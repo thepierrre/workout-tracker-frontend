@@ -1,3 +1,5 @@
+import NewRoutine from "./NewRoutine";
+
 import { Flex, Text, Card, CardBody } from "@chakra-ui/react";
 import { PlusSquareIcon } from "@chakra-ui/icons";
 
@@ -10,10 +12,8 @@ const Routines = () => {
       direction="column"
       gap={7}
       padding={2}
+      marginTop={8}
     >
-      <Text fontSize="xl" w="100%" textAlign="center" p={3}>
-        Routines
-      </Text>
       <Flex direction="column" gap={2} w="100%">
         <Card bg="#404040">
           <CardBody>
@@ -49,10 +49,7 @@ const Routines = () => {
           </CardBody>
         </Card>
       </Flex>
-      <Flex justify="center" align="center" gap={2}>
-        <PlusSquareIcon boxSize={6} />
-        <Text fontSize="lg">Add Routine</Text>
-      </Flex>
+      <NewRoutine />
     </Flex>
   );
 };

@@ -12,7 +12,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-const NewWorkout = () => {
+const NewRoutine = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef<HTMLButtonElement>(null);
   return (
@@ -24,7 +24,7 @@ const NewWorkout = () => {
         bg="lightblue"
         w="90vw"
       >
-        New workout
+        Add routine
       </Button>
       <Drawer
         isOpen={isOpen}
@@ -35,7 +35,7 @@ const NewWorkout = () => {
         <DrawerOverlay />
         <DrawerContent height="50vh" bg="#404040">
           <DrawerHeader textColor="white" textAlign="center">
-            Select a routine
+            Create a routine
           </DrawerHeader>
           <DrawerBody>
             <Flex direction="column" gap={7}>
@@ -71,4 +71,4 @@ const NewWorkout = () => {
   );
 };
 
-export default NewWorkout;
+export default NewRoutine;

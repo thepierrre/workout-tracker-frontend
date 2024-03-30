@@ -4,10 +4,9 @@ import { Outlet, NavLink } from "react-router-dom";
 
 const App = () => {
   return (
-    <Flex bg="#1a1a1a" height="100vh">
+    <Flex bg="#1a1a1a" height="100vh" paddingTop={3}>
       <Tabs variant="soft-rounded">
-        <Outlet />
-        <TabList position="fixed" bottom="2" width="100%">
+        <TabList width="100%">
           <Flex justify="center" width="100%" gap={0.5}>
             <Tab sx={{ color: "white" }} fontSize="sm">
               <NavLink to="/workouts">Workouts</NavLink>
@@ -23,6 +22,7 @@ const App = () => {
             </Tab>
           </Flex>
         </TabList>
+        <Outlet />
       </Tabs>
     </Flex>
   );

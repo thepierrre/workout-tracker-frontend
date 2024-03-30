@@ -12,15 +12,13 @@ const Workout = () => {
       direction="column"
       gap={7}
       padding={2}
+      marginTop={8}
     >
-      <Text fontSize="xl" w="100%" textAlign="center" p={3}>
-        Workouts
-      </Text>
       <Datepicker />
-      <Flex justify="center" align="center" gap={2}>
-        <PlusSquareIcon boxSize={6} />
-        <Text fontSize="lg">Add Workout</Text>
-      </Flex>
+      {/* <Flex justify="center" align="center" gap={2}> */}
+      {/* <PlusSquareIcon boxSize={6} /> */}
+      {/* <Text fontSize="lg">Add Workout</Text> */}
+      {/* </Flex> */}
       <NewWorkout />
     </Flex>
   );
