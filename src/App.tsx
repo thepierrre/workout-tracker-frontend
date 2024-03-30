@@ -1,18 +1,5 @@
-import {
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
-  Box,
-  Flex,
-  Center,
-  // Link,
-} from "@chakra-ui/react";
+import { Tabs, TabList, Tab, Flex } from "@chakra-ui/react";
 
-import Workout from "./components/Workout/Workout";
-import Routines from "./components/Routines/Routines";
-import Profile from "./components/Profile/Profile";
 import { Outlet, NavLink } from "react-router-dom";
 
 const App = () => {
@@ -20,16 +7,18 @@ const App = () => {
     <Flex bg="#1a1a1a" height="100vh">
       <Tabs variant="soft-rounded">
         <Outlet />
-
         <TabList position="fixed" bottom="2" width="100%">
-          <Flex justify="center" width="100%" gap={5}>
-            <Tab sx={{ color: "white" }}>
+          <Flex justify="center" width="100%" gap={0.5}>
+            <Tab sx={{ color: "white" }} fontSize="sm">
               <NavLink to="/workouts">Workouts</NavLink>
             </Tab>
-            <Tab sx={{ color: "white" }}>
+            <Tab sx={{ color: "white" }} fontSize="sm">
               <NavLink to="/routines">Routines</NavLink>
             </Tab>
-            <Tab sx={{ color: "white" }}>
+            <Tab sx={{ color: "white" }} fontSize="sm">
+              <NavLink to="/exercises">Exercises</NavLink>
+            </Tab>
+            <Tab sx={{ color: "white" }} fontSize="sm">
               <NavLink to="/profile">Profile</NavLink>
             </Tab>
           </Flex>

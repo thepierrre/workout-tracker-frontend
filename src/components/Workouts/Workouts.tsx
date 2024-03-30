@@ -1,5 +1,7 @@
 import Datepicker from "./Datepicker";
+import NewWorkout from "./NewWorkout";
 import { Flex, Text } from "@chakra-ui/react";
+import { PlusSquareIcon } from "@chakra-ui/icons";
 
 const Workout = () => {
   return (
@@ -15,7 +17,11 @@ const Workout = () => {
         Workouts
       </Text>
       <Datepicker />
-      <Text fontSize="2xl">Add workout</Text>
+      <Flex justify="center" align="center" gap={2}>
+        <PlusSquareIcon boxSize={6} />
+        <Text fontSize="lg">Add Workout</Text>
+      </Flex>
+      <NewWorkout />
     </Flex>
   );
 };
