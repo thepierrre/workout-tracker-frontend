@@ -11,7 +11,7 @@ const Routines = () => {
       gap={7}
       padding={2}
     >
-      <Text fontSize="3xl" w="100%" textAlign="center" p={3}>
+      <Text fontSize="xl" w="100%" textAlign="center" p={3}>
         Routines
       </Text>
       <Flex direction="column" gap={2} w="100%">

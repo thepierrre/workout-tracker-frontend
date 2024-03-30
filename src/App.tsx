@@ -7,18 +7,42 @@ import {
   Box,
   Flex,
   Center,
+  // Link,
 } from "@chakra-ui/react";
 
 import Workout from "./components/Workout/Workout";
 import Routines from "./components/Routines/Routines";
 import Profile from "./components/Profile/Profile";
-import { BrowserRouter } from "react-router-dom";
+import { Outlet, NavLink } from "react-router-dom";
 
 const App = () => {
   return (
     <Flex bg="#1a1a1a" height="100vh">
       <Tabs variant="soft-rounded">
-        <TabPanels>
+        <Outlet />
+
+        <TabList position="fixed" bottom="2" width="100%">
+          <Flex justify="center" width="100%" gap={5}>
+            <Tab sx={{ color: "white" }}>
+              <NavLink to="/workouts">Workouts</NavLink>
+            </Tab>
+            <Tab sx={{ color: "white" }}>
+              <NavLink to="/routines">Routines</NavLink>
+            </Tab>
+            <Tab sx={{ color: "white" }}>
+              <NavLink to="/profile">Profile</NavLink>
+            </Tab>
+          </Flex>
+        </TabList>
+      </Tabs>
+    </Flex>
+  );
+};
+
+export default App;
+
+{
+  /* <TabPanels>
           <TabPanel padding="0">
             <Workout />
           </TabPanel>
@@ -28,17 +52,5 @@ const App = () => {
           <TabPanel padding="0">
             <Profile />
           </TabPanel>
-        </TabPanels>
-        <TabList position="fixed" bottom="2" width="100%">
-          <Flex justify="center" width="100%" gap={5}>
-            <Tab sx={{ color: "white" }}>Workouts</Tab>
-            <Tab sx={{ color: "white" }}>Routines</Tab>
-            <Tab sx={{ color: "white" }}>Profile</Tab>
-          </Flex>
-        </TabList>
-      </Tabs>
-    </Flex>
-  );
-};
-
-export default App;
+        </TabPanels> */
+}
