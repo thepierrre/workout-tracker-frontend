@@ -3,7 +3,7 @@ import NewRoutine from "./NewRoutine";
 import { Flex, Text, Card, CardBody } from "@chakra-ui/react";
 import { PlusSquareIcon } from "@chakra-ui/icons";
 
-const Routines = () => {
+const RoutinesPage = () => {
   return (
     <Flex
       align="center"
@@ -54,4 +54,4 @@ const Routines = () => {
   );
 };
 
-export default Routines;
+export default RoutinesPage;

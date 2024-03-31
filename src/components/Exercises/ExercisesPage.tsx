@@ -2,14 +2,14 @@ import NewExercise from "./NewExercise";
 
 import { Flex, Text, Card, CardBody } from "@chakra-ui/react";
 
-const Exercises = () => {
+const ExercisesPage = () => {
   return (
     <Flex
       align="center"
       w="100vw"
       color="white"
       direction="column"
-      gap={7}
+      gap={8}
       padding={2}
       marginTop={8}
     >
@@ -71,4 +71,4 @@ const Exercises = () => {
   );
 };
 
-export default Exercises;
+export default ExercisesPage;

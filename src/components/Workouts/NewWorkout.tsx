@@ -10,13 +10,14 @@ import {
   DrawerHeader,
   DrawerBody,
   Text,
+  Heading,
 } from "@chakra-ui/react";
 
 const NewWorkout = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef<HTMLButtonElement>(null);
   return (
-    <Flex>
+    <Flex direction="column" gap={6}>
       <Button
         ref={btnRef}
         onClick={onOpen}
@@ -67,6 +68,9 @@ const NewWorkout = () => {
           </DrawerBody>
         </DrawerContent>
       </Drawer>
+      <Flex justify="center">
+        <Heading fontSize="lg">Full Body 1</Heading>
+      </Flex>
     </Flex>
   );
 };

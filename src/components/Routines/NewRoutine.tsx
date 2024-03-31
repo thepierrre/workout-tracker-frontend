@@ -1,4 +1,7 @@
 import { useState, useRef } from "react";
+import { useForm, Resolver } from "react-hook-form";
+
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 import {
   Flex,
@@ -10,63 +13,89 @@ import {
   DrawerHeader,
   DrawerBody,
   Text,
+  FormControl,
+  Input,
+  FormErrorMessage,
+  Heading,
 } from "@chakra-ui/react";
 
+type FormValues = {
+  name: string;
+  category: string;
+};
+
+const resolver: Resolver<FormValues> = async (values) => {
+  return {
+    values: values.name ? values : {},
+    errors: !values.name
+      ? {
+          name: {
+            type: "required",
+            message: "Exercise is required.",
+          },
+        }
+      : {},
+  };
+};
+
 const NewRoutine = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const btnRef = useRef<HTMLButtonElement>(null);
+  //   const { isOpen, onOpen, onClose } = useDisclosure();
+  //   const btnRef = useRef<HTMLButtonElement>(null);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>({ resolver });
+
+  const onSubmit = (data: FormValues) => {
+    console.log(data);
+  };
+
   return (
-    <Flex>
-      <Button
-        ref={btnRef}
-        onClick={onOpen}
-        textColor="#353935"
-        bg="lightblue"
-        w="90vw"
-      >
-        Add routine
+    <Flex direction="column" gap={4}>
+      <Heading fontSize="lg" textAlign="center">
+        New routine
+      </Heading>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <FormControl isInvalid={!!errors.name}>
+          <Input
+            {...register("name")}
+            w="95vw"
+            bg="#404040"
+            borderColor="transparent"
+            _focusVisible={{
+              borderWidth: "1px",
+              borderColor: "lightblue",
+            }}
+            _placeholder={{ color: "#B3B3B3" }}
+            placeholder="Name"
+          />
+          <FormErrorMessage>
+            {errors.name && errors.name.message}
+          </FormErrorMessage>
+        </FormControl>
+        <Input
+          {...register("category")}
+          mt={4}
+          w="95vw"
+          bg="#404040"
+          borderColor="transparent"
+          _focusVisible={{
+            borderWidth: "1px",
+            borderColor: "lightblue",
+          }}
+          _placeholder={{ color: "#B3B3B3" }}
+          placeholder="Exercise"
+        />
+      </form>
+      <Flex justify="center" gap={2}>
+        <AddCircleIcon />
+        <Text>Exercise</Text>
+      </Flex>
+      <Button w="95vw" bg="lightblue" textColor="#353935" type="submit">
+        Create
       </Button>
-      <Drawer
-        isOpen={isOpen}
-        placement="bottom"
-        onClose={onClose}
-        finalFocusRef={btnRef}
-      >
-        <DrawerOverlay />
-        <DrawerContent height="50vh" bg="#404040">
-          <DrawerHeader textColor="white" textAlign="center">
-            Create a routine
-          </DrawerHeader>
-          <DrawerBody>
-            <Flex direction="column" gap={7}>
-              <Flex direction="column" gap={1} textColor="white">
-                <Flex direction="column" gap={2}>
-                  <Text fontWeight="bold">Full Body 1</Text>
-                  <Text fontWeight="bold" fontSize="xs" color="#E0E0E0">
-                    5 EXERCISES
-                  </Text>
-                </Flex>
-                <Text fontSize="sm" color="#E0E0E0">
-                  Barbell bench press | Barbell squats | Dumbbell lateral raises
-                  | Pulldowns | Leg internal rotation
-                </Text>
-              </Flex>
-              <Flex direction="column" gap={1} textColor="white">
-                <Flex direction="column" gap={2}>
-                  <Text fontWeight="bold">Full Body 2</Text>
-                  <Text fontWeight="bold" fontSize="xs" color="#E0E0E0">
-                    5 EXERCISES
-                  </Text>
-                </Flex>
-                <Text fontSize="sm" color="#E0E0E0">
-                  Barbell incline press | Deadlifts | Dumbbell pushes | Barbell
-                  rows | Leg external rotation
-                </Text>
-              </Flex>
-            </Flex>
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
     </Flex>
   );
 };

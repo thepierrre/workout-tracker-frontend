@@ -3,20 +3,28 @@ import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import { ChakraProvider } from "@chakra-ui/react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Workouts from "./components/Workouts/Workouts.tsx";
-import Routines from "./components/Routines/Routines.tsx";
-import Exercises from "./components/Exercises/Exercises.tsx";
-import Profile from "./components/Profile/Profile.tsx";
+import WorkoutsPage from "./components/Workouts/WorkoutsPage.tsx";
+import RoutinesPage from "./components/Routines/RoutinesPage.tsx";
+import ExercisesPage from "./components/Exercises/ExercisesPage.tsx";
+import ProfilePage from "./components/Profile/ProfilePage.tsx";
+import SingleExercisePage from "./components/Workouts/SingleExercisePage.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
-      { path: "/workouts", element: <Workouts /> },
-      { path: "/routines", element: <Routines /> },
-      { path: "/exercises", element: <Exercises /> },
-      { path: "/profile", element: <Profile /> },
+      {
+        path: "workouts/*",
+        children: [
+          { path: "exercise", element: <SingleExercisePage /> },
+          { path: "*", element: <WorkoutsPage /> },
+        ],
+      },
+      { path: "routines", element: <RoutinesPage /> },
+      { path: "exercises", element: <ExercisesPage /> },
+      { path: "profile", element: <ProfilePage /> },
+      // { path: "/workouts/exercise", element: <SingleExercisePage /> },
     ],
   },
 ]);

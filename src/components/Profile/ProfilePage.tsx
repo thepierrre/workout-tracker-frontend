@@ -1,6 +1,6 @@
 import { Flex, Text } from "@chakra-ui/react";
 
-const Profile = () => {
+const ProfilePage = () => {
   return (
     <Flex
       align="center"
@@ -18,4 +18,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default ProfilePage;
