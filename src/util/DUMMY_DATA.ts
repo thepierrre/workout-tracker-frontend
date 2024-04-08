@@ -13,6 +13,7 @@ export const exercises: Exercise[] = [
     categories: ["lower body", "glutes", "hamstrings", "lower back"],
   },
   { name: "Pulldowns", categories: ["upper body", "back"] },
+  { name: "Abs candles", categories: ["upper body", "abs"] },
 ];
 
 type Routine = {
@@ -27,6 +28,6 @@ export const routines: Routine[] = [
   },
   {
     name: "Full Body 2",
-    exercises: [exercises[3], exercises[4], exercises[5]],
+    exercises: [exercises[3], exercises[4], exercises[5], exercises[6]],
   },
 ];

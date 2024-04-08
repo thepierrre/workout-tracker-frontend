@@ -1,4 +1,6 @@
-import { useRef } from "react";
+import { useRef, Fragment, useState } from "react";
+
+import { routines, Routine } from "../../util/DUMMY_DATA";
 
 import {
   Flex,
@@ -11,11 +13,17 @@ import {
   DrawerBody,
   Text,
   Heading,
+  Card,
+  CardBody,
 } from "@chakra-ui/react";
 
 const NewWorkout = () => {
+  const [chosenRoutine, setChosenRoutine] = useState<Routine | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef<HTMLButtonElement>(null);
+
+  const handleChosenRoutine = () => {};
+
   return (
     <Flex direction="column" gap={6}>
       <Button
@@ -40,37 +48,34 @@ const NewWorkout = () => {
           </DrawerHeader>
           <DrawerBody>
             <Flex direction="column" gap={7}>
-              <Flex direction="column" gap={1} textColor="white">
-                <Flex direction="column" gap={2}>
-                  <Text fontWeight="bold">Full Body 1</Text>
-                  <Text fontWeight="bold" fontSize="xs" color="#E0E0E0">
-                    5 EXERCISES
-                  </Text>
-                </Flex>
-                <Text fontSize="sm" color="#E0E0E0">
-                  Barbell bench press | Barbell squats | Dumbbell lateral raises
-                  | Pulldowns | Leg internal rotation
-                </Text>
-              </Flex>
-              <Flex direction="column" gap={1} textColor="white">
-                <Flex direction="column" gap={2}>
-                  <Text fontWeight="bold">Full Body 2</Text>
-                  <Text fontWeight="bold" fontSize="xs" color="#E0E0E0">
-                    5 EXERCISES
-                  </Text>
-                </Flex>
-                <Text fontSize="sm" color="#E0E0E0">
-                  Barbell incline press | Deadlifts | Dumbbell pushes | Barbell
-                  rows | Leg external rotation
-                </Text>
-              </Flex>
+              {routines.map((routine, index) => (
+                <Card key={index} bg="#404040">
+                  <CardBody>
+                    <Flex direction="column" gap={1} textColor="white">
+                      <Flex direction="column" gap={2}>
+                        <Text fontWeight="bold">{routine.name}</Text>
+                        <Text fontWeight="bold" fontSize="xs" color="#E0E0E0">
+                          {routine.exercises.length} EXERCISES
+                        </Text>
+                      </Flex>
+                      <Text fontSize="sm" color="#E0E0E0">
+                        {routine.exercises.map((exercise, index) => (
+                          <Fragment key={index}>
+                            {index > 0 && " | "} {exercise.name}
+                          </Fragment>
+                        ))}
+                      </Text>
+                    </Flex>
+                  </CardBody>
+                </Card>
+              ))}
             </Flex>
           </DrawerBody>
         </DrawerContent>
       </Drawer>
-      <Flex justify="center">
+      {/* <Flex justify="center">
         <Heading fontSize="lg">Full Body 1</Heading>
-      </Flex>
+      </Flex> */}
     </Flex>
   );
 };
