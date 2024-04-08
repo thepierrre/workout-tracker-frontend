@@ -2,8 +2,7 @@ import Datepicker from "./Datepicker";
 import NewWorkout from "./NewWorkout";
 import Workout from "./Workout";
 
-import { Flex, Text } from "@chakra-ui/react";
-import { PlusSquareIcon } from "@chakra-ui/icons";
+import { Flex } from "@chakra-ui/react";
 
 const WorkoutsPage = () => {
   return (
@@ -13,8 +12,8 @@ const WorkoutsPage = () => {
       color="white"
       direction="column"
       gap={7}
-      padding={2}
-      marginTop={8}
+      p={2}
+      mt={8}
     >
       <Datepicker />
       <NewWorkout />

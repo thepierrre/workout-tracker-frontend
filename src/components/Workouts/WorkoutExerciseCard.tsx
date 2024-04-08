@@ -11,23 +11,23 @@ const WorkoutExerciseCard = () => {
               <Flex gap={10}>
                 <Text fontWeight="bold">1</Text>
                 <Flex gap={1}>
-                  <Text fontWeight="bold">35</Text>
-                  <Text textColor="#C2C2C2">kgs</Text>
-                </Flex>
-                <Flex gap={1}>
                   <Text fontWeight="bold">10</Text>
                   <Text textColor="#C2C2C2">reps</Text>
+                </Flex>
+                <Flex gap={1}>
+                  <Text fontWeight="bold">35</Text>
+                  <Text textColor="#C2C2C2">kgs</Text>
                 </Flex>
               </Flex>
               <Flex gap={10}>
                 <Text fontWeight="bold">2</Text>
                 <Flex gap={1}>
-                  <Text fontWeight="bold">35</Text>
-                  <Text textColor="#C2C2C2">kgs</Text>
-                </Flex>
-                <Flex gap={1}>
                   <Text fontWeight="bold">10</Text>
                   <Text textColor="#C2C2C2">reps</Text>
+                </Flex>
+                <Flex gap={1}>
+                  <Text fontWeight="bold">35</Text>
+                  <Text textColor="#C2C2C2">kgs</Text>
                 </Flex>
               </Flex>
             </Flex>

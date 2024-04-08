@@ -1,7 +1,13 @@
 import NewRoutine from "./NewRoutine";
 
+import { routines } from "../../util/DUMMY_DATA";
+
+import { Fragment } from "react/jsx-runtime";
+
 import { Flex, Text, Card, CardBody } from "@chakra-ui/react";
 import { PlusSquareIcon } from "@chakra-ui/icons";
+
+const numOfExercises = routines.length;
 
 const RoutinesPage = () => {
   return (
@@ -15,39 +21,27 @@ const RoutinesPage = () => {
       marginTop={8}
     >
       <Flex direction="column" gap={2} w="100%">
-        <Card bg="#404040">
-          <CardBody>
-            <Flex direction="column" gap={1} textColor="white">
-              <Flex direction="column" gap={2}>
-                <Text fontWeight="bold">Full Body 1</Text>
-                <Text fontWeight="bold" fontSize="xs" color="#E0E0E0">
-                  5 EXERCISES
+        {routines.map((routine, index) => (
+          <Card key={index} bg="#404040">
+            <CardBody>
+              <Flex direction="column" gap={1} textColor="white">
+                <Flex direction="column" gap={2}>
+                  <Text fontWeight="bold">{routine.name}</Text>
+                  <Text fontWeight="bold" fontSize="xs" color="#E0E0E0">
+                    {routine.exercises.length} EXERCISES
+                  </Text>
+                </Flex>
+                <Text fontSize="sm" color="#E0E0E0">
+                  {routine.exercises.map((exercise, index) => (
+                    <Fragment key={index}>
+                      {index > 0 && " | "} {exercise.name}
+                    </Fragment>
+                  ))}
                 </Text>
               </Flex>
-              <Text fontSize="sm" color="#E0E0E0">
-                Barbell bench press | Barbell squats | Dumbbell lateral raises |
-                Pulldowns | Leg internal rotation
-              </Text>
-            </Flex>
-          </CardBody>
-        </Card>
-
-        <Card bg="#404040">
-          <CardBody>
-            <Flex direction="column" gap={1} textColor="white">
-              <Flex direction="column" gap={2}>
-                <Text fontWeight="bold">Full Body 1</Text>
-                <Text fontWeight="bold" fontSize="xs" color="#E0E0E0">
-                  5 EXERCISES
-                </Text>
-              </Flex>
-              <Text fontSize="sm" color="#E0E0E0">
-                Barbell bench press | Barbell squats | Dumbbell lateral raises |
-                Pulldowns | Leg internal rotation
-              </Text>
-            </Flex>
-          </CardBody>
-        </Card>
+            </CardBody>
+          </Card>
+        ))}
       </Flex>
       <NewRoutine />
     </Flex>

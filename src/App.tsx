@@ -1,7 +1,7 @@
 import { Tabs, TabList, Tab, Flex } from "@chakra-ui/react";
 
 import { useEffect, useMemo, useState } from "react";
-import { Outlet, NavLink, useMatch, Link, useLocation } from "react-router-dom";
+import { Outlet, Link, useLocation } from "react-router-dom";
 
 const App = () => {
   const location = useLocation();
