@@ -1,6 +1,6 @@
-import NewRoutine from "./NewRoutine";
+import NewRoutine from "../components/routines/NewRoutine";
 
-import { routines } from "../../util/DUMMY_DATA";
+import { routines } from "../util/DUMMY_DATA";
 
 import { Fragment } from "react/jsx-runtime";
 

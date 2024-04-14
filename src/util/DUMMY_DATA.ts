@@ -1,7 +1,5 @@
-type Exercise = {
-  name: String;
-  categories: String[];
-};
+import { Exercise } from "../interfaces/exercise.interface";
+import { Routine } from "../interfaces/routine.interface";
 
 export const exercises: Exercise[] = [
   { name: "Barbell bench press", categories: ["upper body", "chest"] },
@@ -15,11 +13,6 @@ export const exercises: Exercise[] = [
   { name: "Pulldowns", categories: ["upper body", "back"] },
   { name: "Abs candles", categories: ["upper body", "abs"] },
 ];
-
-type Routine = {
-  name: String;
-  exercises: Exercise[];
-};
 
 export const routines: Routine[] = [
   {

@@ -1,6 +1,6 @@
-import Datepicker from "./Datepicker";
-import NewWorkout from "./NewWorkout";
-import Workout from "./Workout";
+import Datepicker from "../components/workouts/Datepicker";
+import NewWorkout from "../components/workouts/NewWorkout";
+import Workout from "../components/workouts/Workout";
 
 import { Flex } from "@chakra-ui/react";
 

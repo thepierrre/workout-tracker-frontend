@@ -1,6 +1,10 @@
 import { useRef, Fragment, useState } from "react";
+import { useDispatch } from "react-redux";
+import { setChosenRoutine } from "../../features/workout/currentWorkoutSlice";
 
-import { routines, Routine } from "../../util/DUMMY_DATA";
+import { Routine } from "../../interfaces/routine.interface";
+
+import { routines } from "../../util/DUMMY_DATA";
 
 import {
   Flex,
@@ -18,11 +22,15 @@ import {
 } from "@chakra-ui/react";
 
 const NewWorkout = () => {
-  const [chosenRoutine, setChosenRoutine] = useState<Routine | null>(null);
+  //   const [chosenRoutine, setChosenRoutine] = useState<Routine | null>(null);
+  const dispatch = useDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef<HTMLButtonElement>(null);
 
-  const handleChosenRoutine = () => {};
+  const handleChosenRoutine = (routine: Routine) => {
+    console.log(routine);
+    dispatch(setChosenRoutine(routine));
+  };
 
   return (
     <Flex direction="column" gap={6}>
@@ -49,7 +57,11 @@ const NewWorkout = () => {
           <DrawerBody>
             <Flex direction="column" gap={7}>
               {routines.map((routine, index) => (
-                <Card key={index} bg="#404040">
+                <Card
+                  key={index}
+                  bg="#404040"
+                  onClick={() => handleChosenRoutine(routine)}
+                >
                   <CardBody>
                     <Flex direction="column" gap={1} textColor="white">
                       <Flex direction="column" gap={2}>

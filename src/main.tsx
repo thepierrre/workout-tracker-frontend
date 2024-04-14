@@ -1,13 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
+import App from "./app/App.tsx";
 import { ChakraProvider } from "@chakra-ui/react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import WorkoutsPage from "./components/Workouts/WorkoutsPage.tsx";
-import RoutinesPage from "./components/Routines/RoutinesPage.tsx";
-import ExercisesPage from "./components/Exercises/ExercisesPage.tsx";
-import ProfilePage from "./components/Profile/ProfilePage.tsx";
-import SingleExercisePage from "./components/Workouts/SingleExercisePage.tsx";
+import WorkoutsPage from "./pages/WorkoutsPage.tsx";
+import RoutinesPage from "./pages/RoutinesPage.tsx";
+import ExercisesPage from "./pages/ExercisesPage.tsx";
+import ProfilePage from "./pages/ProfilePage.tsx";
+import SingleExercisePage from "./components/workouts/SingleExercisePage.tsx";
+import { store } from "./app/store.ts";
+import { Provider } from "react-redux";
 
 const router = createBrowserRouter([
   {
@@ -24,15 +26,16 @@ const router = createBrowserRouter([
       { path: "routines", element: <RoutinesPage /> },
       { path: "exercises", element: <ExercisesPage /> },
       { path: "profile", element: <ProfilePage /> },
-      // { path: "/workouts/exercise", element: <SingleExercisePage /> },
     ],
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <ChakraProvider>
-    <React.StrictMode>
-      <RouterProvider router={router} />
-    </React.StrictMode>
-  </ChakraProvider>
+  <Provider store={store}>
+    <ChakraProvider>
+      <React.StrictMode>
+        <RouterProvider router={router} />
+      </React.StrictMode>
+    </ChakraProvider>
+  </Provider>
 );

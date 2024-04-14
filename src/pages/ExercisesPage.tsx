@@ -1,6 +1,6 @@
-import NewExercise from "./NewExercise";
+import NewExercise from "../components/exercises/NewExercise";
 
-import { exercises } from "../../util/DUMMY_DATA";
+import { exercises } from "../util/DUMMY_DATA";
 
 import { Flex, Text, Card, CardBody } from "@chakra-ui/react";
 
