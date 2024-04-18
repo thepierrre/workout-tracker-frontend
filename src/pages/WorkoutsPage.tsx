@@ -1,6 +1,8 @@
 import Datepicker from "../components/workouts/Datepicker";
 import NewWorkout from "../components/workouts/NewWorkout";
-import Workout from "../components/workouts/Workout";
+import Workout from "../components/workouts/WorkoutSession";
+
+import { workouts } from "../util/DUMMY_DATA";
 
 import { Flex } from "@chakra-ui/react";
 
@@ -17,7 +19,9 @@ const WorkoutsPage = () => {
     >
       <Datepicker />
       <NewWorkout />
-      <Workout />
+      {workouts.map((workout) => (
+        <Workout key={workout.id} workout={workout} />
+      ))}
     </Flex>
   );
 };

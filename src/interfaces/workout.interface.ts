@@ -2,7 +2,8 @@ import { ExerciseInstance } from "./exerciseInstance.interface";
 import { Routine } from "./routine.interface";
 
 export interface Workout {
-  created: Date;
+  id: string;
+  creationDate: Date;
   routineName: Routine["name"];
-  exercises: ExerciseInstance[];
+  exerciseInstances: ExerciseInstance[];
 }

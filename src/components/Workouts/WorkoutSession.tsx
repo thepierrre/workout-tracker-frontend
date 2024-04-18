@@ -1,23 +1,31 @@
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
+import { Workout } from "../../interfaces/workout.interface";
 
 import { Card, CardBody, Flex, Text, Heading } from "@chakra-ui/react";
 
-const Workout = () => {
-  const { routineName, exerciseInstances } = useSelector(
-    (state: RootState) => state.currentWorkout
-  );
+interface WorkoutProps {
+  workout: Workout;
+}
+
+const WorkoutSession: React.FC<WorkoutProps> = ({ workout: wrk }) => {
+  // const { routineName, exerciseInstances } = useSelector(
+  //   (state: RootState) => state.currentWorkout
+  // );
 
   return (
     <>
-      <Heading fontWeight="bold" fontSize="lg" mb={4}>
-        {routineName}
+      <Heading fontWeight="bold" fontSize="lg">
+        {wrk.routineName}
       </Heading>
       <Flex direction="column" gap={3} textColor="white">
         <Flex direction="column" gap={3}>
-          {exerciseInstances.map((exerciseInstance, index) => (
-            <Link to={`/workouts/exercises/${exerciseInstance}`}>
+          {wrk.exerciseInstances.map((exerciseInstance, index) => (
+            <Link
+              key={exerciseInstance.id}
+              to={`/workouts/exercises/${exerciseInstance.id}`}
+            >
               <Card bg="#404040" w="95vw" direction="column" key={index}>
                 <CardBody>
                   <Text color="white" fontWeight="bold" mb={2}>
@@ -48,4 +56,4 @@ const Workout = () => {
   );
 };
 
-export default Workout;
+export default WorkoutSession;

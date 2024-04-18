@@ -44,58 +44,71 @@ const date3 = new Date(2024, 4, 14);
 
 export const workouts: Workout[] = [
   {
+    id: "workout-id1",
     creationDate: date1,
     routineName: "Full Body 1",
     exerciseInstances: [
       {
+        id: "instance-id1",
         exercise: exercises[0],
         series: [series1, series2, series3],
       },
       {
+        id: "instance-id2",
         exercise: exercises[1],
         series: [series4, series5, series6],
       },
       {
+        id: "instance-id3",
         exercise: exercises[2],
         series: [series7, series8, series9],
       },
     ],
   },
   {
-    creationDate: date1,
+    id: "workout-id2",
+    creationDate: date2,
     routineName: "Full Body 1",
     exerciseInstances: [
       {
+        id: "instance-id4",
         exercise: exercises[0],
         series: [series1, series2, series2],
       },
       {
+        id: "instance-id5",
         exercise: exercises[1],
         series: [series4, series4, series5],
       },
       {
+        id: "instance-id6",
         exercise: exercises[2],
         series: [series4, series5, series5],
       },
     ],
   },
   {
-    creationDate: date1,
+    id: "workout-id3",
+    creationDate: date3,
     routineName: "Full Body 2",
     exerciseInstances: [
       {
+        id: "instance-id7",
         exercise: exercises[3],
         series: [series1, series2, series3],
       },
       {
+        id: "instance-id8",
         exercise: exercises[4],
         series: [series4, series5, series6],
       },
       {
+        id: "instance-id9",
         exercise: exercises[5],
         series: [series7, series8, series9],
       },
       {
+        id: "instance-id10",
         exercise: exercises[6],
         series: [series7, series8, series9],
       },
