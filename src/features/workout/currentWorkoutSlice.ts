@@ -2,13 +2,16 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 import { Routine } from "../../interfaces/routine.interface";
+import { ExerciseInstance } from "../../interfaces/exerciseInstance.interface";
 
 export interface CurrentWorkoutState {
-  chosenRoutine: Routine | null;
+  routineName: string | null;
+  exerciseInstances: ExerciseInstance[];
 }
 
 const initialState: CurrentWorkoutState = {
-  chosenRoutine: null,
+  routineName: null,
+  exerciseInstances: [],
 };
 
 const currentWorkoutSlice = createSlice({
@@ -16,7 +19,12 @@ const currentWorkoutSlice = createSlice({
   initialState,
   reducers: {
     setChosenRoutine(state, action: PayloadAction<Routine>) {
-      state.chosenRoutine = action.payload;
+      const { name, exercises } = action.payload;
+      state.routineName = name;
+      state.exerciseInstances = exercises.map((exercise) => ({
+        exercise,
+        series: Array.from({ length: 3 }, () => ({ reps: 0, weight: 0 })),
+      }));
     },
   },
 });

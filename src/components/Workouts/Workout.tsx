@@ -1,56 +1,49 @@
-import { NavLink } from "react-router-dom";
-
-import { routines } from "../../util/DUMMY_DATA";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../../app/store";
 
 import { Card, CardBody, Flex, Text, Heading } from "@chakra-ui/react";
 
-type Series = {
-  reps: number;
-  weight: number;
-};
-
-type Exercise = Series[];
-
-type FormValues = Exercise[];
-
 const Workout = () => {
+  const { routineName, exerciseInstances } = useSelector(
+    (state: RootState) => state.currentWorkout
+  );
+
   return (
     <>
-      <NavLink to="/workouts/exercise">
-        {/* <WorkoutExerciseCard /> */}
-
-        <Card bg="#404040" w="95vw">
-          <CardBody>
-            <Flex direction="column" gap={3} textColor="white">
-              <Text fontWeight="bold"></Text>
-              <Flex direction="column" gap={3}>
-                <Flex gap={10}>
-                  <Text fontWeight="bold">1</Text>
-                  <Flex gap={1}>
-                    <Text fontWeight="bold">10</Text>
-                    <Text textColor="#C2C2C2">reps</Text>
+      <Heading fontWeight="bold" fontSize="lg" mb={4}>
+        {routineName}
+      </Heading>
+      <Flex direction="column" gap={3} textColor="white">
+        <Flex direction="column" gap={3}>
+          {exerciseInstances.map((exerciseInstance, index) => (
+            <Link to={`/workouts/exercises/${exerciseInstance}`}>
+              <Card bg="#404040" w="95vw" direction="column" key={index}>
+                <CardBody>
+                  <Text color="white" fontWeight="bold" mb={2}>
+                    {exerciseInstance.exercise.name}
+                  </Text>
+                  <Flex color="white" direction="column">
+                    {exerciseInstance.series.map((series, index) => (
+                      <Flex key={index} gap={10}>
+                        <Text flex={0.1}>{index + 1}</Text>
+                        <Flex gap={3} flex={0.2}>
+                          <Text fontWeight="bold">{series.reps}</Text>
+                          <Text>reps</Text>
+                        </Flex>
+                        <Flex gap={3} flex={0.2}>
+                          <Text fontWeight="bold">{series.weight}</Text>
+                          <Text>kgs</Text>
+                        </Flex>
+                      </Flex>
+                    ))}
                   </Flex>
-                  <Flex gap={1}>
-                    <Text fontWeight="bold">35</Text>
-                    <Text textColor="#C2C2C2">kgs</Text>
-                  </Flex>
-                </Flex>
-                <Flex gap={10}>
-                  <Text fontWeight="bold">2</Text>
-                  <Flex gap={1}>
-                    <Text fontWeight="bold">10</Text>
-                    <Text textColor="#C2C2C2">reps</Text>
-                  </Flex>
-                  <Flex gap={1}>
-                    <Text fontWeight="bold">35</Text>
-                    <Text textColor="#C2C2C2">kgs</Text>
-                  </Flex>
-                </Flex>
-              </Flex>
-            </Flex>
-          </CardBody>
-        </Card>
-      </NavLink>
+                </CardBody>
+              </Card>
+            </Link>
+          ))}
+        </Flex>
+      </Flex>
     </>
   );
 };

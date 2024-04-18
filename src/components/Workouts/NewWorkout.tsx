@@ -1,4 +1,4 @@
-import { useRef, Fragment, useState } from "react";
+import { useRef, Fragment } from "react";
 import { useDispatch } from "react-redux";
 import { setChosenRoutine } from "../../features/workout/currentWorkoutSlice";
 
@@ -16,13 +16,11 @@ import {
   DrawerHeader,
   DrawerBody,
   Text,
-  Heading,
   Card,
   CardBody,
 } from "@chakra-ui/react";
 
 const NewWorkout = () => {
-  //   const [chosenRoutine, setChosenRoutine] = useState<Routine | null>(null);
   const dispatch = useDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef<HTMLButtonElement>(null);
@@ -85,9 +83,6 @@ const NewWorkout = () => {
           </DrawerBody>
         </DrawerContent>
       </Drawer>
-      {/* <Flex justify="center">
-        <Heading fontSize="lg">Full Body 1</Heading>
-      </Flex> */}
     </Flex>
   );
 };

@@ -1,7 +1,8 @@
 import { Series } from "./series.interface";
+import { Exercise } from "./exercise.interface";
 
 export interface ExerciseInstance {
-  name: string;
-  categories: string[];
+  exercise: Exercise;
+  //   categories: string[];
   series: Series[];
 }
