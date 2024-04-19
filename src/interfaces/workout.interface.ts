@@ -3,7 +3,7 @@ import { Routine } from "./routine.interface";
 
 export interface Workout {
   id: string;
-  creationDate: Date;
+  creationDate: string;
   routineName: Routine["name"];
   exerciseInstances: ExerciseInstance[];
 }

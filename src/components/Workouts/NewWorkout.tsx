@@ -1,6 +1,6 @@
 import { useRef, Fragment } from "react";
 import { useDispatch } from "react-redux";
-import { setChosenRoutine } from "../../features/workout/currentWorkoutSlice";
+// import { setChosenRoutine } from "../../features/workout/currentWorkoutSlice";
 
 import { Routine } from "../../interfaces/routine.interface";
 
@@ -25,10 +25,10 @@ const NewWorkout = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef<HTMLButtonElement>(null);
 
-  const handleChosenRoutine = (routine: Routine) => {
-    console.log(routine);
-    dispatch(setChosenRoutine(routine));
-  };
+  //   const handleChosenRoutine = (routine: Routine) => {
+  //     console.log(routine);
+  //     dispatch(setChosenRoutine(routine));
+  //   };
 
   return (
     <Flex direction="column" gap={6}>
@@ -58,7 +58,7 @@ const NewWorkout = () => {
                 <Card
                   key={index}
                   bg="#404040"
-                  onClick={() => handleChosenRoutine(routine)}
+                  //   onClick={() => handleChosenRoutine(routine)}
                 >
                   <CardBody>
                     <Flex direction="column" gap={1} textColor="white">

@@ -19,7 +19,10 @@ const router = createBrowserRouter([
       {
         path: "workouts/*",
         children: [
-          { path: "exercises/:exerciseId", element: <SingleExercisePage /> },
+          {
+            path: "exercise/:exerciseInstanceId",
+            element: <SingleExercisePage />,
+          },
           { path: "*", element: <WorkoutsPage /> },
         ],
       },

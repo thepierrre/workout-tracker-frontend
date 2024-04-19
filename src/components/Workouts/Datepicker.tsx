@@ -1,47 +1,74 @@
-import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { RootState } from "../../app/store";
 import { Flex, Text, Box } from "@chakra-ui/react";
+import { setDay } from "../../features/workout/dayInCalendarSlice";
+import { format } from "date-fns";
 
 const Datepicker = () => {
-  const [activeDay, setActiveDay] = useState<number | undefined>(undefined);
+  const chosenDay = useSelector((state: RootState) => state.chosenDay.day);
+  const dispatch = useDispatch();
 
-  let dates: { day: String; date: number }[] = [
-    { day: "MON", date: 25 },
-    { day: "TUE", date: 26 },
-    { day: "WED", date: 27 },
-    { day: "THU", date: 28 },
-    { day: "FRI", date: 29 },
-    { day: "SAT", date: 30 },
-    { day: "SUN", date: 31 },
-  ];
+  const today = new Date();
+  const currentDayOfWeek = today.getDay();
+  const mondayOffset = (currentDayOfWeek + 6) % 7;
+  const displayedDaysOfWeek = Array.from({ length: 7 }, (_, index) => {
+    const date = new Date(today);
+    date.setDate(today.getDate() - mondayOffset + index);
+    return date;
+  });
 
   const handleActiveDay = (index: number) => {
-    setActiveDay(index);
+    const selectedDate = displayedDaysOfWeek[index];
+    const formattedDate = selectedDate.toString();
+    dispatch(setDay(formattedDate));
+    console.log(displayedDaysOfWeek[index]);
   };
 
-  const datesComponents = dates.map((dateObj, index) => (
-    <Flex
-      key={index}
-      direction="column"
-      align="center"
-      gap={1}
-      onClick={() => handleActiveDay(index)}
-    >
-      <Text fontSize="xs" fontWeight={activeDay === index ? "bold" : ""}>
-        {dateObj.day}
-      </Text>
-      <Box
-        paddingInline={1}
-        borderRadius={7}
-        bg={activeDay === index ? "lightblue" : ""}
-      >
-        <Text fontSize="xl" color={activeDay === index ? "#353935" : ""}>
-          {dateObj.date}
-        </Text>
-      </Box>
+  return (
+    <Flex gap={6}>
+      {displayedDaysOfWeek.map((day, index) => (
+        <Flex
+          key={index}
+          direction="column"
+          align="center"
+          gap={1}
+          onClick={() => handleActiveDay(index)}
+        >
+          <Text
+            fontSize="xs"
+            fontWeight={chosenDay === day.toString() ? "bold" : ""}
+          >
+            {day
+              .toLocaleDateString("en-us", {
+                weekday: "short",
+              })
+              .toUpperCase()}
+          </Text>
+          <Box
+            paddingInline={1}
+            borderRadius={7}
+            bg={
+              format(chosenDay, "yyyy-MM-dd") === format(day, "yyyy-MM-dd")
+                ? "lightblue"
+                : ""
+            }
+          >
+            <Text
+              fontSize="xl"
+              color={
+                format(chosenDay, "yyyy-MM-dd") === format(day, "yyyy-MM-dd")
+                  ? "#353935"
+                  : ""
+              }
+            >
+              {day.getDate()}
+            </Text>
+          </Box>
+        </Flex>
+      ))}
     </Flex>
-  ));
-
-  return <Flex gap={6}>{datesComponents}</Flex>;
+  );
 };
 
 export default Datepicker;

@@ -1,7 +1,7 @@
 import { Text } from "@chakra-ui/react";
 
-const SingleRoutine = () => {
+const SingleRoutinePage = () => {
   return <Text textColor="white">bla bla bla</Text>;
 };
 
-export default SingleRoutine;
+export default SingleRoutinePage;

@@ -1,6 +1,6 @@
 import Datepicker from "../components/workouts/Datepicker";
 import NewWorkout from "../components/workouts/NewWorkout";
-import Workout from "../components/workouts/WorkoutSession";
+import WorkoutSession from "../components/workouts/WorkoutSession";
 
 import { workouts } from "../util/DUMMY_DATA";
 
@@ -20,7 +20,7 @@ const WorkoutsPage = () => {
       <Datepicker />
       <NewWorkout />
       {workouts.map((workout) => (
-        <Workout key={workout.id} workout={workout} />
+        <WorkoutSession key={workout.id} workout={workout} />
       ))}
     </Flex>
   );

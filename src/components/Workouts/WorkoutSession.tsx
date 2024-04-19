@@ -1,6 +1,4 @@
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { RootState } from "../../app/store";
 import { Workout } from "../../interfaces/workout.interface";
 
 import { Card, CardBody, Flex, Text, Heading } from "@chakra-ui/react";
@@ -24,9 +22,9 @@ const WorkoutSession: React.FC<WorkoutProps> = ({ workout: wrk }) => {
           {wrk.exerciseInstances.map((exerciseInstance, index) => (
             <Link
               key={exerciseInstance.id}
-              to={`/workouts/exercises/${exerciseInstance.id}`}
+              to={`/workouts/exercise/${exerciseInstance.id}`}
             >
-              <Card bg="#404040" w="95vw" direction="column" key={index}>
+              <Card bg="#404040" w="95vw" key={index}>
                 <CardBody>
                   <Text color="white" fontWeight="bold" mb={2}>
                     {exerciseInstance.exercise.name}

@@ -1,9 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-import { Routine } from "../../interfaces/routine.interface";
 import { Workout } from "../../interfaces/workout.interface";
-import { ExerciseInstance } from "../../interfaces/exerciseInstance.interface";
 import { workouts } from "../../util/DUMMY_DATA";
 
 export interface WorkoutSessionsState {
