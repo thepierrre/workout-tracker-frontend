@@ -3,6 +3,8 @@ import { Routine } from "../interfaces/routine.interface";
 import { Workout } from "../interfaces/workout.interface";
 import { Series } from "../interfaces/series.interface";
 import { ExerciseInstance } from "../interfaces/exerciseInstance.interface";
+import { User } from "../interfaces/user.interface";
+import { passwords } from "../../DUMY_PASSWORDS";
 
 export const exercises: Exercise[] = [
   { name: "Barbell bench press", categories: ["upper body", "chest"] },
@@ -28,15 +30,15 @@ export const routines: Routine[] = [
   },
 ];
 
-const series1: Series = { reps: 10, weight: 30 };
-const series2: Series = { reps: 10, weight: 35 };
-const series3: Series = { reps: 14, weight: 35 };
-const series4: Series = { reps: 12, weight: 50 };
-const series5: Series = { reps: 12, weight: 40 };
-const series6: Series = { reps: 11, weight: 30 };
-const series7: Series = { reps: 9, weight: 30 };
-const series8: Series = { reps: 9, weight: 60 };
-const series9: Series = { reps: 8, weight: 60 };
+const series1: Series = { id: "series-id1", reps: 10, weight: 30 };
+const series2: Series = { id: "series-id2", reps: 10, weight: 35 };
+const series3: Series = { id: "series-id3", reps: 14, weight: 35 };
+const series4: Series = { id: "series-id4", reps: 12, weight: 50 };
+const series5: Series = { id: "series-id5", reps: 12, weight: 40 };
+const series6: Series = { id: "series-id6", reps: 11, weight: 30 };
+const series7: Series = { id: "series-id7", reps: 9, weight: 30 };
+const series8: Series = { id: "series-id8", reps: 9, weight: 60 };
+const series9: Series = { id: "series-id9", reps: 8, weight: 60 };
 
 const date1 = new Date(2024, 3, 15).toString();
 const date2 = new Date(2024, 4, 1).toString();
@@ -113,5 +115,24 @@ export const workouts: Workout[] = [
         series: [series7, series8, series9],
       },
     ],
+  },
+];
+
+export const users: User[] = [
+  {
+    id: "user-id1",
+    username: "Alex",
+    password: passwords[0],
+    routines: routines,
+    workoutSessions: workouts,
+    exercises: exercises,
+  },
+  {
+    id: "user-id2",
+    username: "Florian",
+    password: passwords[1],
+    routines: [],
+    workoutSessions: [],
+    exercises: [],
   },
 ];

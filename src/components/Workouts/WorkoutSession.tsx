@@ -12,6 +12,8 @@ const WorkoutSession: React.FC<WorkoutProps> = ({ workout: wrk }) => {
   //   (state: RootState) => state.currentWorkout
   // );
 
+  // console.log(wrk);
+
   return (
     <>
       <Heading fontWeight="bold" fontSize="lg">
@@ -23,6 +25,7 @@ const WorkoutSession: React.FC<WorkoutProps> = ({ workout: wrk }) => {
             <Link
               key={exerciseInstance.id}
               to={`/workouts/exercise/${exerciseInstance.id}`}
+              state={{ workout: wrk }}
             >
               <Card bg="#404040" w="95vw" key={index}>
                 <CardBody>
