@@ -1,6 +1,6 @@
 import { Exercise } from "./exercise.interface";
 
 export interface Routine {
-  name: String;
+  name: string;
   exercises: Exercise[];
 }

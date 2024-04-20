@@ -1,16 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../app/store";
-import {
-  Flex,
-  Heading,
-  Text,
-  Button,
-  Card,
-  CardBody,
-  Box,
-} from "@chakra-ui/react";
+import { Flex, Heading, Text, Button, Card, CardBody } from "@chakra-ui/react";
 import { ExerciseInstance } from "../../interfaces/exerciseInstance.interface";
 import { Series } from "../../interfaces/series.interface";
 
@@ -29,8 +21,9 @@ const ExerciseInstancePage = () => {
   const workoutSessions = useSelector(
     (state: RootState) => state.workoutSessions
   );
+  const usr = useSelector((state: RootState) => state.authenticatedUser);
 
-  console.log(wrk);
+  const dispatch = useDispatch();
 
   let exerciseInstance: ExerciseInstance | undefined;
 
@@ -43,7 +36,7 @@ const ExerciseInstancePage = () => {
     }
   }
 
-  const handleModify = (type: string, action: string) => {
+  const handleRepsAndWeight = (type: string, action: string) => {
     if (type === "reps") {
       if (action === "increase") {
         setReps(reps + 1);
@@ -60,8 +53,25 @@ const ExerciseInstancePage = () => {
   };
 
   const handleActiveExInstance = (series: Series) => {
-    setActiveSeries(series);
+    activeSeries && activeSeries.id === series.id
+      ? setActiveSeries(undefined)
+      : setActiveSeries(series);
+  };
+
+  const handleButtonText = () => {
+    return activeSeries ? "UPDATE" : "ADD";
+  };
+
+  const handleDisableButton = () => {
+    return activeSeries ? false : true;
+  };
+
+  const handleUpdateOrAdd = () => {
     console.log(activeSeries);
+  };
+
+  const handleDelete = () => {
+    console.log("deleting...");
   };
 
   return (
@@ -84,7 +94,7 @@ const ExerciseInstancePage = () => {
                     h={10}
                     borderRadius={8}
                     fontSize="3xl"
-                    onClick={() => handleModify("reps", "decrease")}
+                    onClick={() => handleRepsAndWeight("reps", "decrease")}
                   >
                     –
                   </Button>
@@ -103,7 +113,7 @@ const ExerciseInstancePage = () => {
                       h={10}
                       borderRadius={8}
                       fontSize="3xl"
-                      onClick={() => handleModify("reps", "increase")}
+                      onClick={() => handleRepsAndWeight("reps", "increase")}
                     >
                       +
                     </Button>
@@ -129,7 +139,7 @@ const ExerciseInstancePage = () => {
                       h={10}
                       borderRadius={8}
                       fontSize="3xl"
-                      onClick={() => handleModify("weight", "decrease")}
+                      onClick={() => handleRepsAndWeight("weight", "decrease")}
                     >
                       –
                     </Button>
@@ -149,7 +159,7 @@ const ExerciseInstancePage = () => {
                       h={10}
                       borderRadius={8}
                       fontSize="3xl"
-                      onClick={() => handleModify("weight", "increase")}
+                      onClick={() => handleRepsAndWeight("weight", "increase")}
                     >
                       +
                     </Button>
@@ -158,10 +168,21 @@ const ExerciseInstancePage = () => {
               </Flex>
             </Flex>
             <Flex justify="center" gap={5}>
-              <Button w={24} bg="lightblue" textColor="#353935">
-                ADD
+              <Button
+                w={24}
+                bg="lightblue"
+                textColor="#353935"
+                onClick={() => handleUpdateOrAdd()}
+              >
+                {handleButtonText()}
               </Button>
-              <Button w={24} bg="lightblue" textColor="#353935">
+              <Button
+                w={24}
+                bg="lightblue"
+                textColor="#353935"
+                isDisabled={handleDisableButton()}
+                onClick={() => handleDelete()}
+              >
                 DELETE
               </Button>
             </Flex>

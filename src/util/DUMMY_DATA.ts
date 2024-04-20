@@ -2,9 +2,8 @@ import { Exercise } from "../interfaces/exercise.interface";
 import { Routine } from "../interfaces/routine.interface";
 import { Workout } from "../interfaces/workout.interface";
 import { Series } from "../interfaces/series.interface";
-import { ExerciseInstance } from "../interfaces/exerciseInstance.interface";
 import { User } from "../interfaces/user.interface";
-import { passwords } from "../../DUMY_PASSWORDS";
+import { passwords } from "./DUMY_PASSWORDS";
 
 export const exercises: Exercise[] = [
   { name: "Barbell bench press", categories: ["upper body", "chest"] },

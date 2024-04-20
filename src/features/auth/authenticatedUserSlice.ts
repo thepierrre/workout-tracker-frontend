@@ -5,20 +5,20 @@ import { User } from "../../interfaces/user.interface";
 import { users } from "../../util/DUMMY_DATA";
 
 export interface authenticatedUserState {
-  authenticatedUser: User;
+  user: User;
 }
 
 const initialState: authenticatedUserState = {
-  authenticatedUser: users[0],
+  user: users[0],
 };
 
 const authenticatedUserSlice = createSlice({
-  name: "authenticatedUser",
+  name: "user",
   initialState,
   reducers: {
-    setAuthenticatedUser(state, action: PayloadAction<User>) {
+    setUser(state, action: PayloadAction<User>) {
       const userToSet = action.payload;
-      state.authenticatedUser = userToSet;
+      state.user = userToSet;
     },
   },
 });
