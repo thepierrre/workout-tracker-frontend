@@ -39,14 +39,14 @@ const series7: Series = { id: "series-id7", reps: 9, weight: 30 };
 const series8: Series = { id: "series-id8", reps: 9, weight: 60 };
 const series9: Series = { id: "series-id9", reps: 8, weight: 60 };
 
-const date1 = new Date(2024, 3, 15).toString();
+const date1 = new Date(2024, 4, 21).toString();
 const date2 = new Date(2024, 4, 1).toString();
 const date3 = new Date(2024, 4, 14).toString();
 
 export const workouts: Workout[] = [
   {
     id: "workout-id1",
-    creationDate: date1,
+    creationDate: new Date().toString(),
     routineName: "Full Body 1",
     exerciseInstances: [
       {

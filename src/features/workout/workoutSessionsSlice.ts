@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 import { Workout } from "../../interfaces/workout.interface";
+import { Series } from "../../interfaces/series.interface";
 import { workouts } from "../../util/DUMMY_DATA";
 
 export interface WorkoutSessionsState {
@@ -12,6 +13,12 @@ const initialState: WorkoutSessionsState = {
   workouts: workouts,
 };
 
+interface SeriesPayload {
+  workoutId: string;
+  exerciseInstanceId: string;
+  series: Series;
+}
+
 const workoutSessionsSlice = createSlice({
   name: "workoutSessions",
   initialState,
@@ -20,8 +27,55 @@ const workoutSessionsSlice = createSlice({
       const workoutToAdd = action.payload;
       state.workouts.push(workoutToAdd);
     },
+    addSeriesToWorkout(state, action: PayloadAction<SeriesPayload>) {
+      const { workoutId, exerciseInstanceId, series } = action.payload;
+      const workout = state.workouts.find((wrk) => wrk.id === workoutId);
+      if (workout) {
+        const exerciseInstance = workout.exerciseInstances.find(
+          (exInstance) => exInstance.id === exerciseInstanceId
+        );
+        if (exerciseInstance) {
+          exerciseInstance.series.push(series);
+        }
+      }
+    },
+    updateSeriesInWorkout(state, action: PayloadAction<SeriesPayload>) {
+      const { workoutId, exerciseInstanceId, series } = action.payload;
+      const workout = state.workouts.find((wrk) => wrk.id === workoutId);
+      if (workout) {
+        const exerciseInstance = workout.exerciseInstances.find(
+          (exInstance) => exInstance.id === exerciseInstanceId
+        );
+        if (exerciseInstance) {
+          const i = exerciseInstance.series.findIndex(
+            (s) => s.id === series.id
+          );
+          exerciseInstance.series.splice(i, 1, series);
+        }
+      }
+    },
+    deleteSeriesFromWorkout(state, action: PayloadAction<SeriesPayload>) {
+      const { workoutId, exerciseInstanceId, series } = action.payload;
+      const workout = state.workouts.find((wrk) => wrk.id === workoutId);
+      if (workout) {
+        const exerciseInstance = workout.exerciseInstances.find(
+          (exInstance) => exInstance.id === exerciseInstanceId
+        );
+        if (exerciseInstance) {
+          const i = exerciseInstance.series.findIndex(
+            (s) => s.id === series.id
+          );
+          exerciseInstance.series.splice(i, 1);
+        }
+      }
+    },
   },
 });
 
-export const { addWorkout } = workoutSessionsSlice.actions;
+export const {
+  addWorkout,
+  addSeriesToWorkout,
+  updateSeriesInWorkout,
+  deleteSeriesFromWorkout,
+} = workoutSessionsSlice.actions;
 export default workoutSessionsSlice.reducer;

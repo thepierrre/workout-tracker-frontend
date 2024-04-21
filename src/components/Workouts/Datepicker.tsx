@@ -10,6 +10,7 @@ const Datepicker = () => {
   const dispatch = useDispatch();
 
   const today = new Date();
+
   const currentDayOfWeek = today.getDay();
   const mondayOffset = (currentDayOfWeek + 6) % 7;
   const displayedDaysOfWeek = Array.from({ length: 7 }, (_, index) => {
@@ -20,9 +21,8 @@ const Datepicker = () => {
 
   const handleActiveDay = (index: number) => {
     const selectedDate = displayedDaysOfWeek[index];
-    const formattedDate = selectedDate.toString();
+    const formattedDate = format(selectedDate, "dd/MM/yyyy");
     dispatch(setDay(formattedDate));
-    console.log(displayedDaysOfWeek[index]);
   };
 
   return (
@@ -37,30 +37,18 @@ const Datepicker = () => {
         >
           <Text
             fontSize="xs"
-            fontWeight={chosenDay === day.toString() ? "bold" : ""}
+            fontWeight={chosenDay === format(day, "dd/MM/yyyy") ? "bold" : ""}
           >
-            {day
-              .toLocaleDateString("en-us", {
-                weekday: "short",
-              })
-              .toUpperCase()}
+            {format(new Date(day), "EEE").toUpperCase()}
           </Text>
           <Box
             paddingInline={1}
             borderRadius={7}
-            bg={
-              format(chosenDay, "yyyy-MM-dd") === format(day, "yyyy-MM-dd")
-                ? "lightblue"
-                : ""
-            }
+            bg={chosenDay === format(day, "dd/MM/yyyy") ? "lightblue" : ""}
           >
             <Text
               fontSize="xl"
-              color={
-                format(chosenDay, "yyyy-MM-dd") === format(day, "yyyy-MM-dd")
-                  ? "#353935"
-                  : ""
-              }
+              color={chosenDay === format(day, "dd/MM/yyyy") ? "#353935" : ""}
             >
               {day.getDate()}
             </Text>

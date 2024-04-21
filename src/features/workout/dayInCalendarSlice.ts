@@ -1,12 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { format } from "date-fns";
 
 export interface DayInCalendarState {
   day: string;
 }
 
 const initialState: DayInCalendarState = {
-  day: new Date().toDateString(),
+  day: format(new Date(), "dd/MM/yyyy"),
 };
 
 const dayInCalendarSlice = createSlice({

@@ -5,6 +5,11 @@ import { RootState } from "../../app/store";
 import { Flex, Heading, Text, Button, Card, CardBody } from "@chakra-ui/react";
 import { ExerciseInstance } from "../../interfaces/exerciseInstance.interface";
 import { Series } from "../../interfaces/series.interface";
+import {
+  addSeriesToWorkout,
+  updateSeriesInWorkout,
+  deleteSeriesFromWorkout,
+} from "../../features/workout/workoutSessionsSlice";
 
 const ExerciseInstancePage = () => {
   const [reps, setReps] = useState<number>(9);
@@ -21,7 +26,7 @@ const ExerciseInstancePage = () => {
   const workoutSessions = useSelector(
     (state: RootState) => state.workoutSessions
   );
-  const usr = useSelector((state: RootState) => state.authenticatedUser);
+  // const usr = useSelector((state: RootState) => state.authenticatedUser);
 
   const dispatch = useDispatch();
 
@@ -35,6 +40,17 @@ const ExerciseInstancePage = () => {
       break;
     }
   }
+
+  const generateRandomString = (length: number) => {
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopq654kgdkfg545l4ktrklglrt454554l54krfkl454rstuvwxyz0123456789";
+    let result = "";
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      result += characters[randomIndex];
+    }
+    return result;
+  };
 
   const handleRepsAndWeight = (type: string, action: string) => {
     if (type === "reps") {
@@ -59,19 +75,77 @@ const ExerciseInstancePage = () => {
   };
 
   const handleButtonText = () => {
-    return activeSeries ? "UPDATE" : "ADD";
+    return activeSeries ? "UPDATE" : "ADD NEW";
   };
 
   const handleDisableButton = () => {
     return activeSeries ? false : true;
   };
 
-  const handleUpdateOrAdd = () => {
-    console.log(activeSeries);
+  const handleAdd = () => {
+    if (activeSeries) {
+      return;
+    }
+    const seriesToAdd: Series = {
+      id: generateRandomString(5),
+      reps,
+      weight,
+    };
+
+    exerciseInstanceId &&
+      dispatch(
+        addSeriesToWorkout({
+          workoutId: wrk.id,
+          exerciseInstanceId: exerciseInstanceId,
+          series: seriesToAdd,
+        })
+      );
+  };
+
+  const handleUpdate = () => {
+    if (activeSeries) {
+      const seriesToUpdate: Series = {
+        id: activeSeries.id,
+        reps,
+        weight,
+      };
+
+      exerciseInstanceId &&
+        dispatch(
+          updateSeriesInWorkout({
+            workoutId: wrk.id,
+            exerciseInstanceId: exerciseInstanceId,
+            series: seriesToUpdate,
+          })
+        );
+    }
+  };
+
+  const handleAppOrUpdate = () => {
+    if (activeSeries) {
+      handleUpdate();
+    } else {
+      handleAdd();
+    }
   };
 
   const handleDelete = () => {
-    console.log("deleting...");
+    if (activeSeries) {
+      const seriesToUpdate: Series = {
+        id: activeSeries.id,
+        reps,
+        weight,
+      };
+
+      exerciseInstanceId &&
+        dispatch(
+          deleteSeriesFromWorkout({
+            workoutId: wrk.id,
+            exerciseInstanceId: exerciseInstanceId,
+            series: seriesToUpdate,
+          })
+        );
+    }
   };
 
   return (
@@ -172,7 +246,7 @@ const ExerciseInstancePage = () => {
                 w={24}
                 bg="lightblue"
                 textColor="#353935"
-                onClick={() => handleUpdateOrAdd()}
+                onClick={() => handleAppOrUpdate()}
               >
                 {handleButtonText()}
               </Button>
