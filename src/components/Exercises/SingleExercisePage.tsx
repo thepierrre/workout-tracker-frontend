@@ -1,5 +1,11 @@
+import { Text } from "@chakra-ui/react";
+
 const SingleExercisePage = () => {
-  return <></>;
+  return (
+    <>
+      <Text>Hello</Text>
+    </>
+  );
 };
 
 export default SingleExercisePage;

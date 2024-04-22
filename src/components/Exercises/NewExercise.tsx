@@ -1,12 +1,14 @@
+import { generateRandomString } from "../../util/DUMMY_DATA";
 import { useForm, Resolver } from "react-hook-form";
-
-import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../../app/store";
+import { Exercise } from "../../interfaces/exercise.interface";
+import { addExercise } from "../../features/exercises/exercisesSlice";
 
 import {
   Flex,
   Button,
   Heading,
-  Text,
   FormControl,
   Input,
   FormErrorMessage,
@@ -14,7 +16,7 @@ import {
 
 type FormValues = {
   name: string;
-  category: string;
+  categories: string[];
 };
 
 const resolver: Resolver<FormValues> = async (values) => {
@@ -38,8 +40,31 @@ const NewExercise = () => {
     formState: { errors },
   } = useForm<FormValues>({ resolver });
 
+  const usr = useSelector((state: RootState) => state.authenticatedUser.user);
+  const dispatch = useDispatch();
+
+  const convertFormDataToExercise = (formData: FormValues): Exercise => {
+    return {
+      id: generateRandomString(5),
+      name: formData.name,
+      categories: formData.categories,
+      userId: usr.id,
+    };
+  };
+
   const onSubmit = (data: FormValues) => {
-    console.log(data);
+    const notEmptyCategories = data.categories.filter(
+      (category) => category.trim() !== ""
+    );
+    const updatedData = {
+      ...data,
+      categories: notEmptyCategories,
+    };
+
+    console.log(updatedData);
+
+    const exerciseToAdd = convertFormDataToExercise(updatedData);
+    dispatch(addExercise(exerciseToAdd));
   };
 
   return (
@@ -65,27 +90,38 @@ const NewExercise = () => {
             {errors.name && errors.name.message}
           </FormErrorMessage>
         </FormControl>
-        <Input
-          {...register("category")}
-          mt={4}
+        <Heading fontSize="lg" textAlign="center" mt={4} mb={4}>
+          Categories
+        </Heading>
+        <Flex direction="column" gap={2}>
+          {Array(3)
+            .fill("")
+            .map((_, index) => (
+              <Input
+                key={index}
+                {...register(`categories.${index}`)}
+                w="95vw"
+                bg="#404040"
+                borderColor="transparent"
+                _focusVisible={{
+                  borderWidth: "1px",
+                  borderColor: "lightblue",
+                }}
+                _placeholder={{ color: "#B3B3B3" }}
+                placeholder={`Category ${index + 1} (optional)`}
+              />
+            ))}
+        </Flex>
+        <Button
           w="95vw"
-          bg="#404040"
-          borderColor="transparent"
-          _focusVisible={{
-            borderWidth: "1px",
-            borderColor: "lightblue",
-          }}
-          _placeholder={{ color: "#B3B3B3" }}
-          placeholder="Category"
-        />
+          bg="lightblue"
+          textColor="#353935"
+          type="submit"
+          mt={4}
+        >
+          Create
+        </Button>
       </form>
-      <Flex justify="center" gap={2}>
-        <AddCircleIcon />
-        <Text>Category</Text>
-      </Flex>
-      <Button w="95vw" bg="lightblue" textColor="#353935" type="submit">
-        Create
-      </Button>
     </Flex>
   );
 };

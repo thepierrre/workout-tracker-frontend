@@ -5,6 +5,7 @@ import { RootState } from "../../app/store";
 import { Flex, Heading, Text, Button, Card, CardBody } from "@chakra-ui/react";
 import { ExerciseInstance } from "../../interfaces/exerciseInstance.interface";
 import { Series } from "../../interfaces/series.interface";
+import { generateRandomString } from "../../util/DUMMY_DATA";
 import {
   addSeriesToWorkout,
   updateSeriesInWorkout,
@@ -26,7 +27,6 @@ const ExerciseInstancePage = () => {
   const workoutSessions = useSelector(
     (state: RootState) => state.workoutSessions
   );
-  // const usr = useSelector((state: RootState) => state.authenticatedUser);
 
   const dispatch = useDispatch();
 
@@ -40,17 +40,6 @@ const ExerciseInstancePage = () => {
       break;
     }
   }
-
-  const generateRandomString = (length: number) => {
-    const characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopq654kgdkfg545l4ktrklglrt454554l54krfkl454rstuvwxyz0123456789";
-    let result = "";
-    for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * characters.length);
-      result += characters[randomIndex];
-    }
-    return result;
-  };
 
   const handleRepsAndWeight = (type: string, action: string) => {
     if (type === "reps") {

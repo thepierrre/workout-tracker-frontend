@@ -1,10 +1,16 @@
-import NewExercise from "../components/exercises/NewExercise";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../app/store";
 
-import { exercises } from "../util/DUMMY_DATA";
+import NewExercise from "../components/exercises/NewExercise";
 
 import { Flex, Text, Card, CardBody } from "@chakra-ui/react";
 
 const ExercisesPage = () => {
+  const exercises = useSelector(
+    (state: RootState) => state.exercises.exercises
+  );
+
   return (
     <Flex
       align="center"
@@ -17,18 +23,20 @@ const ExercisesPage = () => {
     >
       <Flex direction="column" gap={2} w="100%">
         {exercises.map((exercise, index) => (
-          <Card key={index} bg="#404040">
-            <CardBody>
-              <Flex direction="column" gap={1} textColor="white">
-                <Flex direction="column" gap={1}>
-                  <Text fontWeight="bold">{exercise.name}</Text>
-                  <Text fontWeight="bold" fontSize="xs" color="#E0E0E0">
-                    {exercise.categories.join(" | ").toUpperCase()}
-                  </Text>
+          <Link key={exercise.id} to={`/exercises/exercise`}>
+            <Card key={index} bg="#404040">
+              <CardBody>
+                <Flex direction="column" gap={1} textColor="white">
+                  <Flex direction="column" gap={1}>
+                    <Text fontWeight="bold">{exercise.name}</Text>
+                    <Text fontWeight="bold" fontSize="xs" color="#E0E0E0">
+                      {exercise.categories.join(" | ").toUpperCase()}
+                    </Text>
+                  </Flex>
                 </Flex>
-              </Flex>
-            </CardBody>
-          </Card>
+              </CardBody>
+            </Card>
+          </Link>
         ))}
       </Flex>
       <NewExercise />

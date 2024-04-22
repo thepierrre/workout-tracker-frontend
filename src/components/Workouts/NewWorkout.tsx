@@ -37,7 +37,7 @@ const NewWorkout = () => {
         onClick={onOpen}
         textColor="#353935"
         bg="lightblue"
-        w="90vw"
+        w="95vw"
       >
         New workout
       </Button>

@@ -3,10 +3,11 @@ import NewWorkout from "../components/workouts/NewWorkout";
 import WorkoutSession from "../components/workouts/WorkoutSession";
 import { RootState } from "../app/store";
 import { useSelector, useDispatch } from "react-redux";
+import { format } from "date-fns";
 
 // import { workouts } from "../util/DUMMY_DATA";
 
-import { Flex } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 
 const WorkoutsPage = () => {
   const workouts = useSelector(
@@ -15,8 +16,9 @@ const WorkoutsPage = () => {
 
   const chosenDay = useSelector((state: RootState) => state.chosenDay.day);
 
-  // console.log(workouts[0].creationDate);
-  // console.log(chosenDay);
+  const filteredWorkouts = workouts.filter(
+    (wrk) => format(wrk.creationDate, "dd/MM/yyyy") === chosenDay
+  );
 
   return (
     <Flex
@@ -30,9 +32,13 @@ const WorkoutsPage = () => {
     >
       <Datepicker />
       <NewWorkout />
-      {workouts.map((workout) => (
-        <WorkoutSession key={workout.id} workout={workout} />
-      ))}
+      {filteredWorkouts?.length > 0 ? (
+        filteredWorkouts.map((workout) => (
+          <WorkoutSession key={workout.id} workout={workout} />
+        ))
+      ) : (
+        <Text textColor="white">No workouts for this day.</Text>
+      )}
     </Flex>
   );
 };

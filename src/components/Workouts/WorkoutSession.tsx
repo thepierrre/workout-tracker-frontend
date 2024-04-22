@@ -24,7 +24,7 @@ const WorkoutSession: React.FC<WorkoutProps> = ({ workout: wrk }) => {
           {wrk.exerciseInstances.map((exerciseInstance, index) => (
             <Link
               key={exerciseInstance.id}
-              to={`/workouts/exercise/${exerciseInstance.id}`}
+              to={`/workouts/exercise-instance/${exerciseInstance.id}`}
               state={{ workout: wrk }}
             >
               <Card bg="#404040" w="95vw" key={index}>

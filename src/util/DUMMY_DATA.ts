@@ -6,16 +6,48 @@ import { User } from "../interfaces/user.interface";
 import { passwords } from "./DUMY_PASSWORDS";
 
 export const exercises: Exercise[] = [
-  { name: "Barbell bench press", categories: ["upper body", "chest"] },
-  { name: "Barbell rows", categories: ["upper body", "back"] },
-  { name: "Dumbbell lateral raise", categories: ["upper body", "shoulders"] },
-  { name: "Barbell squats", categories: ["lower body", "glutes", "quads"] },
   {
+    id: "exercise-id1",
+    name: "Barbell bench press",
+    categories: ["upper body", "chest"],
+    userId: "user-id1",
+  },
+  {
+    id: "exercise-id2",
+    name: "Barbell rows",
+    categories: ["upper body", "back"],
+    userId: "user-id1",
+  },
+  {
+    id: "exercise-id3",
+    name: "Dumbbell lateral raise",
+    categories: ["upper body", "shoulders"],
+    userId: "user-id1",
+  },
+  {
+    id: "exercise-id4",
+    name: "Barbell squats",
+    categories: ["lower body", "glutes", "quads"],
+    userId: "user-id1",
+  },
+  {
+    id: "exercise-id5",
     name: "Barbell deadlifts",
     categories: ["lower body", "glutes", "hamstrings", "lower back"],
+    userId: "user-id1",
   },
-  { name: "Pulldowns", categories: ["upper body", "back"] },
-  { name: "Abs candles", categories: ["upper body", "abs"] },
+  {
+    id: "exercise-id6",
+    name: "Pulldowns",
+    categories: ["upper body", "back"],
+    userId: "user-id1",
+  },
+  {
+    id: "exercise-id7",
+    name: "Abs candles",
+    categories: ["upper body", "abs"],
+    userId: "user-id1",
+  },
 ];
 
 export const routines: Routine[] = [
@@ -42,6 +74,17 @@ const series9: Series = { id: "series-id9", reps: 8, weight: 60 };
 const date1 = new Date(2024, 4, 21).toString();
 const date2 = new Date(2024, 4, 1).toString();
 const date3 = new Date(2024, 4, 14).toString();
+
+export const generateRandomString = (length: number) => {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopq654kgdkfg545l4ktrklglrt454554l54krfkl454rstuvwxyz0123456789";
+  let result = "";
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    result += characters[randomIndex];
+  }
+  return result;
+};
 
 export const workouts: Workout[] = [
   {
