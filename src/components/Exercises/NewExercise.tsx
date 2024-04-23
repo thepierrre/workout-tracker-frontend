@@ -4,6 +4,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../app/store";
 import { Exercise } from "../../interfaces/exercise.interface";
 import { addExercise } from "../../features/exercises/exercisesSlice";
+import { useState } from "react";
+
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 import {
   Flex,
@@ -12,6 +15,7 @@ import {
   FormControl,
   Input,
   FormErrorMessage,
+  Text,
 } from "@chakra-ui/react";
 
 type FormValues = {
@@ -67,6 +71,44 @@ const NewExercise = () => {
     dispatch(addExercise(exerciseToAdd));
   };
 
+  const inputs = [
+    <Input
+      key={0}
+      {...register(`categories.${0}`)}
+      w="95vw"
+      bg="#404040"
+      borderColor="transparent"
+      _focusVisible={{
+        borderWidth: "1px",
+        borderColor: "lightblue",
+      }}
+      _placeholder={{ color: "#B3B3B3" }}
+      placeholder={`Category ${1} (optional)`}
+    />,
+  ];
+
+  const [categoryInputs, setCategoryInputs] =
+    useState<React.ReactElement[]>(inputs);
+
+  const handleAddCategoryInput = () => {
+    const input = (
+      <Input
+        key={categoryInputs.length}
+        {...register(`categories.${categoryInputs.length}`)}
+        w="95vw"
+        bg="#404040"
+        borderColor="transparent"
+        _focusVisible={{
+          borderWidth: "1px",
+          borderColor: "lightblue",
+        }}
+        _placeholder={{ color: "#B3B3B3" }}
+        placeholder={`Category ${categoryInputs.length + 1} (optional)`}
+      />
+    );
+    setCategoryInputs((prevInputs) => [...prevInputs, input]);
+  };
+
   return (
     <Flex direction="column" gap={4}>
       <Heading fontSize="lg" textAlign="center">
@@ -94,23 +136,16 @@ const NewExercise = () => {
           Categories
         </Heading>
         <Flex direction="column" gap={2}>
-          {Array(3)
-            .fill("")
-            .map((_, index) => (
-              <Input
-                key={index}
-                {...register(`categories.${index}`)}
-                w="95vw"
-                bg="#404040"
-                borderColor="transparent"
-                _focusVisible={{
-                  borderWidth: "1px",
-                  borderColor: "lightblue",
-                }}
-                _placeholder={{ color: "#B3B3B3" }}
-                placeholder={`Category ${index + 1} (optional)`}
-              />
-            ))}
+          {categoryInputs.map((input) => input)}
+        </Flex>
+        <Flex
+          justify="center"
+          gap={2}
+          onClick={() => handleAddCategoryInput()}
+          mt={4}
+        >
+          <AddCircleIcon />
+          <Text>Category</Text>
         </Flex>
         <Button
           w="95vw"
