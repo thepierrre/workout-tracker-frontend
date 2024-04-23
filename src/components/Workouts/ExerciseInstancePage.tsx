@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../app/store";
 import { Flex, Heading, Text, Button, Card, CardBody } from "@chakra-ui/react";
-import { ExerciseInstance } from "../../interfaces/exerciseInstance.interface";
 import { Series } from "../../interfaces/series.interface";
 import { generateRandomString } from "../../util/DUMMY_DATA";
 import {
@@ -19,27 +18,20 @@ const ExerciseInstancePage = () => {
     undefined
   );
 
-  const { exerciseInstanceId } = useParams();
-
-  const { state } = useLocation();
-  const wrk = state.workout;
+  const { workoutId, exerciseInstanceId } = useParams();
 
   const workoutSessions = useSelector(
     (state: RootState) => state.workoutSessions
   );
 
+  const wrk = workoutSessions.workouts.find((w) => w.id === workoutId);
+  const exerciseInstance = wrk?.exerciseInstances.find(
+    (e) => e.id === exerciseInstanceId
+  );
+
+  console.log(exerciseInstance);
+
   const dispatch = useDispatch();
-
-  let exerciseInstance: ExerciseInstance | undefined;
-
-  for (const workout of workoutSessions.workouts) {
-    exerciseInstance = workout.exerciseInstances.find(
-      (instance) => instance.id === exerciseInstanceId
-    );
-    if (exerciseInstance) {
-      break;
-    }
-  }
 
   const handleRepsAndWeight = (type: string, action: string) => {
     if (type === "reps") {
@@ -81,7 +73,8 @@ const ExerciseInstancePage = () => {
       weight,
     };
 
-    exerciseInstanceId &&
+    wrk &&
+      exerciseInstanceId &&
       dispatch(
         addSeriesToWorkout({
           workoutId: wrk.id,
@@ -99,7 +92,8 @@ const ExerciseInstancePage = () => {
         weight,
       };
 
-      exerciseInstanceId &&
+      wrk &&
+        exerciseInstanceId &&
         dispatch(
           updateSeriesInWorkout({
             workoutId: wrk.id,
@@ -126,7 +120,8 @@ const ExerciseInstancePage = () => {
         weight,
       };
 
-      exerciseInstanceId &&
+      wrk &&
+        exerciseInstanceId &&
         dispatch(
           deleteSeriesFromWorkout({
             workoutId: wrk.id,
