@@ -27,6 +27,12 @@ const workoutSessionsSlice = createSlice({
       const workoutToAdd = action.payload;
       state.workouts.unshift(workoutToAdd);
     },
+    removeWorkout(state, action: PayloadAction<Workout>) {
+      const workoutToRemove = action.payload;
+      state.workouts = state.workouts.filter(
+        (workout) => workout.id !== workoutToRemove.id
+      );
+    },
     addSeriesToWorkout(state, action: PayloadAction<SeriesPayload>) {
       const { workoutId, exerciseInstanceId, series } = action.payload;
       const workout = state.workouts.find((wrk) => wrk.id === workoutId);
@@ -77,5 +83,6 @@ export const {
   addSeriesToWorkout,
   updateSeriesInWorkout,
   deleteSeriesFromWorkout,
+  removeWorkout,
 } = workoutSessionsSlice.actions;
 export default workoutSessionsSlice.reducer;

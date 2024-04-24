@@ -5,15 +5,16 @@ import chosenDayReducer from "../features/workout/dayInCalendarSlice";
 import activeExerciseInstanceReducer from "../features/workout/activeExerciseInstanceSlice";
 import authenticatedUserReducer from "../features/auth/authenticatedUserSlice";
 import exercisesReducer from "../features/exercises/exercisesSlice";
+import routinesReducer from "../features/routines/routinesSlice";
 
 export const store = configureStore({
   reducer: {
-    // currentWorkout: currentWorkoutReducer,
     workoutSessions: workoutSessionsReducer,
     chosenDay: chosenDayReducer,
     activeExerciseInstance: activeExerciseInstanceReducer,
     authenticatedUser: authenticatedUserReducer,
     exercises: exercisesReducer,
+    routines: routinesReducer,
   },
 });
 

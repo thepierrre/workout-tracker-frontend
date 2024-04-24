@@ -52,7 +52,6 @@ const NewWorkout = () => {
       exerciseInstances,
     };
 
-    console.log(chosenDay);
     dispatch(addWorkout(workout));
     onClose();
   };

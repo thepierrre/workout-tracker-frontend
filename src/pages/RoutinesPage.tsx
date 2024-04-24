@@ -1,6 +1,6 @@
 import NewRoutine from "../components/routines/NewRoutine";
-
-import { routines } from "../util/DUMMY_DATA";
+import { useSelector } from "react-redux";
+import { RootState } from "../app/store";
 
 import { Link } from "react-router-dom";
 
@@ -9,6 +9,8 @@ import { Fragment } from "react/jsx-runtime";
 import { Flex, Text, Card, CardBody } from "@chakra-ui/react";
 
 const RoutinesPage = () => {
+  const routines = useSelector((state: RootState) => state.routines.routines);
+
   return (
     <Flex
       align="center"

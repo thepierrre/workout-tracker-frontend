@@ -7,6 +7,7 @@ import { addExercise } from "../../features/exercises/exercisesSlice";
 import { useState } from "react";
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 
 import {
   Flex,
@@ -14,6 +15,8 @@ import {
   Heading,
   FormControl,
   Input,
+  InputGroup,
+  InputRightElement,
   FormErrorMessage,
   Text,
 } from "@chakra-ui/react";
@@ -65,36 +68,14 @@ const NewExercise = () => {
       categories: notEmptyCategories,
     };
 
-    console.log(updatedData);
-
     const exerciseToAdd = convertFormDataToExercise(updatedData);
     dispatch(addExercise(exerciseToAdd));
   };
 
   const inputs = [
-    <Input
-      key={0}
-      {...register(`categories.${0}`)}
-      w="95vw"
-      bg="#404040"
-      borderColor="transparent"
-      _focusVisible={{
-        borderWidth: "1px",
-        borderColor: "lightblue",
-      }}
-      _placeholder={{ color: "#B3B3B3" }}
-      placeholder={`Category ${1} (optional)`}
-    />,
-  ];
-
-  const [categoryInputs, setCategoryInputs] =
-    useState<React.ReactElement[]>(inputs);
-
-  const handleAddCategoryInput = () => {
-    const input = (
+    <InputGroup key={0}>
       <Input
-        key={categoryInputs.length}
-        {...register(`categories.${categoryInputs.length}`)}
+        {...register(`categories.${0}`)}
         w="95vw"
         bg="#404040"
         borderColor="transparent"
@@ -103,10 +84,44 @@ const NewExercise = () => {
           borderColor: "lightblue",
         }}
         _placeholder={{ color: "#B3B3B3" }}
-        placeholder={`Category ${categoryInputs.length + 1} (optional)`}
+        placeholder={`Category ${1} (optional)`}
       />
+      <InputRightElement>
+        <RemoveCircleOutlineIcon />
+      </InputRightElement>
+    </InputGroup>,
+  ];
+
+  const [categoryInputs, setCategoryInputs] =
+    useState<React.ReactElement[]>(inputs);
+
+  const handleAddCategoryInput = () => {
+    const input = (
+      <InputGroup key={categoryInputs.length}>
+        <Input
+          {...register(`categories.${categoryInputs.length}`)}
+          w="95vw"
+          bg="#404040"
+          borderColor="transparent"
+          _focusVisible={{
+            borderWidth: "1px",
+            borderColor: "lightblue",
+          }}
+          _placeholder={{ color: "#B3B3B3" }}
+          placeholder={`Category ${categoryInputs.length + 1} (optional)`}
+        />
+        <InputRightElement>
+          <RemoveCircleOutlineIcon
+            onClick={() => handleRemoveCategoryInput()}
+          />
+        </InputRightElement>
+      </InputGroup>
     );
     setCategoryInputs((prevInputs) => [...prevInputs, input]);
+  };
+
+  const handleRemoveCategoryInput = () => {
+    setCategoryInputs(categoryInputs.slice(0, -1));
   };
 
   return (

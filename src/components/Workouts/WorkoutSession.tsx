@@ -1,13 +1,21 @@
 import { Link } from "react-router-dom";
 import { Workout } from "../../interfaces/workout.interface";
+import { useDispatch } from "react-redux";
+import { removeWorkout } from "../../features/workout/workoutSessionsSlice";
 
-import { Card, CardBody, Flex, Text, Heading } from "@chakra-ui/react";
+import { Card, CardBody, Flex, Text, Heading, Button } from "@chakra-ui/react";
 
 interface WorkoutProps {
   workout: Workout;
 }
 
 const WorkoutSession: React.FC<WorkoutProps> = ({ workout: wrk }) => {
+  const dispatch = useDispatch();
+  const handleRemoveWorkout = (workout: Workout) => {
+    dispatch(removeWorkout(workout));
+    console.log(workout);
+  };
+
   return (
     <>
       <Heading fontWeight="bold" fontSize="lg">
@@ -46,6 +54,13 @@ const WorkoutSession: React.FC<WorkoutProps> = ({ workout: wrk }) => {
           ))}
         </Flex>
       </Flex>
+      <Button
+        background="pink"
+        w="40vw"
+        onClick={() => handleRemoveWorkout(wrk)}
+      >
+        Delete Workout
+      </Button>
     </>
   );
 };
