@@ -25,7 +25,7 @@ const workoutSessionsSlice = createSlice({
   reducers: {
     addWorkout(state, action: PayloadAction<Workout>) {
       const workoutToAdd = action.payload;
-      state.workouts.push(workoutToAdd);
+      state.workouts.unshift(workoutToAdd);
     },
     addSeriesToWorkout(state, action: PayloadAction<SeriesPayload>) {
       const { workoutId, exerciseInstanceId, series } = action.payload;

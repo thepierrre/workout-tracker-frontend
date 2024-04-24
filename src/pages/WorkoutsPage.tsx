@@ -2,10 +2,8 @@ import Datepicker from "../components/workouts/Datepicker";
 import NewWorkout from "../components/workouts/NewWorkout";
 import WorkoutSession from "../components/workouts/WorkoutSession";
 import { RootState } from "../app/store";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { format } from "date-fns";
-
-// import { workouts } from "../util/DUMMY_DATA";
 
 import { Flex, Text } from "@chakra-ui/react";
 
@@ -19,6 +17,14 @@ const WorkoutsPage = () => {
   const filteredWorkouts = workouts.filter(
     (wrk) => format(wrk.creationDate, "dd/MM/yyyy") === chosenDay
   );
+
+  // const date1 = console.log(
+  //   format(filteredWorkouts[0].creationDate, "dd/MM/yyyy")
+  // );
+  // const date2 = console.log(chosenDay);
+  // console.log(date1 === date2);
+
+  // console.log(format(filteredWorkouts[0].creationDate, "dd/MM/yyyy"));
 
   return (
     <Flex

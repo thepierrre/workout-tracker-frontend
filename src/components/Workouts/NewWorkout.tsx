@@ -1,8 +1,14 @@
 import { useRef, Fragment } from "react";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { format } from "date-fns";
 // import { setChosenRoutine } from "../../features/workout/currentWorkoutSlice";
 
 import { Routine } from "../../interfaces/routine.interface";
+import { Workout } from "../../interfaces/workout.interface";
+import { ExerciseInstance } from "../../interfaces/exerciseInstance.interface";
+import { generateRandomString } from "../../util/DUMMY_DATA";
+import { addWorkout } from "../../features/workout/workoutSessionsSlice";
+import { RootState } from "../../app/store";
 
 import { routines } from "../../util/DUMMY_DATA";
 
@@ -18,6 +24,7 @@ import {
   Text,
   Card,
   CardBody,
+  Box,
 } from "@chakra-ui/react";
 
 const NewWorkout = () => {
@@ -25,10 +32,34 @@ const NewWorkout = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef<HTMLButtonElement>(null);
 
-  //   const handleChosenRoutine = (routine: Routine) => {
-  //     console.log(routine);
-  //     dispatch(setChosenRoutine(routine));
-  //   };
+  const chosenDay = useSelector((state: RootState) => state.chosenDay.day);
+  const [day, month, year] = chosenDay.split("/").map(Number);
+  const chosenDayAsDate = new Date(year, month - 1, day).toString();
+
+  const handleAddWorkout = (routine: Routine) => {
+    const exerciseInstances: ExerciseInstance[] = routine.exercises.map(
+      (exercise) => ({
+        id: generateRandomString(5),
+        exercise: exercise,
+        series: Array.from({ length: 3 }, () => ({
+          id: generateRandomString(5),
+          reps: 0,
+          weight: 0,
+        })),
+      })
+    );
+
+    const workout: Workout = {
+      id: generateRandomString(5),
+      creationDate: chosenDayAsDate,
+      routineName: routine.name,
+      exerciseInstances,
+    };
+
+    console.log(chosenDay);
+    dispatch(addWorkout(workout));
+    onClose();
+  };
 
   return (
     <Flex direction="column" gap={6}>
@@ -53,31 +84,25 @@ const NewWorkout = () => {
             Select a routine
           </DrawerHeader>
           <DrawerBody>
-            <Flex direction="column" gap={7}>
+            <Flex direction="column" gap={7} bg="#404040">
               {routines.map((routine, index) => (
-                <Card
-                  key={index}
-                  bg="#404040"
-                  //   onClick={() => handleChosenRoutine(routine)}
-                >
-                  <CardBody>
-                    <Flex direction="column" gap={1} textColor="white">
-                      <Flex direction="column" gap={2}>
-                        <Text fontWeight="bold">{routine.name}</Text>
-                        <Text fontWeight="bold" fontSize="xs" color="#E0E0E0">
-                          {routine.exercises.length} EXERCISES
-                        </Text>
-                      </Flex>
-                      <Text fontSize="sm" color="#E0E0E0">
-                        {routine.exercises.map((exercise, index) => (
-                          <Fragment key={index}>
-                            {index > 0 && " | "} {exercise.name}
-                          </Fragment>
-                        ))}
+                <Box key={index} onClick={() => handleAddWorkout(routine)}>
+                  <Flex direction="column" gap={1} textColor="white">
+                    <Flex direction="column" gap={2}>
+                      <Text fontWeight="bold">{routine.name}</Text>
+                      <Text fontWeight="bold" fontSize="xs" color="#E0E0E0">
+                        {routine.exercises.length} EXERCISES
                       </Text>
                     </Flex>
-                  </CardBody>
-                </Card>
+                    <Text fontSize="sm" color="#E0E0E0">
+                      {routine.exercises.map((exercise, index) => (
+                        <Fragment key={index}>
+                          {index > 0 && " | "} {exercise.name}
+                        </Fragment>
+                      ))}
+                    </Text>
+                  </Flex>
+                </Box>
               ))}
             </Flex>
           </DrawerBody>
