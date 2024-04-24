@@ -18,14 +18,6 @@ const WorkoutsPage = () => {
     (wrk) => format(wrk.creationDate, "dd/MM/yyyy") === chosenDay
   );
 
-  // const date1 = console.log(
-  //   format(filteredWorkouts[0].creationDate, "dd/MM/yyyy")
-  // );
-  // const date2 = console.log(chosenDay);
-  // console.log(date1 === date2);
-
-  // console.log(format(filteredWorkouts[0].creationDate, "dd/MM/yyyy"));
-
   return (
     <Flex
       align="center"

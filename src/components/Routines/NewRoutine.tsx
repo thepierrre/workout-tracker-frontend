@@ -1,17 +1,10 @@
-import { useState, useRef } from "react";
 import { useForm, Resolver } from "react-hook-form";
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 import {
   Flex,
-  useDisclosure,
   Button,
-  Drawer,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerHeader,
-  DrawerBody,
   Text,
   FormControl,
   Input,
@@ -39,9 +32,6 @@ const resolver: Resolver<FormValues> = async (values) => {
 };
 
 const NewRoutine = () => {
-  //   const { isOpen, onOpen, onClose } = useDisclosure();
-  //   const btnRef = useRef<HTMLButtonElement>(null);
-
   const {
     register,
     handleSubmit,

@@ -5,9 +5,6 @@ import { routines } from "../util/DUMMY_DATA";
 import { Fragment } from "react/jsx-runtime";
 
 import { Flex, Text, Card, CardBody } from "@chakra-ui/react";
-import { PlusSquareIcon } from "@chakra-ui/icons";
-
-const numOfExercises = routines.length;
 
 const RoutinesPage = () => {
   return (

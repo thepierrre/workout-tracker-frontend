@@ -8,12 +8,6 @@ interface WorkoutProps {
 }
 
 const WorkoutSession: React.FC<WorkoutProps> = ({ workout: wrk }) => {
-  // const { routineName, exerciseInstances } = useSelector(
-  //   (state: RootState) => state.currentWorkout
-  // );
-
-  // console.log(wrk);
-
   return (
     <>
       <Heading fontWeight="bold" fontSize="lg">

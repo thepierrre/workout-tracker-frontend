@@ -1,7 +1,5 @@
 import { useRef, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { format } from "date-fns";
-// import { setChosenRoutine } from "../../features/workout/currentWorkoutSlice";
 
 import { Routine } from "../../interfaces/routine.interface";
 import { Workout } from "../../interfaces/workout.interface";
@@ -22,8 +20,6 @@ import {
   DrawerHeader,
   DrawerBody,
   Text,
-  Card,
-  CardBody,
   Box,
 } from "@chakra-ui/react";
 

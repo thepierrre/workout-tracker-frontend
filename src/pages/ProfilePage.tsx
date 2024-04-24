@@ -10,11 +10,7 @@ const ProfilePage = () => {
       gap={7}
       padding={2}
       marginTop={5}
-    >
-      {/* <Text fontSize="xl" w="100%" textAlign="center" p={3}>
-        Profile
-      </Text> */}
-    </Flex>
+    ></Flex>
   );
 };
 
