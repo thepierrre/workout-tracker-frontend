@@ -9,6 +9,7 @@ import ExercisesPage from "./pages/ExercisesPage.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
 import SingleExercisePage from "./components/workouts/ExerciseInstancePage.tsx";
 import ExerciseInstancePage from "./components/workouts/ExerciseInstancePage.tsx";
+import SingleRoutinePage from "./components/routines/SingleRoutinePage.tsx";
 import { store } from "./app/store.ts";
 import { Provider } from "react-redux";
 
@@ -27,7 +28,13 @@ const router = createBrowserRouter([
           { path: "*", element: <WorkoutsPage /> },
         ],
       },
-      { path: "routines", element: <RoutinesPage /> },
+      {
+        path: "routines/*",
+        children: [
+          { path: ":routineId", element: <SingleRoutinePage /> },
+          { path: "*", element: <RoutinesPage /> },
+        ],
+      },
       {
         path: "exercises/*",
         children: [

@@ -52,10 +52,12 @@ export const exercises: Exercise[] = [
 
 export const routines: Routine[] = [
   {
+    id: "routine-id1",
     name: "Full Body 1",
     exercises: [exercises[0], exercises[1], exercises[2]],
   },
   {
+    id: "routine-id2",
     name: "Full Body 2",
     exercises: [exercises[3], exercises[4], exercises[5], exercises[6]],
   },

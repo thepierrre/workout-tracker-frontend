@@ -2,6 +2,8 @@ import NewRoutine from "../components/routines/NewRoutine";
 
 import { routines } from "../util/DUMMY_DATA";
 
+import { Link } from "react-router-dom";
+
 import { Fragment } from "react/jsx-runtime";
 
 import { Flex, Text, Card, CardBody } from "@chakra-ui/react";
@@ -19,25 +21,27 @@ const RoutinesPage = () => {
     >
       <Flex direction="column" gap={2} w="100%">
         {routines.map((routine, index) => (
-          <Card key={index} bg="#404040">
-            <CardBody>
-              <Flex direction="column" gap={1} textColor="white">
-                <Flex direction="column" gap={2}>
-                  <Text fontWeight="bold">{routine.name}</Text>
-                  <Text fontWeight="bold" fontSize="xs" color="#E0E0E0">
-                    {routine.exercises.length} EXERCISES
+          <Link to={`/routines/${routine.id}`} key={routine.id}>
+            <Card key={index} bg="#404040">
+              <CardBody>
+                <Flex direction="column" gap={1} textColor="white">
+                  <Flex direction="column" gap={2}>
+                    <Text fontWeight="bold">{routine.name}</Text>
+                    <Text fontWeight="bold" fontSize="xs" color="#E0E0E0">
+                      {routine.exercises.length} EXERCISES
+                    </Text>
+                  </Flex>
+                  <Text fontSize="sm" color="#E0E0E0">
+                    {routine.exercises.map((exercise, index) => (
+                      <Fragment key={index}>
+                        {index > 0 && " | "} {exercise.name}
+                      </Fragment>
+                    ))}
                   </Text>
                 </Flex>
-                <Text fontSize="sm" color="#E0E0E0">
-                  {routine.exercises.map((exercise, index) => (
-                    <Fragment key={index}>
-                      {index > 0 && " | "} {exercise.name}
-                    </Fragment>
-                  ))}
-                </Text>
-              </Flex>
-            </CardBody>
-          </Card>
+              </CardBody>
+            </Card>
+          </Link>
         ))}
       </Flex>
       <NewRoutine />
