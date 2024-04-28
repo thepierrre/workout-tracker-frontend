@@ -146,8 +146,8 @@ const SingleExercisePage = () => {
                     // onChange={() => handleCheck(exercise)}
                     ></Checkbox>
                     <Text textColor="white">
-                      {category.charAt(0).toLocaleUpperCase() +
-                        category.slice(1)}
+                      {category.name.charAt(0).toLocaleUpperCase() +
+                        category.name.slice(1)}
                     </Text>
                   </Flex>
                 </CardBody>

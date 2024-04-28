@@ -61,7 +61,7 @@ const NewExercise = () => {
     return {
       id: generateRandomString(5),
       name: formData.name,
-      categories: formData.categories,
+      categories: selectedCategories,
       userId: usr.id,
     };
   };
@@ -131,14 +131,15 @@ const NewExercise = () => {
     setCategoryInputs(categoryInputs.slice(0, -1));
   };
 
-  const handleCheck = (exercise: Exercise) => {
-    if (selectedCategories.includes(exercise)) {
-      setSelectedCategories((exercises: any) =>
-        exercises.filter((ex: any) => ex.id !== exercise.id)
+  const handleCheck = (category: Category) => {
+    if (selectedCategories.includes(category)) {
+      setSelectedCategories((prevSelectedCategories) =>
+        prevSelectedCategories.filter((cat) => cat.id !== category.id)
       );
     } else {
-      setSelectedCategories([...selectedCategories, exercise]);
+      setSelectedCategories([...selectedCategories, category]);
     }
+    console.log(selectedCategories);
   };
 
   return (
@@ -172,7 +173,7 @@ const NewExercise = () => {
             <Card m={0} p={2} bg="#404040" key={index}>
               <CardBody p={0} ml={5} mr={5}>
                 <Flex gap={5}>
-                  <Checkbox onChange={() => handleCheck(exercise)}></Checkbox>
+                  <Checkbox onChange={() => handleCheck(category)}></Checkbox>
                   <Text textColor="white">
                     {category.name.charAt(0).toLocaleUpperCase() +
                       category.name.slice(1)}

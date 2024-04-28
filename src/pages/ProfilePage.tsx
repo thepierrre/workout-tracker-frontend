@@ -1,6 +1,14 @@
-import { Flex } from "@chakra-ui/react";
+import { RootState } from "../app/store";
+import { useSelector } from "react-redux";
+import { Flex, Button, Heading } from "@chakra-ui/react";
 
 const ProfilePage = () => {
+  const user = useSelector((state: RootState) => state.authenticatedUser.user);
+
+  const handleLogout = () => {
+    console.log("logging out...");
+  };
+
   return (
     <Flex
       align="center"
@@ -10,7 +18,19 @@ const ProfilePage = () => {
       gap={7}
       padding={2}
       marginTop={5}
-    ></Flex>
+    >
+      <Heading fontSize="2xl">Hello, {user.username}</Heading>
+      <Button
+        w="95vw"
+        bg="lightblue"
+        textColor="#353935"
+        type="submit"
+        mt={3}
+        onClick={() => handleLogout()}
+      >
+        Log out
+      </Button>
+    </Flex>
   );
 };
 

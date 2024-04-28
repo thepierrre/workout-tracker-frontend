@@ -179,7 +179,7 @@ export const workouts: Workout[] = [
 export const users: User[] = [
   {
     id: "user-id1",
-    username: "Alex",
+    username: "Piotr",
     password: passwords[0],
     routines: routines,
     workoutSessions: workouts,
