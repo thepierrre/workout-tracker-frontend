@@ -1,7 +1,7 @@
 import { Exercise } from "./exercise.interface";
 
 export interface Routine {
-  id: string;
+  id: string | undefined;
   name: string;
   exercises: Exercise[];
 }

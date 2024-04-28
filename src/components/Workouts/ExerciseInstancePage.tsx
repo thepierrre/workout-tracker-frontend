@@ -153,6 +153,7 @@ const ExerciseInstancePage = () => {
                     borderRadius={8}
                     fontSize="3xl"
                     onClick={() => handleRepsAndWeight("reps", "decrease")}
+                    textColor="white"
                   >
                     –
                   </Button>
@@ -172,6 +173,7 @@ const ExerciseInstancePage = () => {
                       borderRadius={8}
                       fontSize="3xl"
                       onClick={() => handleRepsAndWeight("reps", "increase")}
+                      textColor="white"
                     >
                       +
                     </Button>
@@ -198,6 +200,7 @@ const ExerciseInstancePage = () => {
                       borderRadius={8}
                       fontSize="3xl"
                       onClick={() => handleRepsAndWeight("weight", "decrease")}
+                      textColor="white"
                     >
                       –
                     </Button>
@@ -218,6 +221,7 @@ const ExerciseInstancePage = () => {
                       borderRadius={8}
                       fontSize="3xl"
                       onClick={() => handleRepsAndWeight("weight", "increase")}
+                      textColor="white"
                     >
                       +
                     </Button>

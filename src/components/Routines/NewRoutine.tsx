@@ -116,7 +116,8 @@ const NewRoutine = () => {
           >
             {!addExercisesIsActive && <ArrowCircleDownOutlinedIcon />}
             {addExercisesIsActive && <ArrowCircleUpOutlinedIcon />}
-            <Text>Add Exercises</Text>
+            {!addExercisesIsActive && <Text>Add Exercises</Text>}
+            {addExercisesIsActive && <Text>Hide Exercises</Text>}
           </Flex>
           {addExercisesIsActive && (
             <Flex direction="column" w="100%" gap={2}>

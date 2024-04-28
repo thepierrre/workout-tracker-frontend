@@ -2,8 +2,9 @@ import { Link } from "react-router-dom";
 import { Workout } from "../../interfaces/workout.interface";
 import { useDispatch } from "react-redux";
 import { removeWorkout } from "../../features/workout/workoutSessionsSlice";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 
-import { Card, CardBody, Flex, Text, Heading, Button } from "@chakra-ui/react";
+import { Card, CardBody, Flex, Text, Heading } from "@chakra-ui/react";
 
 interface WorkoutProps {
   workout: Workout;
@@ -53,14 +54,11 @@ const WorkoutSession: React.FC<WorkoutProps> = ({ workout: wrk }) => {
             </Link>
           ))}
         </Flex>
+        <Flex gap={1} justify="center">
+          <RemoveCircleOutlineIcon />
+          <Text>Remove workout</Text>
+        </Flex>
       </Flex>
-      <Button
-        background="pink"
-        w="40vw"
-        onClick={() => handleRemoveWorkout(wrk)}
-      >
-        Delete Workout
-      </Button>
     </>
   );
 };

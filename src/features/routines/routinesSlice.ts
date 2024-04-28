@@ -8,6 +8,11 @@ export interface RoutinesState {
   routines: Routine[];
 }
 
+interface EditRoutinePayload {
+  routine: Routine;
+  index: number;
+}
+
 const initialState: RoutinesState = {
   routines,
 };
@@ -20,8 +25,12 @@ const routinesSlice = createSlice({
       const routine = action.payload;
       state.routines.unshift(routine);
     },
+    editRoutine(state, action: PayloadAction<EditRoutinePayload>) {
+      const { routine, index } = action.payload;
+      state.routines[index] = routine;
+    },
   },
 });
 
-export const { addRoutine } = routinesSlice.actions;
+export const { addRoutine, editRoutine } = routinesSlice.actions;
 export default routinesSlice.reducer;
