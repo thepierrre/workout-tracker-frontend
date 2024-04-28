@@ -11,8 +11,6 @@ const ExercisesPage = () => {
     (state: RootState) => state.exercises.exercises
   );
 
-  console.log(exercises);
-
   return (
     <Flex
       align="center"

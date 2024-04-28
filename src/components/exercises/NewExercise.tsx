@@ -6,7 +6,7 @@ import { Exercise } from "../../interfaces/exercise.interface";
 import { Category } from "../../interfaces/category.interface";
 import { categories } from "../../util/DUMMY_DATA";
 import { addExercise } from "../../features/exercises/exercisesSlice";
-import { useState } from "react";
+import React, { useState } from "react";
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
@@ -51,6 +51,8 @@ const NewExercise = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>({ resolver });
+
+  const [searchCategories, setSearchCategories] = useState<string>("");
 
   const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
 
@@ -139,7 +141,13 @@ const NewExercise = () => {
     } else {
       setSelectedCategories([...selectedCategories, category]);
     }
-    console.log(selectedCategories);
+  };
+
+  const handleFilterCategories = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = event.target.value;
+    console.log(value);
   };
 
   return (
@@ -169,6 +177,18 @@ const NewExercise = () => {
           Categories
         </Heading>
         <Flex direction="column" w="100%" gap={2}>
+          <Input
+            w="95vw"
+            bg="#404040"
+            borderColor="transparent"
+            _focusVisible={{
+              borderWidth: "1px",
+              borderColor: "lightblue",
+            }}
+            _placeholder={{ color: "#B3B3B3" }}
+            placeholder="Start typing to filter"
+            onChange={(event) => handleFilterCategories(event)}
+          />
           {categories.map((category, index) => (
             <Card m={0} p={2} bg="#404040" key={index}>
               <CardBody p={0} ml={5} mr={5}>

@@ -99,8 +99,6 @@ const SingleExercisePage = () => {
   //   } else return false;
   // };
 
-  console.log(exercises);
-
   return (
     <Flex
       align="center"
