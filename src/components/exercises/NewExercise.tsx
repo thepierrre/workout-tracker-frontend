@@ -147,8 +147,15 @@ const NewExercise = () => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const value = event.target.value;
-    console.log(value);
+    setSearchCategories(value);
+    console.log(searchCategories);
   };
+
+  const filteredCategories = categories.filter((category) =>
+    category.name.startsWith(searchCategories.toLowerCase())
+  );
+
+  console.log(filteredCategories);
 
   return (
     <Flex direction="column" gap={4}>
@@ -186,10 +193,10 @@ const NewExercise = () => {
               borderColor: "lightblue",
             }}
             _placeholder={{ color: "#B3B3B3" }}
-            placeholder="Start typing to filter"
+            placeholder="Type to filter"
             onChange={(event) => handleFilterCategories(event)}
           />
-          {categories.map((category, index) => (
+          {filteredCategories.map((category, index) => (
             <Card m={0} p={2} bg="#404040" key={index}>
               <CardBody p={0} ml={5} mr={5}>
                 <Flex gap={5}>
