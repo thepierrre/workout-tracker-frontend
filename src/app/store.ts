@@ -1,11 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-// import currentWorkoutReducer from "../features/workout/currentWorkoutSlice";
 import workoutSessionsReducer from "../features/workout/workoutSessionsSlice";
 import chosenDayReducer from "../features/workout/dayInCalendarSlice";
 import activeExerciseInstanceReducer from "../features/workout/activeExerciseInstanceSlice";
 import authenticatedUserReducer from "../features/auth/authenticatedUserSlice";
 import exercisesReducer from "../features/exercises/exercisesSlice";
 import routinesReducer from "../features/routines/routinesSlice";
+import categoriesReducer from "../features/exercises/exercisesSlice";
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +15,7 @@ export const store = configureStore({
     authenticatedUser: authenticatedUserReducer,
     exercises: exercisesReducer,
     routines: routinesReducer,
+    categories: categoriesReducer,
   },
 });
 

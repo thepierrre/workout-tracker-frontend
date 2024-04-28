@@ -7,7 +7,7 @@ import WorkoutsPage from "./pages/WorkoutsPage.tsx";
 import RoutinesPage from "./pages/RoutinesPage.tsx";
 import ExercisesPage from "./pages/ExercisesPage.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
-import SingleExercisePage from "./components/workouts/ExerciseInstancePage.tsx";
+import SingleExercisePage from "./components/exercises/SingleExercisePage.tsx";
 import ExerciseInstancePage from "./components/workouts/ExerciseInstancePage.tsx";
 import SingleRoutinePage from "./components/routines/SingleRoutinePage.tsx";
 import { store } from "./app/store.ts";
@@ -39,7 +39,7 @@ const router = createBrowserRouter([
         path: "exercises/*",
         children: [
           {
-            path: "exercise",
+            path: ":exerciseId",
             element: <SingleExercisePage />,
           },
           { path: "*", element: <ExercisesPage /> },

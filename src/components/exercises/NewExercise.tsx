@@ -3,6 +3,8 @@ import { useForm, Resolver } from "react-hook-form";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../app/store";
 import { Exercise } from "../../interfaces/exercise.interface";
+import { Category } from "../../interfaces/category.interface";
+import { categories } from "../../util/DUMMY_DATA";
 import { addExercise } from "../../features/exercises/exercisesSlice";
 import { useState } from "react";
 
@@ -19,6 +21,9 @@ import {
   InputRightElement,
   FormErrorMessage,
   Text,
+  Card,
+  CardBody,
+  Checkbox,
 } from "@chakra-ui/react";
 
 type FormValues = {
@@ -46,6 +51,8 @@ const NewExercise = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>({ resolver });
+
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
 
   const usr = useSelector((state: RootState) => state.authenticatedUser.user);
   const dispatch = useDispatch();
@@ -124,6 +131,16 @@ const NewExercise = () => {
     setCategoryInputs(categoryInputs.slice(0, -1));
   };
 
+  const handleCheck = (exercise: Exercise) => {
+    if (selectedCategories.includes(exercise)) {
+      setSelectedCategories((exercises: any) =>
+        exercises.filter((ex: any) => ex.id !== exercise.id)
+      );
+    } else {
+      setSelectedCategories([...selectedCategories, exercise]);
+    }
+  };
+
   return (
     <Flex direction="column" gap={4}>
       <Heading fontSize="lg" textAlign="center">
@@ -149,6 +166,24 @@ const NewExercise = () => {
         </FormControl>
         <Heading fontSize="lg" textAlign="center" mt={4} mb={4}>
           Categories
+        </Heading>
+        <Flex direction="column" w="100%" gap={2}>
+          {categories.map((category, index) => (
+            <Card m={0} p={2} bg="#404040" key={index}>
+              <CardBody p={0} ml={5} mr={5}>
+                <Flex gap={5}>
+                  <Checkbox onChange={() => handleCheck(exercise)}></Checkbox>
+                  <Text textColor="white">
+                    {category.name.charAt(0).toLocaleUpperCase() +
+                      category.name.slice(1)}
+                  </Text>
+                </Flex>
+              </CardBody>
+            </Card>
+          ))}
+        </Flex>
+        <Heading fontSize="md" textAlign="center" m={4}>
+          Add a new category
         </Heading>
         <Flex direction="column" gap={2}>
           {categoryInputs.map((input) => input)}

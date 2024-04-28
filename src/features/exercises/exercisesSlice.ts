@@ -8,6 +8,11 @@ export interface ExercisesState {
   exercises: Exercise[];
 }
 
+interface EditExercisePayload {
+  exercise: Exercise;
+  index: number;
+}
+
 const initialState: ExercisesState = {
   exercises: exercises,
 };
@@ -19,8 +24,12 @@ const exercisesSlice = createSlice({
     addExercise(state, action: PayloadAction<Exercise>) {
       state.exercises.push(action.payload);
     },
+    editExercise(state, action: PayloadAction<EditExercisePayload>) {
+      const { exercise, index } = action.payload;
+      state.exercises[index] = exercise;
+    },
   },
 });
 
-export const { addExercise } = exercisesSlice.actions;
+export const { addExercise, editExercise } = exercisesSlice.actions;
 export default exercisesSlice.reducer;

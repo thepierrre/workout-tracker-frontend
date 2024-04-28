@@ -14,7 +14,6 @@ const WorkoutSession: React.FC<WorkoutProps> = ({ workout: wrk }) => {
   const dispatch = useDispatch();
   const handleRemoveWorkout = (workout: Workout) => {
     dispatch(removeWorkout(workout));
-    console.log(workout);
   };
 
   return (

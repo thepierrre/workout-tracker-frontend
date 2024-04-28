@@ -29,8 +29,6 @@ const ExerciseInstancePage = () => {
     (e) => e.id === exerciseInstanceId
   );
 
-  console.log(exerciseInstance);
-
   const dispatch = useDispatch();
 
   const handleRepsAndWeight = (type: string, action: string) => {

@@ -11,6 +11,8 @@ const ExercisesPage = () => {
     (state: RootState) => state.exercises.exercises
   );
 
+  console.log(exercises);
+
   return (
     <Flex
       align="center"
@@ -23,14 +25,17 @@ const ExercisesPage = () => {
     >
       <Flex direction="column" gap={2} w="100%">
         {exercises.map((exercise, index) => (
-          <Link key={exercise.id} to={`/exercises/exercise`}>
+          <Link key={exercise.id} to={`/exercises/${exercise.id}`}>
             <Card key={index} bg="#404040">
               <CardBody>
                 <Flex direction="column" gap={1} textColor="white">
                   <Flex direction="column" gap={1}>
                     <Text fontWeight="bold">{exercise.name}</Text>
                     <Text fontWeight="bold" fontSize="xs" color="#E0E0E0">
-                      {exercise.categories.join(" | ").toUpperCase()}
+                      {exercise.categories
+                        .map((category) => category.name)
+                        .join(" | ")
+                        .toUpperCase()}
                     </Text>
                   </Flex>
                 </Flex>

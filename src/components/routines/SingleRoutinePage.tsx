@@ -18,11 +18,7 @@ import { useForm, Resolver } from "react-hook-form";
 
 import { Routine } from "../../interfaces/routine.interface";
 import { Exercise } from "../../interfaces/exercise.interface";
-import { generateRandomString } from "../../util/DUMMY_DATA";
 import { editRoutine } from "../../features/routines/routinesSlice";
-
-import ArrowCircleDownOutlinedIcon from "@mui/icons-material/ArrowCircleDownOutlined";
-import ArrowCircleUpOutlinedIcon from "@mui/icons-material/ArrowCircleUpOutlined";
 
 type FormValues = {
   name: string;
@@ -124,7 +120,7 @@ const SingleRoutinePage = () => {
               borderColor: "lightblue",
             }}
             _placeholder={{ color: "#B3B3B3" }}
-            placeholder={currentRoutine?.name}
+            placeholder="Name"
             defaultValue={currentRoutine?.name}
           />
           <FormErrorMessage>
@@ -140,6 +136,9 @@ const SingleRoutinePage = () => {
             mt={4}
           ></Flex>
 
+          <Heading fontSize="md" textAlign="center" mb={2}>
+            Exercises
+          </Heading>
           <Flex direction="column" w="100%" gap={2}>
             {exercises.map((exercise, index) => (
               <Card m={0} p={2} bg="#404040" key={index}>

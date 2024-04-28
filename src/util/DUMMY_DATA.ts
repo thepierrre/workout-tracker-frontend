@@ -3,49 +3,63 @@ import { Routine } from "../interfaces/routine.interface";
 import { Workout } from "../interfaces/workout.interface";
 import { Series } from "../interfaces/series.interface";
 import { User } from "../interfaces/user.interface";
+import { Category } from "../interfaces/category.interface";
 import { passwords } from "./DUMY_PASSWORDS";
+
+export const categories: Category[] = [
+  { id: "category-id1", name: "upper body" },
+  { id: "category-id2", name: "lower body" },
+  { id: "category-id3", name: "chest" },
+  { id: "category-id4", name: "abs" },
+  { id: "category-id5", name: "glutes" },
+  { id: "category-id6", name: "hamstrings" },
+  { id: "category-id7", name: "upper back" },
+  { id: "category-id8", name: "lower back" },
+  { id: "category-id9", name: "shoulders" },
+  { id: "category-id10", name: "quads " },
+];
 
 export const exercises: Exercise[] = [
   {
     id: "exercise-id1",
     name: "Barbell bench press",
-    categories: ["upper body", "chest"],
+    categories: [categories[0], categories[2]],
     userId: "user-id1",
   },
   {
     id: "exercise-id2",
     name: "Barbell rows",
-    categories: ["upper body", "back"],
+    categories: [categories[0], categories[6]],
     userId: "user-id1",
   },
   {
     id: "exercise-id3",
     name: "Dumbbell lateral raise",
-    categories: ["upper body", "shoulders"],
+    categories: [categories[0], categories[8]],
     userId: "user-id1",
   },
   {
     id: "exercise-id4",
     name: "Barbell squats",
-    categories: ["lower body", "glutes", "quads"],
+    categories: [categories[0], categories[8]],
     userId: "user-id1",
   },
   {
     id: "exercise-id5",
     name: "Barbell deadlifts",
-    categories: ["lower body", "glutes", "hamstrings", "lower back"],
+    categories: [categories[1], categories[4], categories[5]],
     userId: "user-id1",
   },
   {
     id: "exercise-id6",
     name: "Pulldowns",
-    categories: ["upper body", "back"],
+    categories: [categories[0], categories[6]],
     userId: "user-id1",
   },
   {
     id: "exercise-id7",
     name: "Abs candles",
-    categories: ["upper body", "abs"],
+    categories: [categories[0], categories[3]],
     userId: "user-id1",
   },
 ];
