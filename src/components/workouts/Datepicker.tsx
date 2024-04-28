@@ -5,6 +5,8 @@ import { Flex, Text, Box } from "@chakra-ui/react";
 import { setDay } from "../../features/workout/dayInCalendarSlice";
 import { format } from "date-fns";
 
+import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
+
 const Datepicker = () => {
   const chosenDay = useSelector((state: RootState) => state.chosenDay.day);
   const dispatch = useDispatch();
@@ -25,36 +27,44 @@ const Datepicker = () => {
     dispatch(setDay(formattedDate));
   };
 
+  const goToPreviousWeek = () => {};
+
+  const goToFollowingWeek = () => {};
+
   return (
-    <Flex gap={6}>
-      {displayedDaysOfWeek.map((day, index) => (
-        <Flex
-          key={index}
-          direction="column"
-          align="center"
-          gap={1}
-          onClick={() => handleActiveDay(index)}
-        >
-          <Text
-            fontSize="xs"
-            fontWeight={chosenDay === format(day, "dd/MM/yyyy") ? "bold" : ""}
-          >
-            {format(new Date(day), "EEE").toUpperCase()}
-          </Text>
-          <Box
-            paddingInline={1}
-            borderRadius={7}
-            bg={chosenDay === format(day, "dd/MM/yyyy") ? "lightblue" : ""}
+    <Flex align="center">
+      <ChevronLeftIcon boxSize={8} onClick={() => goToPreviousWeek()} />
+      <Flex gap={4}>
+        {displayedDaysOfWeek.map((day, index) => (
+          <Flex
+            key={index}
+            direction="column"
+            align="center"
+            gap={1}
+            onClick={() => handleActiveDay(index)}
           >
             <Text
-              fontSize="xl"
-              color={chosenDay === format(day, "dd/MM/yyyy") ? "#353935" : ""}
+              fontSize="xs"
+              fontWeight={chosenDay === format(day, "dd/MM/yyyy") ? "bold" : ""}
             >
-              {day.getDate()}
+              {format(new Date(day), "EEE").toUpperCase()}
             </Text>
-          </Box>
-        </Flex>
-      ))}
+            <Box
+              paddingInline={1}
+              borderRadius={7}
+              bg={chosenDay === format(day, "dd/MM/yyyy") ? "lightblue" : ""}
+            >
+              <Text
+                fontSize="xl"
+                color={chosenDay === format(day, "dd/MM/yyyy") ? "#353935" : ""}
+              >
+                {day.getDate()}
+              </Text>
+            </Box>
+          </Flex>
+        ))}
+      </Flex>
+      <ChevronRightIcon boxSize={8} onClick={() => goToFollowingWeek()} />
     </Flex>
   );
 };

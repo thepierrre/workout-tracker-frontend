@@ -93,7 +93,7 @@ const NewExercise = () => {
           borderColor: "lightblue",
         }}
         _placeholder={{ color: "#B3B3B3" }}
-        placeholder={`Category ${1} (optional)`}
+        placeholder="Category name"
       />
       <InputRightElement>
         <RemoveCircleOutlineIcon />
@@ -105,8 +105,10 @@ const NewExercise = () => {
     useState<React.ReactElement[]>(inputs);
 
   const handleAddCategoryInput = () => {
+    const currentIndex = categoryInputs.length;
+
     const input = (
-      <InputGroup key={categoryInputs.length}>
+      <InputGroup key={currentIndex}>
         <Input
           {...register(`categories.${categoryInputs.length}`)}
           w="95vw"
@@ -117,11 +119,11 @@ const NewExercise = () => {
             borderColor: "lightblue",
           }}
           _placeholder={{ color: "#B3B3B3" }}
-          placeholder={`Category ${categoryInputs.length + 1} (optional)`}
+          placeholder="Category name"
         />
         <InputRightElement>
           <RemoveCircleOutlineIcon
-            onClick={() => handleRemoveCategoryInput()}
+            onClick={() => handleRemoveCategoryInput(currentIndex)}
           />
         </InputRightElement>
       </InputGroup>
@@ -129,8 +131,10 @@ const NewExercise = () => {
     setCategoryInputs((prevInputs) => [...prevInputs, input]);
   };
 
-  const handleRemoveCategoryInput = () => {
-    setCategoryInputs(categoryInputs.slice(0, -1));
+  const handleRemoveCategoryInput = (currentIndex: number) => {
+    setCategoryInputs(
+      categoryInputs.filter((_, index) => index !== currentIndex)
+    );
   };
 
   const handleCheck = (category: Category) => {
@@ -148,7 +152,6 @@ const NewExercise = () => {
   ) => {
     const value = event.target.value;
     setSearchCategories(value);
-    console.log(searchCategories);
   };
 
   const filteredCategories = categories.filter((category) =>
@@ -174,7 +177,7 @@ const NewExercise = () => {
               borderColor: "lightblue",
             }}
             _placeholder={{ color: "#B3B3B3" }}
-            placeholder="Name"
+            placeholder="Exercise name"
           />
           <FormErrorMessage>
             {errors.name && errors.name.message}
@@ -193,7 +196,7 @@ const NewExercise = () => {
               borderColor: "lightblue",
             }}
             _placeholder={{ color: "#B3B3B3" }}
-            placeholder="Type to filter"
+            placeholder="Type to filter categories"
             onChange={(event) => handleFilterCategories(event)}
           />
           {filteredCategories.map((category, index) => (

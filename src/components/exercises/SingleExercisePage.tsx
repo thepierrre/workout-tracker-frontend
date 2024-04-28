@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { Category } from "../../interfaces/category.interface";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../app/store";
+import { generateRandomString } from "../../util/DUMMY_DATA";
+import { categories } from "../../util/DUMMY_DATA";
 import {
   Text,
   Input,
@@ -13,18 +16,19 @@ import {
   CardBody,
   Checkbox,
   Heading,
+  InputGroup,
+  InputRightElement,
 } from "@chakra-ui/react";
 import { useForm, Resolver } from "react-hook-form";
 
-import { Routine } from "../../interfaces/routine.interface";
 import { Exercise } from "../../interfaces/exercise.interface";
-import { editExercise } from "../../features/exercises/exercisesSlice";
+import { addExercise } from "../../features/exercises/exercisesSlice";
 
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 
 type FormValues = {
   name: string;
+  categories: string[];
 };
 
 const resolver: Resolver<FormValues> = async (values) => {
@@ -47,57 +51,117 @@ const SingleExercisePage = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>({ resolver });
-  const { exerciseId } = useParams();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const exercises: Exercise[] = useSelector(
+
+  const [searchCategories, setSearchCategories] = useState<string>("");
+
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
+
+  const usr = useSelector((state: RootState) => state.authenticatedUser.user);
+  const exercises = useSelector(
     (state: RootState) => state.exercises.exercises
   );
-
-  const currentExercise: Exercise | undefined = exercises.find(
+  const { exerciseId } = useParams();
+  const currentExercise = exercises.filter(
     (exercise) => exercise.id === exerciseId
   );
-  // const [addExercisesIsActive, setAddExercisesIsActive] =
-  //   useState<boolean>(false);
-  // const [selectedExercises, setSelectedExercises] = useState<any>(
-  //   currentRoutine?.exercises
-  // );
+  const dispatch = useDispatch();
 
-  // const exercises = useSelector(
-  //   (state: RootState) => state.exercises.exercises
-  // );
-
-  const onSubmit = (data: FormValues) => {
-    // const routine: Routine = {
-    //   id: currentRoutine?.id,
-    //   name: data.name,
-    //   exercises: selectedExercises,
-    // };
-    // if (currentRoutine) {
-    //   const index = routines.findIndex((routine) => routine.id === routineId);
-    //   // dispatch(editRoutine({ routine, index }));
-    //   navigate("/routines");
+  const convertFormDataToExercise = (formData: FormValues): Exercise => {
+    return {
+      id: generateRandomString(5),
+      name: formData.name,
+      categories: selectedCategories,
+      userId: usr.id,
+    };
   };
 
-  // const handleAddExercisesDropdown = () => {
-  //   setAddExercisesIsActive(!addExercisesIsActive);
-  // };
+  const onSubmit = (data: FormValues) => {
+    const notEmptyCategories = data.categories.filter(
+      (category) => category.trim() !== ""
+    );
+    const updatedData = {
+      ...data,
+      categories: notEmptyCategories,
+    };
 
-  // const handleCheck = (exercise: Exercise) => {
-  //   if (selectedExercises.includes(exercise)) {
-  //     setSelectedExercises((exercises: any) =>
-  //       exercises.filter((ex: any) => ex.id !== exercise.id)
-  //     );
-  //   } else {
-  //     setSelectedExercises([...selectedExercises, exercise]);
-  //   }
-  // };
+    const exerciseToAdd = convertFormDataToExercise(updatedData);
+    dispatch(addExercise(exerciseToAdd));
+  };
 
-  // const handleDefaultChecked = (exercise: Exercise): boolean => {
-  //   if (currentRoutine?.exercises.includes(exercise)) {
-  //     return true;
-  //   } else return false;
-  // };
+  const inputs = [
+    <InputGroup key={0}>
+      <Input
+        {...register(`categories.${0}`)}
+        w="95vw"
+        bg="#404040"
+        borderColor="transparent"
+        _focusVisible={{
+          borderWidth: "1px",
+          borderColor: "lightblue",
+        }}
+        _placeholder={{ color: "#B3B3B3" }}
+        placeholder={`Category ${1} (optional)`}
+      />
+      <InputRightElement>
+        <RemoveCircleOutlineIcon />
+      </InputRightElement>
+    </InputGroup>,
+  ];
+
+  const [categoryInputs, setCategoryInputs] =
+    useState<React.ReactElement[]>(inputs);
+
+  const handleAddCategoryInput = () => {
+    const input = (
+      <InputGroup key={categoryInputs.length}>
+        <Input
+          {...register(`categories.${categoryInputs.length}`)}
+          w="95vw"
+          bg="#404040"
+          borderColor="transparent"
+          _focusVisible={{
+            borderWidth: "1px",
+            borderColor: "lightblue",
+          }}
+          _placeholder={{ color: "#B3B3B3" }}
+          placeholder={`Category ${categoryInputs.length + 1} (optional)`}
+        />
+        <InputRightElement>
+          <RemoveCircleOutlineIcon
+            onClick={() => handleRemoveCategoryInput()}
+          />
+        </InputRightElement>
+      </InputGroup>
+    );
+    setCategoryInputs((prevInputs) => [...prevInputs, input]);
+  };
+
+  const handleRemoveCategoryInput = () => {
+    setCategoryInputs(categoryInputs.slice(0, -1));
+  };
+
+  const handleCheck = (category: Category) => {
+    if (selectedCategories.includes(category)) {
+      setSelectedCategories((prevSelectedCategories) =>
+        prevSelectedCategories.filter((cat) => cat.id !== category.id)
+      );
+    } else {
+      setSelectedCategories([...selectedCategories, category]);
+    }
+  };
+
+  const handleFilterCategories = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = event.target.value;
+    setSearchCategories(value);
+  };
+
+  const filteredCategories = categories.filter((category) =>
+    category.name.startsWith(searchCategories.toLowerCase())
+  );
+
+  console.log(filteredCategories);
 
   return (
     <Flex
@@ -123,7 +187,6 @@ const SingleExercisePage = () => {
             }}
             _placeholder={{ color: "#B3B3B3" }}
             placeholder="Name"
-            defaultValue={currentExercise?.name}
           />
           <FormErrorMessage>
             {errors.name && errors.name.message}
@@ -135,14 +198,11 @@ const SingleExercisePage = () => {
             Categories
           </Heading>
           <Flex direction="column" w="100%" gap={2}>
-            {currentExercise?.categories.map((category, index) => (
+            {filteredCategories.map((category, index) => (
               <Card m={0} p={2} bg="#404040" key={index}>
                 <CardBody p={0} ml={5} mr={5}>
                   <Flex gap={5}>
-                    <Checkbox
-                    // defaultChecked={handleDefaultChecked(exercise)}
-                    // onChange={() => handleCheck(exercise)}
-                    ></Checkbox>
+                    <Checkbox onChange={() => handleCheck(category)}></Checkbox>
                     <Text textColor="white">
                       {category.name.charAt(0).toLocaleUpperCase() +
                         category.name.slice(1)}
