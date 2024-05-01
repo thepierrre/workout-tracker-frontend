@@ -102,7 +102,6 @@ const Datepicker = () => {
           </Flex>
         ))}
       </Flex>
-
       <IconButton
         color="white"
         icon={<ChevronRightIcon boxSize={8} />}

@@ -35,3 +35,6 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
+
+// add statistics (how many workouts, routines, exercises etc.)
+// add history (e.g. display workouts for month and year)

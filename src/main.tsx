@@ -10,6 +10,8 @@ import ProfilePage from "./pages/ProfilePage.tsx";
 import SingleExercisePage from "./components/exercises/SingleExercisePage.tsx";
 import ExerciseInstancePage from "./components/workouts/ExerciseInstancePage.tsx";
 import SingleRoutinePage from "./components/routines/SingleRoutinePage.tsx";
+import NewExercise from "./pages/NewExercise.tsx";
+import NewRoutine from "./pages/NewRoutine.tsx";
 import { store } from "./app/store.ts";
 import { Provider } from "react-redux";
 
@@ -32,6 +34,7 @@ const router = createBrowserRouter([
         path: "routines/*",
         children: [
           { path: ":routineId", element: <SingleRoutinePage /> },
+          { path: "new-routine", element: <NewRoutine /> },
           { path: "*", element: <RoutinesPage /> },
         ],
       },
@@ -42,6 +45,7 @@ const router = createBrowserRouter([
             path: ":exerciseId",
             element: <SingleExercisePage />,
           },
+          { path: "new-exercise", element: <NewExercise /> },
           { path: "*", element: <ExercisesPage /> },
         ],
       },

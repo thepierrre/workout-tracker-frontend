@@ -105,9 +105,9 @@ const SingleRoutinePage = () => {
       direction="column"
       gap={5}
       padding={2}
-      marginTop={8}
+      marginTop={6}
     >
-      <Heading fontSize="2xl">Edit routine</Heading>
+      <Heading fontSize="lg">Edit routine</Heading>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl isInvalid={!!errors.name}>
           <Input

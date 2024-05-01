@@ -1,15 +1,14 @@
-import { generateRandomString } from "../../util/DUMMY_DATA";
+import { useNavigate } from "react-router-dom";
+import { generateRandomString } from "../util/DUMMY_DATA";
 import { useForm, Resolver } from "react-hook-form";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../app/store";
-import { Exercise } from "../../interfaces/exercise.interface";
-import { Category } from "../../interfaces/category.interface";
-import { categories } from "../../util/DUMMY_DATA";
-import { addExercise } from "../../features/exercises/exercisesSlice";
+import { RootState } from "../app/store";
+import { Exercise } from "../interfaces/exercise.interface";
+import { Category } from "../interfaces/category.interface";
+import { categories } from "../util/DUMMY_DATA";
+import { addExercise } from "../features/exercises/exercisesSlice";
 import React, { useState } from "react";
-
-import AddCircleIcon from "@mui/icons-material/AddCircle";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import { ChevronLeftIcon } from "@chakra-ui/icons";
 
 import {
   Flex,
@@ -17,13 +16,13 @@ import {
   Heading,
   FormControl,
   Input,
-  InputGroup,
-  InputRightElement,
   FormErrorMessage,
   Text,
   Card,
   CardBody,
   Checkbox,
+  IconButton,
+  Box,
 } from "@chakra-ui/react";
 
 type FormValues = {
@@ -38,7 +37,7 @@ const resolver: Resolver<FormValues> = async (values) => {
       ? {
           name: {
             type: "required",
-            message: "Exercise is required.",
+            message: "Exercise name is required.",
           },
         }
       : {},
@@ -46,6 +45,7 @@ const resolver: Resolver<FormValues> = async (values) => {
 };
 
 const NewExercise = () => {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -76,65 +76,9 @@ const NewExercise = () => {
       ...data,
       categories: notEmptyCategories,
     };
-
     const exerciseToAdd = convertFormDataToExercise(updatedData);
     dispatch(addExercise(exerciseToAdd));
-  };
-
-  const inputs = [
-    <InputGroup key={0}>
-      <Input
-        {...register(`categories.${0}`)}
-        w="95vw"
-        bg="#404040"
-        borderColor="transparent"
-        _focusVisible={{
-          borderWidth: "1px",
-          borderColor: "lightblue",
-        }}
-        _placeholder={{ color: "#B3B3B3" }}
-        placeholder="Category name"
-      />
-      <InputRightElement>
-        <RemoveCircleOutlineIcon />
-      </InputRightElement>
-    </InputGroup>,
-  ];
-
-  const [categoryInputs, setCategoryInputs] =
-    useState<React.ReactElement[]>(inputs);
-
-  const handleAddCategoryInput = () => {
-    const currentIndex = categoryInputs.length;
-
-    const input = (
-      <InputGroup key={currentIndex}>
-        <Input
-          {...register(`categories.${categoryInputs.length}`)}
-          w="95vw"
-          bg="#404040"
-          borderColor="transparent"
-          _focusVisible={{
-            borderWidth: "1px",
-            borderColor: "lightblue",
-          }}
-          _placeholder={{ color: "#B3B3B3" }}
-          placeholder="Category name"
-        />
-        <InputRightElement>
-          <RemoveCircleOutlineIcon
-            onClick={() => handleRemoveCategoryInput(currentIndex)}
-          />
-        </InputRightElement>
-      </InputGroup>
-    );
-    setCategoryInputs((prevInputs) => [...prevInputs, input]);
-  };
-
-  const handleRemoveCategoryInput = (currentIndex: number) => {
-    setCategoryInputs(
-      categoryInputs.filter((_, index) => index !== currentIndex)
-    );
+    navigate("/exercises");
   };
 
   const handleCheck = (category: Category) => {
@@ -158,13 +102,36 @@ const NewExercise = () => {
     category.name.startsWith(searchCategories.toLowerCase())
   );
 
-  console.log(filteredCategories);
+  const handleGoBack = () => {
+    navigate("/exercises");
+  };
 
   return (
-    <Flex direction="column" gap={4}>
-      <Heading fontSize="lg" textAlign="center">
-        New exercise
-      </Heading>
+    <Flex
+      align="center"
+      w="100vw"
+      color="white"
+      direction="column"
+      gap={7}
+      padding={2}
+      marginTop={5}
+    >
+      <Flex align="center" w="100%">
+        <IconButton
+          aria-label="Go back"
+          variant="link"
+          color="white"
+          w="15%"
+          icon={<ChevronLeftIcon boxSize={8} />}
+          onClick={() => handleGoBack()}
+        />
+
+        <Heading w="70%" fontSize="lg" textAlign="center">
+          New exercise
+        </Heading>
+        <Box w="16%" />
+      </Flex>
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl isInvalid={!!errors.name}>
           <Input
@@ -213,21 +180,6 @@ const NewExercise = () => {
             </Card>
           ))}
         </Flex>
-        <Heading fontSize="md" textAlign="center" m={4}>
-          Add a new category
-        </Heading>
-        <Flex direction="column" gap={2}>
-          {categoryInputs.map((input) => input)}
-        </Flex>
-        <Flex
-          justify="center"
-          gap={2}
-          onClick={() => handleAddCategoryInput()}
-          mt={4}
-        >
-          <AddCircleIcon />
-          <Text>Category</Text>
-        </Flex>
         <Button
           w="95vw"
           bg="lightblue"
@@ -235,7 +187,7 @@ const NewExercise = () => {
           type="submit"
           mt={4}
         >
-          Create
+          Add
         </Button>
       </form>
     </Flex>

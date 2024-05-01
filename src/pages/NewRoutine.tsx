@@ -1,18 +1,20 @@
+import { useNavigate } from "react-router-dom";
 import { useForm, Resolver } from "react-hook-form";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../app/store";
-import { Exercise } from "../../interfaces/exercise.interface";
-import { Routine } from "../../interfaces/routine.interface";
-import { addRoutine } from "../../features/routines/routinesSlice";
-import { generateRandomString } from "../../util/DUMMY_DATA";
+import { RootState } from "../app/store";
+import { Exercise } from "../interfaces/exercise.interface";
+import { Routine } from "../interfaces/routine.interface";
+import { addRoutine } from "../features/routines/routinesSlice";
+import { generateRandomString } from "../util/DUMMY_DATA";
 
-import ArrowCircleDownOutlinedIcon from "@mui/icons-material/ArrowCircleDownOutlined";
-import ArrowCircleUpOutlinedIcon from "@mui/icons-material/ArrowCircleUpOutlined";
+import WideButton from "../components/UI/WideButton";
+
+import { ChevronLeftIcon } from "@chakra-ui/icons";
 
 import {
   Flex,
-  Button,
+  Box,
   Text,
   FormControl,
   Input,
@@ -21,6 +23,7 @@ import {
   Card,
   CardBody,
   Checkbox,
+  IconButton,
 } from "@chakra-ui/react";
 
 type FormValues = {
@@ -43,14 +46,13 @@ const resolver: Resolver<FormValues> = async (values) => {
 };
 
 const NewRoutine = () => {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>({ resolver });
 
-  const [addExercisesIsActive, setAddExercisesIsActive] =
-    useState<boolean>(false);
   const [selectedExercises, setSelectedExercises] = useState<Exercise[]>([]);
 
   const dispatch = useDispatch();
@@ -67,10 +69,7 @@ const NewRoutine = () => {
     };
 
     dispatch(addRoutine(routine));
-  };
-
-  const handleAddExercisesDropdown = () => {
-    setAddExercisesIsActive(!addExercisesIsActive);
+    navigate("/routines");
   };
 
   const handleCheck = (exercise: Exercise) => {
@@ -83,11 +82,35 @@ const NewRoutine = () => {
     }
   };
 
+  const handleGoBack = () => {
+    navigate("/routines");
+  };
+
   return (
-    <Flex direction="column" gap={4}>
-      <Heading fontSize="lg" textAlign="center">
-        New routine
-      </Heading>
+    <Flex
+      align="center"
+      w="100vw"
+      color="white"
+      direction="column"
+      gap={7}
+      padding={2}
+      marginTop={6}
+    >
+      <Flex align="center" w="100%">
+        <IconButton
+          aria-label="Go back"
+          variant="link"
+          color="white"
+          w="15%"
+          icon={<ChevronLeftIcon boxSize={8} />}
+          onClick={() => handleGoBack()}
+        />
+
+        <Heading w="70%" fontSize="lg" textAlign="center">
+          New routine
+        </Heading>
+        <Box w="16%" />
+      </Flex>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl isInvalid={!!errors.name}>
           <Input
@@ -108,43 +131,24 @@ const NewRoutine = () => {
         </FormControl>
 
         <Flex gap={4} direction="column" w="95vw">
-          <Flex
-            justify="center"
-            onClick={() => handleAddExercisesDropdown()}
-            gap={1}
-            mt={4}
-          >
-            {!addExercisesIsActive && <ArrowCircleDownOutlinedIcon />}
-            {addExercisesIsActive && <ArrowCircleUpOutlinedIcon />}
-            {!addExercisesIsActive && <Text>Add Exercises</Text>}
-            {addExercisesIsActive && <Text>Hide Exercises</Text>}
+          <Flex justify="center" gap={1} mt={4}>
+            <Text>Add Exercises</Text>
           </Flex>
-          {addExercisesIsActive && (
-            <Flex direction="column" w="100%" gap={2}>
-              {exercises.map((exercise, index) => (
-                <Card m={0} p={2} bg="#404040" key={index}>
-                  <CardBody p={0} ml={5} mr={5}>
-                    <Flex gap={5}>
-                      <Checkbox
-                        onChange={() => handleCheck(exercise)}
-                      ></Checkbox>
-                      <Text textColor="white">{exercise.name}</Text>
-                    </Flex>
-                  </CardBody>
-                </Card>
-              ))}
-            </Flex>
-          )}
+
+          <Flex direction="column" w="100%" gap={2}>
+            {exercises.map((exercise, index) => (
+              <Card m={0} p={2} bg="#404040" key={index}>
+                <CardBody p={0} ml={5} mr={5}>
+                  <Flex gap={5}>
+                    <Checkbox onChange={() => handleCheck(exercise)}></Checkbox>
+                    <Text textColor="white">{exercise.name}</Text>
+                  </Flex>
+                </CardBody>
+              </Card>
+            ))}
+          </Flex>
         </Flex>
-        <Button
-          w="95vw"
-          bg="lightblue"
-          textColor="#353935"
-          type="submit"
-          mt={3}
-        >
-          Create
-        </Button>
+        <WideButton>Add</WideButton>
       </form>
     </Flex>
   );
