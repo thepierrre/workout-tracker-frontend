@@ -1,6 +1,6 @@
 import { RootState } from "../app/store";
 import { useSelector } from "react-redux";
-import { Flex, Button, Heading } from "@chakra-ui/react";
+import { Flex, Button, Heading, Card, Text } from "@chakra-ui/react";
 
 const ProfilePage = () => {
   const user = useSelector((state: RootState) => state.authenticatedUser.user);
@@ -30,6 +30,8 @@ const ProfilePage = () => {
       >
         Log out
       </Button>
+      <Heading fontSize="lg">Statistics</Heading>
+      <Card bg="#404040" color="white" padding={4} w="95vw"></Card>
     </Flex>
   );
 };

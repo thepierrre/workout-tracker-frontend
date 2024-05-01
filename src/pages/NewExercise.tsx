@@ -69,14 +69,14 @@ const NewExercise = () => {
   };
 
   const onSubmit = (data: FormValues) => {
-    const notEmptyCategories = data.categories.filter(
-      (category) => category.trim() !== ""
-    );
-    const updatedData = {
-      ...data,
-      categories: notEmptyCategories,
+    console.log(data.name);
+    const exerciseToAdd = {
+      id: generateRandomString(5),
+      name: data.name,
+      categories: selectedCategories,
+      userId: usr.id,
     };
-    const exerciseToAdd = convertFormDataToExercise(updatedData);
+
     dispatch(addExercise(exerciseToAdd));
     navigate("/exercises");
   };

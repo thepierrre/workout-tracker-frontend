@@ -81,17 +81,15 @@ const SingleExercisePage = () => {
   };
 
   const onSubmit = (data: FormValues) => {
-    const notEmptyCategories = data.categories.filter(
-      (category) => category.trim() !== ""
-    );
-    const updatedData = {
-      ...data,
-      categories: notEmptyCategories,
+    const exerciseToUpdate = {
+      id: currentExercise.id,
+      name: data.name,
+      categories: selectedCategories,
+      userId: usr.id,
     };
 
     const currentIndex = exercises.indexOf(currentExercise);
 
-    const exerciseToUpdate = convertFormDataToExercise(updatedData);
     if (currentIndex !== -1) {
       dispatch(
         editExercise({
