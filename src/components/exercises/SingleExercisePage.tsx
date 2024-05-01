@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { Category } from "../../interfaces/category.interface";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../app/store";
@@ -134,7 +134,7 @@ const SingleExercisePage = () => {
   };
 
   const handleGoBack = () => {
-    navigate("/exercises");
+    navigate(-1);
   };
 
   return (
@@ -199,6 +199,7 @@ const SingleExercisePage = () => {
               placeholder="Type to filter categories"
               onChange={(event) => handleFilterCategories(event)}
             />
+
             {filteredCategories.map((category, index) => (
               <Card m={0} p={2} bg="#404040" key={index}>
                 <CardBody p={0} ml={5} mr={5}>
@@ -217,7 +218,6 @@ const SingleExercisePage = () => {
             ))}
           </Flex>
         </Flex>
-
         <Button
           w="95vw"
           bg="lightblue"

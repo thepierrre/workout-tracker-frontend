@@ -83,7 +83,7 @@ const NewRoutine = () => {
   };
 
   const handleGoBack = () => {
-    navigate("/routines");
+    navigate(-1);
   };
 
   return (

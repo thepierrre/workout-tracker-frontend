@@ -9,7 +9,7 @@ export interface CategoriesState {
 }
 
 const initialState: CategoriesState = {
-  categories,
+  categories: categories,
 };
 
 const categoriesSlice = createSlice({

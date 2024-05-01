@@ -13,7 +13,10 @@ import {
   CardBody,
   Checkbox,
   Heading,
+  IconButton,
+  Box,
 } from "@chakra-ui/react";
+import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { useForm, Resolver } from "react-hook-form";
 
 import { Routine } from "../../interfaces/routine.interface";
@@ -97,6 +100,10 @@ const SingleRoutinePage = () => {
     } else return false;
   };
 
+  const handleGoBack = () => {
+    navigate(-1);
+  };
+
   return (
     <Flex
       align="center"
@@ -107,7 +114,21 @@ const SingleRoutinePage = () => {
       padding={2}
       marginTop={6}
     >
-      <Heading fontSize="lg">Edit routine</Heading>
+      <Flex align="center" w="100%">
+        <IconButton
+          aria-label="Go back"
+          variant="link"
+          color="white"
+          w="15%"
+          icon={<ChevronLeftIcon boxSize={8} />}
+          onClick={() => handleGoBack()}
+        />
+
+        <Heading w="70%" fontSize="lg" textAlign="center">
+          Edit routine
+        </Heading>
+        <Box w="16%" />
+      </Flex>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl isInvalid={!!errors.name}>
           <Input

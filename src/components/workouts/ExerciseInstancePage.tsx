@@ -1,8 +1,18 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../app/store";
-import { Flex, Heading, Text, Button, Card, CardBody } from "@chakra-ui/react";
+import {
+  Flex,
+  Heading,
+  Text,
+  Button,
+  Card,
+  CardBody,
+  Box,
+  IconButton,
+} from "@chakra-ui/react";
+import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { Series } from "../../interfaces/series.interface";
 import { generateRandomString } from "../../util/DUMMY_DATA";
 import {
@@ -17,6 +27,8 @@ const ExerciseInstancePage = () => {
   const [activeSeries, setActiveSeries] = useState<Series | undefined>(
     undefined
   );
+
+  const navigate = useNavigate();
 
   const { workoutId, exerciseInstanceId } = useParams();
 
@@ -130,13 +142,30 @@ const ExerciseInstancePage = () => {
     }
   };
 
+  const handleGoBack = () => {
+    navigate(-1);
+  };
+
   return (
     <Flex direction="column" w="100vw" mt={5} p={2} textColor="white">
       {exerciseInstance?.exercise !== undefined && (
         <Flex direction="column" gap={5}>
-          <Heading fontSize="md" color="white" textAlign="center">
-            {exerciseInstance?.exercise.name.toUpperCase()}
-          </Heading>
+          <Flex align="center" w="100%">
+            <IconButton
+              aria-label="Go back"
+              variant="link"
+              color="white"
+              w="15%"
+              icon={<ChevronLeftIcon boxSize={8} />}
+              onClick={() => handleGoBack()}
+            />
+
+            <Heading fontSize="md" color="white" textAlign="center" w="70%">
+              {exerciseInstance?.exercise.name.toUpperCase()}
+            </Heading>
+            <Box w="15%" />
+          </Flex>
+
           <Flex w="100%" direction="column" gap={5} mt={2}>
             <Flex>
               <Flex direction="column" w="50%" gap={1}>

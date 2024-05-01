@@ -9,6 +9,7 @@ import { categories } from "../util/DUMMY_DATA";
 import { addExercise } from "../features/exercises/exercisesSlice";
 import React, { useState } from "react";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
+import { categories as catts } from "../util/DUMMY_DATA";
 
 import {
   Flex,
@@ -23,6 +24,8 @@ import {
   Checkbox,
   IconButton,
   Box,
+  Wrap,
+  WrapItem,
 } from "@chakra-ui/react";
 
 type FormValues = {
@@ -57,6 +60,10 @@ const NewExercise = () => {
   const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
 
   const usr = useSelector((state: RootState) => state.authenticatedUser.user);
+  const initialCategories = useSelector(
+    (state: RootState) => state.categories.categories
+  );
+  const [categories, setCategories] = useState<Category[]>(initialCategories);
   const dispatch = useDispatch();
 
   const convertFormDataToExercise = (formData: FormValues): Exercise => {
@@ -83,11 +90,19 @@ const NewExercise = () => {
 
   const handleCheck = (category: Category) => {
     if (selectedCategories.includes(category)) {
-      setSelectedCategories((prevSelectedCategories) =>
-        prevSelectedCategories.filter((cat) => cat.id !== category.id)
-      );
+      setTimeout(() => {
+        setSelectedCategories((prevSelectedCategories) =>
+          prevSelectedCategories.filter((cat) => cat.id !== category.id)
+        );
+        setCategories([...categories, category]);
+      }, 250);
     } else {
-      setSelectedCategories([...selectedCategories, category]);
+      setTimeout(() => {
+        setSelectedCategories([...selectedCategories, category]);
+        setCategories((prevCategories) =>
+          prevCategories.filter((cat) => cat.id !== category.id)
+        );
+      }, 250);
     }
   };
 
@@ -103,7 +118,7 @@ const NewExercise = () => {
   );
 
   const handleGoBack = () => {
-    navigate("/exercises");
+    navigate(-1);
   };
 
   return (
@@ -153,6 +168,20 @@ const NewExercise = () => {
         <Heading fontSize="lg" textAlign="center" mt={4} mb={4}>
           Categories
         </Heading>
+        <Wrap w="90vw" mt={4} mb={4} ml={2} mr={2}>
+          {selectedCategories.map((category) => (
+            <Flex gap={5} w="48%" key={category.name}>
+              <Checkbox
+                defaultChecked={true}
+                onChange={() => handleCheck(category)}
+              ></Checkbox>
+              <Text textColor="white">
+                {category.name.charAt(0).toLocaleUpperCase() +
+                  category.name.slice(1)}
+              </Text>
+            </Flex>
+          ))}
+        </Wrap>
         <Flex direction="column" w="100%" gap={2}>
           <Input
             w="95vw"
@@ -166,19 +195,17 @@ const NewExercise = () => {
             placeholder="Type to filter categories"
             onChange={(event) => handleFilterCategories(event)}
           />
-          {filteredCategories.map((category, index) => (
-            <Card m={0} p={2} bg="#404040" key={index}>
-              <CardBody p={0} ml={5} mr={5}>
-                <Flex gap={5}>
-                  <Checkbox onChange={() => handleCheck(category)}></Checkbox>
-                  <Text textColor="white">
-                    {category.name.charAt(0).toLocaleUpperCase() +
-                      category.name.slice(1)}
-                  </Text>
-                </Flex>
-              </CardBody>
-            </Card>
-          ))}
+          <Wrap w="90vw" mt={4} mb={4} ml={2} mr={2}>
+            {filteredCategories.map((category) => (
+              <Flex gap={5} w="48%" key={category.name}>
+                <Checkbox onChange={() => handleCheck(category)}></Checkbox>
+                <Text textColor="white">
+                  {category.name.charAt(0).toLocaleUpperCase() +
+                    category.name.slice(1)}
+                </Text>
+              </Flex>
+            ))}
+          </Wrap>
         </Flex>
         <Button
           w="95vw"

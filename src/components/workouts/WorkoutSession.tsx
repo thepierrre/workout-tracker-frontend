@@ -12,6 +12,7 @@ interface WorkoutProps {
 
 const WorkoutSession: React.FC<WorkoutProps> = ({ workout: wrk }) => {
   const dispatch = useDispatch();
+
   const handleRemoveWorkout = (workout: Workout) => {
     dispatch(removeWorkout(workout));
   };
@@ -53,9 +54,14 @@ const WorkoutSession: React.FC<WorkoutProps> = ({ workout: wrk }) => {
             </Link>
           ))}
         </Flex>
-        <Flex gap={1} justify="center">
+        <Flex
+          gap={1}
+          justify="center"
+          color="lightblue"
+          onClick={() => handleRemoveWorkout(wrk)}
+        >
           <RemoveCircleOutlineIcon />
-          <Text>Remove workout</Text>
+          <Text fontWeight="bold">Remove workout</Text>
         </Flex>
       </Flex>
     </>

@@ -5,7 +5,7 @@ import activeExerciseInstanceReducer from "../features/workout/activeExerciseIns
 import authenticatedUserReducer from "../features/auth/authenticatedUserSlice";
 import exercisesReducer from "../features/exercises/exercisesSlice";
 import routinesReducer from "../features/routines/routinesSlice";
-import categoriesReducer from "../features/exercises/exercisesSlice";
+import categoriesReducer from "../features/exercises/categoriesSlice";
 
 export const store = configureStore({
   reducer: {
