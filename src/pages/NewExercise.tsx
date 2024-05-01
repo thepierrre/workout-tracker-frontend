@@ -8,7 +8,7 @@ import { Category } from "../interfaces/category.interface";
 import { categories } from "../util/DUMMY_DATA";
 import { addExercise } from "../features/exercises/exercisesSlice";
 import React, { useState } from "react";
-import { ChevronLeftIcon } from "@chakra-ui/icons";
+import { ChevronLeftIcon, SearchIcon } from "@chakra-ui/icons";
 import { categories as catts } from "../util/DUMMY_DATA";
 
 import {
@@ -23,6 +23,8 @@ import {
   CardBody,
   Checkbox,
   IconButton,
+  InputGroup,
+  InputLeftElement,
   Box,
   Wrap,
   WrapItem,
@@ -65,15 +67,6 @@ const NewExercise = () => {
   );
   const [categories, setCategories] = useState<Category[]>(initialCategories);
   const dispatch = useDispatch();
-
-  const convertFormDataToExercise = (formData: FormValues): Exercise => {
-    return {
-      id: generateRandomString(5),
-      name: formData.name,
-      categories: selectedCategories,
-      userId: usr.id,
-    };
-  };
 
   const onSubmit = (data: FormValues) => {
     console.log(data.name);
@@ -165,9 +158,7 @@ const NewExercise = () => {
             {errors.name && errors.name.message}
           </FormErrorMessage>
         </FormControl>
-        <Heading fontSize="lg" textAlign="center" mt={4} mb={4}>
-          Categories
-        </Heading>
+
         <Wrap w="90vw" mt={4} mb={4} ml={2} mr={2}>
           {selectedCategories.map((category) => (
             <Flex gap={5} w="48%" key={category.name}>
@@ -183,18 +174,24 @@ const NewExercise = () => {
           ))}
         </Wrap>
         <Flex direction="column" w="100%" gap={2}>
-          <Input
-            w="95vw"
-            bg="#404040"
-            borderColor="transparent"
-            _focusVisible={{
-              borderWidth: "1px",
-              borderColor: "lightblue",
-            }}
-            _placeholder={{ color: "#B3B3B3" }}
-            placeholder="Type to filter categories"
-            onChange={(event) => handleFilterCategories(event)}
-          />
+          <InputGroup>
+            <Input
+              w="95vw"
+              bg="#404040"
+              borderColor="transparent"
+              _focusVisible={{
+                borderWidth: "1px",
+                borderColor: "lightblue",
+              }}
+              _placeholder={{ color: "#B3B3B3" }}
+              placeholder="Filter categories"
+              onChange={(event) => handleFilterCategories(event)}
+            />
+            <InputLeftElement>
+              <SearchIcon />
+            </InputLeftElement>
+          </InputGroup>
+
           <Wrap w="90vw" mt={4} mb={4} ml={2} mr={2}>
             {filteredCategories.map((category) => (
               <Flex gap={5} w="48%" key={category.name}>

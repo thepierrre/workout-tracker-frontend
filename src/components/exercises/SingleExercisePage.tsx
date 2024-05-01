@@ -16,9 +16,12 @@ import {
   Checkbox,
   Heading,
   IconButton,
+  InputGroup,
+  InputLeftElement,
+  Wrap,
   Box,
 } from "@chakra-ui/react";
-import { ChevronLeftIcon } from "@chakra-ui/icons";
+import { ChevronLeftIcon, SearchIcon } from "@chakra-ui/icons";
 import { useForm, Resolver } from "react-hook-form";
 
 import { Exercise } from "../../interfaces/exercise.interface";
@@ -103,14 +106,20 @@ const SingleExercisePage = () => {
   };
 
   const handleCheck = (category: Category) => {
-    if (selectedCategories) {
-      if (selectedCategories.includes(category)) {
+    if (selectedCategories.includes(category)) {
+      setTimeout(() => {
         setSelectedCategories((prevSelectedCategories) =>
           prevSelectedCategories.filter((cat) => cat.id !== category.id)
         );
-      } else {
+        setCategories([...categories, category]);
+      }, 250);
+    } else {
+      setTimeout(() => {
         setSelectedCategories([...selectedCategories, category]);
-      }
+        setCategories((prevCategories) =>
+          prevCategories.filter((cat) => cat.id !== category.id)
+        );
+      }, 250);
     }
   };
 
@@ -181,41 +190,52 @@ const SingleExercisePage = () => {
             {errors.name && errors.name.message}
           </FormErrorMessage>
         </FormControl>
+        <Wrap w="90vw" mt={4} mb={4} ml={2} mr={2}>
+          {selectedCategories.map((category) => (
+            <Flex gap={5} w="48%" key={category.name}>
+              <Checkbox
+                defaultChecked={true}
+                onChange={() => handleCheck(category)}
+              ></Checkbox>
+              <Text textColor="white">
+                {category.name.charAt(0).toLocaleUpperCase() +
+                  category.name.slice(1)}
+              </Text>
+            </Flex>
+          ))}
+        </Wrap>
 
         <Flex gap={2} direction="column" w="95vw">
-          <Heading fontSize="md" textAlign="center" mt={6} mb={3}>
-            Categories
-          </Heading>
           <Flex direction="column" w="100%" gap={2}>
-            <Input
-              w="95vw"
-              bg="#404040"
-              borderColor="transparent"
-              _focusVisible={{
-                borderWidth: "1px",
-                borderColor: "lightblue",
-              }}
-              _placeholder={{ color: "#B3B3B3" }}
-              placeholder="Type to filter categories"
-              onChange={(event) => handleFilterCategories(event)}
-            />
+            <InputGroup>
+              <Input
+                w="95vw"
+                bg="#404040"
+                borderColor="transparent"
+                _focusVisible={{
+                  borderWidth: "1px",
+                  borderColor: "lightblue",
+                }}
+                _placeholder={{ color: "#B3B3B3" }}
+                placeholder="Filter categories"
+                onChange={(event) => handleFilterCategories(event)}
+              />
+              <InputLeftElement>
+                <SearchIcon />
+              </InputLeftElement>
+            </InputGroup>
 
-            {filteredCategories.map((category, index) => (
-              <Card m={0} p={2} bg="#404040" key={index}>
-                <CardBody p={0} ml={5} mr={5}>
-                  <Flex gap={5}>
-                    <Checkbox
-                      onChange={() => handleCheck(category)}
-                      defaultChecked={categoryCheckedByDefault(category)}
-                    ></Checkbox>
-                    <Text textColor="white">
-                      {category.name.charAt(0).toLocaleUpperCase() +
-                        category.name.slice(1)}
-                    </Text>
-                  </Flex>
-                </CardBody>
-              </Card>
-            ))}
+            <Wrap w="90vw" mt={4} mb={4} ml={2} mr={2}>
+              {filteredCategories.map((category) => (
+                <Flex gap={5} w="48%" key={category.name}>
+                  <Checkbox onChange={() => handleCheck(category)}></Checkbox>
+                  <Text textColor="white">
+                    {category.name.charAt(0).toLocaleUpperCase() +
+                      category.name.slice(1)}
+                  </Text>
+                </Flex>
+              ))}
+            </Wrap>
           </Flex>
         </Flex>
         <Button
