@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
-import { Flex, Text, Box } from "@chakra-ui/react";
+import { Flex, Text, Box, IconButton } from "@chakra-ui/react";
 import { setDay } from "../../features/workout/dayInCalendarSlice";
 import { format } from "date-fns";
 
@@ -38,7 +38,7 @@ const Datepicker = () => {
   const dispatch = useDispatch();
 
   const handleActiveDay = (index: number) => {
-    const selectedDate = daysOfThisWeek[index];
+    const selectedDate = displayedWeek[index];
     const formattedDate = format(selectedDate, "dd/MM/yyyy");
     dispatch(setDay(formattedDate));
   };
@@ -61,12 +61,14 @@ const Datepicker = () => {
 
   return (
     <Flex align="center">
-      {displayedWeek !== daysOfLastWeek && (
-        <ChevronLeftIcon
-          boxSize={8}
-          onClick={() => handleDisplayedWeek("previous")}
-        />
-      )}
+      <IconButton
+        color="white"
+        icon={<ChevronLeftIcon boxSize={8} />}
+        isDisabled={displayedWeek === daysOfLastWeek ? true : false}
+        aria-label="Go to previous week"
+        variant="link"
+        onClick={() => handleDisplayedWeek("previous")}
+      />
       <Flex gap={4}>
         {displayedWeek.map((day, index) => (
           <Flex
@@ -75,6 +77,7 @@ const Datepicker = () => {
             align="center"
             gap={1}
             onClick={() => handleActiveDay(index)}
+            w={7}
           >
             <Text
               fontSize="xs"
@@ -85,11 +88,13 @@ const Datepicker = () => {
             <Box
               paddingInline={1}
               borderRadius={7}
+              w={8}
               bg={chosenDay === format(day, "dd/MM/yyyy") ? "lightblue" : ""}
             >
               <Text
                 fontSize="xl"
                 color={chosenDay === format(day, "dd/MM/yyyy") ? "#353935" : ""}
+                textAlign="center"
               >
                 {day.getDate()}
               </Text>
@@ -97,12 +102,15 @@ const Datepicker = () => {
           </Flex>
         ))}
       </Flex>
-      {displayedWeek !== daysOfNextWeek && (
-        <ChevronRightIcon
-          boxSize={8}
-          onClick={() => handleDisplayedWeek("following")}
-        />
-      )}
+
+      <IconButton
+        color="white"
+        icon={<ChevronRightIcon boxSize={8} />}
+        isDisabled={displayedWeek === daysOfNextWeek ? true : false}
+        aria-label="Go to previous week"
+        variant="link"
+        onClick={() => handleDisplayedWeek("following")}
+      />
     </Flex>
   );
 };
