@@ -7,16 +7,18 @@ import { Category } from "../interfaces/category.interface";
 import { passwords } from "./DUMY_PASSWORDS";
 
 export const categories: Category[] = [
-  { id: "category-id1", name: "upper body" },
-  { id: "category-id2", name: "lower body" },
-  { id: "category-id3", name: "chest" },
-  { id: "category-id4", name: "abs" },
-  { id: "category-id5", name: "glutes" },
-  { id: "category-id6", name: "hamstrings" },
-  { id: "category-id7", name: "upper back" },
-  { id: "category-id8", name: "lower back" },
-  { id: "category-id9", name: "shoulders" },
-  { id: "category-id10", name: "quads " },
+  { id: "category-id1", name: "chest" },
+  { id: "category-id2", name: "triceps" },
+  { id: "category-id3", name: "biceps" },
+  { id: "category-id4", name: "back" },
+  { id: "category-id5", name: "traps" },
+  { id: "category-id6", name: "lats" },
+  { id: "category-id7", name: "shoulders" },
+  { id: "category-id8", name: "abs" },
+  { id: "category-id9", name: "quads" },
+  { id: "category-id10", name: "hamstrings" },
+  { id: "category-id11", name: "glutes" },
+  { id: "category-id12", name: "calves" },
 ];
 
 export const exercises: Exercise[] = [
@@ -72,7 +74,27 @@ export const routines: Routine[] = [
   },
   {
     id: "routine-id2",
+    name: "Abs",
+    exercises: [exercises[3], exercises[4], exercises[5], exercises[6]],
+  },
+  {
+    id: "routine-id3",
+    name: "Legs",
+    exercises: [exercises[3], exercises[4], exercises[5], exercises[6]],
+  },
+  {
+    id: "routine-id4",
+    name: "Upper Body",
+    exercises: [exercises[3], exercises[4], exercises[5], exercises[6]],
+  },
+  {
+    id: "routine-id5",
     name: "Full Body 2",
+    exercises: [exercises[3], exercises[4], exercises[5], exercises[6]],
+  },
+  {
+    id: "routine-id6",
+    name: "Cardio",
     exercises: [exercises[3], exercises[4], exercises[5], exercises[6]],
   },
 ];
