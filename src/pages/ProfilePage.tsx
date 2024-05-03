@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { RootState } from "../app/store";
 import { useSelector } from "react-redux";
 import { Flex, Button, Heading, Card, Text, Select } from "@chakra-ui/react";
@@ -11,11 +12,9 @@ const ProfilePage = () => {
     (state: RootState) => state.workoutSessions.workouts
   );
 
-  const [currentDay, setCurrentDay] = useState<number | undefined>(undefined);
-  const [currentMonth, setCurrentMonth] = useState<string | undefined>(
-    undefined
-  );
-  const [currentYear, setCurrentYear] = useState<number | undefined>(undefined);
+  const [chosenDay, setChosenDay] = useState<number | undefined>(undefined);
+  const [chosenMonth, setChosenMonth] = useState<string | undefined>(undefined);
+  const [chosenYear, setChosenYear] = useState<number | undefined>(undefined);
 
   const days: number[] = [];
   for (let i = 0; i < workouts.length; i++) {
@@ -66,23 +65,53 @@ const ProfilePage = () => {
 
   const handleDaySelection = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedDay = +event.target.value;
-    setCurrentDay(selectedDay);
-    console.log(currentMonth);
+    if (selectedDay === 0) {
+      setChosenDay(undefined);
+    } else {
+      setChosenDay(selectedDay);
+    }
   };
 
   const handleMonthSelection = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const selectedMonth = event.target.value;
-    setCurrentMonth(selectedMonth);
-    console.log(currentMonth);
+    if (!selectedMonth) {
+      setChosenMonth(undefined);
+    } else {
+      setChosenMonth(selectedMonth);
+    }
   };
 
   const handleYearSelection = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedYear = +event.target.value;
-    setCurrentYear(selectedYear);
-    console.log(currentYear);
+    if (selectedYear === 0) {
+      setChosenYear(undefined);
+    } else {
+      setChosenYear(selectedYear);
+    }
+    console.log(chosenYear);
   };
+
+  const filteredWorkouts1 = workouts.filter(
+    (workout) => getYear(workout.creationDate) === chosenYear
+  );
+
+  let filteredWorkouts;
+
+  const filteredByDay = workouts.filter(
+    (workout) => getDate(workout.creationDate) === chosenYear
+  );
+
+  const filteredByMonth = workouts.filter(
+    (workout) => format(workout.creationDate, "LLLL") === chosenMonth
+  );
+
+  const filteredByYear = workouts.filter(
+    (workout) => getYear(workout.creationDate) === chosenYear
+  );
+
+  const filterWorkouts = () => {};
 
   return (
     <Flex
@@ -128,18 +157,20 @@ const ProfilePage = () => {
           ))}
         </Select>
       </Flex>
-      {workouts.map((workout, index) => (
-        <Card bg="#404040" color="white" padding={4} w="95vw" key={index}>
-          <Flex direction="column" gap={2}>
-            <Heading fontWeight="bold" fontSize="md">
-              {`${getDate(workout.creationDate)} ${format(
-                workout.creationDate,
-                "LLLL"
-              )}`}
-            </Heading>
-            <Text>{workout.routineName}</Text>
-          </Flex>
-        </Card>
+      {filteredWorkouts1.map((workout) => (
+        <Link to={`/workouts/${workout.id}`} key={workout.id}>
+          <Card bg="#404040" color="white" padding={4} w="95vw">
+            <Flex direction="column" gap={2}>
+              <Heading fontWeight="bold" fontSize="md">
+                {`${getDate(workout.creationDate)} ${format(
+                  workout.creationDate,
+                  "LLLL"
+                )}`}
+              </Heading>
+              <Text>{workout.routineName}</Text>
+            </Flex>
+          </Card>
+        </Link>
       ))}
       <Button
         w="95vw"
@@ -156,6 +187,3 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
-
-// add statistics (how many workouts, routines, exercises etc.)
-// add history (e.g. display workouts for month and year)
