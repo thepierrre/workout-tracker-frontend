@@ -72,16 +72,18 @@ const SingleExercisePage = () => {
   const [selectedCategories, setSelectedCategories] = useState<Category[]>(
     currentExercise.categories
   );
-  const dispatch = useDispatch();
+  const initialCategories = useSelector(
+    (state: RootState) => state.categories.categories
+  );
 
-  const convertFormDataToExercise = (formData: FormValues): Exercise => {
-    return {
-      id: currentExercise.id,
-      name: formData.name,
-      categories: selectedCategories,
-      userId: usr.id,
-    };
-  };
+  const notSelectedCategories = initialCategories.filter(
+    (cat) => !selectedCategories.includes(cat)
+  );
+
+  const [categories, setCategories] = useState<Category[]>(
+    notSelectedCategories
+  );
+  const dispatch = useDispatch();
 
   const onSubmit = (data: FormValues) => {
     const exerciseToUpdate = {
@@ -106,6 +108,18 @@ const SingleExercisePage = () => {
   };
 
   const handleCheck = (category: Category) => {
+    console.log(selectedCategories);
+
+    // if (!selectedCategories.includes(category)) {
+    //   setTimeout(() => {
+    //     setSelectedCategories([...selectedCategories, category]);
+    //     setCategories((prevCategories) =>
+    //       prevCategories.filter((cat) => cat.id !== category.id)
+    //     );
+    //   }, 250);
+    // }
+    // return;
+
     if (selectedCategories.includes(category)) {
       setTimeout(() => {
         setSelectedCategories((prevSelectedCategories) =>
