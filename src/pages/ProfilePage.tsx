@@ -111,8 +111,6 @@ const ProfilePage = () => {
     (workout) => getYear(workout.creationDate) === chosenYear
   );
 
-  const filterWorkouts = () => {};
-
   return (
     <Flex
       align="center"
