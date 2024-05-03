@@ -109,9 +109,18 @@ const series7: Series = { id: "series-id7", reps: 9, weight: 30 };
 const series8: Series = { id: "series-id8", reps: 9, weight: 60 };
 const series9: Series = { id: "series-id9", reps: 8, weight: 60 };
 
-const date1 = new Date(2024, 4, 21).toString();
-const date2 = new Date(2024, 4, 1).toString();
-const date3 = new Date(2024, 4, 14).toString();
+const date1 = new Date(2022, 4, 21).toString();
+const date2 = new Date(2022, 5, 1).toString();
+const date3 = new Date(2023, 4, 15).toString();
+const date4 = new Date(2024, 0, 15).toString();
+const date5 = new Date(2024, 4, 3).toString();
+const date6 = new Date(2024, 4, 11).toString();
+const date7 = new Date(2023, 4, 14).toString();
+const date8 = new Date(2021, 4, 21).toString();
+const date9 = new Date(2024, 1, 14).toString();
+const date10 = new Date(2023, 7, 14).toString();
+const date11 = new Date(2024, 4, 15).toString();
+const date12 = new Date(2024, 4, 15).toString();
 
 export const generateRandomString = (length: number) => {
   const characters =
@@ -172,6 +181,249 @@ export const workouts: Workout[] = [
   {
     id: "workout-id3",
     creationDate: date3,
+    routineName: "Legs",
+    exerciseInstances: [
+      {
+        id: "instance-id7",
+        exercise: exercises[3],
+        series: [series1, series2, series3],
+      },
+      {
+        id: "instance-id8",
+        exercise: exercises[4],
+        series: [series4, series5, series6],
+      },
+      {
+        id: "instance-id9",
+        exercise: exercises[5],
+        series: [series7, series8, series9],
+      },
+      {
+        id: "instance-id10",
+        exercise: exercises[6],
+        series: [series7, series8, series9],
+      },
+    ],
+  },
+  {
+    id: "workout-id4",
+    creationDate: date4,
+    routineName: "Abs",
+    exerciseInstances: [
+      {
+        id: "instance-id7",
+        exercise: exercises[3],
+        series: [series1, series2, series3],
+      },
+      {
+        id: "instance-id8",
+        exercise: exercises[4],
+        series: [series4, series5, series6],
+      },
+      {
+        id: "instance-id9",
+        exercise: exercises[5],
+        series: [series7, series8, series9],
+      },
+      {
+        id: "instance-id10",
+        exercise: exercises[6],
+        series: [series7, series8, series9],
+      },
+    ],
+  },
+  {
+    id: "workout-id5",
+    creationDate: date5,
+    routineName: "Abs",
+    exerciseInstances: [
+      {
+        id: "instance-id7",
+        exercise: exercises[3],
+        series: [series1, series2, series3],
+      },
+      {
+        id: "instance-id8",
+        exercise: exercises[4],
+        series: [series4, series5, series6],
+      },
+      {
+        id: "instance-id9",
+        exercise: exercises[5],
+        series: [series7, series8, series9],
+      },
+      {
+        id: "instance-id10",
+        exercise: exercises[6],
+        series: [series7, series8, series9],
+      },
+    ],
+  },
+  {
+    id: "workout-id6",
+    creationDate: date6,
+    routineName: "Cardio",
+    exerciseInstances: [
+      {
+        id: "instance-id7",
+        exercise: exercises[3],
+        series: [series1, series2, series3],
+      },
+      {
+        id: "instance-id8",
+        exercise: exercises[4],
+        series: [series4, series5, series6],
+      },
+      {
+        id: "instance-id9",
+        exercise: exercises[5],
+        series: [series7, series8, series9],
+      },
+      {
+        id: "instance-id10",
+        exercise: exercises[6],
+        series: [series7, series8, series9],
+      },
+    ],
+  },
+  {
+    id: "workout-id7",
+    creationDate: date7,
+    routineName: "Pulling 1",
+    exerciseInstances: [
+      {
+        id: "instance-id7",
+        exercise: exercises[3],
+        series: [series1, series2, series3],
+      },
+      {
+        id: "instance-id8",
+        exercise: exercises[4],
+        series: [series4, series5, series6],
+      },
+      {
+        id: "instance-id9",
+        exercise: exercises[5],
+        series: [series7, series8, series9],
+      },
+      {
+        id: "instance-id10",
+        exercise: exercises[6],
+        series: [series7, series8, series9],
+      },
+    ],
+  },
+  {
+    id: "workout-id8",
+    creationDate: date8,
+    routineName: "Pulling 2",
+    exerciseInstances: [
+      {
+        id: "instance-id7",
+        exercise: exercises[3],
+        series: [series1, series2, series3],
+      },
+      {
+        id: "instance-id8",
+        exercise: exercises[4],
+        series: [series4, series5, series6],
+      },
+      {
+        id: "instance-id9",
+        exercise: exercises[5],
+        series: [series7, series8, series9],
+      },
+      {
+        id: "instance-id10",
+        exercise: exercises[6],
+        series: [series7, series8, series9],
+      },
+    ],
+  },
+  {
+    id: "workout-id9",
+    creationDate: date9,
+    routineName: "Pushing",
+    exerciseInstances: [
+      {
+        id: "instance-id7",
+        exercise: exercises[3],
+        series: [series1, series2, series3],
+      },
+      {
+        id: "instance-id8",
+        exercise: exercises[4],
+        series: [series4, series5, series6],
+      },
+      {
+        id: "instance-id9",
+        exercise: exercises[5],
+        series: [series7, series8, series9],
+      },
+      {
+        id: "instance-id10",
+        exercise: exercises[6],
+        series: [series7, series8, series9],
+      },
+    ],
+  },
+  {
+    id: "workout-id10",
+    creationDate: date10,
+    routineName: "Full Body 2",
+    exerciseInstances: [
+      {
+        id: "instance-id7",
+        exercise: exercises[3],
+        series: [series1, series2, series3],
+      },
+      {
+        id: "instance-id8",
+        exercise: exercises[4],
+        series: [series4, series5, series6],
+      },
+      {
+        id: "instance-id9",
+        exercise: exercises[5],
+        series: [series7, series8, series9],
+      },
+      {
+        id: "instance-id10",
+        exercise: exercises[6],
+        series: [series7, series8, series9],
+      },
+    ],
+  },
+  {
+    id: "workout-id11",
+    creationDate: date11,
+    routineName: "Full Body 2",
+    exerciseInstances: [
+      {
+        id: "instance-id7",
+        exercise: exercises[3],
+        series: [series1, series2, series3],
+      },
+      {
+        id: "instance-id8",
+        exercise: exercises[4],
+        series: [series4, series5, series6],
+      },
+      {
+        id: "instance-id9",
+        exercise: exercises[5],
+        series: [series7, series8, series9],
+      },
+      {
+        id: "instance-id10",
+        exercise: exercises[6],
+        series: [series7, series8, series9],
+      },
+    ],
+  },
+  {
+    id: "workout-id12",
+    creationDate: date12,
     routineName: "Full Body 2",
     exerciseInstances: [
       {
