@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { RootState } from "../app/store";
 import { useSelector } from "react-redux";
+import { Workout } from "../interfaces/workout.interface";
 import { Flex, Button, Heading, Card, Text, Select } from "@chakra-ui/react";
 import { format, getDate, getYear } from "date-fns";
-import WorkoutSession from "../components/workouts/WorkoutSession";
 
 const ProfilePage = () => {
   const user = useSelector((state: RootState) => state.authenticatedUser.user);
@@ -15,6 +15,25 @@ const ProfilePage = () => {
   const [chosenDay, setChosenDay] = useState<number | undefined>(undefined);
   const [chosenMonth, setChosenMonth] = useState<string | undefined>(undefined);
   const [chosenYear, setChosenYear] = useState<number | undefined>(undefined);
+
+  const [_filteredByDay, setFilteredByDay] = useState<Workout[]>([]);
+  const [_filteredByMonth, setFilteredByMonth] = useState<Workout[]>([]);
+  const [_filteredByYear, setFilteredByYear] = useState<Workout[]>([]);
+  const [_allFilteredWorkouts, setAllFilteredWorkouts] = useState<Workout[]>(
+    []
+  );
+
+  const filteredWorkouts = workouts.filter((workout) => {
+    const workoutDay = getDate(workout.creationDate);
+    const workoutMonth = format(workout.creationDate, "LLLL");
+    const workoutYear = getYear(workout.creationDate);
+
+    return (
+      (!chosenDay || workoutDay === chosenDay) &&
+      (!chosenMonth || workoutMonth === chosenMonth) &&
+      (!chosenYear || workoutYear === chosenYear)
+    );
+  });
 
   const days: number[] = [];
   for (let i = 0; i < workouts.length; i++) {
@@ -63,13 +82,40 @@ const ProfilePage = () => {
     console.log("logging out...");
   };
 
+  const handleFilteredWorkouts = () => {
+    const filteredByDay = workouts.filter(
+      (workout) => getDate(workout.creationDate) === chosenDay
+    );
+
+    const filteredByMonth = workouts.filter(
+      (workout) => format(workout.creationDate, "LLLL") === chosenMonth
+    );
+
+    const filteredByYear = workouts.filter(
+      (workout) => getYear(workout.creationDate) === chosenYear
+    );
+
+    // Calculate intersection of all filters
+    const filteredResults = filteredByDay
+      .filter((workout) => filteredByMonth.includes(workout))
+      .filter((workout) => filteredByYear.includes(workout));
+
+    setAllFilteredWorkouts(filteredResults);
+  };
+
   const handleDaySelection = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedDay = +event.target.value;
     if (selectedDay === 0) {
       setChosenDay(undefined);
     } else {
       setChosenDay(selectedDay);
+      setFilteredByDay(
+        workouts.filter(
+          (workout) => getDate(workout.creationDate) === selectedDay
+        )
+      );
     }
+    handleFilteredWorkouts();
   };
 
   const handleMonthSelection = (
@@ -80,7 +126,13 @@ const ProfilePage = () => {
       setChosenMonth(undefined);
     } else {
       setChosenMonth(selectedMonth);
+      setFilteredByMonth(
+        workouts.filter(
+          (workout) => format(workout.creationDate, "LLLL") === selectedMonth
+        )
+      );
     }
+    handleFilteredWorkouts();
   };
 
   const handleYearSelection = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -89,27 +141,14 @@ const ProfilePage = () => {
       setChosenYear(undefined);
     } else {
       setChosenYear(selectedYear);
+      setFilteredByYear(
+        workouts.filter(
+          (workout) => getYear(workout.creationDate) === selectedYear
+        )
+      );
     }
-    console.log(chosenYear);
+    handleFilteredWorkouts();
   };
-
-  const filteredWorkouts1 = workouts.filter(
-    (workout) => getYear(workout.creationDate) === chosenYear
-  );
-
-  let filteredWorkouts;
-
-  const filteredByDay = workouts.filter(
-    (workout) => getDate(workout.creationDate) === chosenYear
-  );
-
-  const filteredByMonth = workouts.filter(
-    (workout) => format(workout.creationDate, "LLLL") === chosenMonth
-  );
-
-  const filteredByYear = workouts.filter(
-    (workout) => getYear(workout.creationDate) === chosenYear
-  );
 
   return (
     <Flex
@@ -155,7 +194,7 @@ const ProfilePage = () => {
           ))}
         </Select>
       </Flex>
-      {filteredWorkouts1.map((workout) => (
+      {filteredWorkouts.map((workout) => (
         <Link to={`/workouts/${workout.id}`} key={workout.id}>
           <Card bg="#404040" color="white" padding={4} w="95vw">
             <Flex direction="column" gap={2}>
