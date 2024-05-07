@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../app/store";
+import axios from "../util/axiosInstance";
 
 import { Link } from "react-router-dom";
 
@@ -9,6 +11,18 @@ import { Flex, Text, Card, CardBody, Button } from "@chakra-ui/react";
 
 const RoutinesPage = () => {
   const routines = useSelector((state: RootState) => state.routines.routines);
+
+  useEffect(() => {
+    const getRoutines = async () => {
+      try {
+        const response = await axios.get("users");
+        console.log(response);
+      } catch {
+        // empty on purpose
+      }
+    };
+    getRoutines();
+  }, []);
 
   return (
     <Flex

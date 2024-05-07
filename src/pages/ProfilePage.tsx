@@ -11,6 +11,10 @@ const ProfilePage = () => {
   const workouts = useSelector(
     (state: RootState) => state.workoutSessions.workouts
   );
+  const routines = useSelector((state: RootState) => state.routines.routines);
+  const exercises = useSelector(
+    (state: RootState) => state.exercises.exercises
+  );
 
   const [chosenDay, setChosenDay] = useState<number | undefined>(undefined);
   const [chosenMonth, setChosenMonth] = useState<string | undefined>(undefined);
@@ -156,12 +160,12 @@ const ProfilePage = () => {
       w="100vw"
       color="white"
       direction="column"
-      gap={3}
+      gap={5}
       padding={2}
       marginTop={5}
     >
       <Heading fontSize="2xl">Hello, {user.username}</Heading>
-      <Heading fontSize="lg">History</Heading>
+      <Heading fontSize="lg">Workout history</Heading>
       <Flex gap={2} w="95vw">
         <Select
           placeholder="Day"
@@ -194,21 +198,47 @@ const ProfilePage = () => {
           ))}
         </Select>
       </Flex>
-      {filteredWorkouts.map((workout) => (
-        <Link to={`/workouts/${workout.id}`} key={workout.id}>
-          <Card bg="#404040" color="white" padding={4} w="95vw">
-            <Flex direction="column" gap={2}>
-              <Heading fontWeight="bold" fontSize="md">
-                {`${getDate(workout.creationDate)} ${format(
-                  workout.creationDate,
-                  "LLLL"
-                )}`}
-              </Heading>
-              <Text>{workout.routineName}</Text>
-            </Flex>
-          </Card>
-        </Link>
-      ))}
+      <Flex direction="column" gap={2} overflowY="auto" maxH="25rem">
+        {filteredWorkouts.map((workout) => (
+          <Link to={`/workouts/${workout.id}`} key={workout.id}>
+            <Card bg="#404040" color="white" padding={4} w="95vw">
+              <Flex direction="column" gap={1}>
+                <Text fontSize="sm">
+                  {`${getDate(workout.creationDate)} ${format(
+                    workout.creationDate,
+                    "LLLL"
+                  ).toUpperCase()}, ${getYear(workout.creationDate)}`}
+                </Text>
+                <Text fontWeight="bold">{workout.routineName}</Text>
+              </Flex>
+            </Card>
+          </Link>
+        ))}
+      </Flex>
+
+      <Flex direction="column" align="center" gap={2}>
+        <Heading fontSize="lg" mb={1}>
+          Statistics
+        </Heading>
+        <Card bg="#404040" color="white" padding={4} w="95vw" gap={2}>
+          <Flex gap={2}>
+            <Text fontWeight="bold">Workouts:</Text>
+            <Text>{workouts.length}</Text>
+          </Flex>
+        </Card>
+        <Card bg="#404040" color="white" padding={4} w="95vw" gap={2}>
+          <Flex gap={2}>
+            <Text fontWeight="bold">Routines:</Text>
+            <Text>{routines.length}</Text>
+          </Flex>
+        </Card>
+        <Card bg="#404040" color="white" padding={4} w="95vw" gap={2}>
+          <Flex gap={2}>
+            <Text fontWeight="bold">Exercises:</Text>
+            <Text>{exercises.length}</Text>
+          </Flex>
+        </Card>
+      </Flex>
       <Button
         w="95vw"
         bg="lightblue"

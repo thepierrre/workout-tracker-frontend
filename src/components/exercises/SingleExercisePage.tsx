@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Category } from "../../interfaces/category.interface";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../app/store";
-import { categories } from "../../util/DUMMY_DATA";
 import {
   Text,
   Input,
@@ -11,8 +10,6 @@ import {
   Button,
   FormControl,
   FormErrorMessage,
-  Card,
-  CardBody,
   Checkbox,
   Heading,
   IconButton,
@@ -23,8 +20,6 @@ import {
 } from "@chakra-ui/react";
 import { ChevronLeftIcon, SearchIcon } from "@chakra-ui/icons";
 import { useForm, Resolver } from "react-hook-form";
-
-import { Exercise } from "../../interfaces/exercise.interface";
 import { editExercise } from "../../features/exercises/exercisesSlice";
 
 type FormValues = {

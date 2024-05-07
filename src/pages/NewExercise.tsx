@@ -3,13 +3,10 @@ import { generateRandomString } from "../util/DUMMY_DATA";
 import { useForm, Resolver } from "react-hook-form";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../app/store";
-import { Exercise } from "../interfaces/exercise.interface";
 import { Category } from "../interfaces/category.interface";
-import { categories } from "../util/DUMMY_DATA";
 import { addExercise } from "../features/exercises/exercisesSlice";
 import React, { useState } from "react";
 import { ChevronLeftIcon, SearchIcon } from "@chakra-ui/icons";
-import { categories as catts } from "../util/DUMMY_DATA";
 
 import {
   Flex,
@@ -19,15 +16,12 @@ import {
   Input,
   FormErrorMessage,
   Text,
-  Card,
-  CardBody,
   Checkbox,
   IconButton,
   InputGroup,
   InputLeftElement,
   Box,
   Wrap,
-  WrapItem,
 } from "@chakra-ui/react";
 
 type FormValues = {
