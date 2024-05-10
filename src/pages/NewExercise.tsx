@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { generateRandomString } from "../util/DUMMY_DATA";
-import { Resolver } from "react-hook-form";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../app/store";
 import { Category } from "../interfaces/category.interface";
@@ -9,24 +8,6 @@ import { ChevronLeftIcon } from "@chakra-ui/icons";
 import ExerciseForm from "../components/forms/ExerciseForm";
 
 import { Flex, Heading, IconButton, Box } from "@chakra-ui/react";
-
-type FormValues = {
-  name: string;
-};
-
-const resolver: Resolver<FormValues> = async (values) => {
-  return {
-    values: values.name ? values : {},
-    errors: !values.name
-      ? {
-          name: {
-            type: "required",
-            message: "Exercise name is required.",
-          },
-        }
-      : {},
-  };
-};
 
 const NewExercise = () => {
   const navigate = useNavigate();
