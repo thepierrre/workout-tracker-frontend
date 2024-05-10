@@ -164,91 +164,105 @@ const ProfilePage = () => {
       padding={2}
       marginTop={5}
     >
-      <Heading fontSize="2xl">Hello, {user.username}</Heading>
-      <Heading fontSize="lg">Workout history</Heading>
-      <Flex gap={2} w="95vw">
-        <Select
-          placeholder="Day"
-          onChange={(event) => handleDaySelection(event)}
-        >
-          {days.map((day, index) => (
-            <option key={index} value={day}>
-              {day}
-            </option>
-          ))}
-        </Select>
-        <Select
-          placeholder="Month"
-          onChange={(event) => handleMonthSelection(event)}
-        >
-          {months.map((month, index) => (
-            <option key={index} value={month}>
-              {month}
-            </option>
-          ))}
-        </Select>
-        <Select
-          placeholder="Year"
-          onChange={(event) => handleYearSelection(event)}
-        >
-          {years.map((year, index) => (
-            <option key={index} value={year}>
-              {year}
-            </option>
-          ))}
-        </Select>
-      </Flex>
-      <Flex direction="column" gap={2} overflowY="auto" maxH="25rem">
-        {filteredWorkouts.map((workout) => (
-          <Link to={`/workouts/${workout.id}`} key={workout.id}>
-            <Card bg="#404040" color="white" padding={4} w="95vw">
-              <Flex direction="column" gap={1}>
-                <Text fontSize="sm">
-                  {`${getDate(workout.creationDate)} ${format(
-                    workout.creationDate,
-                    "LLLL"
-                  ).toUpperCase()}, ${getYear(workout.creationDate)}`}
-                </Text>
-                <Text fontWeight="bold">{workout.routineName}</Text>
+      {user !== undefined ? (
+        <>
+          <Heading fontSize="2xl">Hello, {user?.username || "noname"}</Heading>
+          <Heading fontSize="lg">Workout history</Heading>
+          <Flex gap={2} w="95vw">
+            <Select
+              placeholder="Day"
+              onChange={(event) => handleDaySelection(event)}
+            >
+              {days.map((day, index) => (
+                <option key={index} value={day}>
+                  {day}
+                </option>
+              ))}
+            </Select>
+            <Select
+              placeholder="Month"
+              onChange={(event) => handleMonthSelection(event)}
+            >
+              {months.map((month, index) => (
+                <option key={index} value={month}>
+                  {month}
+                </option>
+              ))}
+            </Select>
+            <Select
+              placeholder="Year"
+              onChange={(event) => handleYearSelection(event)}
+            >
+              {years.map((year, index) => (
+                <option key={index} value={year}>
+                  {year}
+                </option>
+              ))}
+            </Select>
+          </Flex>
+          <Flex direction="column" gap={2} overflowY="auto" maxH="25rem">
+            {filteredWorkouts.map((workout) => (
+              <Link to={`/workouts/${workout.id}`} key={workout.id}>
+                <Card bg="#404040" color="white" padding={4} w="95vw">
+                  <Flex direction="column" gap={1}>
+                    <Text fontSize="sm">
+                      {`${getDate(workout.creationDate)} ${format(
+                        workout.creationDate,
+                        "LLLL"
+                      ).toUpperCase()}, ${getYear(workout.creationDate)}`}
+                    </Text>
+                    <Text fontWeight="bold">{workout.routineName}</Text>
+                  </Flex>
+                </Card>
+              </Link>
+            ))}
+          </Flex>
+
+          <Flex direction="column" align="center" gap={2}>
+            <Heading fontSize="lg" mb={1}>
+              Statistics
+            </Heading>
+            <Card bg="#404040" color="white" padding={4} w="95vw" gap={2}>
+              <Flex gap={2}>
+                <Text fontWeight="bold">Workouts:</Text>
+                <Text>{workouts.length}</Text>
               </Flex>
             </Card>
-          </Link>
-        ))}
-      </Flex>
-
-      <Flex direction="column" align="center" gap={2}>
-        <Heading fontSize="lg" mb={1}>
-          Statistics
-        </Heading>
-        <Card bg="#404040" color="white" padding={4} w="95vw" gap={2}>
-          <Flex gap={2}>
-            <Text fontWeight="bold">Workouts:</Text>
-            <Text>{workouts.length}</Text>
+            <Card bg="#404040" color="white" padding={4} w="95vw" gap={2}>
+              <Flex gap={2}>
+                <Text fontWeight="bold">Routines:</Text>
+                <Text>{routines.length}</Text>
+              </Flex>
+            </Card>
+            <Card bg="#404040" color="white" padding={4} w="95vw" gap={2}>
+              <Flex gap={2}>
+                <Text fontWeight="bold">Exercises:</Text>
+                <Text>{exercises.length}</Text>
+              </Flex>
+            </Card>
           </Flex>
-        </Card>
-        <Card bg="#404040" color="white" padding={4} w="95vw" gap={2}>
-          <Flex gap={2}>
-            <Text fontWeight="bold">Routines:</Text>
-            <Text>{routines.length}</Text>
-          </Flex>
-        </Card>
-        <Card bg="#404040" color="white" padding={4} w="95vw" gap={2}>
-          <Flex gap={2}>
-            <Text fontWeight="bold">Exercises:</Text>
-            <Text>{exercises.length}</Text>
-          </Flex>
-        </Card>
-      </Flex>
-      <Button
-        w="95vw"
-        bg="lightblue"
-        textColor="#353935"
-        type="submit"
-        mt={3}
-        onClick={() => handleLogout()}
-      >
-        Log out
-      </Button>
+          <Button
+            w="95vw"
+            bg="lightblue"
+            textColor="#353935"
+            type="submit"
+            mt={3}
+            onClick={() => handleLogout()}
+          >
+            Log out
+          </Button>
+        </>
+      ) : (
+        <Flex direction="column" gap={3}>
+          <Heading textAlign="center">Hello</Heading>
+          <Button w="95vw" bg="lightblue" textColor="#353935" type="submit">
+            Sign in
+          </Button>
+          <Button w="95vw" bg="lightblue" textColor="#353935" type="submit">
+            Register
+          </Button>
+        </Flex>
+      )}
     </Flex>
   );
 };

@@ -10,6 +10,7 @@ export interface authenticatedUserState {
 
 const initialState: authenticatedUserState = {
   user: users[0],
+  // user: undefined,
 };
 
 const authenticatedUserSlice = createSlice({
