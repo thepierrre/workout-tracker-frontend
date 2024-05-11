@@ -38,6 +38,7 @@ const resolver: Resolver<FormValues> = async (values) => {
 interface ExerciseFormProps {
   initialName?: string;
   initialSelectedCategories?: Category[];
+  buttonText: string;
   onSubmit: (data: FormValues, selectedCategories: Category[]) => void;
 }
 
@@ -45,6 +46,7 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
   initialName = "",
   initialSelectedCategories = [],
   onSubmit,
+  buttonText,
 }) => {
   const {
     register,
@@ -164,7 +166,7 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
         </Wrap>
       </Flex>
 
-      <WideButton type="submit">Submit</WideButton>
+      <WideButton type="submit">{buttonText}</WideButton>
     </form>
   );
 };

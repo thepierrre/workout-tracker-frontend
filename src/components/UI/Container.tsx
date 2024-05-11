@@ -12,7 +12,6 @@ const Container: React.FC<ContainerProps> = (props) => {
       w="100vw"
       color="white"
       direction="column"
-      gap={5}
       padding={2}
       marginTop={5}
       {...props}

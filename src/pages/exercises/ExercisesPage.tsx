@@ -17,7 +17,7 @@ const ExercisesPage = () => {
       <Link to="/exercises/new-exercise">
         <WideButton type="submit">New exercise</WideButton>
       </Link>
-      <Flex direction="column" gap={2} w="100%">
+      <Flex direction="column" gap={2} w="100%" mt={3}>
         {exercises.length > 0 ? (
           exercises.map((exercise, index) => (
             <Link key={exercise.id} to={`/exercises/${exercise.id}`}>

@@ -1,12 +1,6 @@
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-
 import AuthForm, { FormValues } from "../forms/AuthForm";
 
 const LogIn = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
   const onSubmit = (data: FormValues) => {
     console.log(data);
     // dispatch(addExercise(exerciseToAdd));

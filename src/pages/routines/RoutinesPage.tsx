@@ -28,7 +28,7 @@ const RoutinesPage = () => {
       <Link to="/routines/new-routine">
         <WideButton type="submit">New routine</WideButton>
       </Link>
-      <Flex direction="column" gap={2} w="95vw" align="center">
+      <Flex direction="column" gap={2} w="95vw" align="center" mt={3}>
         {routines.length > 0 ? (
           routines.map((routine) => (
             <Link to={`/routines/${routine.id}`} key={routine.id}>

@@ -19,8 +19,8 @@ const WorkoutSession: React.FC<WorkoutProps> = ({ workout: wrk }) => {
   };
 
   return (
-    <>
-      <Heading fontWeight="bold" fontSize="lg">
+    <Flex direction="column" m={2}>
+      <Heading fontWeight="bold" fontSize="lg" textAlign="center" m={3}>
         {wrk.routineName}
       </Heading>
       <Flex direction="column" gap={3} textColor="white">
@@ -47,7 +47,7 @@ const WorkoutSession: React.FC<WorkoutProps> = ({ workout: wrk }) => {
           <Text fontWeight="bold">Remove workout</Text>
         </Flex>
       </Flex>
-    </>
+    </Flex>
   );
 };
 

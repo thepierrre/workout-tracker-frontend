@@ -1,5 +1,5 @@
 import React from "react";
-import { useForm, Resolver, ResolverOptions } from "react-hook-form";
+import { useForm, Resolver } from "react-hook-form";
 import { FormControl, FormErrorMessage, Input, Flex } from "@chakra-ui/react";
 import WideButton from "../UI/WideButton";
 
@@ -68,7 +68,7 @@ const AuthForm: React.FC<Props> = ({
 
   return (
     <form onSubmit={handleSubmit((data) => onSubmit(data))}>
-      <Flex direction="column" gap={3}>
+      <Flex direction="column" gap={3} mt={3}>
         <FormControl isInvalid={!!errors.username}>
           <Input
             {...register("username")}

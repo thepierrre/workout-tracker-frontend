@@ -60,7 +60,7 @@ const Datepicker = () => {
   };
 
   return (
-    <Flex align="center">
+    <Flex align="center" m={2}>
       <IconButton
         color="white"
         icon={<ChevronLeftIcon boxSize={8} />}

@@ -201,9 +201,12 @@ const ProfilePage = () => {
           </Button>
         </Flex>
       )} */}
+      <Heading fontSize="lg" mb={3}>
+        Sign in to your account
+      </Heading>
       <LogIn />
       <Link to="/profile/sign-up">
-        <WideButton>Sign up</WideButton>
+        <WideButton>Register</WideButton>
       </Link>
     </Container>
   );

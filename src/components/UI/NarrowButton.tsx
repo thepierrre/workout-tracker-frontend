@@ -1,11 +1,11 @@
 import { Button, ButtonProps } from "@chakra-ui/react";
 import React from "react";
 
-interface WideButtonProps extends ButtonProps {
+interface Props extends ButtonProps {
   children: string;
 }
 
-const NarrowButton: React.FC<WideButtonProps> = (props) => {
+const NarrowButton: React.FC<Props> = (props) => {
   return (
     <Button w={24} bg="lightblue" textColor="#353935" {...props}>
       {props.children}

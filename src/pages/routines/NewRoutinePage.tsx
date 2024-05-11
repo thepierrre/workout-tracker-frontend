@@ -31,7 +31,7 @@ const NewRoutinePage = () => {
 
   return (
     <Container>
-      <Flex align="center" w="100%">
+      <Flex align="center" w="100%" mb={3}>
         <IconButton
           aria-label="Go back"
           variant="link"
@@ -46,7 +46,7 @@ const NewRoutinePage = () => {
         </Heading>
         <Box w="16%" />
       </Flex>
-      <RoutineForm onSubmit={onSubmit}></RoutineForm>
+      <RoutineForm onSubmit={onSubmit} buttonText="Create"></RoutineForm>
     </Container>
   );
 };

@@ -7,6 +7,8 @@ import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { editExercise } from "../../features/exercises/exercisesSlice";
 import ExerciseForm from "../../components/forms/ExerciseForm";
 import Container from "../../components/UI/Container";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import { Exercise } from "../../interfaces/exercise.interface";
 
 const SingleExercisePage = () => {
   const navigate = useNavigate();
@@ -45,13 +47,15 @@ const SingleExercisePage = () => {
     navigate("/exercises");
   };
 
+  const handleRemoveExercise = (exercise: Exercise) => {};
+
   const handleGoBack = () => {
     navigate(-1);
   };
 
   return (
     <Container>
-      <Flex align="center" w="100%">
+      <Flex align="center" w="100%" mb={3}>
         <IconButton
           aria-label="Go back"
           variant="link"
@@ -69,8 +73,19 @@ const SingleExercisePage = () => {
       <ExerciseForm
         initialName={currentExercise.name}
         initialSelectedCategories={currentExercise.categories}
+        buttonText="Update"
         onSubmit={onSubmit}
       ></ExerciseForm>
+      <Flex
+        gap={1}
+        justify="center"
+        color="lightblue"
+        onClick={() => handleRemoveExercise(currentExercise)}
+        mt={3}
+      >
+        <RemoveCircleOutlineIcon />
+        <Text fontWeight="bold">Remove exercise</Text>
+      </Flex>
     </Container>
   );
 };
