@@ -13,14 +13,18 @@ import { Flex, Heading, IconButton, Box } from "@chakra-ui/react";
 const NewExercisePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const usr = useSelector((state: RootState) => state.authenticatedUser.user);
+  const user = useSelector((state: RootState) => state.authenticatedUser.user);
+
+  if (!user) {
+    return;
+  }
 
   const onSubmit = (data: { name: string }, selectedCategories: Category[]) => {
     const exerciseToAdd = {
       id: generateRandomString(5),
       name: data.name,
       categories: selectedCategories,
-      userId: usr.id,
+      userId: user.id,
     };
 
     dispatch(addExercise(exerciseToAdd));

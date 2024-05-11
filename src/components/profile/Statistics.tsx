@@ -12,7 +12,7 @@ interface Props {
 
 const Statistics: React.FC<Props> = ({ workouts, routines, exercises }) => {
   return (
-    <Flex direction="column" align="center" gap={2}>
+    <Flex direction="column" align="center" gap={2} mb={3}>
       <Heading fontSize="lg" mb={1}>
         Statistics
       </Heading>

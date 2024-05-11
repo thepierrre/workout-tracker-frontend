@@ -16,11 +16,15 @@ const SingleExercisePage = () => {
   const exercises = useSelector(
     (state: RootState) => state.exercises.exercises
   );
-  const usr = useSelector((state: RootState) => state.authenticatedUser.user);
+  const user = useSelector((state: RootState) => state.authenticatedUser.user);
   const currentExercise = exercises.find(
     (exercise) => exercise.id === exerciseId
   );
   const dispatch = useDispatch();
+
+  if (!user) {
+    return;
+  }
 
   if (!currentExercise) {
     return <Text>Exercise not found.</Text>;
@@ -31,7 +35,7 @@ const SingleExercisePage = () => {
       id: currentExercise.id,
       name: data.name,
       categories: selectedCategories,
-      userId: usr.id,
+      userId: user.id,
     };
 
     const currentIndex = exercises.indexOf(currentExercise);

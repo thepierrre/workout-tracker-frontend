@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+import WideButton from "../../components/UI/WideButton";
 import Container from "../../components/UI/Container";
 import { Heading } from "@chakra-ui/react";
 import AuthForm, { FormValues } from "../../components/forms/AuthForm";
@@ -15,9 +17,12 @@ const RegisterPage = () => {
         onSubmit={onSubmit}
         initialUsername=""
         initialPassword=""
-        buttonText="Sign up"
+        buttonText="Register"
         isRegistration={true}
       />
+      <Link to="/profile">
+        <WideButton>Existing member? Sign in</WideButton>
+      </Link>
     </Container>
   );
 };

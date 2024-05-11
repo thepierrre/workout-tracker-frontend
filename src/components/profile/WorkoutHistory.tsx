@@ -26,9 +26,10 @@ const WorkoutHistory: React.FC<Props> = ({
 }) => {
   return (
     <>
-      {" "}
-      <Heading fontSize="lg">Workout history</Heading>
-      <Flex gap={2} w="95vw">
+      <Heading fontSize="lg" mb={4}>
+        Workout history
+      </Heading>
+      <Flex gap={2} w="95vw" mb={3}>
         <Select
           placeholder="Day"
           onChange={(event) => handleDaySelection(event)}
@@ -60,7 +61,7 @@ const WorkoutHistory: React.FC<Props> = ({
           ))}
         </Select>
       </Flex>
-      <Flex direction="column" gap={2} overflowY="auto" maxH="25rem">
+      <Flex direction="column" gap={2} overflowY="auto" maxH="25rem" mb={3}>
         {filteredWorkouts.map((workout) => (
           <Link to={`/workouts/${workout.id}`} key={workout.id}>
             <Card bg="#404040" color="white" padding={4} w="95vw">

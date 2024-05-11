@@ -6,6 +6,7 @@ export interface User {
   id: string;
   username: string;
   password: string;
+  email: string;
   routines: Routine[];
   workoutSessions: Workout[];
   exercises: Exercise[];

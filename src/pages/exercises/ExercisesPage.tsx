@@ -25,7 +25,9 @@ const ExercisesPage = () => {
             </Link>
           ))
         ) : (
-          <Text textAlign="center">You don't have any exercises yet.</Text>
+          <Text textAlign="center" mt={5}>
+            You don't have any exercises yet.
+          </Text>
         )}
       </Flex>
     </Container>

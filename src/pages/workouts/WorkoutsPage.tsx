@@ -28,7 +28,9 @@ export const WorkoutsPage = () => {
           <WorkoutSession key={workout.id} workout={workout} />
         ))
       ) : (
-        <Text textColor="white">No workouts for this day.</Text>
+        <Text textColor="white" mt={5}>
+          No workouts for this day.
+        </Text>
       )}
     </Container>
   );

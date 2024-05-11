@@ -161,9 +161,11 @@ const ProfilePage = () => {
 
   return (
     <Container>
-      {/* {user !== undefined ? (
+      {user !== undefined ? (
         <>
-          <Heading fontSize="2xl">Hello, {user?.username || "noname"}</Heading>
+          <Heading fontSize="2xl" mb={5}>
+            Hello, {user?.username || "noname"}
+          </Heading>
           <WorkoutHistory
             workouts={workouts}
             filteredWorkouts={filteredWorkouts}
@@ -191,23 +193,16 @@ const ProfilePage = () => {
           </Button>
         </>
       ) : (
-        <Flex direction="column" gap={3}>
-          <Heading textAlign="center">Hello</Heading>
-          <Button w="95vw" bg="lightblue" textColor="#353935" type="submit">
-            Sign in
-          </Button>
-          <Button w="95vw" bg="lightblue" textColor="#353935" type="submit">
-            Register
-          </Button>
-        </Flex>
-      )} */}
-      <Heading fontSize="lg" mb={3}>
-        Sign in to your account
-      </Heading>
-      <LogIn />
-      <Link to="/profile/sign-up">
-        <WideButton>Register</WideButton>
-      </Link>
+        <>
+          <Heading fontSize="lg" mb={3}>
+            Sign in to your account
+          </Heading>
+          <LogIn />
+          <Link to="/profile/sign-up">
+            <WideButton>Register</WideButton>
+          </Link>
+        </>
+      )}
     </Container>
   );
 };
