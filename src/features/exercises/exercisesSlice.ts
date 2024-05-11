@@ -28,8 +28,15 @@ const exercisesSlice = createSlice({
       const { exercise, index } = action.payload;
       state.exercises[index] = exercise;
     },
+    removeExercise(state, action: PayloadAction<Exercise>) {
+      const exerciseToRemove = action.payload;
+      state.exercises = state.exercises.filter(
+        (exercise) => exercise.id !== exerciseToRemove.id
+      );
+    },
   },
 });
 
-export const { addExercise, editExercise } = exercisesSlice.actions;
+export const { addExercise, editExercise, removeExercise } =
+  exercisesSlice.actions;
 export default exercisesSlice.reducer;

@@ -29,8 +29,14 @@ const routinesSlice = createSlice({
       const { routine, index } = action.payload;
       state.routines[index] = routine;
     },
+    removeRoutine(state, action: PayloadAction<Routine>) {
+      const routineToRemove = action.payload;
+      state.routines = state.routines.filter(
+        (routine) => routine.id !== routineToRemove.id
+      );
+    },
   },
 });
 
-export const { addRoutine, editRoutine } = routinesSlice.actions;
+export const { addRoutine, editRoutine, removeRoutine } = routinesSlice.actions;
 export default routinesSlice.reducer;

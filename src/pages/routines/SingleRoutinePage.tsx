@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../app/store";
+import { removeRoutine } from "../../features/routines/routinesSlice";
 import RoutineForm from "../../components/forms/RoutineForm";
 import { Exercise } from "../../interfaces/exercise.interface";
 import Container from "../../components/UI/Container";
@@ -39,7 +40,10 @@ const SingleRoutinePage = () => {
     }
   };
 
-  const handleRemoveRoutine = (routine: Routine) => {};
+  const handleRemoveRoutine = (routine: Routine) => {
+    dispatch(removeRoutine(routine));
+    navigate("/routines");
+  };
 
   const handleGoBack = () => {
     navigate(-1);

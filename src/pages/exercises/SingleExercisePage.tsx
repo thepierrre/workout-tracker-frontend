@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Category } from "../../interfaces/category.interface";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../app/store";
+import { removeExercise } from "../../features/exercises/exercisesSlice";
 import { Text, Flex, Heading, IconButton, Box } from "@chakra-ui/react";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { editExercise } from "../../features/exercises/exercisesSlice";
@@ -51,7 +52,10 @@ const SingleExercisePage = () => {
     navigate("/exercises");
   };
 
-  const handleRemoveExercise = (exercise: Exercise) => {};
+  const handleRemoveExercise = (exercise: Exercise) => {
+    dispatch(removeExercise(exercise));
+    navigate("/exercises");
+  };
 
   const handleGoBack = () => {
     navigate(-1);
