@@ -1,7 +1,5 @@
-import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
-import axios from "../../util/axiosInstance";
 import WideButton from "../../components/UI/WideButton";
 import SingleRoutine from "../../components/routines/SingleRoutine";
 import Container from "../../components/UI/Container";
@@ -10,18 +8,6 @@ import { Flex, Text } from "@chakra-ui/react";
 
 const RoutinesPage = () => {
   const routines = useSelector((state: RootState) => state.routines.routines);
-
-  useEffect(() => {
-    const getRoutines = async () => {
-      try {
-        const response = await axios.get("users");
-        console.log(response);
-      } catch {
-        // empty on purpose
-      }
-    };
-    getRoutines();
-  }, []);
 
   return (
     <Container>

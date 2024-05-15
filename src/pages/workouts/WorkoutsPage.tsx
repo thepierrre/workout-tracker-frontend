@@ -1,3 +1,5 @@
+import axios from "axios";
+import { useEffect } from "react";
 import Datepicker from "../../components/workouts/Datepicker";
 import NewWorkout from "../../components/workouts/NewWorkout";
 import WorkoutSession from "../../components/workouts/WorkoutSession";
@@ -18,6 +20,18 @@ export const WorkoutsPage = () => {
   const filteredWorkouts = workouts.filter(
     (wrk) => format(wrk.creationDate, "dd/MM/yyyy") === chosenDay
   );
+
+  // useEffect(() => {
+  //   const getUsers = async () => {
+  //     try {
+  //       const response = await axios.get("http://localhost:8080/users");
+  //       console.log(response.data);
+  //     } catch {
+  //       // empty on purpose
+  //     }
+  //   };
+  //   getUsers();
+  // }, []);
 
   return (
     <Container>

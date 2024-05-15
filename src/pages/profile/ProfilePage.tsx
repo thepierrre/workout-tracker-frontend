@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { RootState } from "../../app/store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../../features/auth/authenticatedUserSlice";
 import { Workout } from "../../interfaces/workout.interface";
 import { Flex, Button, Heading } from "@chakra-ui/react";
 import { format, getDate, getYear } from "date-fns";
@@ -12,6 +13,7 @@ import LogIn from "../../components/profile/LogIn";
 import WideButton from "../../components/UI/WideButton";
 
 const ProfilePage = () => {
+  const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.authenticatedUser.user);
   const workouts = useSelector(
     (state: RootState) => state.workoutSessions.workouts
@@ -88,7 +90,7 @@ const ProfilePage = () => {
   }
 
   const handleLogout = () => {
-    console.log("logging out...");
+    dispatch(setUser(undefined));
   };
 
   const handleFilteredWorkouts = () => {
