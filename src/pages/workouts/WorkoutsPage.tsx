@@ -1,18 +1,24 @@
 import axios from "axios";
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCategories } from "../../features/exercises/categoriesSlice";
 import Datepicker from "../../components/workouts/Datepicker";
 import NewWorkout from "../../components/workouts/NewWorkout";
 import WorkoutSession from "../../components/workouts/WorkoutSession";
-import { RootState } from "../../app/store";
-import { useSelector } from "react-redux";
+import { RootState, AppDispatch } from "../../app/store";
 import { format } from "date-fns";
 import Container from "../../components/UI/Container";
 
 import { Text } from "@chakra-ui/react";
 
 export const WorkoutsPage = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const workouts = useSelector(
     (state: RootState) => state.workoutSessions.workouts
+  );
+
+  const categories = useSelector(
+    (state: RootState) => state.categories.categories
   );
 
   const chosenDay = useSelector((state: RootState) => state.chosenDay.day);
@@ -20,6 +26,10 @@ export const WorkoutsPage = () => {
   const filteredWorkouts = workouts.filter(
     (wrk) => format(wrk.creationDate, "dd/MM/yyyy") === chosenDay
   );
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
 
   // useEffect(() => {
   //   const getUsers = async () => {

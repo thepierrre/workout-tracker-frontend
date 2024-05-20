@@ -121,6 +121,7 @@ const AuthForm: React.FC<Props> = ({
             }}
             _placeholder={{ color: "#B3B3B3" }}
             placeholder="Password"
+            type="password"
             defaultValue={initialPassword}
           />
           <FormErrorMessage>
