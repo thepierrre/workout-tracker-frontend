@@ -1,11 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { User } from "../../interfaces/user.interface";
 import axios from "axios";
-// import Cookies from "js-cookie";
 import axiosInstance from "../../util/axiosInstance";
 import { setCookie } from "typescript-cookie";
 import { setUser } from "../../features/auth/authenticatedUserSlice";
-import { users } from "../../util/DUMMY_DATA";
 
 import AuthForm, { FormValues } from "../forms/AuthForm";
 
@@ -13,39 +12,49 @@ const LogIn = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const onSubmit = (data: FormValues) => {
-    axiosInstance
-      .post("auth/login", {
+  const onSubmit = async (data: FormValues) => {
+    try {
+      const loginResponse = await axiosInstance.post("auth/login", {
         username: data.username,
         password: data.password,
-      })
-      .then((response) => {
-        console.log(response);
-        const token = response.data.accessToken;
-        console.log(token);
-        setCookie("token", token, {
-          expires: 7,
-          secure: true,
-          sameSite: "Strict",
-        });
-        // Cookies.set("token", token, {
-        //   expires: 7,
-        //   secure: true,
-        //   sameSite: "Strict",
-        // });
-        // dispatch(setUser({ username: data.username }));
-      })
-      .catch((error) => {
-        console.log(error);
       });
-  };
 
-  // const onSubmit = (data: FormValues) => {
-  //   console.log(data);
-  //   dispatch(setUser(users[0]));
-  //   // dispatch(addExercise(exerciseToAdd));
-  //   navigate("/workouts");
-  // };
+      console.log(loginResponse);
+
+      // const token = loginResponse.data.accessToken;
+
+      // setCookie("token", token, {
+      //   expires: 7,
+      //   secure: true,
+      //   sameSite: "Strict",
+      // });
+
+      // axiosInstance.defaults.headers.common[
+      //   "Authorization"
+      // ] = `Bearer ${token}`;
+
+      const userResponse = await axiosInstance.get("users/me");
+
+      const authenticatedUser: User = {
+        id: userResponse.data.id,
+        username: userResponse.data.username,
+        password: "", // Do not store the password
+        email: userResponse.data.email,
+        routines: userResponse.data.routines || [],
+        workoutSessions: userResponse.data.workoutSessions || [],
+        exercises: userResponse.data.exercises || [],
+      };
+
+      dispatch(setUser(authenticatedUser));
+      // navigate("/workouts");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error("Axios error:", error.response?.data);
+      } else {
+        console.error("Unexpected error:", error);
+      }
+    }
+  };
 
   return (
     <AuthForm

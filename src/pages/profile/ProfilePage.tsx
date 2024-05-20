@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import axiosInstance from "../../util/axiosInstance";
+import { removeCookie } from "typescript-cookie";
 import { RootState } from "../../app/store";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "../../features/auth/authenticatedUserSlice";
+import { useNavigate } from "react-router-dom";
+import { clearUser } from "../../features/auth/authenticatedUserSlice";
 import { Workout } from "../../interfaces/workout.interface";
-import { Flex, Button, Heading } from "@chakra-ui/react";
+import { Button, Heading } from "@chakra-ui/react";
 import { format, getDate, getYear } from "date-fns";
 import Container from "../../components/UI/Container";
 import Statistics from "../../components/profile/Statistics";
@@ -14,6 +17,7 @@ import WideButton from "../../components/UI/WideButton";
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.authenticatedUser.user);
   const workouts = useSelector(
     (state: RootState) => state.workoutSessions.workouts
@@ -89,8 +93,18 @@ const ProfilePage = () => {
     years.sort((a, b) => b - a);
   }
 
-  const handleLogout = () => {
-    dispatch(setUser(undefined));
+  const handleLogout = async () => {
+    try {
+      await axiosInstance.post("auth/logout");
+
+      // Dispatch clear user action to reset user state in Redux
+      dispatch(clearUser());
+
+      // Navigate to login page or home page
+      navigate("/login");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
   };
 
   const handleFilteredWorkouts = () => {

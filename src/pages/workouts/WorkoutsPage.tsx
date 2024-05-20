@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../features/exercises/categoriesSlice";
@@ -31,17 +30,10 @@ export const WorkoutsPage = () => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   const getUsers = async () => {
-  //     try {
-  //       const response = await axios.get("http://localhost:8080/users");
-  //       console.log(response.data);
-  //     } catch {
-  //       // empty on purpose
-  //     }
-  //   };
-  //   getUsers();
-  // }, []);
+  useEffect(() => {
+    // Log categories when they change
+    console.log("Fetched categories:", categories);
+  }, [categories]);
 
   return (
     <Container>

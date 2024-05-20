@@ -1,9 +1,7 @@
-import axios from "axios";
+import axiosInstance from "../../util/axiosInstance";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-
 import { Category } from "../../interfaces/category.interface";
-import { categories } from "../../util/DUMMY_DATA";
 
 export interface CategoriesState {
   categories: Category[];
@@ -23,7 +21,7 @@ export const fetchCategories = createAsyncThunk<
   { rejectValue: string } // Type of the reject value
 >("categories/fetchCategories", async (_, thunkAPI) => {
   try {
-    const response = await axios.get("http://localhost:8080/api/categories");
+    const response = await axiosInstance.get("categories");
     return response.data;
   } catch (error) {
     let errorMessage = "An unknown error occurred";
