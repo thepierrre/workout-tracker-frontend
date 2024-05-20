@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import axiosInstance from "../../util/axiosInstance";
-import { removeCookie } from "typescript-cookie";
 import { RootState } from "../../app/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -97,10 +96,8 @@ const ProfilePage = () => {
     try {
       await axiosInstance.post("auth/logout");
 
-      // Dispatch clear user action to reset user state in Redux
       dispatch(clearUser());
 
-      // Navigate to login page or home page
       navigate("/login");
     } catch (error) {
       console.error("Error logging out:", error);

@@ -1,9 +1,8 @@
 import axios from "axios";
+import axiosInstance from "../../util/axiosInstance";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-
 import { User } from "../../interfaces/user.interface";
-import { users } from "../../util/DUMMY_DATA";
 
 export interface authenticatedUserState {
   user: User | undefined;
@@ -23,14 +22,31 @@ export const fetchUser = createAsyncThunk<
   { rejectValue: string } // Type of the reject value
 >("user/fetchUser", async (username, thunkAPI) => {
   try {
-    const response = await axios.get(
-      `http://localhost:8080/api/users/${username}`
-    );
+    const response = await axiosInstance.get(`users/${username}`);
     console.log(response.data);
     return response.data;
   } catch (error) {
     let errorMessage = "An unknown error occurred";
     if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    return thunkAPI.rejectWithValue(errorMessage);
+  }
+});
+
+export const initializeUser = createAsyncThunk<
+  User | undefined, // Return type of the fulfilled action
+  void, // Argument type (not needed here, so void)
+  { rejectValue: string } // Type of the reject value
+>("user/initializeUser", async (_, thunkAPI) => {
+  try {
+    const response = await axiosInstance.get("users/me");
+    return response.data;
+  } catch (error) {
+    let errorMessage = "An unknown error occurred";
+    if (axios.isAxiosError(error) && error.response) {
+      errorMessage = error.response.data.message || error.message;
+    } else if (error instanceof Error) {
       errorMessage = error.message;
     }
     return thunkAPI.rejectWithValue(errorMessage);
@@ -50,19 +66,22 @@ const authenticatedUserSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchUser.pending, (state) => {
+      .addCase(initializeUser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchUser.fulfilled, (state, action: PayloadAction<User>) => {
-        state.loading = false;
-        state.user = action.payload; // Store the single user
-      })
       .addCase(
-        fetchUser.rejected,
+        initializeUser.fulfilled,
+        (state, action: PayloadAction<User | undefined>) => {
+          state.loading = false;
+          state.user = action.payload || undefined;
+        }
+      )
+      .addCase(
+        initializeUser.rejected,
         (state, action: PayloadAction<string | undefined>) => {
           state.loading = false;
-          state.error = action.payload || "Failed to fetch user";
+          state.error = action.payload || "Failed to initialize user";
         }
       );
   },

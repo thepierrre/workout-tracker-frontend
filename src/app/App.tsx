@@ -1,10 +1,13 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "./store";
 import { Tabs, TabList, Tab, Flex } from "@chakra-ui/react";
+import { initializeUser } from "../features/auth/authenticatedUserSlice";
 import { useEffect, useMemo, useState } from "react";
+import { AppDispatch } from "./store";
 import { Outlet, Link, useLocation, Navigate } from "react-router-dom";
 
 const App = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const location = useLocation();
   const [activeTab, setActiveTab] = useState("");
   const user = useSelector((state: RootState) => state.authenticatedUser.user);
@@ -12,6 +15,10 @@ const App = () => {
   useEffect(() => {
     setActiveTab(location.pathname);
   }, [location]);
+
+  useEffect(() => {
+    dispatch(initializeUser());
+  }, [dispatch]);
 
   user ? Navigate({ to: "/workouts" }) : Navigate({ to: "/profile" });
 
