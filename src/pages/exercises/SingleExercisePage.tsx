@@ -1,7 +1,8 @@
+import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Category } from "../../interfaces/category.interface";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../app/store";
+import { RootState, AppDispatch } from "../../app/store";
 import { removeExercise } from "../../features/exercises/exercisesSlice";
 import { Text, Flex, Heading, IconButton, Box } from "@chakra-ui/react";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
@@ -10,6 +11,7 @@ import ExerciseForm from "../../components/forms/ExerciseForm";
 import Container from "../../components/UI/Container";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { Exercise } from "../../interfaces/exercise.interface";
+import { fetchCategories } from "../../features/exercises/categoriesSlice";
 
 const SingleExercisePage = () => {
   const navigate = useNavigate();
@@ -21,7 +23,11 @@ const SingleExercisePage = () => {
   const currentExercise = exercises.find(
     (exercise) => exercise.id === exerciseId
   );
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
 
   if (!user) {
     return;

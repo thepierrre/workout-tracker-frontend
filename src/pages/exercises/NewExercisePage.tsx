@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { generateRandomString } from "../../util/DUMMY_DATA";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../app/store";
+import { RootState, AppDispatch } from "../../app/store";
 import { Category } from "../../interfaces/category.interface";
 import { addExercise } from "../../features/exercises/exercisesSlice";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
@@ -12,22 +12,31 @@ import { Flex, Heading, IconButton, Box } from "@chakra-ui/react";
 
 const NewExercisePage = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const user = useSelector((state: RootState) => state.authenticatedUser.user);
 
   if (!user) {
     return;
   }
 
-  const onSubmit = (data: { name: string }, selectedCategories: Category[]) => {
+  const onSubmit = async (
+    data: { name: string },
+    selectedCategories: Category[]
+  ) => {
     const exerciseToAdd = {
-      id: generateRandomString(5),
       name: data.name,
       categories: selectedCategories,
       userId: user.id,
     };
 
-    dispatch(addExercise(exerciseToAdd));
+    console.log(exerciseToAdd);
+
+    try {
+      await dispatch(addExercise(exerciseToAdd)).unwrap();
+      navigate("/exercises");
+    } catch (error) {
+      console.error("Failed to add exercise: ", error);
+    }
     navigate("/exercises");
   };
 

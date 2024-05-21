@@ -1,7 +1,7 @@
 import { Category } from "./category.interface";
 
 export interface Exercise {
-  id: string;
+  id: string | undefined;
   name: string;
   categories: Category[];
   userId: string;

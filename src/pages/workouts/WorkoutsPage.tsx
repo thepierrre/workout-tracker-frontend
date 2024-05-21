@@ -11,13 +11,8 @@ import Container from "../../components/UI/Container";
 import { Text } from "@chakra-ui/react";
 
 export const WorkoutsPage = () => {
-  const dispatch = useDispatch<AppDispatch>();
   const workouts = useSelector(
     (state: RootState) => state.workoutSessions.workouts
-  );
-
-  const categories = useSelector(
-    (state: RootState) => state.categories.categories
   );
 
   const chosenDay = useSelector((state: RootState) => state.chosenDay.day);
@@ -25,15 +20,6 @@ export const WorkoutsPage = () => {
   const filteredWorkouts = workouts.filter(
     (wrk) => format(wrk.creationDate, "dd/MM/yyyy") === chosenDay
   );
-
-  useEffect(() => {
-    dispatch(fetchCategories());
-  }, [dispatch]);
-
-  useEffect(() => {
-    // Log categories when they change
-    console.log("Fetched categories:", categories);
-  }, [categories]);
 
   return (
     <Container>

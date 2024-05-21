@@ -1,16 +1,19 @@
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "./store";
-import { Tabs, TabList, Tab, Flex } from "@chakra-ui/react";
+import { Tabs, TabList, Tab, Flex, Spinner } from "@chakra-ui/react";
 import { initializeUser } from "../features/auth/authenticatedUserSlice";
 import { useEffect, useMemo, useState } from "react";
 import { AppDispatch } from "./store";
-import { Outlet, Link, useLocation, Navigate } from "react-router-dom";
+import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 
 const App = () => {
   const dispatch = useDispatch<AppDispatch>();
   const location = useLocation();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("");
-  const user = useSelector((state: RootState) => state.authenticatedUser.user);
+  const { user, loading } = useSelector(
+    (state: RootState) => state.authenticatedUser
+  );
 
   useEffect(() => {
     setActiveTab(location.pathname);
@@ -20,7 +23,15 @@ const App = () => {
     dispatch(initializeUser());
   }, [dispatch]);
 
-  user ? Navigate({ to: "/workouts" }) : Navigate({ to: "/profile" });
+  useEffect(() => {
+    if (user) {
+      navigate("/workouts");
+    } else {
+      navigate("/profile");
+    }
+  }, [user, navigate]);
+
+  // user ? Navigate({ to: "/workouts" }) : Navigate({ to: "/profile" });
 
   const tabs = [
     {
@@ -45,6 +56,20 @@ const App = () => {
     return tabs.findIndex((tab) => location.pathname.startsWith(tab.url));
   }, [activeTab]);
 
+  if (loading) {
+    return (
+      <Flex
+        bg="#1a1a1a"
+        minH="100vh"
+        paddingTop={3}
+        align="center"
+        justify="center"
+      >
+        <Spinner size="xl" color="white" />
+      </Flex>
+    );
+  }
+
   return (
     <Flex bg="#1a1a1a" minH="100vh" paddingTop={3}>
       <Tabs variant="soft-rounded" defaultIndex={defaultIndex}>
@@ -65,7 +90,6 @@ const App = () => {
             </Flex>
           </TabList>
         )}
-
         <Outlet />
       </Tabs>
     </Flex>
