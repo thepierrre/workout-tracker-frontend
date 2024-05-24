@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { generateRandomString } from "../../util/DUMMY_DATA";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../../app/store";
 import { Category } from "../../interfaces/category.interface";

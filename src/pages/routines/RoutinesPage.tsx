@@ -1,13 +1,20 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../../app/store";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { AppDispatch, RootState } from "../../app/store";
 import WideButton from "../../components/UI/WideButton";
+import { fetchRoutines } from "../../features/routines/routinesSlice";
 import SingleRoutine from "../../components/routines/SingleRoutine";
 import Container from "../../components/UI/Container";
 import { Link } from "react-router-dom";
 import { Flex, Text } from "@chakra-ui/react";
 
 const RoutinesPage = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const routines = useSelector((state: RootState) => state.routines.routines);
+
+  useEffect(() => {
+    dispatch(fetchRoutines());
+  }, [dispatch]);
 
   return (
     <Container>

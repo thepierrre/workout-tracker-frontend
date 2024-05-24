@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { fetchRoutines } from "../../features/routines/routinesSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../app/store";
+import { RootState, AppDispatch } from "../../app/store";
 import { removeRoutine } from "../../features/routines/routinesSlice";
 import RoutineForm from "../../components/forms/RoutineForm";
 import { Exercise } from "../../interfaces/exercise.interface";
@@ -15,13 +17,19 @@ import { editRoutine } from "../../features/routines/routinesSlice";
 const SingleRoutinePage = () => {
   const { routineId } = useParams();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const routines: Routine[] = useSelector(
     (state: RootState) => state.routines.routines
   );
   const currentRoutine: Routine | undefined = routines.find(
     (routine) => routine.id === routineId
   );
+
+  const user = useSelector((state: RootState) => state.authenticatedUser.user);
+
+  useEffect(() => {
+    dispatch(fetchRoutines());
+  }, [dispatch]);
 
   if (!currentRoutine) {
     return <Text>Routine not found.</Text>;
@@ -32,6 +40,7 @@ const SingleRoutinePage = () => {
       id: currentRoutine.id,
       name: data.name,
       exercises: selectedExercises,
+      userId: user.id,
     };
     if (currentRoutine) {
       const index = routines.findIndex((routine) => routine.id === routineId);

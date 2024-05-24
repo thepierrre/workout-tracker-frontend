@@ -1,29 +1,61 @@
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { Exercise } from "../../interfaces/exercise.interface";
+import { RootState } from "../../app/store";
 import { Routine } from "../../interfaces/routine.interface";
 import { addRoutine } from "../../features/routines/routinesSlice";
-import { generateRandomString } from "../../util/DUMMY_DATA";
-import { ChevronLeftIcon } from "@chakra-ui/icons";
+import { AppDispatch } from "../../app/store";
+import { useSelector, useDispatch } from "react-redux";
+import { Container, Flex, IconButton, Heading, Box } from "@chakra-ui/react";
 import RoutineForm from "../../components/forms/RoutineForm";
-import Container from "../../components/UI/Container";
-
-import { Flex, Box, Heading, IconButton } from "@chakra-ui/react";
+import { ChevronLeftIcon } from "@chakra-ui/icons";
 
 const NewRoutinePage = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
+  const user = useSelector((state: RootState) => state.authenticatedUser.user);
 
-  const onSubmit = (data: { name: string }, selectedExercises: Exercise[]) => {
-    const routine: Routine = {
-      id: generateRandomString(5),
+  if (!user) {
+    return;
+  }
+
+  const onSubmit = async (
+    data: { name: string },
+    selectedExercises: Exercise[]
+  ) => {
+    const routineToAdd: Omit<Routine, "id"> = {
       name: data.name,
       exercises: selectedExercises,
+      userId: user.id,
     };
 
-    dispatch(addRoutine(routine));
-    navigate("/routines");
+    try {
+      await dispatch(addRoutine(routineToAdd)).unwrap();
+      navigate("/routines");
+    } catch (error) {
+      console.error("Failed to add routine: ", error);
+    }
   };
+
+  // const onSubmit2 = async (
+  //   data: { name: string },
+  //   selectedCategories: Category[]
+  // ) => {
+  //   const exerciseToAdd = {
+  //     name: data.name,
+  //     categories: selectedCategories,
+  //     userId: user.id,
+  //   };
+
+  //   console.log(exerciseToAdd);
+
+  //   try {
+  //     await dispatch(addExercise(exerciseToAdd)).unwrap();
+  //     navigate("/exercises");
+  //   } catch (error) {
+  //     console.error("Failed to add exercise: ", error);
+  //   }
+  //   navigate("/exercises");
+  // };
 
   const handleGoBack = () => {
     navigate(-1);

@@ -59,7 +59,7 @@ const SingleExercisePage = () => {
   };
 
   const handleRemoveExercise = (exercise: Exercise) => {
-    dispatch(removeExercise(exercise));
+    dispatch(removeExercise(exercise.id));
     navigate("/exercises");
   };
 
