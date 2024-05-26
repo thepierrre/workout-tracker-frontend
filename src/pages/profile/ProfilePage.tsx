@@ -1,7 +1,11 @@
+import { useEffect } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import axiosInstance from "../../util/axiosInstance";
-import { RootState } from "../../app/store";
+import { RootState, AppDispatch } from "../../app/store";
+import { fetchWorkouts } from "../../features/workout/workoutSessionsSlice";
+import { fetchExercises } from "../../features/exercises/exercisesSlice";
+import { fetchRoutines } from "../../features/routines/routinesSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { clearUser } from "../../features/auth/authenticatedUserSlice";
@@ -15,7 +19,7 @@ import LogIn from "../../components/profile/LogIn";
 import WideButton from "../../components/UI/WideButton";
 
 const ProfilePage = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.authenticatedUser.user);
   const workouts = useSelector(
@@ -36,6 +40,12 @@ const ProfilePage = () => {
   const [_allFilteredWorkouts, setAllFilteredWorkouts] = useState<Workout[]>(
     []
   );
+
+  useEffect(() => {
+    dispatch(fetchWorkouts());
+    dispatch(fetchRoutines());
+    dispatch(fetchExercises());
+  }, [dispatch]);
 
   const filteredWorkouts = workouts.filter((workout) => {
     const workoutDay = getDate(workout.creationDate);

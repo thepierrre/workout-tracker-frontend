@@ -35,6 +35,10 @@ const SingleRoutinePage = () => {
     return <Text>Routine not found.</Text>;
   }
 
+  if (!user) {
+    return;
+  }
+
   const onSubmit = (data: { name: string }, selectedExercises: Exercise[]) => {
     const routine: Routine = {
       id: currentRoutine.id,

@@ -1,9 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { Exercise } from "../../interfaces/exercise.interface";
-import { RootState } from "../../app/store";
+import { RootState, AppDispatch } from "../../app/store";
 import { Routine } from "../../interfaces/routine.interface";
 import { addRoutine } from "../../features/routines/routinesSlice";
-import { AppDispatch } from "../../app/store";
 import { useSelector, useDispatch } from "react-redux";
 import { Container, Flex, IconButton, Heading, Box } from "@chakra-ui/react";
 import RoutineForm from "../../components/forms/RoutineForm";

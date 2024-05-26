@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 import { User } from "../../interfaces/user.interface";
 import axios from "axios";
 import axiosInstance from "../../util/axiosInstance";
-import { setCookie } from "typescript-cookie";
 import { setUser } from "../../features/auth/authenticatedUserSlice";
 
 import AuthForm, { FormValues } from "../forms/AuthForm";
@@ -20,18 +19,6 @@ const LogIn = () => {
       });
 
       console.log(loginResponse);
-
-      // const token = loginResponse.data.accessToken;
-
-      // setCookie("token", token, {
-      //   expires: 7,
-      //   secure: true,
-      //   sameSite: "Strict",
-      // });
-
-      // axiosInstance.defaults.headers.common[
-      //   "Authorization"
-      // ] = `Bearer ${token}`;
 
       const userResponse = await axiosInstance.get("users/me");
 

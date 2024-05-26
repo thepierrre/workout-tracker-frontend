@@ -3,12 +3,12 @@ import WideButton from "../../components/UI/WideButton";
 import Container from "../../components/UI/Container";
 import { Heading } from "@chakra-ui/react";
 import AuthForm, { FormValues } from "../../components/forms/AuthForm";
-import axios from "axios";
+import axiosInstance from "../../util/axiosInstance";
 
 const RegisterPage = () => {
   const onSubmit = (data: FormValues) => {
-    axios
-      .post("http://localhost:8080/api/auth/register", {
+    axiosInstance
+      .post("auth/register", {
         username: data.username,
         email: data.email,
         password: data.password,
