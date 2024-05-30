@@ -43,7 +43,7 @@ const SingleRoutinePage = () => {
     const routine: Routine = {
       id: currentRoutine.id,
       name: data.name,
-      exercises: selectedExercises,
+      exerciseTypes: selectedExercises,
       userId: user.id,
     };
     if (currentRoutine) {
@@ -81,7 +81,7 @@ const SingleRoutinePage = () => {
       </Flex>
       <RoutineForm
         initialName={currentRoutine.name}
-        initialSelectedExercises={currentRoutine.exercises}
+        initialSelectedExercises={currentRoutine.exerciseTypes}
         onSubmit={onSubmit}
         buttonText="Update"
       ></RoutineForm>

@@ -16,12 +16,12 @@ const SingleRoutine: React.FC<Props> = ({ routine }) => {
           <Flex direction="column" gap={2}>
             <Text fontWeight="bold">{routine.name}</Text>
             <Text fontWeight="bold" fontSize="xs" color="#E0E0E0">
-              {routine.exercises?.length}{" "}
-              {routine.exercises?.length === 1 ? "EXERCISE" : "EXERCISES"}
+              {routine.exerciseTypes?.length}{" "}
+              {routine.exerciseTypes?.length === 1 ? "EXERCISE" : "EXERCISES"}
             </Text>
           </Flex>
           <Text fontSize="sm" color="#E0E0E0">
-            {routine.exercises?.map((exercise, index) => (
+            {routine.exerciseTypes?.map((exercise, index) => (
               <Fragment key={exercise.id}>
                 {index > 0 && " | "} {exercise.name}
               </Fragment>

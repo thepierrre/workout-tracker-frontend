@@ -23,7 +23,7 @@ const NewRoutinePage = () => {
   ) => {
     const routineToAdd: Omit<Routine, "id"> = {
       name: data.name,
-      exercises: selectedExercises,
+      exerciseTypes: selectedExercises,
       userId: user.id,
     };
 

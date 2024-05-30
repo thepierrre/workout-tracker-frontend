@@ -40,7 +40,8 @@ const NewWorkout = () => {
   }, [dispatch]);
 
   const handleAddWorkout = (routine: Routine) => {
-    const exerciseInstances: ExerciseInstance[] = routine?.exercises?.map(
+    console.log(routine);
+    const exerciseInstances: ExerciseInstance[] = routine?.exerciseTypes?.map(
       (exercise) => ({
         id: generateRandomString(5),
         exercise: exercise,
@@ -86,11 +87,11 @@ const NewWorkout = () => {
                     <Flex direction="column" gap={2}>
                       <Text fontWeight="bold">{routine?.name}</Text>
                       <Text fontWeight="bold" fontSize="xs" color="#E0E0E0">
-                        {routine?.exercises?.length} EXERCISES
+                        {routine?.exerciseTypes?.length} EXERCISES
                       </Text>
                     </Flex>
                     <Text fontSize="sm" color="#E0E0E0">
-                      {routine?.exercises?.map((exercise, index) => (
+                      {routine?.exerciseTypes?.map((exercise, index) => (
                         <Fragment key={index}>
                           {index > 0 && " | "} {exercise.name}
                         </Fragment>

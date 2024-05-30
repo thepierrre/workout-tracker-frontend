@@ -70,37 +70,37 @@ export const routines: Routine[] = [
   {
     id: "routine-id1",
     name: "Full Body 1",
-    exercises: [exercises[0], exercises[1], exercises[2]],
+    exerciseTypes: [exercises[0], exercises[1], exercises[2]],
     userId: "user-id1",
   },
   {
     id: "routine-id2",
     name: "Abs",
-    exercises: [exercises[3], exercises[4], exercises[5], exercises[6]],
+    exerciseTypes: [exercises[3], exercises[4], exercises[5], exercises[6]],
     userId: "user-id1",
   },
   {
     id: "routine-id3",
     name: "Legs",
-    exercises: [exercises[3], exercises[4], exercises[5], exercises[6]],
+    exerciseTypes: [exercises[3], exercises[4], exercises[5], exercises[6]],
     userId: "user-id1",
   },
   {
     id: "routine-id4",
     name: "Upper Body",
-    exercises: [exercises[3], exercises[4], exercises[5], exercises[6]],
+    exerciseTypes: [exercises[3], exercises[4], exercises[5], exercises[6]],
     userId: "user-id1",
   },
   {
     id: "routine-id5",
     name: "Full Body 2",
-    exercises: [exercises[3], exercises[4], exercises[5], exercises[6]],
+    exerciseTypes: [exercises[3], exercises[4], exercises[5], exercises[6]],
     userId: "user-id1",
   },
   {
     id: "routine-id6",
     name: "Cardio",
-    exercises: [exercises[3], exercises[4], exercises[5], exercises[6]],
+    exerciseTypes: [exercises[3], exercises[4], exercises[5], exercises[6]],
     userId: "user-id1",
   },
 ];
