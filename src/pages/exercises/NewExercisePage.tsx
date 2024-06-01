@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { fetchCategories } from "../../features/exercises/categoriesSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../../app/store";
 import { Category } from "../../interfaces/category.interface";
@@ -7,12 +9,19 @@ import { ChevronLeftIcon } from "@chakra-ui/icons";
 import ExerciseForm from "../../components/forms/ExerciseForm";
 import Container from "../../components/UI/Container";
 
-import { Flex, Heading, IconButton, Box } from "@chakra-ui/react";
+import { Flex, Heading, IconButton, Box, Spinner } from "@chakra-ui/react";
 
 const NewExercisePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const user = useSelector((state: RootState) => state.authenticatedUser.user);
+  const categoriesState = useSelector((state: RootState) => state.categories);
+
+  useEffect(() => {
+    if (categoriesState.categories.length === 0) {
+      dispatch(fetchCategories());
+    }
+  }, [dispatch, categoriesState.categories.length]);
 
   if (!user) {
     return;
@@ -42,6 +51,16 @@ const NewExercisePage = () => {
   const handleGoBack = () => {
     navigate(-1);
   };
+
+  if (categoriesState.loading) {
+    return (
+      <Container>
+        <Flex align="center" justify="center" h="100vh">
+          <Spinner size="xl" />
+        </Flex>
+      </Container>
+    );
+  }
 
   return (
     <Container>

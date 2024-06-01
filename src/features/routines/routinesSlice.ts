@@ -61,7 +61,7 @@ export const removeRoutine = createAsyncThunk<
   string,
   string,
   { rejectValue: string }
->("exercises/removeRoutine", async (routineId, thunkAPI) => {
+>("routines/removeRoutine", async (routineId, thunkAPI) => {
   try {
     await axiosInstance.delete(`routines/${routineId}`);
     return routineId;

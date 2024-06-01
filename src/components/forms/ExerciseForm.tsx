@@ -55,8 +55,6 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
     formState: { errors },
   } = useForm<FormValues>({ resolver });
 
-  const dispatch = useDispatch<AppDispatch>();
-
   const [searchedCategories, setSearchedCategories] = useState<string>("");
   const [selectedCategories, setSelectedCategories] = useState<Category[]>(
     initialSelectedCategories
@@ -65,10 +63,6 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
   const initialCategories = useSelector(
     (state: RootState) => state.categories.categories
   );
-
-  useEffect(() => {
-    dispatch(fetchCategories());
-  }, [dispatch]);
 
   const notSelectedCategories = initialCategories.filter(
     (cat) => !selectedCategories.includes(cat)

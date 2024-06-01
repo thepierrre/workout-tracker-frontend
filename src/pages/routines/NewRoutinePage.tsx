@@ -35,27 +35,6 @@ const NewRoutinePage = () => {
     }
   };
 
-  // const onSubmit2 = async (
-  //   data: { name: string },
-  //   selectedCategories: Category[]
-  // ) => {
-  //   const exerciseToAdd = {
-  //     name: data.name,
-  //     categories: selectedCategories,
-  //     userId: user.id,
-  //   };
-
-  //   console.log(exerciseToAdd);
-
-  //   try {
-  //     await dispatch(addExercise(exerciseToAdd)).unwrap();
-  //     navigate("/exercises");
-  //   } catch (error) {
-  //     console.error("Failed to add exercise: ", error);
-  //   }
-  //   navigate("/exercises");
-  // };
-
   const handleGoBack = () => {
     navigate(-1);
   };
