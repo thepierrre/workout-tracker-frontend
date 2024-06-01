@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { fetchCategories } from "../../features/exercises/categoriesSlice";
 import { Category } from "../../interfaces/category.interface";
 import { useForm, Resolver } from "react-hook-form";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState, AppDispatch } from "../../app/store";
+import { useSelector } from "react-redux";
+import { RootState } from "../../app/store";
 import WideButton from "../UI/WideButton";
 import {
   Flex,
@@ -59,17 +58,18 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
   const [selectedCategories, setSelectedCategories] = useState<Category[]>(
     initialSelectedCategories
   );
+  const [categories, setCategories] = useState<Category[]>([]);
 
   const initialCategories = useSelector(
     (state: RootState) => state.categories.categories
   );
 
-  const notSelectedCategories = initialCategories.filter(
-    (cat) => !selectedCategories.includes(cat)
-  );
-  const [categories, setCategories] = useState<Category[]>(
-    notSelectedCategories
-  );
+  useEffect(() => {
+    const filteredCategories = initialCategories.filter(
+      (ex) => !initialSelectedCategories.some((selCat) => selCat.id === ex.id)
+    );
+    setCategories(filteredCategories);
+  }, [initialCategories, initialSelectedCategories]);
 
   const handleCheck = (category: Category) => {
     if (selectedCategories.includes(category)) {

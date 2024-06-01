@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, Resolver } from "react-hook-form";
 import { Exercise } from "../../interfaces/exercise.interface";
 import { useSelector } from "react-redux";
@@ -57,30 +57,33 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
   const [selectedExercises, setSelectedExercises] = useState<Exercise[]>(
     initialSelectedExercises
   );
+  const [exercises, setExercises] = useState<Exercise[]>([]);
 
   const initialExercises = useSelector(
     (state: RootState) => state.exercises.exercises
   );
-  const notSelectedExercses = initialExercises.filter(
-    (ex) => !selectedExercises.includes(ex)
-  );
-  const [exercises, setExercises] = useState<Exercise[]>(notSelectedExercses);
+
+  useEffect(() => {
+    const filteredExercises = initialExercises.filter(
+      (ex) => !initialSelectedExercises.some((selEx) => selEx.id === ex.id)
+    );
+    setExercises(filteredExercises);
+  }, [initialExercises, initialSelectedExercises]);
 
   const handleCheck = (exercise: Exercise) => {
-    if (selectedExercises.includes(exercise)) {
-      setTimeout(() => {
-        setSelectedExercises((prevSelectedExercises) =>
-          prevSelectedExercises.filter((ex) => ex.id !== exercise.id)
-        );
-        setExercises([...exercises, exercise]);
-      }, 250);
+    if (selectedExercises.some((ex) => ex.id === exercise.id)) {
+      setSelectedExercises((prevSelectedExercises) =>
+        prevSelectedExercises.filter((ex) => ex.id !== exercise.id)
+      );
+      setExercises((prevExercises) => [...prevExercises, exercise]);
     } else {
-      setTimeout(() => {
-        setSelectedExercises([...selectedExercises, exercise]);
-        setExercises((prevExercises) =>
-          prevExercises.filter((ex) => ex.id !== exercise.id)
-        );
-      }, 250);
+      setSelectedExercises((prevSelectedExercises) => [
+        ...prevSelectedExercises,
+        exercise,
+      ]);
+      setExercises((prevExercises) =>
+        prevExercises.filter((ex) => ex.id !== exercise.id)
+      );
     }
   };
 
@@ -92,7 +95,7 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
   };
 
   const filteredExercises = exercises.filter((exercise) =>
-    exercise.name.toLowerCase().startsWith(searchedExercises.toLowerCase())
+    exercise.name.toLowerCase().includes(searchedExercises.toLowerCase())
   );
 
   return (
@@ -102,6 +105,7 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
           {...register("name")}
           w="95vw"
           bg="#404040"
+          color="white"
           borderColor="transparent"
           _focusVisible={{
             borderWidth: "1px",
@@ -118,7 +122,7 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
 
       <Flex w="95vw" mt={4} mb={4} ml={2} mr={2} direction="column">
         {selectedExercises.map((exercise) => (
-          <Flex gap={4} p={2} key={exercise.name}>
+          <Flex gap={4} p={2} key={exercise.id}>
             <Checkbox
               defaultChecked={true}
               onChange={() => handleCheck(exercise)}
@@ -136,6 +140,7 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
           <Input
             w="95vw"
             bg="#404040"
+            color="white"
             borderColor="transparent"
             _focusVisible={{
               borderWidth: "1px",
@@ -152,7 +157,7 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
 
         <Flex w="95vw" mt={4} mb={4} ml={2} mr={2} direction="column">
           {filteredExercises.map((exercise) => (
-            <Flex key={exercise.name}>
+            <Flex key={exercise.id}>
               <Flex gap={4} p={2}>
                 <Checkbox onChange={() => handleCheck(exercise)}></Checkbox>
                 <Text textColor="white">
