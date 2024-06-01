@@ -6,16 +6,17 @@ import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import WorkoutExerciseInstance from "./WorkoutExerciseInstance";
 
 import { Flex, Text, Heading } from "@chakra-ui/react";
+import { AppDispatch } from "../../app/store";
 
 interface WorkoutProps {
   workout: Workout;
 }
 
 const WorkoutSession: React.FC<WorkoutProps> = ({ workout: wrk }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleRemoveWorkout = (workout: Workout) => {
-    dispatch(removeWorkout(workout));
+    dispatch(removeWorkout(workout.id));
   };
 
   return (

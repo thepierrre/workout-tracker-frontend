@@ -40,23 +40,24 @@ const NewWorkout = () => {
   }, [dispatch]);
 
   const handleAddWorkout = (routine: Routine) => {
-    console.log(routine);
-    const exerciseInstances: ExerciseInstance[] = routine?.exerciseTypes?.map(
-      (exercise) => ({
-        id: generateRandomString(5),
-        exercise: exercise,
-        series: Array.from({ length: 3 }, () => ({
-          id: generateRandomString(5),
-          reps: 0,
-          weight: 0,
-        })),
-      })
-    );
+    // console.log(routine);
+    // const exerciseInstances: ExerciseInstance[] = routine?.exerciseTypes?.map(
+    //   (exercise) => ({
+    //     id: generateRandomString(5),
+    //     exercise: exercise,
+    //     series: Array.from({ length: 3 }, () => ({
+    //       id: generateRandomString(5),
+    //       reps: 0,
+    //       weight: 0,
+    //     })),
+    //   })
+    // );
 
-    const workoutToAdd: Omit<Workout, "id"> = {
-      creationDate: format(chosenDayAsDate, "yyyy-MM-dd"),
+    const workoutToAdd: Omit<
+      Workout,
+      "id" | "creationDate" | "exerciseInstances"
+    > = {
       routineName: routine.name,
-      exerciseInstances,
     };
 
     dispatch(addWorkout(workoutToAdd));

@@ -21,6 +21,7 @@ export const WorkoutsPage = () => {
   }, [dispatch]);
 
   const chosenDay = useSelector((state: RootState) => state.chosenDay.day);
+  console.log("chosen day: " + chosenDay);
 
   const filteredWorkouts = workouts?.filter(
     (wrk) => format(wrk.creationDate, "dd/MM/yyyy") === chosenDay

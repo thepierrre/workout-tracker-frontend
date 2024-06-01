@@ -28,7 +28,7 @@ export const fetchExercises = createAsyncThunk<
   { rejectValue: string } // Type of the reject value
 >("exercises/fetchExercises", async (_, thunkAPI) => {
   try {
-    const response = await axiosInstance.get("exercise-types");
+    const response = await axiosInstance.get("user-exercise-types");
     return response.data;
   } catch (error) {
     let errorMessage = "An unknown error occurred";

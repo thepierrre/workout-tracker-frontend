@@ -28,7 +28,7 @@ export const fetchRoutines = createAsyncThunk<
   { rejectValue: string } // Type of the reject value
 >("routines/fetchRoutines", async (_, thunkAPI) => {
   try {
-    const response = await axiosInstance.get("routines");
+    const response = await axiosInstance.get("user-routines");
     return response.data;
   } catch (error) {
     let errorMessage = "An unknown error occurred";
@@ -57,6 +57,23 @@ export const addRoutine = createAsyncThunk<
   }
 });
 
+export const removeRoutine = createAsyncThunk<
+  string,
+  string,
+  { rejectValue: string }
+>("exercises/removeRoutine", async (routineId, thunkAPI) => {
+  try {
+    await axiosInstance.delete(`routines/${routineId}`);
+    return routineId;
+  } catch (error) {
+    let errorMessage = "An unknown error occurred";
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    return thunkAPI.rejectWithValue(errorMessage);
+  }
+});
+
 const routinesSlice = createSlice({
   name: "routinesSlice",
   initialState,
@@ -64,12 +81,6 @@ const routinesSlice = createSlice({
     editRoutine(state, action: PayloadAction<EditRoutinePayload>) {
       const { routine, index } = action.payload;
       state.routines[index] = routine;
-    },
-    removeRoutine(state, action: PayloadAction<Routine>) {
-      const routineToRemove = action.payload;
-      state.routines = state.routines.filter(
-        (routine) => routine.id !== routineToRemove.id
-      );
     },
   },
   extraReducers: (builder) => {
@@ -103,9 +114,23 @@ const routinesSlice = createSlice({
         (state, action: PayloadAction<string | undefined>) => {
           state.error = action.payload || "Failed to add the routine.";
         }
+      )
+      .addCase(
+        removeRoutine.fulfilled,
+        (state, action: PayloadAction<string>) => {
+          state.routines = state.routines.filter(
+            (routine) => routine.id !== action.payload
+          );
+        }
+      )
+      .addCase(
+        removeRoutine.rejected,
+        (state, action: PayloadAction<string | undefined>) => {
+          state.error = action.payload || "Failed to remove the routine.";
+        }
       );
   },
 });
 
-export const { editRoutine, removeRoutine } = routinesSlice.actions;
+export const { editRoutine } = routinesSlice.actions;
 export default routinesSlice.reducer;

@@ -147,17 +147,17 @@ export const workouts: Workout[] = [
     exerciseInstances: [
       {
         id: "instance-id1",
-        exercise: exercises[0],
+        exerciseType: exercises[0],
         series: [series1, series2, series3],
       },
       {
         id: "instance-id2",
-        exercise: exercises[1],
+        exerciseType: exercises[1],
         series: [series4, series5, series6],
       },
       {
         id: "instance-id3",
-        exercise: exercises[2],
+        exerciseType: exercises[2],
         series: [series7, series8, series9],
       },
     ],
@@ -169,17 +169,17 @@ export const workouts: Workout[] = [
     exerciseInstances: [
       {
         id: "instance-id4",
-        exercise: exercises[0],
+        exerciseType: exercises[0],
         series: [series1, series2, series2],
       },
       {
         id: "instance-id5",
-        exercise: exercises[1],
+        exerciseType: exercises[1],
         series: [series4, series4, series5],
       },
       {
         id: "instance-id6",
-        exercise: exercises[2],
+        exerciseType: exercises[2],
         series: [series4, series5, series5],
       },
     ],
@@ -191,22 +191,22 @@ export const workouts: Workout[] = [
     exerciseInstances: [
       {
         id: "instance-id7",
-        exercise: exercises[3],
+        exerciseType: exercises[3],
         series: [series1, series2, series3],
       },
       {
         id: "instance-id8",
-        exercise: exercises[4],
+        exerciseType: exercises[4],
         series: [series4, series5, series6],
       },
       {
         id: "instance-id9",
-        exercise: exercises[5],
+        exerciseType: exercises[5],
         series: [series7, series8, series9],
       },
       {
         id: "instance-id10",
-        exercise: exercises[6],
+        exerciseType: exercises[6],
         series: [series7, series8, series9],
       },
     ],
@@ -218,22 +218,22 @@ export const workouts: Workout[] = [
     exerciseInstances: [
       {
         id: "instance-id7",
-        exercise: exercises[3],
+        exerciseType: exercises[3],
         series: [series1, series2, series3],
       },
       {
         id: "instance-id8",
-        exercise: exercises[4],
+        exerciseType: exercises[4],
         series: [series4, series5, series6],
       },
       {
         id: "instance-id9",
-        exercise: exercises[5],
+        exerciseType: exercises[5],
         series: [series7, series8, series9],
       },
       {
         id: "instance-id10",
-        exercise: exercises[6],
+        exerciseType: exercises[6],
         series: [series7, series8, series9],
       },
     ],
@@ -245,22 +245,22 @@ export const workouts: Workout[] = [
     exerciseInstances: [
       {
         id: "instance-id7",
-        exercise: exercises[3],
+        exerciseType: exercises[3],
         series: [series1, series2, series3],
       },
       {
         id: "instance-id8",
-        exercise: exercises[4],
+        exerciseType: exercises[4],
         series: [series4, series5, series6],
       },
       {
         id: "instance-id9",
-        exercise: exercises[5],
+        exerciseType: exercises[5],
         series: [series7, series8, series9],
       },
       {
         id: "instance-id10",
-        exercise: exercises[6],
+        exerciseType: exercises[6],
         series: [series7, series8, series9],
       },
     ],
@@ -272,22 +272,22 @@ export const workouts: Workout[] = [
     exerciseInstances: [
       {
         id: "instance-id7",
-        exercise: exercises[3],
+        exerciseType: exercises[3],
         series: [series1, series2, series3],
       },
       {
         id: "instance-id8",
-        exercise: exercises[4],
+        exerciseType: exercises[4],
         series: [series4, series5, series6],
       },
       {
         id: "instance-id9",
-        exercise: exercises[5],
+        exerciseType: exercises[5],
         series: [series7, series8, series9],
       },
       {
         id: "instance-id10",
-        exercise: exercises[6],
+        exerciseType: exercises[6],
         series: [series7, series8, series9],
       },
     ],
@@ -299,22 +299,22 @@ export const workouts: Workout[] = [
     exerciseInstances: [
       {
         id: "instance-id7",
-        exercise: exercises[3],
+        exerciseType: exercises[3],
         series: [series1, series2, series3],
       },
       {
         id: "instance-id8",
-        exercise: exercises[4],
+        exerciseType: exercises[4],
         series: [series4, series5, series6],
       },
       {
         id: "instance-id9",
-        exercise: exercises[5],
+        exerciseType: exercises[5],
         series: [series7, series8, series9],
       },
       {
         id: "instance-id10",
-        exercise: exercises[6],
+        exerciseType: exercises[6],
         series: [series7, series8, series9],
       },
     ],
@@ -326,22 +326,22 @@ export const workouts: Workout[] = [
     exerciseInstances: [
       {
         id: "instance-id7",
-        exercise: exercises[3],
+        exerciseType: exercises[3],
         series: [series1, series2, series3],
       },
       {
         id: "instance-id8",
-        exercise: exercises[4],
+        exerciseType: exercises[4],
         series: [series4, series5, series6],
       },
       {
         id: "instance-id9",
-        exercise: exercises[5],
+        exerciseType: exercises[5],
         series: [series7, series8, series9],
       },
       {
         id: "instance-id10",
-        exercise: exercises[6],
+        exerciseType: exercises[6],
         series: [series7, series8, series9],
       },
     ],
@@ -353,22 +353,22 @@ export const workouts: Workout[] = [
     exerciseInstances: [
       {
         id: "instance-id7",
-        exercise: exercises[3],
+        exerciseType: exercises[3],
         series: [series1, series2, series3],
       },
       {
         id: "instance-id8",
-        exercise: exercises[4],
+        exerciseType: exercises[4],
         series: [series4, series5, series6],
       },
       {
         id: "instance-id9",
-        exercise: exercises[5],
+        exerciseType: exercises[5],
         series: [series7, series8, series9],
       },
       {
         id: "instance-id10",
-        exercise: exercises[6],
+        exerciseType: exercises[6],
         series: [series7, series8, series9],
       },
     ],
@@ -380,22 +380,22 @@ export const workouts: Workout[] = [
     exerciseInstances: [
       {
         id: "instance-id7",
-        exercise: exercises[3],
+        exerciseType: exercises[3],
         series: [series1, series2, series3],
       },
       {
         id: "instance-id8",
-        exercise: exercises[4],
+        exerciseType: exercises[4],
         series: [series4, series5, series6],
       },
       {
         id: "instance-id9",
-        exercise: exercises[5],
+        exerciseType: exercises[5],
         series: [series7, series8, series9],
       },
       {
         id: "instance-id10",
-        exercise: exercises[6],
+        exerciseType: exercises[6],
         series: [series7, series8, series9],
       },
     ],
@@ -407,22 +407,22 @@ export const workouts: Workout[] = [
     exerciseInstances: [
       {
         id: "instance-id7",
-        exercise: exercises[3],
+        exerciseType: exercises[3],
         series: [series1, series2, series3],
       },
       {
         id: "instance-id8",
-        exercise: exercises[4],
+        exerciseType: exercises[4],
         series: [series4, series5, series6],
       },
       {
         id: "instance-id9",
-        exercise: exercises[5],
+        exerciseType: exercises[5],
         series: [series7, series8, series9],
       },
       {
         id: "instance-id10",
-        exercise: exercises[6],
+        exerciseType: exercises[6],
         series: [series7, series8, series9],
       },
     ],
@@ -434,22 +434,22 @@ export const workouts: Workout[] = [
     exerciseInstances: [
       {
         id: "instance-id7",
-        exercise: exercises[3],
+        exerciseType: exercises[3],
         series: [series1, series2, series3],
       },
       {
         id: "instance-id8",
-        exercise: exercises[4],
+        exerciseType: exercises[4],
         series: [series4, series5, series6],
       },
       {
         id: "instance-id9",
-        exercise: exercises[5],
+        exerciseType: exercises[5],
         series: [series7, series8, series9],
       },
       {
         id: "instance-id10",
-        exercise: exercises[6],
+        exerciseType: exercises[6],
         series: [series7, series8, series9],
       },
     ],

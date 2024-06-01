@@ -12,10 +12,10 @@ const WorkoutExerciseInstance: React.FC<Props> = ({ exerciseInstance }) => {
     <CustomCard>
       <CardBody>
         <Text color="white" fontWeight="bold" mb={2}>
-          {exerciseInstance.exercise.name}
+          {exerciseInstance?.exerciseType?.name}
         </Text>
         <Flex color="white" direction="column">
-          {exerciseInstance.series.map((series, index) => (
+          {exerciseInstance?.series?.map((series, index) => (
             <Flex key={index} gap={10}>
               <Text flex={0.1}>{index + 1}</Text>
               <Flex gap={3} flex={0.2}>

@@ -54,7 +54,7 @@ const SingleRoutinePage = () => {
   };
 
   const handleRemoveRoutine = (routine: Routine) => {
-    dispatch(removeRoutine(routine));
+    dispatch(removeRoutine(routine.id));
     navigate("/routines");
   };
 

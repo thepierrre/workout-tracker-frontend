@@ -30,7 +30,7 @@ export const fetchWorkouts = createAsyncThunk<
   { rejectValue: string }
 >("workouts/fetchWorkouts", async (_, thunkAPI) => {
   try {
-    const response = await axiosInstance.get("workouts");
+    const response = await axiosInstance.get("user-workouts");
     return response.data;
   } catch (error) {
     let errorMessage = "An unknown error occurred";
@@ -43,7 +43,7 @@ export const fetchWorkouts = createAsyncThunk<
 
 export const addWorkout = createAsyncThunk<
   Workout, // Return type of the fulfilled action
-  Omit<Workout, "id">, // Argument type (without id)
+  Omit<Workout, "id" | "creationDate" | "exerciseInstances">, // Argument type (without id)
   { rejectValue: string } // Type of the reject value
 >("workouts/addWorkout", async (newWorkout, thunkAPI) => {
   try {
@@ -59,20 +59,27 @@ export const addWorkout = createAsyncThunk<
   }
 });
 
+export const removeWorkout = createAsyncThunk<
+  string,
+  string,
+  { rejectValue: string }
+>("workouts/removeWorkout", async (workoutId, thunkAPI) => {
+  try {
+    await axiosInstance.delete(`workouts/${workoutId}`);
+    return workoutId;
+  } catch (error) {
+    let errorMessage = "An unknown error occurred";
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    return thunkAPI.rejectWithValue(errorMessage);
+  }
+});
+
 const workoutSessionsSlice = createSlice({
   name: "workoutSessions",
   initialState,
   reducers: {
-    // addWorkout(state, action: PayloadAction<Workout>) {
-    //   const workoutToAdd = action.payload;
-    //   state.workouts.unshift(workoutToAdd);
-    // },
-    removeWorkout(state, action: PayloadAction<Workout>) {
-      const workoutToRemove = action.payload;
-      state.workouts = state.workouts.filter(
-        (workout) => workout.id !== workoutToRemove.id
-      );
-    },
     addSeriesToWorkout(state, action: PayloadAction<SeriesPayload>) {
       const { workoutId, exerciseInstanceId, series } = action.payload;
       const workout = state.workouts.find((wrk) => wrk.id === workoutId);
@@ -147,6 +154,20 @@ const workoutSessionsSlice = createSlice({
         (state, action: PayloadAction<string | undefined>) => {
           state.error = action.payload || "Failed to add the workout.";
         }
+      )
+      .addCase(
+        removeWorkout.fulfilled,
+        (state, action: PayloadAction<string>) => {
+          state.workouts = state.workouts.filter(
+            (workout) => workout.id !== action.payload
+          );
+        }
+      )
+      .addCase(
+        removeWorkout.rejected,
+        (state, action: PayloadAction<string | undefined>) => {
+          state.error = action.payload || "Failed to remove the workout.";
+        }
       );
   },
 });
@@ -155,6 +176,5 @@ export const {
   addSeriesToWorkout,
   updateSeriesInWorkout,
   deleteSeriesFromWorkout,
-  removeWorkout,
 } = workoutSessionsSlice.actions;
 export default workoutSessionsSlice.reducer;
