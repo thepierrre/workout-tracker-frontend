@@ -45,8 +45,27 @@ export const addRoutine = createAsyncThunk<
   { rejectValue: string } // Type of the reject value
 >("routines/addRoutine", async (newRoutine, thunkAPI) => {
   try {
-    console.log(newRoutine);
     const response = await axiosInstance.post("routines", newRoutine);
+    return response.data;
+  } catch (error) {
+    let errorMessage = "An unknown error occurred";
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    return thunkAPI.rejectWithValue(errorMessage);
+  }
+});
+
+export const updateRoutine = createAsyncThunk<
+  Routine, // Return type of the fulfilled action
+  Routine, // Argument type (without id)
+  { rejectValue: string } // Type of the reject value
+>("routines/updateRoutine", async (updatedRoutine, thunkAPI) => {
+  try {
+    const response = await axiosInstance.put(
+      `routines/${updatedRoutine.id}`,
+      updatedRoutine
+    );
     return response.data;
   } catch (error) {
     let errorMessage = "An unknown error occurred";
@@ -77,12 +96,7 @@ export const removeRoutine = createAsyncThunk<
 const routinesSlice = createSlice({
   name: "routinesSlice",
   initialState,
-  reducers: {
-    editRoutine(state, action: PayloadAction<EditRoutinePayload>) {
-      const { routine, index } = action.payload;
-      state.routines[index] = routine;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchRoutines.pending, (state) => {
@@ -128,9 +142,25 @@ const routinesSlice = createSlice({
         (state, action: PayloadAction<string | undefined>) => {
           state.error = action.payload || "Failed to remove the routine.";
         }
+      )
+      .addCase(
+        updateRoutine.fulfilled,
+        (state, action: PayloadAction<Routine>) => {
+          const index = state.routines.findIndex(
+            (routine) => routine.id === action.payload.id
+          );
+          if (index !== -1) {
+            state.routines[index] = action.payload;
+          }
+        }
+      )
+      .addCase(
+        updateRoutine.rejected,
+        (state, action: PayloadAction<string | undefined>) => {
+          state.error = action.payload || "Failed to update the exercise.";
+        }
       );
   },
 });
 
-export const { editRoutine } = routinesSlice.actions;
 export default routinesSlice.reducer;

@@ -3,7 +3,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import { fetchRoutines } from "../../features/routines/routinesSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../../app/store";
-import { removeRoutine } from "../../features/routines/routinesSlice";
+import {
+  updateRoutine,
+  removeRoutine,
+} from "../../features/routines/routinesSlice";
 import RoutineForm from "../../components/forms/RoutineForm";
 import { Exercise } from "../../interfaces/exercise.interface";
 import Container from "../../components/UI/Container";
@@ -12,7 +15,6 @@ import { ChevronLeftIcon } from "@chakra-ui/icons";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 
 import { Routine } from "../../interfaces/routine.interface";
-import { editRoutine } from "../../features/routines/routinesSlice";
 
 const SingleRoutinePage = () => {
   const { routineId } = useParams();
@@ -40,17 +42,31 @@ const SingleRoutinePage = () => {
   }
 
   const onSubmit = (data: { name: string }, selectedExercises: Exercise[]) => {
-    const routine: Routine = {
-      id: currentRoutine.id,
-      name: data.name,
-      exerciseTypes: selectedExercises,
-      userId: user.id,
-    };
-    if (currentRoutine) {
-      const index = routines.findIndex((routine) => routine.id === routineId);
-      dispatch(editRoutine({ routine, index }));
-      navigate("/routines");
+    const currentIndex = routines.indexOf(currentRoutine);
+
+    if (currentIndex !== -1) {
+      dispatch(
+        updateRoutine({
+          id: currentRoutine.id,
+          name: data.name,
+          exerciseTypes: selectedExercises,
+          userId: user.id,
+        })
+      );
     }
+    navigate("/routines");
+
+    // const routine: Routine = {
+    //   id: currentRoutine.id,
+    //   name: data.name,
+    //   exerciseTypes: selectedExercises,
+    //   userId: user.id,
+    // };
+    // if (currentRoutine) {
+    //   const index = routines.findIndex((routine) => routine.id === routineId);
+    //   dispatch(updateRoutine({ routine, index }));
+    //   navigate("/routines");
+    // }
   };
 
   const handleRemoveRoutine = (routine: Routine) => {

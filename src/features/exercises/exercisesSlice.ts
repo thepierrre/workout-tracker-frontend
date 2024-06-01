@@ -56,6 +56,26 @@ export const addExercise = createAsyncThunk<
   }
 });
 
+export const updateExercise = createAsyncThunk<
+  Exercise, // Return type of the fulfilled action
+  Exercise, // Argument type (without id)
+  { rejectValue: string } // Type of the reject value
+>("exercises/updateExercise", async (updatedExercise, thunkAPI) => {
+  try {
+    const response = await axiosInstance.put(
+      `exercise-types/${updatedExercise.id}`,
+      updatedExercise
+    );
+    return response.data;
+  } catch (error) {
+    let errorMessage = "An unknown error occurred";
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    return thunkAPI.rejectWithValue(errorMessage);
+  }
+});
+
 export const removeExercise = createAsyncThunk<
   string,
   string,
@@ -76,18 +96,7 @@ export const removeExercise = createAsyncThunk<
 const exercisesSlice = createSlice({
   name: "exercises",
   initialState,
-  reducers: {
-    editExercise(state, action: PayloadAction<EditExercisePayload>) {
-      const { exercise, index } = action.payload;
-      state.exercises[index] = exercise;
-    },
-    // removeExercise(state, action: PayloadAction<Exercise>) {
-    //   const exerciseToRemove = action.payload;
-    //   state.exercises = state.exercises.filter(
-    //     (exercise) => exercise.id !== exerciseToRemove.id
-    //   );
-    // },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchExercises.pending, (state) => {
@@ -133,9 +142,25 @@ const exercisesSlice = createSlice({
         (state, action: PayloadAction<string | undefined>) => {
           state.error = action.payload || "Failed to remove the exercise.";
         }
+      )
+      .addCase(
+        updateExercise.fulfilled,
+        (state, action: PayloadAction<Exercise>) => {
+          const index = state.exercises.findIndex(
+            (ex) => ex.id === action.payload.id
+          );
+          if (index !== -1) {
+            state.exercises[index] = action.payload;
+          }
+        }
+      )
+      .addCase(
+        updateExercise.rejected,
+        (state, action: PayloadAction<string | undefined>) => {
+          state.error = action.payload || "Failed to update the exercise.";
+        }
       );
   },
 });
 
-export const { editExercise } = exercisesSlice.actions;
 export default exercisesSlice.reducer;

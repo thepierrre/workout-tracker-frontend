@@ -6,7 +6,7 @@ import { RootState, AppDispatch } from "../../app/store";
 import { removeExercise } from "../../features/exercises/exercisesSlice";
 import { Text, Flex, Heading, IconButton, Box } from "@chakra-ui/react";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
-import { editExercise } from "../../features/exercises/exercisesSlice";
+import { updateExercise } from "../../features/exercises/exercisesSlice";
 import ExerciseForm from "../../components/forms/ExerciseForm";
 import Container from "../../components/UI/Container";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
@@ -38,20 +38,15 @@ const SingleExercisePage = () => {
   }
 
   const onSubmit = (data: { name: string }, selectedCategories: Category[]) => {
-    const exerciseToUpdate = {
-      id: currentExercise.id,
-      name: data.name,
-      categories: selectedCategories,
-      userId: user.id,
-    };
-
     const currentIndex = exercises.indexOf(currentExercise);
 
     if (currentIndex !== -1) {
       dispatch(
-        editExercise({
-          exercise: exerciseToUpdate,
-          index: currentIndex,
+        updateExercise({
+          id: currentExercise.id,
+          name: data.name,
+          categories: selectedCategories,
+          userId: user.id,
         })
       );
     }

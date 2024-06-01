@@ -13,12 +13,10 @@ const LogIn = () => {
 
   const onSubmit = async (data: FormValues) => {
     try {
-      const loginResponse = await axiosInstance.post("auth/login", {
+      await axiosInstance.post("auth/login", {
         username: data.username,
         password: data.password,
       });
-
-      console.log(loginResponse);
 
       const userResponse = await axiosInstance.get("users/me");
 

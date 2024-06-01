@@ -23,7 +23,6 @@ export const fetchUser = createAsyncThunk<
 >("user/fetchUser", async (username, thunkAPI) => {
   try {
     const response = await axiosInstance.get(`users/${username}`);
-    console.log(response.data);
     return response.data;
   } catch (error) {
     let errorMessage = "An unknown error occurred";

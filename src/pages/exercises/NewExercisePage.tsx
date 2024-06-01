@@ -37,8 +37,6 @@ const NewExercisePage = () => {
       userId: user.id,
     };
 
-    console.log(exerciseToAdd);
-
     try {
       await dispatch(addExercise(exerciseToAdd)).unwrap();
       navigate("/exercises");

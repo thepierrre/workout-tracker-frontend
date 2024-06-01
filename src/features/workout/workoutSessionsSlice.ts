@@ -47,7 +47,6 @@ export const addWorkout = createAsyncThunk<
   { rejectValue: string } // Type of the reject value
 >("workouts/addWorkout", async (newWorkout, thunkAPI) => {
   try {
-    console.log(newWorkout);
     const response = await axiosInstance.post("workouts", newWorkout);
     return response.data;
   } catch (error) {
