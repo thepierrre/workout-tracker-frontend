@@ -43,7 +43,7 @@ export const fetchWorkouts = createAsyncThunk<
 
 export const addWorkout = createAsyncThunk<
   Workout, // Return type of the fulfilled action
-  Omit<Workout, "id" | "creationDate" | "exerciseInstances">, // Argument type (without id)
+  Omit<Workout, "id" | "exerciseInstances">, // Argument type (without id)
   { rejectValue: string } // Type of the reject value
 >("workouts/addWorkout", async (newWorkout, thunkAPI) => {
   try {
