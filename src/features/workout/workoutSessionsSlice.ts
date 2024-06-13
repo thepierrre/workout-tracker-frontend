@@ -31,6 +31,7 @@ export const fetchWorkouts = createAsyncThunk<
 >("workouts/fetchWorkouts", async (_, thunkAPI) => {
   try {
     const response = await axiosInstance.get("user-workouts");
+    // console.log(response.data);
     return response.data;
   } catch (error) {
     let errorMessage = "An unknown error occurred";
@@ -47,7 +48,9 @@ export const addWorkout = createAsyncThunk<
   { rejectValue: string } // Type of the reject value
 >("workouts/addWorkout", async (newWorkout, thunkAPI) => {
   try {
+    // console.log(newWorkout);
     const response = await axiosInstance.post("workouts", newWorkout);
+    // console.log(response.data);
     return response.data;
   } catch (error) {
     let errorMessage = "An unknown error occurred";
@@ -87,7 +90,7 @@ const workoutSessionsSlice = createSlice({
           (exInstance) => exInstance.id === exerciseInstanceId
         );
         if (exerciseInstance) {
-          exerciseInstance.series.push(series);
+          exerciseInstance.workingSets.push(series);
         }
       }
     },
@@ -99,10 +102,10 @@ const workoutSessionsSlice = createSlice({
           (exInstance) => exInstance.id === exerciseInstanceId
         );
         if (exerciseInstance) {
-          const i = exerciseInstance.series.findIndex(
+          const i = exerciseInstance.workingSets.findIndex(
             (s) => s.id === series.id
           );
-          exerciseInstance.series.splice(i, 1, series);
+          exerciseInstance.workingSets.splice(i, 1, series);
         }
       }
     },
@@ -114,10 +117,10 @@ const workoutSessionsSlice = createSlice({
           (exInstance) => exInstance.id === exerciseInstanceId
         );
         if (exerciseInstance) {
-          const i = exerciseInstance.series.findIndex(
+          const i = exerciseInstance.workingSets.findIndex(
             (s) => s.id === series.id
           );
-          exerciseInstance.series.splice(i, 1);
+          exerciseInstance.workingSets.splice(i, 1);
         }
       }
     },

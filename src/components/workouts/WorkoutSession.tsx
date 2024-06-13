@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Workout } from "../../interfaces/workout.interface";
 import { useDispatch } from "react-redux";
@@ -14,6 +15,10 @@ interface WorkoutProps {
 
 const WorkoutSession: React.FC<WorkoutProps> = ({ workout: wrk }) => {
   const dispatch = useDispatch<AppDispatch>();
+
+  // useEffect(() => {
+  //   console.log(wrk.exerciseInstances);
+  // });
 
   const handleRemoveWorkout = (workout: Workout) => {
     dispatch(removeWorkout(workout.id));
