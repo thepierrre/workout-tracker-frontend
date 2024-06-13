@@ -4,14 +4,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { Routine } from "../../interfaces/routine.interface";
 import WideButton from "../UI/WideButton";
 import { Workout } from "../../interfaces/workout.interface";
-import { ExerciseInstance } from "../../interfaces/exerciseInstance.interface";
-import { generateRandomString } from "../../util/DUMMY_DATA";
 import { addWorkout } from "../../features/workout/workoutSessionsSlice";
 import { fetchRoutines } from "../../features/routines/routinesSlice";
 import { RootState, AppDispatch } from "../../app/store";
-import { format, getDate, getYear } from "date-fns";
-
-// import { routines } from "../../util/DUMMY_DATA";
+import { format } from "date-fns";
 
 import {
   Flex,

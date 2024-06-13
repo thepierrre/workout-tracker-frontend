@@ -22,6 +22,9 @@ const NewExercisePage = () => {
       dispatch(fetchCategories());
     }
   }, [dispatch, categoriesState.categories.length]);
+  // useEffect(() => {
+  //   dispatch(fetchCategories());
+  // }, [dispatch]);
 
   if (!user) {
     return;
@@ -77,7 +80,11 @@ const NewExercisePage = () => {
         </Heading>
         <Box w="16%" />
       </Flex>
-      <ExerciseForm onSubmit={onSubmit} buttonText="Create"></ExerciseForm>
+      <ExerciseForm
+        initialSelectedCategories={[]}
+        onSubmit={onSubmit}
+        buttonText="Create"
+      ></ExerciseForm>
     </Container>
   );
 };

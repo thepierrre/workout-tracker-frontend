@@ -27,7 +27,7 @@ const resolver: Resolver<FormValues> = async (values) => {
       ? {
           name: {
             type: "required",
-            message: "Name is required.",
+            message: "Routine name is required.",
           },
         }
       : {},

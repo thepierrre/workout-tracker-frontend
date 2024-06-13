@@ -15,15 +15,16 @@ import { fetchCategories } from "../../features/exercises/categoriesSlice";
 
 const SingleExercisePage = () => {
   const navigate = useNavigate();
-  const { exerciseId } = useParams();
+  const dispatch = useDispatch<AppDispatch>();
+  const user = useSelector((state: RootState) => state.authenticatedUser.user);
   const exercises = useSelector(
     (state: RootState) => state.exercises.exercises
   );
-  const user = useSelector((state: RootState) => state.authenticatedUser.user);
+  const { exerciseId } = useParams();
+
   const currentExercise = exercises.find(
     (exercise) => exercise.id === exerciseId
   );
-  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     dispatch(fetchCategories());

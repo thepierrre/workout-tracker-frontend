@@ -1,17 +1,46 @@
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { User } from "../../interfaces/user.interface";
 import axios from "axios";
 import axiosInstance from "../../util/axiosInstance";
 import { setUser } from "../../features/auth/authenticatedUserSlice";
-
+import { useForm, SubmitHandler, Resolver } from "react-hook-form";
 import AuthForm, { FormValues } from "../forms/AuthForm";
 
 const LogIn = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
-  const onSubmit = async (data: FormValues) => {
+  const resolver: Resolver<FormValues> = async (values) => {
+    const errors = {
+      ...(values.username
+        ? {}
+        : {
+            username: {
+              type: "required",
+              message: "Username is required.",
+            },
+          }),
+      ...(values.password
+        ? {}
+        : {
+            password: {
+              type: "required",
+              message: "Password is required.",
+            },
+          }),
+    };
+
+    return {
+      values: values.username && values.password ? values : {},
+      errors: errors,
+    };
+  };
+
+  const {
+    setError,
+    formState: { errors },
+  } = useForm<FormValues>({ resolver });
+
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
       await axiosInstance.post("auth/login", {
         username: data.username,
@@ -23,7 +52,7 @@ const LogIn = () => {
       const authenticatedUser: User = {
         id: userResponse.data.id,
         username: userResponse.data.username,
-        password: "", // Do not store the password
+        password: "",
         email: userResponse.data.email,
         routines: userResponse.data.routines || [],
         workoutSessions: userResponse.data.workoutSessions || [],
@@ -31,12 +60,17 @@ const LogIn = () => {
       };
 
       dispatch(setUser(authenticatedUser));
-      // navigate("/workouts");
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error("Axios error:", error.response?.data);
+      if (axios.isAxiosError(error) && error.response) {
+        setError("password", {
+          type: "manual",
+          message: error.response.data,
+        });
       } else {
-        console.error("Unexpected error:", error);
+        setError("password", {
+          type: "manual",
+          message: "Unexpected error: " + error,
+        });
       }
     }
   };
@@ -48,6 +82,8 @@ const LogIn = () => {
       initialPassword=""
       buttonText="Sign in"
       isRegistration={false}
+      setFormError={setError}
+      errors={errors}
     />
   );
 };

@@ -55,18 +55,6 @@ const SingleRoutinePage = () => {
       );
     }
     navigate("/routines");
-
-    // const routine: Routine = {
-    //   id: currentRoutine.id,
-    //   name: data.name,
-    //   exerciseTypes: selectedExercises,
-    //   userId: user.id,
-    // };
-    // if (currentRoutine) {
-    //   const index = routines.findIndex((routine) => routine.id === routineId);
-    //   dispatch(updateRoutine({ routine, index }));
-    //   navigate("/routines");
-    // }
   };
 
   const handleRemoveRoutine = (routine: Routine) => {

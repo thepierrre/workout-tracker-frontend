@@ -56,7 +56,11 @@ const NewRoutinePage = () => {
         </Heading>
         <Box w="16%" />
       </Flex>
-      <RoutineForm onSubmit={onSubmit} buttonText="Create"></RoutineForm>
+      <RoutineForm
+        initialSelectedExercises={[]}
+        onSubmit={onSubmit}
+        buttonText="Create"
+      ></RoutineForm>
     </Container>
   );
 };
