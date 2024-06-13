@@ -150,7 +150,7 @@ const WorkoutExerciseInstancePage = () => {
 
   return (
     <Container>
-      {exerciseInstance?.exercise !== undefined && (
+      {exerciseInstance?.exerciseTypeName !== undefined && (
         <Flex direction="column" gap={5}>
           <Flex align="center" w="100%">
             <IconButton
@@ -163,7 +163,7 @@ const WorkoutExerciseInstancePage = () => {
             />
 
             <Heading fontSize="md" color="white" textAlign="center" w="70%">
-              {exerciseInstance?.exercise.name.toUpperCase()}
+              {exerciseInstance?.exerciseTypeName.toUpperCase()}
             </Heading>
             <Box w="15%" />
           </Flex>
@@ -255,35 +255,35 @@ const WorkoutExerciseInstancePage = () => {
             </Flex>
           </Flex>
           <Flex direction="column" gap={2} mt={3}>
-            {exerciseInstance?.series.map((series, index) => (
+            {exerciseInstance?.workingSets.map((set, index) => (
               <Card
                 // bg="#404040"
                 bg={
-                  activeSeries && activeSeries.id === series.id
+                  activeSeries && activeSeries.id === set.id
                     ? "lightblue"
                     : "#404040"
                 }
                 w="95vw"
                 key={index}
-                onClick={() => series && handleActiveExInstance(series)}
+                onClick={() => set && handleActiveExInstance(set)}
               >
                 <CardBody p={4}>
                   <Flex
                     key={index}
                     gap={10}
                     color={
-                      activeSeries && activeSeries.id === series.id
+                      activeSeries && activeSeries.id === set.id
                         ? "#353935"
                         : "white"
                     }
                   >
                     <Text flex={0.1}>{index + 1}</Text>
                     <Flex gap={3} flex={0.2}>
-                      <Text fontWeight="bold">{series.reps}</Text>
+                      <Text fontWeight="bold">{set.reps}</Text>
                       <Text>reps</Text>
                     </Flex>
                     <Flex gap={3} flex={0.2}>
-                      <Text fontWeight="bold">{series.weight}</Text>
+                      <Text fontWeight="bold">{set.weight}</Text>
                       <Text>kgs</Text>
                     </Flex>
                   </Flex>
