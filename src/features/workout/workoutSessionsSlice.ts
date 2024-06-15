@@ -46,8 +46,6 @@ interface DeleteWorkingSetArgs {
   workingSetId: number;
 }
 
-// Omit<Series, "id">,
-
 export const deleteSet = createAsyncThunk<
   ExerciseInstance,
   DeleteWorkingSetArgs,
@@ -182,50 +180,7 @@ export const removeWorkout = createAsyncThunk<
 const workoutSessionsSlice = createSlice({
   name: "workoutSessions",
   initialState,
-  reducers: {
-    // addSeriesToWorkout(state, action: PayloadAction<SeriesPayload>) {
-    //   const { workoutId, exerciseInstanceId, series } = action.payload;
-    //   const workout = state.workouts.find((wrk) => wrk.id === workoutId);
-    //   if (workout) {
-    //     const exerciseInstance = workout.exerciseInstances.find(
-    //       (exInstance) => exInstance.id === exerciseInstanceId
-    //     );
-    //     if (exerciseInstance) {
-    //       exerciseInstance.workingSets.push(series);
-    //     }
-    //   }
-    // },
-    // updateSeriesInWorkout(state, action: PayloadAction<SeriesPayload>) {
-    //   const { workoutId, exerciseInstanceId, series } = action.payload;
-    //   const workout = state.workouts.find((wrk) => wrk.id === workoutId);
-    //   if (workout) {
-    //     const exerciseInstance = workout.exerciseInstances.find(
-    //       (exInstance) => exInstance.id === exerciseInstanceId
-    //     );
-    //     if (exerciseInstance) {
-    //       const i = exerciseInstance.workingSets.findIndex(
-    //         (s) => s.id === series.id
-    //       );
-    //       exerciseInstance.workingSets.splice(i, 1, series);
-    //     }
-    //   }
-    // },
-    // deleteSeriesFromWorkout(state, action: PayloadAction<SeriesPayload>) {
-    //   const { workoutId, exerciseInstanceId, series } = action.payload;
-    //   const workout = state.workouts.find((wrk) => wrk.id === workoutId);
-    //   if (workout) {
-    //     const exerciseInstance = workout.exerciseInstances.find(
-    //       (exInstance) => exInstance.id === exerciseInstanceId
-    //     );
-    //     if (exerciseInstance) {
-    //       const i = exerciseInstance.workingSets.findIndex(
-    //         (s) => s.id === series.id
-    //       );
-    //       exerciseInstance.workingSets.splice(i, 1);
-    //     }
-    //   }
-    // },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchWorkouts.pending, (state) => {
