@@ -25,21 +25,57 @@ interface ExerciseInstance {
 }
 
 interface Series {
-  id: string;
+  id: number;
   reps: number;
   weight: number;
 }
 
-interface WorkingSetArgs {
+interface AddWorkingSetArgs {
   exerciseInstanceId: string;
   newSet: Omit<Series, "id">;
 }
 
+interface updateWorkingSetArgs {
+  exerciseInstanceId: string;
+  workingSetId: number;
+  setToUpdate: Omit<Series, "id">;
+}
+
+interface DeleteWorkingSetArgs {
+  exerciseInstanceId: string;
+  workingSetId: number;
+}
+
 // Omit<Series, "id">,
+
+export const deleteSet = createAsyncThunk<
+  ExerciseInstance,
+  DeleteWorkingSetArgs,
+  { rejectValue: string }
+>(
+  "workouts/deleteWorkingSet",
+  async ({ exerciseInstanceId, workingSetId }, thunkAPI) => {
+    try {
+      const response = await axiosInstance.delete(
+        `exercise-instances/${exerciseInstanceId}/sets/${workingSetId}`
+      );
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      let errorMessage = "An unknown error occurred";
+      if (axios.isAxiosError(error) && error.response) {
+        errorMessage = error.response.data.message;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
 
 export const addSet = createAsyncThunk<
   ExerciseInstance,
-  WorkingSetArgs,
+  AddWorkingSetArgs,
   { rejectValue: string }
 >(
   "workouts/addWorkingSet",
@@ -48,6 +84,32 @@ export const addSet = createAsyncThunk<
       const response = await axiosInstance.post(
         `exercise-instances/${exerciseInstanceId}/sets`,
         newSet
+      );
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      let errorMessage = "An unknown error occurred";
+      if (axios.isAxiosError(error) && error.response) {
+        errorMessage = error.response.data.message;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const updateSet = createAsyncThunk<
+  ExerciseInstance,
+  updateWorkingSetArgs,
+  { rejectValue: string }
+>(
+  "workouts/updateWorkingSet",
+  async ({ exerciseInstanceId, workingSetId, setToUpdate }, thunkAPI) => {
+    try {
+      const response = await axiosInstance.patch(
+        `exercise-instances/${exerciseInstanceId}/sets/${workingSetId}`,
+        setToUpdate
       );
       console.log(response.data);
       return response.data;
@@ -218,6 +280,56 @@ const workoutSessionsSlice = createSlice({
       )
       .addCase(
         addSet.fulfilled,
+        (state, action: PayloadAction<ExerciseInstance>) => {
+          const updatedExerciseInstance = action.payload;
+          const workout = state.workouts.find((workout) =>
+            workout.exerciseInstances.some(
+              (instance) => instance.id === updatedExerciseInstance.id
+            )
+          );
+
+          if (workout) {
+            const exerciseInstanceIndex = workout.exerciseInstances.findIndex(
+              (instance) => instance.id === updatedExerciseInstance.id
+            );
+            workout.exerciseInstances[exerciseInstanceIndex] =
+              updatedExerciseInstance;
+          }
+        }
+      )
+      .addCase(
+        updateSet.rejected,
+        (state, action: PayloadAction<string | undefined>) => {
+          state.error = action.payload || "Failed to update the set.";
+        }
+      )
+      .addCase(
+        updateSet.fulfilled,
+        (state, action: PayloadAction<ExerciseInstance>) => {
+          const updatedExerciseInstance = action.payload;
+          const workout = state.workouts.find((workout) =>
+            workout.exerciseInstances.some(
+              (instance) => instance.id === updatedExerciseInstance.id
+            )
+          );
+
+          if (workout) {
+            const exerciseInstanceIndex = workout.exerciseInstances.findIndex(
+              (instance) => instance.id === updatedExerciseInstance.id
+            );
+            workout.exerciseInstances[exerciseInstanceIndex] =
+              updatedExerciseInstance;
+          }
+        }
+      )
+      .addCase(
+        deleteSet.rejected,
+        (state, action: PayloadAction<string | undefined>) => {
+          state.error = action.payload || "Failed to delete the set.";
+        }
+      )
+      .addCase(
+        deleteSet.fulfilled,
         (state, action: PayloadAction<ExerciseInstance>) => {
           const updatedExerciseInstance = action.payload;
           const workout = state.workouts.find((workout) =>

@@ -18,6 +18,8 @@ import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { Series } from "../../interfaces/series.interface";
 import {
   addSet,
+  updateSet,
+  deleteSet,
   fetchWorkouts,
 } from "../../features/workout/workoutSessionsSlice";
 
@@ -96,66 +98,60 @@ const WorkoutExerciseInstancePage = () => {
     }
   };
 
-  // wrk && exerciseInstanceId && console.log("abc");
-  // dispatch(
-  //   addSeriesToWorkout({
-  //     workoutId: wrk.id,
-  //     exerciseInstanceId: exerciseInstanceId,
-  //     series: seriesToAdd,
-  //   })
-  // );
-  // };
+  const handleUpdate = async () => {
+    let exerciseInstanceId = exerciseInstance?.id;
+    let setId = activeSeries?.id;
 
-  // const handleUpdate = () => {
-  //   if (activeSeries) {
-  //     const seriesToUpdate: Series = {
-  //       id: activeSeries.id,
-  //       reps,
-  //       weight,
-  //     };
+    const seriesToUpdate: Omit<Series, "id"> = {
+      reps,
+      weight,
+    };
 
-  //     console.log(seriesToUpdate);
-
-  //     // wrk &&
-  //     //   exerciseInstanceId &&
-  //     //   dispatch(
-  //     //     updateSeriesInWorkout({
-  //     //       workoutId: wrk.id,
-  //     //       exerciseInstanceId: exerciseInstanceId,
-  //     //       series: seriesToUpdate,
-  //     //     })
-  //     //   );
-  //   }
-  // };
+    if (exerciseInstanceId && setId) {
+      try {
+        await dispatch(
+          updateSet({
+            exerciseInstanceId,
+            workingSetId: setId,
+            setToUpdate: seriesToUpdate,
+          })
+        );
+      } catch (error) {
+        console.error("Failed to update set: ", error);
+      }
+    } else {
+      console.error("Exercise instance ID or set ID is missing");
+    }
+  };
 
   const handleAppOrUpdate = () => {
     if (activeSeries) {
-      // handleUpdate();
+      handleUpdate();
       return;
     } else {
       handleAdd();
     }
   };
 
-  // const handleDelete = () => {
-  //   if (activeSeries) {
-  //     const seriesToUpdate: Series = {
-  //       id: activeSeries.id,
-  //       reps,
-  //       weight,
-  //     };
+  const handleDelete = async () => {
+    let exerciseInstanceId = exerciseInstance?.id;
+    let setId = activeSeries?.id;
 
-  //     // wrk &&
-  //     //   exerciseInstanceId &&
-  //     //   dispatch(
-  //     //     deleteSeriesFromWorkout({
-  //     //       workoutId: wrk.id,
-  //     //       exerciseInstanceId: exerciseInstanceId,
-  //     //       series: seriesToUpdate,
-  //     //     })
-  //     //   );
-  //   }
-  // };
+    if (exerciseInstanceId && setId) {
+      try {
+        await dispatch(
+          deleteSet({
+            exerciseInstanceId,
+            workingSetId: setId,
+          })
+        );
+      } catch (error) {
+        console.error("Failed to delete set: ", error);
+      }
+    } else {
+      console.error("Exercise instance ID or set ID is missing");
+    }
+  };
 
   const handleGoBack = () => {
     navigate(-1);
@@ -261,7 +257,7 @@ const WorkoutExerciseInstancePage = () => {
                 bg="lightblue"
                 textColor="#353935"
                 isDisabled={handleDisableButton()}
-                // onClick={() => handleDelete()}
+                onClick={() => handleDelete()}
               >
                 DELETE
               </NarrowButton>
