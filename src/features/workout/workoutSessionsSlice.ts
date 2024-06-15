@@ -1,9 +1,9 @@
+import axios from "axios";
 import axiosInstance from "../../util/axiosInstance";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 import { Workout } from "../../interfaces/workout.interface";
-import { Series } from "../../interfaces/series.interface";
 import { workouts } from "../../util/DUMMY_DATA";
 
 export interface WorkoutSessionsState {
@@ -18,11 +18,50 @@ const initialState: WorkoutSessionsState = {
   error: null,
 };
 
-interface SeriesPayload {
-  workoutId: string;
-  exerciseInstanceId: string;
-  series: Series;
+interface ExerciseInstance {
+  id: string;
+  exerciseTypeName: string;
+  workingSets: Series[];
 }
+
+interface Series {
+  id: string;
+  reps: number;
+  weight: number;
+}
+
+interface WorkingSetArgs {
+  exerciseInstanceId: string;
+  newSet: Omit<Series, "id">;
+}
+
+// Omit<Series, "id">,
+
+export const addSet = createAsyncThunk<
+  ExerciseInstance,
+  WorkingSetArgs,
+  { rejectValue: string }
+>(
+  "workouts/addWorkingSet",
+  async ({ exerciseInstanceId, newSet }, thunkAPI) => {
+    try {
+      const response = await axiosInstance.post(
+        `exercise-instances/${exerciseInstanceId}/sets`,
+        newSet
+      );
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      let errorMessage = "An unknown error occurred";
+      if (axios.isAxiosError(error) && error.response) {
+        errorMessage = error.response.data.message;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
 
 export const fetchWorkouts = createAsyncThunk<
   Workout[],
@@ -82,48 +121,48 @@ const workoutSessionsSlice = createSlice({
   name: "workoutSessions",
   initialState,
   reducers: {
-    addSeriesToWorkout(state, action: PayloadAction<SeriesPayload>) {
-      const { workoutId, exerciseInstanceId, series } = action.payload;
-      const workout = state.workouts.find((wrk) => wrk.id === workoutId);
-      if (workout) {
-        const exerciseInstance = workout.exerciseInstances.find(
-          (exInstance) => exInstance.id === exerciseInstanceId
-        );
-        if (exerciseInstance) {
-          exerciseInstance.workingSets.push(series);
-        }
-      }
-    },
-    updateSeriesInWorkout(state, action: PayloadAction<SeriesPayload>) {
-      const { workoutId, exerciseInstanceId, series } = action.payload;
-      const workout = state.workouts.find((wrk) => wrk.id === workoutId);
-      if (workout) {
-        const exerciseInstance = workout.exerciseInstances.find(
-          (exInstance) => exInstance.id === exerciseInstanceId
-        );
-        if (exerciseInstance) {
-          const i = exerciseInstance.workingSets.findIndex(
-            (s) => s.id === series.id
-          );
-          exerciseInstance.workingSets.splice(i, 1, series);
-        }
-      }
-    },
-    deleteSeriesFromWorkout(state, action: PayloadAction<SeriesPayload>) {
-      const { workoutId, exerciseInstanceId, series } = action.payload;
-      const workout = state.workouts.find((wrk) => wrk.id === workoutId);
-      if (workout) {
-        const exerciseInstance = workout.exerciseInstances.find(
-          (exInstance) => exInstance.id === exerciseInstanceId
-        );
-        if (exerciseInstance) {
-          const i = exerciseInstance.workingSets.findIndex(
-            (s) => s.id === series.id
-          );
-          exerciseInstance.workingSets.splice(i, 1);
-        }
-      }
-    },
+    // addSeriesToWorkout(state, action: PayloadAction<SeriesPayload>) {
+    //   const { workoutId, exerciseInstanceId, series } = action.payload;
+    //   const workout = state.workouts.find((wrk) => wrk.id === workoutId);
+    //   if (workout) {
+    //     const exerciseInstance = workout.exerciseInstances.find(
+    //       (exInstance) => exInstance.id === exerciseInstanceId
+    //     );
+    //     if (exerciseInstance) {
+    //       exerciseInstance.workingSets.push(series);
+    //     }
+    //   }
+    // },
+    // updateSeriesInWorkout(state, action: PayloadAction<SeriesPayload>) {
+    //   const { workoutId, exerciseInstanceId, series } = action.payload;
+    //   const workout = state.workouts.find((wrk) => wrk.id === workoutId);
+    //   if (workout) {
+    //     const exerciseInstance = workout.exerciseInstances.find(
+    //       (exInstance) => exInstance.id === exerciseInstanceId
+    //     );
+    //     if (exerciseInstance) {
+    //       const i = exerciseInstance.workingSets.findIndex(
+    //         (s) => s.id === series.id
+    //       );
+    //       exerciseInstance.workingSets.splice(i, 1, series);
+    //     }
+    //   }
+    // },
+    // deleteSeriesFromWorkout(state, action: PayloadAction<SeriesPayload>) {
+    //   const { workoutId, exerciseInstanceId, series } = action.payload;
+    //   const workout = state.workouts.find((wrk) => wrk.id === workoutId);
+    //   if (workout) {
+    //     const exerciseInstance = workout.exerciseInstances.find(
+    //       (exInstance) => exInstance.id === exerciseInstanceId
+    //     );
+    //     if (exerciseInstance) {
+    //       const i = exerciseInstance.workingSets.findIndex(
+    //         (s) => s.id === series.id
+    //       );
+    //       exerciseInstance.workingSets.splice(i, 1);
+    //     }
+    //   }
+    // },
   },
   extraReducers: (builder) => {
     builder
@@ -170,13 +209,38 @@ const workoutSessionsSlice = createSlice({
         (state, action: PayloadAction<string | undefined>) => {
           state.error = action.payload || "Failed to remove the workout.";
         }
+      )
+      .addCase(
+        addSet.rejected,
+        (state, action: PayloadAction<string | undefined>) => {
+          state.error = action.payload || "Failed to add the set.";
+        }
+      )
+      .addCase(
+        addSet.fulfilled,
+        (state, action: PayloadAction<ExerciseInstance>) => {
+          const updatedExerciseInstance = action.payload;
+          const workout = state.workouts.find((workout) =>
+            workout.exerciseInstances.some(
+              (instance) => instance.id === updatedExerciseInstance.id
+            )
+          );
+
+          if (workout) {
+            const exerciseInstanceIndex = workout.exerciseInstances.findIndex(
+              (instance) => instance.id === updatedExerciseInstance.id
+            );
+            workout.exerciseInstances[exerciseInstanceIndex] =
+              updatedExerciseInstance;
+          }
+        }
       );
   },
 });
 
 export const {
-  addSeriesToWorkout,
-  updateSeriesInWorkout,
-  deleteSeriesFromWorkout,
+  // addSeriesToWorkout,
+  // updateSeriesInWorkout,
+  // deleteSeriesFromWorkout,
 } = workoutSessionsSlice.actions;
 export default workoutSessionsSlice.reducer;

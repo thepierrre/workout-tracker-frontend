@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../app/store";
+import { AppDispatch, RootState } from "../../app/store";
 import NarrowButton from "../../components/UI/NarrowButton";
 import SmallButton from "../../components/UI/SmallButton";
 import Container from "../../components/UI/Container";
@@ -16,11 +16,9 @@ import {
 } from "@chakra-ui/react";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { Series } from "../../interfaces/series.interface";
-import { generateRandomString } from "../../util/DUMMY_DATA";
 import {
-  addSeriesToWorkout,
-  updateSeriesInWorkout,
-  deleteSeriesFromWorkout,
+  addSet,
+  fetchWorkouts,
 } from "../../features/workout/workoutSessionsSlice";
 
 const WorkoutExerciseInstancePage = () => {
@@ -43,7 +41,11 @@ const WorkoutExerciseInstancePage = () => {
     (e) => e.id === exerciseInstanceId
   );
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(fetchWorkouts);
+  }, [wrk]);
 
   const handleRepsAndWeight = (type: string, action: string) => {
     if (type === "reps") {
@@ -75,74 +77,85 @@ const WorkoutExerciseInstancePage = () => {
     return activeSeries ? false : true;
   };
 
-  const handleAdd = () => {
-    if (activeSeries) {
-      return;
-    }
-    const seriesToAdd: Series = {
-      id: generateRandomString(5),
+  const handleAdd = async () => {
+    const seriesToAdd: Omit<Series, "id"> = {
       reps,
       weight,
     };
 
-    wrk &&
-      exerciseInstanceId &&
-      dispatch(
-        addSeriesToWorkout({
-          workoutId: wrk.id,
-          exerciseInstanceId: exerciseInstanceId,
-          series: seriesToAdd,
-        })
-      );
-  };
+    let exerciseInstanceId = exerciseInstance?.id;
 
-  const handleUpdate = () => {
-    if (activeSeries) {
-      const seriesToUpdate: Series = {
-        id: activeSeries.id,
-        reps,
-        weight,
-      };
-
-      wrk &&
-        exerciseInstanceId &&
-        dispatch(
-          updateSeriesInWorkout({
-            workoutId: wrk.id,
-            exerciseInstanceId: exerciseInstanceId,
-            series: seriesToUpdate,
-          })
-        );
+    if (exerciseInstanceId) {
+      try {
+        await dispatch(addSet({ exerciseInstanceId, newSet: seriesToAdd }));
+      } catch (error) {
+        console.error("Failed to add set: ", error);
+      }
+    } else {
+      console.error("Exercise instance ID is missing");
     }
   };
 
+  // wrk && exerciseInstanceId && console.log("abc");
+  // dispatch(
+  //   addSeriesToWorkout({
+  //     workoutId: wrk.id,
+  //     exerciseInstanceId: exerciseInstanceId,
+  //     series: seriesToAdd,
+  //   })
+  // );
+  // };
+
+  // const handleUpdate = () => {
+  //   if (activeSeries) {
+  //     const seriesToUpdate: Series = {
+  //       id: activeSeries.id,
+  //       reps,
+  //       weight,
+  //     };
+
+  //     console.log(seriesToUpdate);
+
+  //     // wrk &&
+  //     //   exerciseInstanceId &&
+  //     //   dispatch(
+  //     //     updateSeriesInWorkout({
+  //     //       workoutId: wrk.id,
+  //     //       exerciseInstanceId: exerciseInstanceId,
+  //     //       series: seriesToUpdate,
+  //     //     })
+  //     //   );
+  //   }
+  // };
+
   const handleAppOrUpdate = () => {
     if (activeSeries) {
-      handleUpdate();
+      // handleUpdate();
+      return;
     } else {
       handleAdd();
     }
   };
 
-  const handleDelete = () => {
-    if (activeSeries) {
-      const seriesToUpdate: Series = {
-        id: activeSeries.id,
-        reps,
-        weight,
-      };
+  // const handleDelete = () => {
+  //   if (activeSeries) {
+  //     const seriesToUpdate: Series = {
+  //       id: activeSeries.id,
+  //       reps,
+  //       weight,
+  //     };
 
-      wrk &&
-        exerciseInstanceId &&
-        dispatch(
-          deleteSeriesFromWorkout({
-            workoutId: wrk.id,
-            exerciseInstanceId: exerciseInstanceId,
-            series: seriesToUpdate,
-          })
-        );
-    }
-  };
+  //     // wrk &&
+  //     //   exerciseInstanceId &&
+  //     //   dispatch(
+  //     //     deleteSeriesFromWorkout({
+  //     //       workoutId: wrk.id,
+  //     //       exerciseInstanceId: exerciseInstanceId,
+  //     //       series: seriesToUpdate,
+  //     //     })
+  //     //   );
+  //   }
+  // };
 
   const handleGoBack = () => {
     navigate(-1);
@@ -248,7 +261,7 @@ const WorkoutExerciseInstancePage = () => {
                 bg="lightblue"
                 textColor="#353935"
                 isDisabled={handleDisableButton()}
-                onClick={() => handleDelete()}
+                // onClick={() => handleDelete()}
               >
                 DELETE
               </NarrowButton>
@@ -257,7 +270,6 @@ const WorkoutExerciseInstancePage = () => {
           <Flex direction="column" gap={2} mt={3}>
             {exerciseInstance?.workingSets.map((set, index) => (
               <Card
-                // bg="#404040"
                 bg={
                   activeSeries && activeSeries.id === set.id
                     ? "lightblue"

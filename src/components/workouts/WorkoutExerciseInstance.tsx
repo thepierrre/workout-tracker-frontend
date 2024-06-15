@@ -8,10 +8,6 @@ interface Props {
 }
 
 const WorkoutExerciseInstance: React.FC<Props> = ({ exerciseInstance }) => {
-  useEffect(() => {
-    console.log(exerciseInstance);
-  });
-
   return (
     <CustomCard>
       <CardBody>
