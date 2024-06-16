@@ -14,6 +14,7 @@ import {
   Checkbox,
   InputGroup,
   InputLeftElement,
+  Wrap,
 } from "@chakra-ui/react";
 
 interface FormValues {
@@ -120,9 +121,9 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
         </FormErrorMessage>
       </FormControl>
 
-      <Flex w="95vw" mt={4} mb={4} ml={2} mr={2} direction="column">
+      <Wrap w="90vw" mt={4} mb={4} ml={2} mr={2}>
         {selectedExercises.map((exercise) => (
-          <Flex gap={4} p={2} key={exercise.id}>
+          <Flex gap={4} w="48%" key={exercise.id}>
             <Checkbox
               defaultChecked={true}
               onChange={() => handleCheck(exercise)}
@@ -133,9 +134,9 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
             </Text>
           </Flex>
         ))}
-      </Flex>
+      </Wrap>
 
-      <Flex direction="column" w="100%">
+      <Flex direction="column" w="100%" gap={2}>
         <InputGroup>
           <Input
             w="95vw"
@@ -155,10 +156,10 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
           </InputLeftElement>
         </InputGroup>
 
-        <Flex w="95vw" mt={4} mb={4} ml={2} mr={2} direction="column">
+        <Wrap w="90vw" mt={4} mb={4} ml={2} mr={2} direction="column">
           {filteredExercises.map((exercise) => (
             <Flex key={exercise.id}>
-              <Flex gap={4} p={2}>
+              <Flex gap={4} w="48%">
                 <Checkbox onChange={() => handleCheck(exercise)}></Checkbox>
                 <Text textColor="white">
                   {exercise.name.charAt(0).toLocaleUpperCase() +
@@ -167,7 +168,7 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
               </Flex>
             </Flex>
           ))}
-        </Flex>
+        </Wrap>
       </Flex>
 
       <WideButton type="submit">{buttonText}</WideButton>

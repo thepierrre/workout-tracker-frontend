@@ -24,8 +24,8 @@ import {
 } from "../../features/workout/workoutSessionsSlice";
 
 const WorkoutExerciseInstancePage = () => {
-  const [reps, setReps] = useState<number>(9);
-  const [weight, setWeight] = useState<number>(42);
+  const [reps, setReps] = useState<number>(10);
+  const [weight, setWeight] = useState<number>(30);
   const [activeSeries, setActiveSeries] = useState<Series | undefined>(
     undefined
   );

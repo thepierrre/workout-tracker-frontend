@@ -22,9 +22,6 @@ const NewExercisePage = () => {
       dispatch(fetchCategories());
     }
   }, [dispatch, categoriesState.categories.length]);
-  // useEffect(() => {
-  //   dispatch(fetchCategories());
-  // }, [dispatch]);
 
   if (!user) {
     return;

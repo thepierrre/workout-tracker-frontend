@@ -31,8 +31,6 @@ const App = () => {
     }
   }, [user, navigate]);
 
-  // user ? Navigate({ to: "/workouts" }) : Navigate({ to: "/profile" });
-
   const tabs = [
     {
       url: "/workouts",
@@ -79,7 +77,8 @@ const App = () => {
               {tabs.map((tab) => (
                 <Tab
                   sx={{ color: "white" }}
-                  fontSize="sm"
+                  w="23vw"
+                  fontSize="md"
                   as={Link}
                   to={tab.url}
                   key={tab.title}
