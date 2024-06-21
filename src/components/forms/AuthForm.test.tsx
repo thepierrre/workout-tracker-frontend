@@ -42,4 +42,6 @@ describe("AuthForm", () => {
     expect(screen.getByPlaceholderText("Password")).toBeInTheDocument();
     expect(screen.getByText("Existing member? Sign in")).toBeInTheDocument();
   });
+
+  it;
 });

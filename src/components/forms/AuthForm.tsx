@@ -72,7 +72,6 @@ const AuthForm: React.FC<Props> = ({
     resolver,
   });
 
-  // Wrap the onSubmit function to handle form submission
   const handleFormSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
       await onSubmit(data);

@@ -26,6 +26,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "src/util/DUMY_PASSWORDS.ts", "jest.config.js"],
+  "include": ["src", "src/util/DUMY_PASSWORDS.ts", "jest.config.cjs"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
