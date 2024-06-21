@@ -221,9 +221,9 @@ const ProfilePage = () => {
             Sign in to your account
           </Heading>
           <LogIn />
-          <Link to="/profile/sign-up">
-            <WideButton>Register</WideButton>
-          </Link>
+          {/* <Link to="/profile/sign-up">
+            <WideButton>No account? Sign up</WideButton>
+          </Link> */}
         </>
       )}
     </Container>

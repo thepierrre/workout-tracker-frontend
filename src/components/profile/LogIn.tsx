@@ -5,6 +5,9 @@ import axiosInstance from "../../util/axiosInstance";
 import { setUser } from "../../features/auth/authenticatedUserSlice";
 import { useForm, SubmitHandler, Resolver } from "react-hook-form";
 import AuthForm, { FormValues } from "../forms/AuthForm";
+import Container from "../UI/Container";
+import WideButton from "../UI/WideButton";
+import { Link } from "react-router-dom";
 
 const LogIn = () => {
   const dispatch = useDispatch();
@@ -76,15 +79,20 @@ const LogIn = () => {
   };
 
   return (
-    <AuthForm
-      onSubmit={onSubmit}
-      initialUsername=""
-      initialPassword=""
-      buttonText="Sign in"
-      isRegistration={false}
-      setFormError={setError}
-      errors={errors}
-    />
+    <Container>
+      <AuthForm
+        onSubmit={onSubmit}
+        initialUsername=""
+        initialPassword=""
+        buttonText="Sign in"
+        isRegistration={false}
+        setFormError={setError}
+        errors={errors}
+      />
+      <Link to="/profile/sign-up">
+        <WideButton>No account? Sign up</WideButton>
+      </Link>
+    </Container>
   );
 };
 

@@ -10,11 +10,6 @@ export interface RoutinesState {
   error: string | null;
 }
 
-interface EditRoutinePayload {
-  routine: Routine;
-  index: number;
-}
-
 const initialState: RoutinesState = {
   routines: [],
   loading: false,

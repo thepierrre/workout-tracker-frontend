@@ -6,13 +6,16 @@ import "@testing-library/jest-dom";
 import RegisterPage from "../../pages/profile/RegisterPage";
 import { Provider } from "react-redux";
 import { store } from "../../app/store";
+import { BrowserRouter } from "react-router-dom";
 
 jest.mock("axios");
 
 const renderWithProviders = (ui: React.ReactElement) => {
   return render(
     <ChakraProvider>
-      <Provider store={store}>{ui}</Provider>
+      <Provider store={store}>
+        <BrowserRouter>{ui}</BrowserRouter>
+      </Provider>
     </ChakraProvider>
   );
 };
@@ -28,7 +31,7 @@ describe("AuthForm", () => {
     expect(screen.getByPlaceholderText("Username")).toBeInTheDocument();
     expect(screen.getByPlaceholderText("Password")).toBeInTheDocument();
     expect(screen.getByText("Sign in")).toBeInTheDocument();
-    expect(screen.getByText("Register")).toBeInTheDocument();
+    expect(screen.getByText("No account? Sign up")).toBeInTheDocument();
   });
 
   it("renders the registration form correctly", () => {
@@ -37,7 +40,6 @@ describe("AuthForm", () => {
     expect(screen.getByPlaceholderText("Username")).toBeInTheDocument();
     expect(screen.getByPlaceholderText("Email")).toBeInTheDocument();
     expect(screen.getByPlaceholderText("Password")).toBeInTheDocument();
-    expect(screen.getByText("Register")).toBeInTheDocument();
     expect(screen.getByText("Existing member? Sign in")).toBeInTheDocument();
   });
 });

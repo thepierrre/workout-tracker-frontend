@@ -83,7 +83,7 @@ const RegisterPage = () => {
         onSubmit={onSubmit}
         initialUsername=""
         initialPassword=""
-        buttonText="Register"
+        buttonText="Sign up"
         isRegistration={true}
         setFormError={setError}
         errors={errors}
