@@ -1,7 +1,6 @@
 import axiosInstance from "../../util/axiosInstance";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { routines } from "../../util/DUMMY_DATA";
 
 import { Routine } from "../../interfaces/routine.interface";
 
@@ -17,7 +16,7 @@ interface EditRoutinePayload {
 }
 
 const initialState: RoutinesState = {
-  routines,
+  routines: [],
   loading: false,
   error: null,
 };

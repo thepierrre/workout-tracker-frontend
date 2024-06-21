@@ -4,7 +4,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 import { Workout } from "../../interfaces/workout.interface";
-import { workouts } from "../../util/DUMMY_DATA";
 
 export interface WorkoutSessionsState {
   workouts: Workout[];
@@ -13,7 +12,7 @@ export interface WorkoutSessionsState {
 }
 
 const initialState: WorkoutSessionsState = {
-  workouts: workouts,
+  workouts: [],
   loading: false,
   error: null,
 };

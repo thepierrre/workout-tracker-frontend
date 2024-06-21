@@ -44,7 +44,6 @@ const RegisterPage = () => {
 
   const {
     setError,
-    handleSubmit,
     formState: { errors },
   } = useForm<FormValues>({ resolver });
 

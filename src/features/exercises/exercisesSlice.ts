@@ -3,17 +3,11 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 import { Exercise } from "../../interfaces/exercise.interface";
-import { exercises } from "../../util/DUMMY_DATA";
 
 export interface ExercisesState {
   exercises: Exercise[];
   loading: boolean;
   error: string | null;
-}
-
-interface EditExercisePayload {
-  exercise: Exercise;
-  index: number;
 }
 
 const initialState: ExercisesState = {

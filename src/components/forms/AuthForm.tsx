@@ -68,7 +68,7 @@ const AuthForm: React.FC<Props> = ({
     };
   };
 
-  const { register, handleSubmit, setError } = useForm<FormValues>({
+  const { register, handleSubmit } = useForm<FormValues>({
     resolver,
   });
 
