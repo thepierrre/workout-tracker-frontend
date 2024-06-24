@@ -13,14 +13,14 @@ const renderWithProviders = (ui: React.ReactElement) => {
 };
 
 describe("RegisterPage", () => {
-  test("render register page", () => {
+  test("renders the registration page", () => {
     renderWithProviders(<RegisterPage />);
     expect(screen.getByText("Create an account")).toBeInTheDocument();
     expect(screen.getByText("Sign up")).toBeInTheDocument();
     expect(screen.getByText("Existing member? Sign in")).toBeInTheDocument();
   });
 
-  test("render login page when button is clicked", () => {
+  test("renders the login page when the login button is clicked", () => {
     renderWithProviders(<RegisterPage />);
     fireEvent.click(screen.getByText("Existing member? Sign in"));
     waitFor(() =>
