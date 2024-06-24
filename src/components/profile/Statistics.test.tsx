@@ -5,8 +5,6 @@ import Statistics from "./Statistics";
 import { Workout } from "../../interfaces/workout.interface";
 import { Routine } from "../../interfaces/routine.interface";
 import { Exercise } from "../../interfaces/exercise.interface";
-import { Provider } from "react-redux";
-import { store } from "../../app/store";
 import { BrowserRouter } from "react-router-dom";
 
 const workouts: Workout[] = [
@@ -57,9 +55,7 @@ const exercises: Exercise[] = [
 const renderWithProviders = (ui: React.ReactElement) => {
   return render(
     <ChakraProvider>
-      <Provider store={store}>
-        <BrowserRouter>{ui}</BrowserRouter>
-      </Provider>
+      <BrowserRouter>{ui}</BrowserRouter>
     </ChakraProvider>
   );
 };
@@ -86,5 +82,29 @@ describe("Statistics component", () => {
     );
     expect(screen.getByText("Workouts:")).toBeInTheDocument();
     expect(screen.getByText(workouts.length.toString())).toBeInTheDocument();
+  });
+
+  test("displays the correct number of routines", () => {
+    renderWithProviders(
+      <Statistics
+        workouts={workouts}
+        routines={routines}
+        exercises={exercises}
+      />
+    );
+    expect(screen.getByText("Routines:")).toBeInTheDocument();
+    expect(screen.getByText(routines.length.toString())).toBeInTheDocument();
+  });
+
+  test("displays the correct number of exercises", () => {
+    renderWithProviders(
+      <Statistics
+        workouts={workouts}
+        routines={routines}
+        exercises={exercises}
+      />
+    );
+    expect(screen.getByText("Exercises:")).toBeInTheDocument();
+    expect(screen.getByText(exercises.length.toString())).toBeInTheDocument();
   });
 });

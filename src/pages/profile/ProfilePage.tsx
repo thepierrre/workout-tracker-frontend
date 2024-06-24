@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import axiosInstance from "../../util/axiosInstance";
 import { RootState, AppDispatch } from "../../app/store";
 import { fetchWorkouts } from "../../features/workout/workoutSessionsSlice";
@@ -16,7 +15,6 @@ import Container from "../../components/UI/Container";
 import Statistics from "../../components/profile/Statistics";
 import WorkoutHistory from "../../components/profile/WorkoutHistory";
 import LogIn from "../../components/profile/LogIn";
-import WideButton from "../../components/UI/WideButton";
 
 const ProfilePage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -47,7 +45,7 @@ const ProfilePage = () => {
     dispatch(fetchExercises());
   }, [dispatch]);
 
-  const filteredWorkouts = workouts.filter((workout) => {
+  const filteredWorkouts = workouts.filter((workout: Workout) => {
     const workoutDay = getDate(workout.creationDate);
     const workoutMonth = format(workout.creationDate, "LLLL");
     const workoutYear = getYear(workout.creationDate);
@@ -116,21 +114,21 @@ const ProfilePage = () => {
 
   const handleFilteredWorkouts = () => {
     const filteredByDay = workouts.filter(
-      (workout) => getDate(workout.creationDate) === chosenDay
+      (workout: Workout) => getDate(workout.creationDate) === chosenDay
     );
 
     const filteredByMonth = workouts.filter(
-      (workout) => format(workout.creationDate, "LLLL") === chosenMonth
+      (workout: Workout) => format(workout.creationDate, "LLLL") === chosenMonth
     );
 
     const filteredByYear = workouts.filter(
-      (workout) => getYear(workout.creationDate) === chosenYear
+      (workout: Workout) => getYear(workout.creationDate) === chosenYear
     );
 
     // Calculate intersection of all filters
     const filteredResults = filteredByDay
-      .filter((workout) => filteredByMonth.includes(workout))
-      .filter((workout) => filteredByYear.includes(workout));
+      .filter((workout: Workout) => filteredByMonth.includes(workout))
+      .filter((workout: Workout) => filteredByYear.includes(workout));
 
     setAllFilteredWorkouts(filteredResults);
   };
@@ -143,7 +141,7 @@ const ProfilePage = () => {
       setChosenDay(selectedDay);
       setFilteredByDay(
         workouts.filter(
-          (workout) => getDate(workout.creationDate) === selectedDay
+          (workout: Workout) => getDate(workout.creationDate) === selectedDay
         )
       );
     }
@@ -160,7 +158,8 @@ const ProfilePage = () => {
       setChosenMonth(selectedMonth);
       setFilteredByMonth(
         workouts.filter(
-          (workout) => format(workout.creationDate, "LLLL") === selectedMonth
+          (workout: Workout) =>
+            format(workout.creationDate, "LLLL") === selectedMonth
         )
       );
     }
@@ -175,7 +174,7 @@ const ProfilePage = () => {
       setChosenYear(selectedYear);
       setFilteredByYear(
         workouts.filter(
-          (workout) => getYear(workout.creationDate) === selectedYear
+          (workout: Workout) => getYear(workout.creationDate) === selectedYear
         )
       );
     }

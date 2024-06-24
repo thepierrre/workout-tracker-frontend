@@ -25,7 +25,7 @@ describe("AuthForm", () => {
     jest.clearAllMocks();
   });
 
-  it("renders the login form correctly", () => {
+  test("renders the login form correctly", () => {
     renderWithProviders(<LogIn />);
 
     expect(screen.getByPlaceholderText("Username")).toBeInTheDocument();
@@ -34,7 +34,7 @@ describe("AuthForm", () => {
     expect(screen.getByText("No account? Sign up")).toBeInTheDocument();
   });
 
-  it("renders the registration form correctly", () => {
+  test("renders the registration form correctly", () => {
     renderWithProviders(<RegisterPage />);
 
     expect(screen.getByPlaceholderText("Username")).toBeInTheDocument();
