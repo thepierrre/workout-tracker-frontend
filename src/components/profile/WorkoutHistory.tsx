@@ -33,6 +33,7 @@ const WorkoutHistory: React.FC<Props> = ({
         <Select
           placeholder="Day"
           onChange={(event) => handleDaySelection(event)}
+          data-testid="day-select"
         >
           {days.map((day, index) => (
             <option key={index} value={day}>
@@ -43,6 +44,7 @@ const WorkoutHistory: React.FC<Props> = ({
         <Select
           placeholder="Month"
           onChange={(event) => handleMonthSelection(event)}
+          data-testid="month-select"
         >
           {months.map((month, index) => (
             <option key={index} value={month}>
@@ -53,6 +55,7 @@ const WorkoutHistory: React.FC<Props> = ({
         <Select
           placeholder="Year"
           onChange={(event) => handleYearSelection(event)}
+          data-testid="year-select"
         >
           {years.map((year, index) => (
             <option key={index} value={year}>
@@ -63,7 +66,11 @@ const WorkoutHistory: React.FC<Props> = ({
       </Flex>
       <Flex direction="column" gap={2} overflowY="auto" maxH="25rem" mb={3}>
         {filteredWorkouts.map((workout) => (
-          <Link to={`/workouts/${workout.id}`} key={workout.id}>
+          <Link
+            to={`/workouts/${workout.id}`}
+            key={workout.id}
+            data-testid="workout-item"
+          >
             <Card bg="#404040" color="white" padding={4} w="95vw">
               <Flex direction="column" gap={1}>
                 <Text fontSize="sm">
