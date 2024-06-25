@@ -64,7 +64,7 @@ const NewRoutinePage = () => {
         />
 
         <Heading w="70%" fontSize="lg" textAlign="center" color="white">
-          New routine
+          Add a new routine
         </Heading>
         <Box w="16%" />
       </Flex>

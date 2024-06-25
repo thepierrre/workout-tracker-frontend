@@ -12,10 +12,20 @@ const SingleExercise: React.FC<Props> = ({ exercise }) => {
       <CardBody>
         <Flex direction="column" gap={1} textColor="white">
           <Flex direction="column" gap={1}>
-            <Text fontWeight="bold">{exercise.name}</Text>
-            <Text fontWeight="bold" fontSize="xs" color="#E0E0E0">
+            <Text
+              fontWeight="bold"
+              data-testid={`exercise-name-${exercise.id}`}
+            >
+              {exercise.name}
+            </Text>
+            <Text
+              fontWeight="bold"
+              fontSize="xs"
+              color="#E0E0E0"
+              data-testid={`exercise-categories-${exercise.id}`}
+            >
               {exercise.categories
-                .map((category) => category.name)
+                .map((category) => category?.name)
                 .join(" | ")
                 .toUpperCase()}
             </Text>

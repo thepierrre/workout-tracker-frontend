@@ -73,7 +73,7 @@ const NewExercisePage = () => {
         />
 
         <Heading w="70%" fontSize="lg" textAlign="center">
-          New exercise
+          Add a new exercise
         </Heading>
         <Box w="16%" />
       </Flex>

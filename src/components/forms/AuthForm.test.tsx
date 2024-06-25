@@ -21,10 +21,6 @@ const renderWithProviders = (ui: React.ReactElement) => {
 };
 
 describe("AuthForm", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   test("renders the login form correctly", () => {
     renderWithProviders(<LogIn />);
 
@@ -42,6 +38,4 @@ describe("AuthForm", () => {
     expect(screen.getByPlaceholderText("Password")).toBeInTheDocument();
     expect(screen.getByText("Existing member? Sign in")).toBeInTheDocument();
   });
-
-  it;
 });
