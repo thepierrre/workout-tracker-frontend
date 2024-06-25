@@ -23,15 +23,6 @@ export const mockCategories: Category[] = [
   { id: "6", name: "category6" },
 ];
 
-export const mockRoutines: Routine[] = [
-  { id: "1", name: "routine1", exerciseTypes: [], userId: "1" },
-  { id: "2", name: "routine2", exerciseTypes: [], userId: "1" },
-  { id: "3", name: "routine3", exerciseTypes: [], userId: "1" },
-  { id: "4", name: "routine4", exerciseTypes: [], userId: "1" },
-  { id: "5", name: "routine5", exerciseTypes: [], userId: "1" },
-  { id: "6", name: "routine5", exerciseTypes: [], userId: "1" },
-];
-
 export const mockExerciseTypes: Exercise[] = [
   {
     id: "1",
@@ -58,6 +49,49 @@ export const mockExerciseTypes: Exercise[] = [
     userId: "1",
   },
   { id: "5", name: "exercise5", categories: [mockCategories[1]], userId: "1" },
+];
+
+export const mockRoutines: Routine[] = [
+  {
+    id: "1",
+    name: "routine1",
+    exerciseTypes: [],
+    userId: "1",
+  },
+  {
+    id: "2",
+    name: "routine2",
+    exerciseTypes: [mockExerciseTypes[1]],
+    userId: "1",
+  },
+  {
+    id: "3",
+    name: "routine3",
+    exerciseTypes: [mockExerciseTypes[2]],
+    userId: "1",
+  },
+  {
+    id: "4",
+    name: "routine4",
+    exerciseTypes: [mockExerciseTypes[3], mockExerciseTypes[4]],
+    userId: "1",
+  },
+  {
+    id: "5",
+    name: "routine5",
+    exerciseTypes: [
+      mockExerciseTypes[4],
+      mockExerciseTypes[5],
+      mockExerciseTypes[3],
+    ],
+    userId: "1",
+  },
+  {
+    id: "6",
+    name: "routine5",
+    exerciseTypes: [mockExerciseTypes[5]],
+    userId: "1",
+  },
 ];
 
 export const mockWorkouts: Workout[] = [

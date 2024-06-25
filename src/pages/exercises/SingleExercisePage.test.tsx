@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import SingleExercisePage from "./SingleExercisePage";
 import { configureStore } from "@reduxjs/toolkit";
 import workoutSessionsReducer from "../../features/workout/workoutSessionsSlice";
@@ -47,10 +47,8 @@ const store = configureStore({
   },
 });
 
-const renderWithProviders = (
-  ui: React.ReactElement,
-  { route = "/exercises/1" } = {}
-) => {
+const renderWithProviders = (ui: React.ReactElement) => {
+  const route = "/exercises/1";
   return render(
     <ChakraProvider>
       <Provider store={store}>
@@ -65,10 +63,59 @@ const renderWithProviders = (
 };
 
 describe("SingleExercisePage", () => {
-  test("renders the correct exercise", () => {
+  test("renders the correct exercise with the UI elements", () => {
     renderWithProviders(<SingleExercisePage />);
 
     expect(screen.getByText("Edit exercise")).toBeInTheDocument();
     expect(screen.getByDisplayValue("exercise1")).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText("Filter categories")
+    ).toBeInTheDocument();
+    expect(screen.getByText("Update")).toBeInTheDocument();
+    expect(screen.getByText("Remove exercise")).toBeInTheDocument();
+    expect(screen.getByText("Category1")).toBeInTheDocument();
+    const selectedCategories = screen.getAllByTestId("selected category");
+
+    expect(selectedCategories).toHaveLength(2);
+    const notSelectedCategories = screen.getAllByTestId(
+      "not selected category"
+    );
+    expect(notSelectedCategories).toHaveLength(4);
+  });
+
+  test("updating the name and categories renders an updated exercise", () => {
+    renderWithProviders(<SingleExercisePage />);
+
+    const selectedCategories = screen.getAllByTestId("selected category");
+    expect(selectedCategories).toHaveLength(2);
+
+    const notSelectedCheckbox = screen.getAllByTestId(
+      "not selected checkbox"
+    )[0];
+    fireEvent.click(notSelectedCheckbox);
+
+    waitFor(() => {
+      const updatedSelectedCategories =
+        screen.getAllByTestId("selected category");
+      expect(updatedSelectedCategories).toHaveLength(3);
+    });
+
+    fireEvent.change(screen.getByDisplayValue("exercise1"), {
+      target: { value: "edited exercise" },
+    });
+
+    fireEvent.click(screen.getByText("Update"));
+    waitFor(() => expect(screen.getByText("New exercise")).toBeInTheDocument());
+    waitFor(() =>
+      expect(screen.getByText("edited exercise")).toBeInTheDocument()
+    );
+  });
+
+  test("clicking on the 'Remove exercise' button removes the exercise", () => {
+    renderWithProviders(<SingleExercisePage />);
+
+    fireEvent.click(screen.getByText("Remove exercise"));
+    waitFor(() => expect(screen.getByText("New exercise")).toBeInTheDocument());
+    waitFor(() => expect(screen.queryByText("exercise1")).toBeNull());
   });
 });

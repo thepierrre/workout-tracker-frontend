@@ -128,7 +128,7 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
               defaultChecked={true}
               onChange={() => handleCheck(category)}
             ></Checkbox>
-            <Text textColor="white">
+            <Text textColor="white" data-testid="selected category">
               {category.name.charAt(0).toLocaleUpperCase() +
                 category.name.slice(1)}
             </Text>
@@ -158,8 +158,11 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
         <Wrap w="90vw" mt={4} mb={4} ml={2} mr={2}>
           {filteredCategories.map((category) => (
             <Flex gap={5} w="48%" key={category.name}>
-              <Checkbox onChange={() => handleCheck(category)}></Checkbox>
-              <Text textColor="white">
+              <Checkbox
+                onChange={() => handleCheck(category)}
+                data-testid="not selected checkbox"
+              ></Checkbox>
+              <Text textColor="white" data-testid="not selected category">
                 {category.name.charAt(0).toLocaleUpperCase() +
                   category.name.slice(1)}
               </Text>
