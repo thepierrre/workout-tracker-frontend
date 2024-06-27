@@ -92,4 +92,12 @@ describe("NewExercisePage", () => {
     );
     waitFor(() => expect(screen.getAllByText("Category1")).toHaveLength(2));
   });
+
+  test("Attempt at adding an exercise with no name renders an error", () => {
+    renderWithProviders(<NewExercisePage />);
+    fireEvent.click(screen.getByText("Create"));
+    waitFor(() =>
+      expect(screen.getByText("Exercise name is required.")).toBeInTheDocument()
+    );
+  });
 });

@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { ExerciseInstance } from "../../interfaces/exerciseInstance.interface";
 import CustomCard from "../UI/CustomCard";
 import { CardBody, Text, Flex } from "@chakra-ui/react";

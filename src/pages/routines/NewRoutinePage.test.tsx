@@ -1,5 +1,4 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import RoutinesPage from "./RoutinesPage";
 import { Provider } from "react-redux";
 import { ChakraProvider } from "@chakra-ui/react";
 import { BrowserRouter } from "react-router-dom";
@@ -19,6 +18,7 @@ import {
   mockCategories,
   mockRoutines,
 } from "../../util/testData";
+import NewRoutinePage from "./NewRoutinePage";
 
 const store = configureStore({
   reducer: {
@@ -69,38 +69,51 @@ const renderWithProviders = (ui: React.ReactElement) => {
   );
 };
 
-describe("RoutinesPage", () => {
-  test("renders the 'New routine' button correctly", () => {
-    renderWithProviders(<RoutinesPage />);
-    expect(screen.getByText("New routine")).toBeInTheDocument();
+describe("NewRoutinePage", () => {
+  test("renders the heading, inputs and exercises correctly", () => {
+    renderWithProviders(<NewRoutinePage />);
+    expect(screen.getByText("Add a new routine")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Routine name")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Filter exercises")).toBeInTheDocument();
+    expect(screen.getAllByText("Exercise1")).toHaveLength(1);
+    expect(screen.getAllByText("Exercise2")).toHaveLength(1);
+    expect(screen.getAllByText("Exercise3")).toHaveLength(1);
+    expect(screen.getAllByText("Exercise4")).toHaveLength(1);
+    expect(screen.getAllByText("Exercise5")).toHaveLength(1);
   });
 
-  test("renders the correct number of routines and their exercises", () => {
-    renderWithProviders(<RoutinesPage />);
-    const routineElements = screen.getAllByTestId(/^routine-name-/);
-    expect(routineElements).toHaveLength(mockRoutines.length);
+  test("adds a new routine with exercises and renders the routines page when 'Create' is clicked", () => {
+    renderWithProviders(<NewRoutinePage />);
 
-    mockRoutines.forEach((routine) => {
-      const routineElement = screen.getByTestId(`routine-name-${routine.id}`);
-      expect(routineElement).toBeInTheDocument();
-      expect(routineElement).toHaveTextContent(routine.name);
-
-      const exercisesElement = screen.getByTestId(
-        `routine-exercises-${routine.id}`
-      );
-      const expectedExercises = routine.exerciseTypes
-        .map((exercise) => exercise?.name.trim())
-        .join(" | ");
-      expect(exercisesElement).toBeInTheDocument();
-      expect(exercisesElement).toHaveTextContent(expectedExercises);
+    fireEvent.change(screen.getByPlaceholderText("Routine name"), {
+      target: { value: "Newly created" },
     });
+    expect(screen.getByDisplayValue("Newly created")).toBeInTheDocument();
+
+    fireEvent.change(screen.getByPlaceholderText("Filter exercises"), {
+      target: { value: "exercise1" },
+    });
+    expect(screen.getByText("Exercise1")).toBeInTheDocument();
+    expect(screen.queryByText("Exercise2")).toBeNull();
+    expect(screen.queryByText("Exercise3")).toBeNull();
+    expect(screen.queryByText("Exercise4")).toBeNull();
+    expect(screen.queryByText("Exercise5")).toBeNull();
+
+    fireEvent.click(screen.getByTestId("not selected checkbox"));
+
+    fireEvent.click(screen.getByText("Create"));
+    waitFor(() => expect(screen.getByText("New routine")).toBeInTheDocument());
+    waitFor(() =>
+      expect(screen.getByText("Newly created")).toBeInTheDocument()
+    );
+    waitFor(() => expect(screen.getAllByText("exercise1")).toHaveLength(1));
   });
 
-  test("renders the 'New routine' page when the 'New routine' button is clicked", () => {
-    renderWithProviders(<RoutinesPage />);
-    fireEvent.click(screen.getByText("New routine"));
+  test("Attempt at adding a routine with no name renders an error", () => {
+    renderWithProviders(<NewRoutinePage />);
+    fireEvent.click(screen.getByText("Create"));
     waitFor(() =>
-      expect(screen.getByText("Add a new routine")).toBeInTheDocument()
+      expect(screen.getByText("Routine name is required.")).toBeInTheDocument()
     );
   });
 });

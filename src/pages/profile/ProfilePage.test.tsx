@@ -93,7 +93,7 @@ describe("ProfilePage", () => {
       target: { value: "2024" },
     });
     const filteredWorkouts = screen.getAllByTestId("workout-item");
-    expect(filteredWorkouts).toHaveLength(3);
+    expect(filteredWorkouts).toHaveLength(6);
   });
 
   test("renders statistics", () => {

@@ -118,4 +118,16 @@ describe("SingleExercisePage", () => {
     waitFor(() => expect(screen.getByText("New exercise")).toBeInTheDocument());
     waitFor(() => expect(screen.queryByText("exercise1")).toBeNull());
   });
+
+  test("Attempt at adding an exercise with no name renders an error", () => {
+    renderWithProviders(<SingleExercisePage />);
+
+    fireEvent.change(screen.getByDisplayValue("exercise1"), {
+      target: { value: "" },
+    });
+    fireEvent.click(screen.getByText("Update"));
+    waitFor(() =>
+      expect(screen.getByText("Exercise name is required.")).toBeInTheDocument()
+    );
+  });
 });

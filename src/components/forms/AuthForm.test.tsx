@@ -8,8 +8,6 @@ import { Provider } from "react-redux";
 import { store } from "../../app/store";
 import { BrowserRouter } from "react-router-dom";
 
-jest.mock("axios");
-
 const renderWithProviders = (ui: React.ReactElement) => {
   return render(
     <ChakraProvider>

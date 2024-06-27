@@ -75,7 +75,7 @@ const NewWorkout = () => {
                     <Text fontSize="sm" color="#E0E0E0">
                       {routine?.exerciseTypes?.map((exercise, index) => (
                         <Fragment key={index}>
-                          {index > 0 && " | "} {exercise.name}
+                          {index > 0 && " | "} {exercise?.name}
                         </Fragment>
                       ))}
                     </Text>

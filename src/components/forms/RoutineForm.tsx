@@ -113,7 +113,7 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
             borderColor: "lightblue",
           }}
           _placeholder={{ color: "#B3B3B3" }}
-          placeholder="Name"
+          placeholder="Routine name"
           defaultValue={initialName}
         />
         <FormErrorMessage>
@@ -128,7 +128,7 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
               defaultChecked={true}
               onChange={() => handleCheck(exercise)}
             ></Checkbox>
-            <Text textColor="white">
+            <Text textColor="white" data-testid="selected exercise">
               {exercise.name.charAt(0).toLocaleUpperCase() +
                 exercise.name.slice(1)}
             </Text>
@@ -160,8 +160,11 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
           {filteredExercises.map((exercise) => (
             <Flex key={exercise.id}>
               <Flex gap={4} w="48%">
-                <Checkbox onChange={() => handleCheck(exercise)}></Checkbox>
-                <Text textColor="white">
+                <Checkbox
+                  onChange={() => handleCheck(exercise)}
+                  data-testid="not selected checkbox"
+                ></Checkbox>
+                <Text textColor="white" data-testid="not selected exercise">
                   {exercise.name.charAt(0).toLocaleUpperCase() +
                     exercise.name.slice(1)}
                 </Text>
