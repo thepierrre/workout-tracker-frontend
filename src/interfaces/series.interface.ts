@@ -1,5 +1,5 @@
 export interface Series {
-  id: string;
+  id: number;
   reps: number;
   weight: number;
 }

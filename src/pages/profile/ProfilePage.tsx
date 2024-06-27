@@ -15,6 +15,7 @@ import Container from "../../components/UI/Container";
 import Statistics from "../../components/profile/Statistics";
 import WorkoutHistory from "../../components/profile/WorkoutHistory";
 import LogIn from "../../components/profile/LogIn";
+import Welcome from "./Welcome";
 
 const ProfilePage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -216,6 +217,7 @@ const ProfilePage = () => {
         </>
       ) : (
         <>
+          <Welcome />
           <Heading fontSize="lg" mb={3}>
             Sign in to your account
           </Heading>

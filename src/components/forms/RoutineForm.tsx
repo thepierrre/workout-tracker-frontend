@@ -22,13 +22,14 @@ interface FormValues {
 }
 
 const resolver: Resolver<FormValues> = async (values) => {
+  const trimmedName = values.name.trim();
   return {
-    values: values.name ? values : {},
-    errors: !values.name
+    values: trimmedName ? { name: trimmedName } : {},
+    errors: !trimmedName
       ? {
           name: {
             type: "required",
-            message: "Routine name is required.",
+            message: "Routine name cannot be empty.",
           },
         }
       : {},
@@ -156,22 +157,28 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
           </InputLeftElement>
         </InputGroup>
 
-        <Wrap w="90vw" mt={4} mb={4} ml={2} mr={2} direction="column">
-          {filteredExercises.map((exercise) => (
-            <Flex key={exercise.id}>
-              <Flex gap={4} w="48%">
-                <Checkbox
-                  onChange={() => handleCheck(exercise)}
-                  data-testid="not selected checkbox"
-                ></Checkbox>
-                <Text textColor="white" data-testid="not selected exercise">
-                  {exercise.name.charAt(0).toLocaleUpperCase() +
-                    exercise.name.slice(1)}
-                </Text>
+        {filteredExercises.length > 0 ? (
+          <Wrap w="90vw" mt={4} mb={4} ml={2} mr={2} direction="column">
+            {filteredExercises.map((exercise) => (
+              <Flex key={exercise.id}>
+                <Flex gap={4} w="48%">
+                  <Checkbox
+                    onChange={() => handleCheck(exercise)}
+                    data-testid="not selected checkbox"
+                  ></Checkbox>
+                  <Text textColor="white" data-testid="not selected exercise">
+                    {exercise.name.charAt(0).toLocaleUpperCase() +
+                      exercise.name.slice(1)}
+                  </Text>
+                </Flex>
               </Flex>
-            </Flex>
-          ))}
-        </Wrap>
+            ))}
+          </Wrap>
+        ) : (
+          <Text textAlign="center" mt={4} mb={4}>
+            There aren't any exercises to choose.
+          </Text>
+        )}
       </Flex>
 
       <WideButton type="submit">{buttonText}</WideButton>

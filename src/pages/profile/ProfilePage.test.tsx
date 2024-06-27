@@ -113,9 +113,6 @@ describe("ProfilePage", () => {
     renderWithProviders(<ProfilePage />);
 
     fireEvent.click(screen.getByText("Log out"));
-
-    waitFor(() =>
-      expect(screen.getByText("Sign in to your account")).toBeInTheDocument()
-    );
+    waitFor(() => expect(screen.getByText("Hello there!")).toBeInTheDocument());
   });
 });

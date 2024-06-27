@@ -22,13 +22,14 @@ interface FormValues {
 }
 
 const resolver: Resolver<FormValues> = async (values) => {
+  const trimmedName = values.name.trim();
   return {
-    values: values.name ? values : {},
-    errors: !values.name
+    values: trimmedName ? { name: trimmedName } : {},
+    errors: !trimmedName
       ? {
           name: {
             type: "required",
-            message: "Exercise name is required.",
+            message: "Exercise name cannot be empty.",
           },
         }
       : {},
@@ -155,20 +156,26 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
           </InputLeftElement>
         </InputGroup>
 
-        <Wrap w="90vw" mt={4} mb={4} ml={2} mr={2}>
-          {filteredCategories.map((category) => (
-            <Flex gap={5} w="48%" key={category.name}>
-              <Checkbox
-                onChange={() => handleCheck(category)}
-                data-testid="not selected checkbox"
-              ></Checkbox>
-              <Text textColor="white" data-testid="not selected category">
-                {category.name.charAt(0).toLocaleUpperCase() +
-                  category.name.slice(1)}
-              </Text>
-            </Flex>
-          ))}
-        </Wrap>
+        {filteredCategories.length > 0 ? (
+          <Wrap w="90vw" mt={4} mb={4} ml={2} mr={2}>
+            {filteredCategories.map((category) => (
+              <Flex gap={5} w="48%" key={category.name}>
+                <Checkbox
+                  onChange={() => handleCheck(category)}
+                  data-testid="not selected checkbox"
+                ></Checkbox>
+                <Text textColor="white" data-testid="not selected category">
+                  {category.name.charAt(0).toLocaleUpperCase() +
+                    category.name.slice(1)}
+                </Text>
+              </Flex>
+            ))}
+          </Wrap>
+        ) : (
+          <Text textAlign="center" mt={4} mb={4}>
+            There aren't any categories to choose.
+          </Text>
+        )}
       </Flex>
 
       <WideButton type="submit">{buttonText}</WideButton>

@@ -16,7 +16,7 @@ describe("RegisterPage", () => {
   test("renders the registration page", () => {
     renderWithProviders(<RegisterPage />);
     expect(screen.getByText("Create an account")).toBeInTheDocument();
-    expect(screen.getByText("Sign up")).toBeInTheDocument();
+    expect(screen.getByText("Create account")).toBeInTheDocument();
     expect(screen.getByText("Existing member? Sign in")).toBeInTheDocument();
   });
 

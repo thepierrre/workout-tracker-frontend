@@ -6,6 +6,7 @@ import axios from "axios";
 import AuthForm, { FormValues } from "../../components/forms/AuthForm";
 import { useForm, SubmitHandler, Resolver } from "react-hook-form";
 import axiosInstance from "../../util/axiosInstance";
+import Welcome from "./Welcome";
 
 const RegisterPage = () => {
   const resolver: Resolver<FormValues> = async (values) => {
@@ -78,18 +79,21 @@ const RegisterPage = () => {
   };
   return (
     <Container>
-      <Heading fontSize="lg">Create an account</Heading>
+      <Welcome />
+      <Heading fontSize="lg" mb={3}>
+        Create an account
+      </Heading>
       <AuthForm
         onSubmit={onSubmit}
         initialUsername=""
         initialPassword=""
-        buttonText="Sign up"
+        buttonText="Create account"
         isRegistration={true}
         setFormError={setError}
         errors={errors}
       />
       <Link to="/profile">
-        <WideButton>Existing member? Sign in</WideButton>
+        <WideButton background="#EDF2F7">Existing member? Sign in</WideButton>
       </Link>
     </Container>
   );

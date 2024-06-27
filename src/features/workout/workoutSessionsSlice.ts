@@ -56,7 +56,6 @@ export const deleteSet = createAsyncThunk<
       const response = await axiosInstance.delete(
         `exercise-instances/${exerciseInstanceId}/sets/${workingSetId}`
       );
-      console.log(response.data);
       return response.data;
     } catch (error) {
       let errorMessage = "An unknown error occurred";
@@ -82,7 +81,6 @@ export const addSet = createAsyncThunk<
         `exercise-instances/${exerciseInstanceId}/sets`,
         newSet
       );
-      console.log(response.data);
       return response.data;
     } catch (error) {
       let errorMessage = "An unknown error occurred";
@@ -108,7 +106,6 @@ export const updateSet = createAsyncThunk<
         `exercise-instances/${exerciseInstanceId}/sets/${workingSetId}`,
         setToUpdate
       );
-      console.log(response.data);
       return response.data;
     } catch (error) {
       let errorMessage = "An unknown error occurred";
@@ -129,7 +126,6 @@ export const fetchWorkouts = createAsyncThunk<
 >("workouts/fetchWorkouts", async (_, thunkAPI) => {
   try {
     const response = await axiosInstance.get("user-workouts");
-    // console.log(response.data);
     return response.data;
   } catch (error) {
     let errorMessage = "An unknown error occurred";
@@ -146,9 +142,7 @@ export const addWorkout = createAsyncThunk<
   { rejectValue: string } // Type of the reject value
 >("workouts/addWorkout", async (newWorkout, thunkAPI) => {
   try {
-    // console.log(newWorkout);
     const response = await axiosInstance.post("workouts", newWorkout);
-    // console.log(response.data);
     return response.data;
   } catch (error) {
     let errorMessage = "An unknown error occurred";
