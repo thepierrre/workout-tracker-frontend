@@ -23,21 +23,29 @@ type FormValues = {
 
 const resolver: Resolver<FormValues> = async (values) => {
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const passwordLength = 8;
   const errors = {
     ...(values.username
       ? {}
       : {
           username: {
             type: "required",
-            message: "Please enter a username.",
+            message: "Enter a username.",
           },
         }),
     ...(values.password
-      ? {}
+      ? values.password.length < 8
+        ? {
+            password: {
+              type: "pattern",
+              message: "Enter a password with at least 8 characters.",
+            },
+          }
+        : {}
       : {
           password: {
             type: "required",
-            message: "Please enter a password.",
+            message: "Enter a password.",
           },
         }),
     ...(values.email
@@ -45,14 +53,14 @@ const resolver: Resolver<FormValues> = async (values) => {
         ? {
             email: {
               type: "pattern",
-              message: "Please enter a valid email address.",
+              message: "Enter a valid email.",
             },
           }
         : {}
       : {
           email: {
             type: "required",
-            message: "Please enter an email.",
+            message: "Enter an email.",
           },
         }),
   };
@@ -68,6 +76,7 @@ const RegisterPage = () => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<FormValues>({ resolver });
 
@@ -78,7 +87,25 @@ const RegisterPage = () => {
         setUserRegistered(true);
       }
     } catch (error) {
-      console.error(error);
+      if (axios.isAxiosError(error)) {
+        const message = error.response?.data?.message;
+        if (
+          message ===
+          `User with the username "${data.username}" already exists.`
+        ) {
+          setError("username", {
+            type: "server",
+            message: "This username is already taken.",
+          });
+        } else if (
+          message === `User with the email "${data.email}" already exists.`
+        ) {
+          setError("email", {
+            type: "server",
+            message: "This email is already taken.",
+          });
+        }
+      }
     }
   };
 
