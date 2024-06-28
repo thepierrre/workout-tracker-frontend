@@ -4,12 +4,13 @@ import logo from "../../../public/logo.png";
 const Welcome = () => {
   return (
     <>
-      <Heading fontSize="4xl" mb={10}>
+      <Heading fontSize="4xl" mb={12}>
         Hello there!
       </Heading>
-      <Text fontSize="xl" textAlign="center">
+      <Text fontSize="xl" textAlign="center" mb={1} fontWeight="bold">
         Time for the gym?
-        <br />
+      </Text>
+      <Text fontSize="xl" textAlign="center">
         Log in or create an account
         <br /> and start your workout!
       </Text>

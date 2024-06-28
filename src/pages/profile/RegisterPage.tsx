@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import WideButton from "../../components/UI/WideButton";
 import Container from "../../components/UI/Container";
-import { Heading } from "@chakra-ui/react";
+import { Heading, Flex, Text } from "@chakra-ui/react";
 import axios from "axios";
 import AuthForm, { FormValues } from "../../components/forms/AuthForm";
 import { useForm, SubmitHandler, Resolver } from "react-hook-form";
@@ -80,9 +80,19 @@ const RegisterPage = () => {
   return (
     <Container>
       <Welcome />
-      <Heading fontSize="lg" mb={3}>
+      <Heading fontSize="xl" mb={1}>
         Create an account
       </Heading>
+      <Flex gap={1}>
+        <Text fontSize="lg" mb={3}>
+          Already a member?
+        </Text>
+        <Link to="/">
+          <Text fontSize="lg" mb={3} color="lightblue" fontWeight="bold">
+            Sign in!
+          </Text>
+        </Link>
+      </Flex>
       <AuthForm
         onSubmit={onSubmit}
         initialUsername=""
@@ -92,9 +102,6 @@ const RegisterPage = () => {
         setFormError={setError}
         errors={errors}
       />
-      <Link to="/">
-        <WideButton background="#EDF2F7">Existing member? Sign in</WideButton>
-      </Link>
     </Container>
   );
 };

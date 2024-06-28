@@ -36,7 +36,7 @@ export const WorkoutsPage = () => {
         ))
       ) : (
         <Text textColor="white" mt={5}>
-          No workouts for this day.
+          Add your first workout for today!
         </Text>
       )}
     </Container>

@@ -29,7 +29,7 @@ const RoutinesPage = () => {
             </Link>
           ))
         ) : (
-          <Text mt={5}>You don't have any routines yet.</Text>
+          <Text mt={5}>No routines yet. Add your first one!</Text>
         )}
       </Flex>
     </Container>

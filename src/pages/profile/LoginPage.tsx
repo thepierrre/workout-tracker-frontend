@@ -3,6 +3,7 @@ import { User } from "../../interfaces/user.interface";
 import axios from "axios";
 import axiosInstance from "../../util/axiosInstance";
 import { setUser } from "../../features/auth/authenticatedUserSlice";
+import { Heading, Text, Flex } from "@chakra-ui/react";
 import { useForm, SubmitHandler, Resolver } from "react-hook-form";
 import AuthForm, { FormValues } from "../../components/forms/AuthForm";
 import WideButton from "../../components/UI/WideButton";
@@ -82,6 +83,19 @@ const LoginPage = () => {
   return (
     <Container>
       <Welcome />
+      <Heading fontSize="xl" mb={1}>
+        Sign in to your account
+      </Heading>
+      <Flex gap={1}>
+        <Text fontSize="lg" mb={3}>
+          No account?
+        </Text>
+        <Link to="/sign-up">
+          <Text fontSize="lg" mb={3} color="lightblue" fontWeight="bold">
+            Create one!
+          </Text>
+        </Link>
+      </Flex>
       <AuthForm
         onSubmit={onSubmit}
         initialUsername=""
@@ -91,9 +105,6 @@ const LoginPage = () => {
         setFormError={setError}
         errors={errors}
       />
-      <Link to="/sign-up">
-        <WideButton background="#EDF2F7">No account? Sign up</WideButton>
-      </Link>
     </Container>
   );
 };

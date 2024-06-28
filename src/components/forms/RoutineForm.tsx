@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useForm, Resolver } from "react-hook-form";
+import { Link } from "react-router-dom";
 import { Exercise } from "../../interfaces/exercise.interface";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
@@ -175,9 +176,21 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
             ))}
           </Wrap>
         ) : (
-          <Text textAlign="center" mt={4} mb={4}>
-            There aren't any exercises to choose.
-          </Text>
+          <Flex direction="column">
+            <Text textAlign="center" mt={4}>
+              You don't have any exercises.
+            </Text>
+            <Link to="/exercises">
+              <Text
+                textAlign="center"
+                mb={4}
+                color="lightblue"
+                fontWeight="bold"
+              >
+                Create some now!
+              </Text>
+            </Link>
+          </Flex>
         )}
       </Flex>
 

@@ -33,7 +33,7 @@ const ExercisesPage = () => {
           ))
         ) : (
           <Text textAlign="center" mt={5}>
-            You don't have any exercises yet.
+            No exercises yet. Add your first one!
           </Text>
         )}
       </Flex>
