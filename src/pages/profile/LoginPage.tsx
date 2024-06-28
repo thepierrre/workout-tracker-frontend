@@ -1,56 +1,66 @@
-import { useDispatch } from "react-redux";
-import { User } from "../../interfaces/user.interface";
-import axios from "axios";
-import axiosInstance from "../../util/axiosInstance";
-import { setUser } from "../../features/auth/authenticatedUserSlice";
-import { Heading, Text, Flex } from "@chakra-ui/react";
-import { useForm, SubmitHandler, Resolver } from "react-hook-form";
-import AuthForm, { FormValues } from "../../components/forms/AuthForm";
-import WideButton from "../../components/UI/WideButton";
-import Container from "../../components/UI/Container";
-import Welcome from "./Welcome";
 import { Link } from "react-router-dom";
+import WideButton from "../../components/UI/WideButton";
+import { User } from "interfaces/user.interface";
+import Container from "../../components/UI/Container";
+import {
+  Heading,
+  Flex,
+  Text,
+  FormControl,
+  Input,
+  FormErrorMessage,
+} from "@chakra-ui/react";
+import axios from "axios";
+import { useForm, SubmitHandler, Resolver } from "react-hook-form";
+import { setUser } from "../../features/auth/authenticatedUserSlice";
+import axiosInstance from "../../util/axiosInstance";
+import { useDispatch } from "react-redux";
+import Welcome from "./Welcome";
 
-const LoginPage = () => {
-  const dispatch = useDispatch();
+type FormValues = {
+  username: string;
+  password: string;
+};
 
-  const resolver: Resolver<FormValues> = async (values) => {
-    const errors = {
-      ...(values.username
-        ? {}
-        : {
-            username: {
-              type: "required",
-              message: "Username is required.",
-            },
-          }),
-      ...(values.password
-        ? {}
-        : {
-            password: {
-              type: "required",
-              message: "Password is required.",
-            },
-          }),
-    };
-
-    return {
-      values: values.username && values.password ? values : {},
-      errors: errors,
-    };
+const resolver: Resolver<FormValues> = async (values) => {
+  const errors = {
+    ...(values.username
+      ? {}
+      : {
+          username: {
+            type: "required",
+            message: "Enter a username.",
+          },
+        }),
+    ...(values.password
+      ? {}
+      : {
+          password: {
+            type: "required",
+            message: "Enter a password.",
+          },
+        }),
   };
 
+  return {
+    values: values.username && values.password ? values : {},
+    errors: errors,
+  };
+};
+
+const RegisterPage = () => {
+  const dispatch = useDispatch();
+
   const {
+    register,
+    handleSubmit,
     setError,
     formState: { errors },
   } = useForm<FormValues>({ resolver });
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
-      await axiosInstance.post("auth/login", {
-        username: data.username,
-        password: data.password,
-      });
+      await axiosInstance.post("/auth/login", data);
 
       const userResponse = await axiosInstance.get("users/me");
 
@@ -66,16 +76,19 @@ const LoginPage = () => {
 
       dispatch(setUser(authenticatedUser));
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        setError("password", {
-          type: "manual",
-          message: error.response.data,
-        });
-      } else {
-        setError("password", {
-          type: "manual",
-          message: "Unexpected error: " + error,
-        });
+      if (axios.isAxiosError(error)) {
+        const message = error.response?.data;
+        console.log(error.response?.data);
+        if (message === "Invalid username or password.") {
+          setError("username", {
+            type: "server",
+            message: "",
+          });
+          setError("password", {
+            type: "server",
+            message: "Invalid username or password.",
+          });
+        }
       }
     }
   };
@@ -96,17 +109,49 @@ const LoginPage = () => {
           </Text>
         </Link>
       </Flex>
-      <AuthForm
-        onSubmit={onSubmit}
-        initialUsername=""
-        initialPassword=""
-        buttonText="Sign in"
-        isRegistration={false}
-        setFormError={setError}
-        errors={errors}
-      />
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Flex direction="column" gap={3} mt={3}>
+          <FormControl isInvalid={!!errors?.username}>
+            <Input
+              {...register("username")}
+              w="95vw"
+              bg="#404040"
+              borderColor="transparent"
+              _focusVisible={{
+                borderWidth: "1px",
+                borderColor: "lightblue",
+              }}
+              _placeholder={{ color: "#B3B3B3" }}
+              placeholder="Username"
+            />
+            <FormErrorMessage>
+              {errors?.username && errors.username.message}
+            </FormErrorMessage>
+          </FormControl>
+
+          <FormControl isInvalid={!!errors?.password}>
+            <Input
+              {...register("password")}
+              w="95vw"
+              bg="#404040"
+              borderColor="transparent"
+              _focusVisible={{
+                borderWidth: "1px",
+                borderColor: "lightblue",
+              }}
+              _placeholder={{ color: "#B3B3B3" }}
+              placeholder="Password"
+              type="password"
+            />
+            <FormErrorMessage>
+              {errors?.password && errors.password.message}
+            </FormErrorMessage>
+          </FormControl>
+          <WideButton type="submit">Sign in</WideButton>
+        </Flex>
+      </form>
     </Container>
   );
 };
 
-export default LoginPage;
+export default RegisterPage;

@@ -23,7 +23,6 @@ type FormValues = {
 
 const resolver: Resolver<FormValues> = async (values) => {
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const passwordLength = 8;
   const errors = {
     ...(values.username
       ? {}
