@@ -34,9 +34,9 @@ export const fetchUser = createAsyncThunk<
 });
 
 export const initializeUser = createAsyncThunk<
-  User | undefined, // Return type of the fulfilled action
-  void, // Argument type (not needed here, so void)
-  { rejectValue: string } // Type of the reject value
+  User | undefined,
+  void,
+  { rejectValue: string }
 >("user/initializeUser", async (_, thunkAPI) => {
   try {
     const response = await axiosInstance.get("users/me");
