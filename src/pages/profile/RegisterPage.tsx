@@ -92,7 +92,7 @@ const RegisterPage = () => {
         setFormError={setError}
         errors={errors}
       />
-      <Link to="/profile">
+      <Link to="/">
         <WideButton background="#EDF2F7">Existing member? Sign in</WideButton>
       </Link>
     </Container>

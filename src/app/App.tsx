@@ -27,7 +27,9 @@ const App = () => {
     if (user) {
       navigate("/workouts");
     } else {
-      navigate("/profile");
+      if (location.pathname !== "/sign-up") {
+        navigate("/");
+      }
     }
   }, [user, navigate]);
 
@@ -50,7 +52,7 @@ const App = () => {
     },
   ];
 
-  const defaultIndex = useMemo(() => {
+  const activeIndex = useMemo(() => {
     return tabs.findIndex((tab) => location.pathname.startsWith(tab.url));
   }, [activeTab]);
 
@@ -70,7 +72,7 @@ const App = () => {
 
   return (
     <Flex bg="#1a1a1a" minH="100vh" paddingTop={3}>
-      <Tabs variant="soft-rounded" defaultIndex={defaultIndex}>
+      <Tabs variant="soft-rounded" index={activeIndex}>
         {user && (
           <TabList width="100%">
             <Flex justify="center" width="100%" gap={0.5}>

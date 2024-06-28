@@ -7,6 +7,7 @@ import WorkoutsPage from "./pages/workouts/WorkoutsPage.tsx";
 import RoutinesPage from "./pages/routines/RoutinesPage.tsx";
 import ExercisesPage from "./pages/exercises/ExercisesPage.tsx";
 import ProfilePage from "./pages/profile/ProfilePage.tsx";
+import LoginPage from "./pages/profile/LoginPage.tsx";
 import SingleExercisePage from "./pages/exercises/SingleExercisePage.tsx";
 import ExerciseInstancePage from "./pages/workouts/ExerciseInstancePage.tsx";
 import SingleRoutinePage from "./pages/routines/SingleRoutinePage.tsx";
@@ -21,6 +22,11 @@ const router = createBrowserRouter([
     path: "/",
     element: <App />,
     children: [
+      {
+        path: "",
+        element: <LoginPage />,
+      },
+      { path: "sign-up", element: <RegisterPage /> },
       {
         path: "workouts/*",
         children: [
@@ -52,10 +58,7 @@ const router = createBrowserRouter([
       },
       {
         path: "profile/*",
-        children: [
-          { path: "sign-up", element: <RegisterPage /> },
-          { path: "*", element: <ProfilePage /> },
-        ],
+        children: [{ path: "*", element: <ProfilePage /> }],
       },
     ],
   },

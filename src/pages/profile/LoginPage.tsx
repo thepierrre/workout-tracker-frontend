@@ -4,11 +4,13 @@ import axios from "axios";
 import axiosInstance from "../../util/axiosInstance";
 import { setUser } from "../../features/auth/authenticatedUserSlice";
 import { useForm, SubmitHandler, Resolver } from "react-hook-form";
-import AuthForm, { FormValues } from "../forms/AuthForm";
-import WideButton from "../UI/WideButton";
+import AuthForm, { FormValues } from "../../components/forms/AuthForm";
+import WideButton from "../../components/UI/WideButton";
+import Container from "../../components/UI/Container";
+import Welcome from "./Welcome";
 import { Link } from "react-router-dom";
 
-const LogIn = () => {
+const LoginPage = () => {
   const dispatch = useDispatch();
 
   const resolver: Resolver<FormValues> = async (values) => {
@@ -78,7 +80,8 @@ const LogIn = () => {
   };
 
   return (
-    <>
+    <Container>
+      <Welcome />
       <AuthForm
         onSubmit={onSubmit}
         initialUsername=""
@@ -88,11 +91,11 @@ const LogIn = () => {
         setFormError={setError}
         errors={errors}
       />
-      <Link to="/profile/sign-up">
+      <Link to="/sign-up">
         <WideButton background="#EDF2F7">No account? Sign up</WideButton>
       </Link>
-    </>
+    </Container>
   );
 };
 
-export default LogIn;
+export default LoginPage;
