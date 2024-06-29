@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useForm, Resolver } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { Exercise } from "../../interfaces/exercise.interface";
@@ -16,6 +16,10 @@ import {
   InputGroup,
   InputLeftElement,
   Wrap,
+  FormLabel,
+  useToast,
+  Box,
+  ToastId,
 } from "@chakra-ui/react";
 
 interface FormValues {
@@ -60,34 +64,81 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
   const [selectedExercises, setSelectedExercises] = useState<Exercise[]>(
     initialSelectedExercises
   );
-  const [exercises, setExercises] = useState<Exercise[]>([]);
-
-  const initialExercises = useSelector(
+  const exercises = useSelector(
     (state: RootState) => state.exercises.exercises
   );
 
   useEffect(() => {
-    const filteredExercises = initialExercises.filter(
-      (ex) => !initialSelectedExercises.some((selEx) => selEx.id === ex.id)
-    );
-    setExercises(filteredExercises);
-  }, [initialExercises, initialSelectedExercises]);
+    setSelectedExercises(initialSelectedExercises);
+  }, [initialSelectedExercises]);
+
+  // useEffect(() => {
+  //   const filteredExercises = initialExercises.filter(
+  //     (ex) => !initialSelectedExercises.some((selEx) => selEx.id === ex.id)
+  //   );
+  //   setExercises(filteredExercises);
+  // }, [initialExercises, initialSelectedExercises]);
+
+  const toast = useToast();
+  const toastIdRef = useRef<ToastId | undefined>(undefined);
+
+  // const handleCheck = (exercise: Exercise) => {
+  //   if (selectedExercises.some((ex) => ex.id === exercise.id)) {
+  //     setSelectedExercises((prevSelectedExercises) =>
+  //       prevSelectedExercises.filter((ex) => ex.id !== exercise.id)
+  //     );
+  //     setExercises((prevExercises) => [...prevExercises, exercise]);
+  //   } else {
+  //     setSelectedExercises((prevSelectedExercises) => [
+  //       ...prevSelectedExercises,
+  //       exercise,
+  //     ]);
+  //     setExercises((prevExercises) =>
+  //       prevExercises.filter((ex) => ex.id !== exercise.id)
+  //     );
+  //   }
+  // };
+
+  const addToast = () => {
+    if (toastIdRef.current) {
+      toast.close(toastIdRef.current);
+    }
+    toastIdRef.current = toast({
+      position: "bottom",
+      duration: 2500,
+      render: () => (
+        <Box
+          color="white"
+          bg="lightblue"
+          background="#F56565"
+          borderRadius={10}
+          p={3}
+          fontSize="lg"
+          mb={10}
+        >
+          <Text>You cannot add more than 15 exercises!</Text>
+        </Box>
+      ),
+    });
+  };
+
+  const handleToast = (isExerciseSelected: boolean) => {
+    if (!isExerciseSelected && selectedExercises.length >= 15) {
+      addToast();
+    }
+  };
 
   const handleCheck = (exercise: Exercise) => {
-    if (selectedExercises.some((ex) => ex.id === exercise.id)) {
-      setSelectedExercises((prevSelectedExercises) =>
-        prevSelectedExercises.filter((ex) => ex.id !== exercise.id)
-      );
-      setExercises((prevExercises) => [...prevExercises, exercise]);
-    } else {
-      setSelectedExercises((prevSelectedExercises) => [
-        ...prevSelectedExercises,
-        exercise,
-      ]);
-      setExercises((prevExercises) =>
-        prevExercises.filter((ex) => ex.id !== exercise.id)
-      );
-    }
+    setSelectedExercises((prevSelectedExercises) => {
+      if (prevSelectedExercises.find((ex) => ex.id === exercise.id)) {
+        return prevSelectedExercises.filter((ex) => ex.id !== exercise.id);
+      } else {
+        if (selectedExercises.length >= 15) {
+          return prevSelectedExercises;
+        }
+        return [...prevSelectedExercises, exercise];
+      }
+    });
   };
 
   const handleExerciseFiltering = (
@@ -97,13 +148,24 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
     setSearchedExercises(value);
   };
 
+  // const filteredExercises = exercises.filter((exercise) =>
+  //   exercise.name.toLowerCase().includes(searchedExercises.toLowerCase())
+  // );
+
   const filteredExercises = exercises.filter((exercise) =>
-    exercise.name.toLowerCase().includes(searchedExercises.toLowerCase())
+    exercise.name.toLowerCase().startsWith(searchedExercises.toLowerCase())
   );
+
+  const isExerciseSelected = (exercise: Exercise) =>
+    selectedExercises.some((ex) => ex.id === exercise.id);
+
+  const isCheckboxDisabled = (exercise: Exercise) =>
+    !isExerciseSelected(exercise) && selectedExercises.length >= 15;
 
   return (
     <form onSubmit={handleSubmit((data) => onSubmit(data, selectedExercises))}>
       <FormControl isInvalid={!!errors.name}>
+        <FormLabel fontSize="sm">Routine name</FormLabel>
         <Input
           {...register("name")}
           w="95vw"
@@ -115,7 +177,7 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
             borderColor: "lightblue",
           }}
           _placeholder={{ color: "#B3B3B3" }}
-          placeholder="Routine name"
+          placeholder="Enter a name"
           defaultValue={initialName}
         />
         <FormErrorMessage>
@@ -123,22 +185,10 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
         </FormErrorMessage>
       </FormControl>
 
-      <Wrap w="90vw" mt={4} mb={4} ml={2} mr={2}>
-        {selectedExercises.map((exercise) => (
-          <Flex gap={4} w="48%" key={exercise.id}>
-            <Checkbox
-              defaultChecked={true}
-              onChange={() => handleCheck(exercise)}
-            ></Checkbox>
-            <Text textColor="white" data-testid="selected exercise">
-              {exercise.name.charAt(0).toLocaleUpperCase() +
-                exercise.name.slice(1)}
-            </Text>
-          </Flex>
-        ))}
-      </Wrap>
-
-      <Flex direction="column" w="100%" gap={2}>
+      <Flex direction="column" w="100%" mt={5}>
+        <FormLabel textColor="white" fontSize="sm">
+          Filter exercises
+        </FormLabel>
         <InputGroup>
           <Input
             w="95vw"
@@ -150,7 +200,7 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
               borderColor: "lightblue",
             }}
             _placeholder={{ color: "#B3B3B3" }}
-            placeholder="Filter exercises"
+            placeholder="Search"
             onChange={(event) => handleExerciseFiltering(event)}
           />
           <InputLeftElement>
@@ -161,17 +211,22 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
         {filteredExercises.length > 0 ? (
           <Wrap w="90vw" mt={4} mb={4} ml={2} mr={2} direction="column">
             {filteredExercises.map((exercise) => (
-              <Flex key={exercise.id}>
-                <Flex gap={4} w="48%">
-                  <Checkbox
-                    onChange={() => handleCheck(exercise)}
-                    data-testid="not selected checkbox"
-                  ></Checkbox>
-                  <Text textColor="white" data-testid="not selected exercise">
-                    {exercise.name.charAt(0).toLocaleUpperCase() +
-                      exercise.name.slice(1)}
-                  </Text>
-                </Flex>
+              <Flex
+                key={exercise.id}
+                gap={5}
+                w="48%"
+                onClick={() => handleToast(isExerciseSelected(exercise))}
+              >
+                <Checkbox
+                  isChecked={isExerciseSelected(exercise)}
+                  isDisabled={isCheckboxDisabled(exercise)}
+                  onChange={() => handleCheck(exercise)}
+                  data-testid="not selected checkbox"
+                  fontWeight={isExerciseSelected(exercise) ? "bold" : ""}
+                >
+                  {exercise.name.charAt(0).toLocaleUpperCase() +
+                    exercise.name.slice(1)}
+                </Checkbox>
               </Flex>
             ))}
           </Wrap>

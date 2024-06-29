@@ -97,8 +97,8 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
     });
   };
 
-  const handleToast = () => {
-    if (selectedCategories.length >= 5) {
+  const handleToast = (isCategorySelected: boolean) => {
+    if (!isCategorySelected && selectedCategories.length >= 5) {
       addToast();
     }
   };
@@ -184,7 +184,7 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
                 gap={5}
                 w="48%"
                 key={category.name}
-                onClick={() => handleToast()}
+                onClick={() => handleToast(isCategorySelected(category))}
               >
                 <Checkbox
                   isChecked={isCategorySelected(category)}
