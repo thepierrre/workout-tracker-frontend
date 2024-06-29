@@ -34,9 +34,9 @@ export const fetchRoutines = createAsyncThunk<
 });
 
 export const addRoutine = createAsyncThunk<
-  Routine, // Return type of the fulfilled action
-  Omit<Routine, "id">, // Argument type (without id)
-  { rejectValue: string } // Type of the reject value
+  Routine,
+  Omit<Routine, "id">,
+  { rejectValue: string }
 >("routines/addRoutine", async (newRoutine, thunkAPI) => {
   try {
     const response = await axiosInstance.post("routines", newRoutine);
@@ -51,9 +51,9 @@ export const addRoutine = createAsyncThunk<
 });
 
 export const updateRoutine = createAsyncThunk<
-  Routine, // Return type of the fulfilled action
-  Routine, // Argument type (without id)
-  { rejectValue: string } // Type of the reject value
+  Routine,
+  Routine,
+  { rejectValue: string }
 >("routines/updateRoutine", async (updatedRoutine, thunkAPI) => {
   try {
     const response = await axiosInstance.put(

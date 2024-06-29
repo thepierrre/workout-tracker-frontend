@@ -2,6 +2,7 @@ import { Flex, Heading, Card, Text } from "@chakra-ui/react";
 import { Workout } from "../../interfaces/workout.interface";
 import { Routine } from "../../interfaces/routine.interface";
 import { Exercise } from "../../interfaces/exercise.interface";
+import { Link } from "react-router-dom";
 import React from "react";
 
 interface Props {
@@ -16,24 +17,32 @@ const Statistics: React.FC<Props> = ({ workouts, routines, exercises }) => {
       <Heading fontSize="lg" mb={1}>
         Statistics
       </Heading>
-      <Card bg="#404040" color="white" padding={4} w="95vw" gap={2}>
-        <Flex gap={2}>
-          <Text fontWeight="bold">Workouts:</Text>
-          <Text>{workouts.length}</Text>
-        </Flex>
-      </Card>
-      <Card bg="#404040" color="white" padding={4} w="95vw" gap={2}>
-        <Flex gap={2}>
-          <Text fontWeight="bold">Routines:</Text>
-          <Text>{routines.length}</Text>
-        </Flex>
-      </Card>
-      <Card bg="#404040" color="white" padding={4} w="95vw" gap={2}>
-        <Flex gap={2}>
-          <Text fontWeight="bold">Exercises:</Text>
-          <Text>{exercises.length}</Text>
-        </Flex>
-      </Card>
+      <Link to="/workouts">
+        <Card bg="#404040" color="white" padding={4} w="95vw" gap={2}>
+          <Flex gap={2}>
+            <Text fontWeight="bold">Workouts:</Text>
+            <Text>{workouts.length}</Text>
+          </Flex>
+        </Card>
+      </Link>
+
+      <Link to="/routines">
+        <Card bg="#404040" color="white" padding={4} w="95vw" gap={2}>
+          <Flex gap={2}>
+            <Text fontWeight="bold">Routines:</Text>
+            <Text>{routines.length}</Text>
+          </Flex>
+        </Card>
+      </Link>
+
+      <Link to="/exercises">
+        <Card bg="#404040" color="white" padding={4} w="95vw" gap={2}>
+          <Flex gap={2}>
+            <Text fontWeight="bold">Exercises:</Text>
+            <Text>{exercises.length}</Text>
+          </Flex>
+        </Card>
+      </Link>
     </Flex>
   );
 };

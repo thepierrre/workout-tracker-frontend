@@ -34,9 +34,9 @@ export const fetchExercises = createAsyncThunk<
 });
 
 export const addExercise = createAsyncThunk<
-  Exercise, // Return type of the fulfilled action
-  Omit<Exercise, "id">, // Argument type (without id)
-  { rejectValue: string } // Type of the reject value
+  Exercise,
+  Omit<Exercise, "id">,
+  { rejectValue: string }
 >("exercises/addExercise", async (newExercise, thunkAPI) => {
   try {
     const response = await axiosInstance.post("exercise-types", newExercise);
@@ -51,9 +51,9 @@ export const addExercise = createAsyncThunk<
 });
 
 export const updateExercise = createAsyncThunk<
-  Exercise, // Return type of the fulfilled action
-  Exercise, // Argument type (without id)
-  { rejectValue: string } // Type of the reject value
+  Exercise,
+  Exercise,
+  { rejectValue: string }
 >("exercises/updateExercise", async (updatedExercise, thunkAPI) => {
   try {
     const response = await axiosInstance.put(

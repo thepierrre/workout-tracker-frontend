@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import WideButton from "../../components/UI/WideButton";
 import Container from "../../components/UI/Container";
@@ -9,6 +9,8 @@ import {
   FormControl,
   Input,
   FormErrorMessage,
+  useToast,
+  ToastId,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useForm, SubmitHandler, Resolver } from "react-hook-form";
@@ -71,7 +73,6 @@ const resolver: Resolver<FormValues> = async (values) => {
 };
 
 const RegisterPage = () => {
-  const [userRegistered, setUserRegistered] = useState<boolean>(false);
   const {
     register,
     handleSubmit,
@@ -79,11 +80,37 @@ const RegisterPage = () => {
     formState: { errors },
   } = useForm<FormValues>({ resolver });
 
+  const addToast = () => {
+    toastIdRef.current = toast({
+      position: "bottom",
+      duration: 5000,
+      render: () => (
+        <Flex
+          color="white"
+          direction="column"
+          bg="lightblue"
+          align="center"
+          justify="center"
+          background="#2F855A"
+          borderRadius={10}
+          p={2}
+          fontSize="lg"
+          mb={10}
+        >
+          <Text>Account created!</Text>
+          <a href="/" style={{ fontWeight: "bold", color: "white" }}>
+            Sign in.
+          </a>
+        </Flex>
+      ),
+    });
+  };
+
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
       const response = await axiosInstance.post("/auth/register", data);
       if (response.data === `User "${data.username}" registered.`) {
-        setUserRegistered(true);
+        addToast();
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -107,6 +134,9 @@ const RegisterPage = () => {
       }
     }
   };
+
+  const toast = useToast();
+  const toastIdRef = useRef<ToastId | undefined>(undefined);
 
   return (
     <Container>
@@ -180,16 +210,7 @@ const RegisterPage = () => {
               {errors?.password && errors.password.message}
             </FormErrorMessage>
           </FormControl>
-          {userRegistered && (
-            <Flex justify="center" gap={1}>
-              <Text>Registration complete!</Text>
-              <Link to="/">
-                <Text color="lightblue" fontWeight="bold">
-                  Sign in.
-                </Text>
-              </Link>
-            </Flex>
-          )}
+
           <WideButton type="submit">Create account</WideButton>
         </Flex>
       </form>

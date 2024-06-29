@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useRef, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Routine } from "../../interfaces/routine.interface";
+import { Link } from "react-router-dom";
 import WideButton from "../UI/WideButton";
 import { Workout } from "../../interfaces/workout.interface";
 import { addWorkout } from "../../features/workout/workoutSessionsSlice";
@@ -58,10 +59,26 @@ const NewWorkout = () => {
       >
         <DrawerOverlay />
         <DrawerContent height="50vh" bg="#404040">
-          <DrawerHeader textColor="white" textAlign="center">
+          <DrawerHeader textColor="white" textAlign="center" fontSize="2xl">
             Select a routine
           </DrawerHeader>
           <DrawerBody>
+            <Flex align="center" direction="column" mt={10}>
+              <Text color="white" fontSize="xl" textAlign="center">
+                No routines yet.
+              </Text>
+              <Link to="/routines">
+                <Text
+                  color="lightblue"
+                  fontSize="xl"
+                  textAlign="center"
+                  fontWeight="bold"
+                >
+                  Add your first one!
+                </Text>
+              </Link>
+            </Flex>
+
             <Flex direction="column" gap={7} bg="#404040">
               {routines?.map((routine, index) => (
                 <Box key={index} onClick={() => handleAddWorkout(routine)}>
