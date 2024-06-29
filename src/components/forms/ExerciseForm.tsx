@@ -13,6 +13,7 @@ import {
   Checkbox,
   InputGroup,
   InputLeftElement,
+  FormLabel,
   Wrap,
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
@@ -59,35 +60,22 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
   const [selectedCategories, setSelectedCategories] = useState<Category[]>(
     initialSelectedCategories
   );
-  const [categories, setCategories] = useState<Category[]>([]);
-
-  const initialCategories = useSelector(
+  const categories = useSelector(
     (state: RootState) => state.categories.categories
   );
 
   useEffect(() => {
-    const filteredCategories = initialCategories.filter(
-      (ex) => !initialSelectedCategories.some((selCat) => selCat.id === ex.id)
-    );
-    setCategories(filteredCategories);
-  }, [initialCategories, initialSelectedCategories]);
+    setSelectedCategories(initialSelectedCategories);
+  }, [initialSelectedCategories]);
 
   const handleCheck = (category: Category) => {
-    if (selectedCategories.includes(category)) {
-      setTimeout(() => {
-        setSelectedCategories((prevSelectedCategories) =>
-          prevSelectedCategories.filter((cat) => cat.id !== category.id)
-        );
-        setCategories([...categories, category]);
-      }, 250);
-    } else {
-      setTimeout(() => {
-        setSelectedCategories([...selectedCategories, category]);
-        setCategories((prevCategories) =>
-          prevCategories.filter((cat) => cat.id !== category.id)
-        );
-      }, 250);
-    }
+    setSelectedCategories((prevSelectedCategories) => {
+      if (prevSelectedCategories.find((cat) => cat.id === category.id)) {
+        return prevSelectedCategories.filter((cat) => cat.id !== category.id);
+      } else {
+        return [...prevSelectedCategories, category];
+      }
+    });
   };
 
   const handleCategoryFiltering = (
@@ -101,9 +89,13 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
     category.name.toLowerCase().startsWith(searchedCategories.toLowerCase())
   );
 
+  const isCategorySelected = (category: Category) =>
+    selectedCategories.some((cat) => cat.id === category.id);
+
   return (
     <form onSubmit={handleSubmit((data) => onSubmit(data, selectedCategories))}>
       <FormControl isInvalid={!!errors.name}>
+        <FormLabel fontSize="sm">Exercise name</FormLabel>
         <Input
           {...register("name")}
           w="95vw"
@@ -114,7 +106,7 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
             borderColor: "lightblue",
           }}
           _placeholder={{ color: "#B3B3B3" }}
-          placeholder="Exercise name"
+          placeholder="Enter a name"
           defaultValue={initialName}
         />
         <FormErrorMessage>
@@ -122,22 +114,10 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
         </FormErrorMessage>
       </FormControl>
 
-      <Wrap w="90vw" mt={4} mb={4} ml={2} mr={2}>
-        {selectedCategories.map((category) => (
-          <Flex gap={5} w="48%" key={category.name}>
-            <Checkbox
-              defaultChecked={true}
-              onChange={() => handleCheck(category)}
-            ></Checkbox>
-            <Text textColor="white" data-testid="selected category">
-              {category.name.charAt(0).toLocaleUpperCase() +
-                category.name.slice(1)}
-            </Text>
-          </Flex>
-        ))}
-      </Wrap>
-
-      <Flex direction="column" w="100%" gap={2}>
+      <Flex direction="column" w="100%" mt={5}>
+        <FormLabel textColor="white" fontSize="sm">
+          Filter categories
+        </FormLabel>
         <InputGroup>
           <Input
             w="95vw"
@@ -148,7 +128,7 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
               borderColor: "lightblue",
             }}
             _placeholder={{ color: "#B3B3B3" }}
-            placeholder="Filter categories"
+            placeholder="Search"
             onChange={(event) => handleCategoryFiltering(event)}
           />
           <InputLeftElement>
@@ -159,12 +139,22 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
         {filteredCategories.length > 0 ? (
           <Wrap w="90vw" mt={4} mb={4} ml={2} mr={2}>
             {filteredCategories.map((category) => (
-              <Flex gap={5} w="48%" key={category.name}>
+              <Flex
+                gap={5}
+                w="48%"
+                key={category.name}
+                onClick={() => handleCheck(category)}
+              >
                 <Checkbox
+                  isChecked={isCategorySelected(category)}
                   onChange={() => handleCheck(category)}
                   data-testid="not selected checkbox"
                 ></Checkbox>
-                <Text textColor="white" data-testid="not selected category">
+                <Text
+                  fontWeight={isCategorySelected(category) ? "bold" : ""}
+                  textColor={isCategorySelected(category) ? "#90CDF4" : "white"}
+                  data-testid="not selected category"
+                >
                   {category.name.charAt(0).toLocaleUpperCase() +
                     category.name.slice(1)}
                 </Text>

@@ -63,43 +63,45 @@ const NewWorkout = () => {
             Select a routine
           </DrawerHeader>
           <DrawerBody>
-            <Flex align="center" direction="column" mt={10}>
-              <Text color="white" fontSize="xl" textAlign="center">
-                No routines yet.
-              </Text>
-              <Link to="/routines">
-                <Text
-                  color="lightblue"
-                  fontSize="xl"
-                  textAlign="center"
-                  fontWeight="bold"
-                >
-                  Add your first one!
+            {routines?.length === 0 ? (
+              <Flex align="center" direction="column" mt={10}>
+                <Text color="white" fontSize="lg" textAlign="center">
+                  No routines yet.
                 </Text>
-              </Link>
-            </Flex>
-
-            <Flex direction="column" gap={7} bg="#404040">
-              {routines?.map((routine, index) => (
-                <Box key={index} onClick={() => handleAddWorkout(routine)}>
-                  <Flex direction="column" gap={1} textColor="white">
-                    <Flex direction="column" gap={2}>
-                      <Text fontWeight="bold">{routine?.name}</Text>
-                      <Text fontWeight="bold" fontSize="xs" color="#E0E0E0">
-                        {routine?.exerciseTypes?.length} EXERCISES
+                <Link to="/routines/new-routine">
+                  <Text
+                    color="lightblue"
+                    fontSize="lg"
+                    textAlign="center"
+                    fontWeight="bold"
+                  >
+                    Add your first one!
+                  </Text>
+                </Link>
+              </Flex>
+            ) : (
+              <Flex direction="column" gap={7} bg="#404040">
+                {routines?.map((routine, index) => (
+                  <Box key={index} onClick={() => handleAddWorkout(routine)}>
+                    <Flex direction="column" gap={1} textColor="white">
+                      <Flex direction="column" gap={2}>
+                        <Text fontWeight="bold">{routine?.name}</Text>
+                        <Text fontWeight="bold" fontSize="xs" color="#E0E0E0">
+                          {routine?.exerciseTypes?.length} EXERCISES
+                        </Text>
+                      </Flex>
+                      <Text fontSize="sm" color="#E0E0E0">
+                        {routine?.exerciseTypes?.map((exercise, index) => (
+                          <Fragment key={index}>
+                            {index > 0 && " | "} {exercise?.name}
+                          </Fragment>
+                        ))}
                       </Text>
                     </Flex>
-                    <Text fontSize="sm" color="#E0E0E0">
-                      {routine?.exerciseTypes?.map((exercise, index) => (
-                        <Fragment key={index}>
-                          {index > 0 && " | "} {exercise?.name}
-                        </Fragment>
-                      ))}
-                    </Text>
-                  </Flex>
-                </Box>
-              ))}
-            </Flex>
+                  </Box>
+                ))}
+              </Flex>
+            )}
           </DrawerBody>
         </DrawerContent>
       </Drawer>
