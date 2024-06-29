@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import { Link } from "react-router-dom";
 import WideButton from "../../components/UI/WideButton";
 import Container from "../../components/UI/Container";
@@ -80,6 +80,9 @@ const RegisterPage = () => {
     formState: { errors },
   } = useForm<FormValues>({ resolver });
 
+  const toast = useToast();
+  const toastIdRef = useRef<ToastId | undefined>(undefined);
+
   const addToast = () => {
     toastIdRef.current = toast({
       position: "bottom",
@@ -134,9 +137,6 @@ const RegisterPage = () => {
       }
     }
   };
-
-  const toast = useToast();
-  const toastIdRef = useRef<ToastId | undefined>(undefined);
 
   return (
     <Container>

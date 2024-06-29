@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Category } from "../../interfaces/category.interface";
 import { useForm, Resolver } from "react-hook-form";
 import { useSelector } from "react-redux";
@@ -15,6 +15,9 @@ import {
   InputLeftElement,
   FormLabel,
   Wrap,
+  useToast,
+  Box,
+  ToastId,
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 
@@ -68,11 +71,46 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
     setSelectedCategories(initialSelectedCategories);
   }, [initialSelectedCategories]);
 
+  const toast = useToast();
+  const toastIdRef = useRef<ToastId | undefined>(undefined);
+
+  const addToast = () => {
+    if (toastIdRef.current) {
+      toast.close(toastIdRef.current);
+    }
+    toastIdRef.current = toast({
+      position: "bottom",
+      duration: 2500,
+      render: () => (
+        <Box
+          color="white"
+          bg="lightblue"
+          background="#F56565"
+          borderRadius={10}
+          p={3}
+          fontSize="lg"
+          mb={10}
+        >
+          <Text>You cannot add more than 5 categories!</Text>
+        </Box>
+      ),
+    });
+  };
+
+  const handleToast = () => {
+    if (selectedCategories.length >= 5) {
+      addToast();
+    }
+  };
+
   const handleCheck = (category: Category) => {
     setSelectedCategories((prevSelectedCategories) => {
       if (prevSelectedCategories.find((cat) => cat.id === category.id)) {
         return prevSelectedCategories.filter((cat) => cat.id !== category.id);
       } else {
+        if (selectedCategories.length >= 5) {
+          return prevSelectedCategories;
+        }
         return [...prevSelectedCategories, category];
       }
     });
@@ -91,6 +129,9 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
 
   const isCategorySelected = (category: Category) =>
     selectedCategories.some((cat) => cat.id === category.id);
+
+  const isCheckboxDisabled = (category: Category) =>
+    !isCategorySelected(category) && selectedCategories.length >= 5;
 
   return (
     <form onSubmit={handleSubmit((data) => onSubmit(data, selectedCategories))}>
@@ -143,21 +184,18 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
                 gap={5}
                 w="48%"
                 key={category.name}
-                onClick={() => handleCheck(category)}
+                onClick={() => handleToast()}
               >
                 <Checkbox
                   isChecked={isCategorySelected(category)}
+                  isDisabled={isCheckboxDisabled(category)}
                   onChange={() => handleCheck(category)}
                   data-testid="not selected checkbox"
-                ></Checkbox>
-                <Text
                   fontWeight={isCategorySelected(category) ? "bold" : ""}
-                  textColor={isCategorySelected(category) ? "#90CDF4" : "white"}
-                  data-testid="not selected category"
                 >
                   {category.name.charAt(0).toLocaleUpperCase() +
                     category.name.slice(1)}
-                </Text>
+                </Checkbox>
               </Flex>
             ))}
           </Wrap>
