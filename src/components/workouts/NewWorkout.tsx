@@ -64,14 +64,14 @@ const NewWorkout = () => {
           </DrawerHeader>
           <DrawerBody>
             {routines?.length === 0 ? (
-              <Flex align="center" direction="column" mt={10}>
-                <Text color="white" fontSize="lg" textAlign="center">
+              <Flex align="center" direction="column" mt={5}>
+                <Text color="white" fontSize="md" textAlign="center">
                   No routines yet.
                 </Text>
                 <Link to="/routines/new-routine">
                   <Text
                     color="lightblue"
-                    fontSize="lg"
+                    fontSize="md"
                     textAlign="center"
                     fontWeight="bold"
                   >

@@ -10,20 +10,13 @@ import {
   Heading,
   IconButton,
   Box,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
   useDisclosure,
-  Button,
 } from "@chakra-ui/react";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { updateExercise } from "../../features/exercises/exercisesSlice";
 import ExerciseForm from "../../components/forms/ExerciseForm";
 import Container from "../../components/UI/Container";
+import DeletionModal from "../../components/UI/DeletionModal";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { Exercise } from "../../interfaces/exercise.interface";
 import { fetchCategories } from "../../features/exercises/categoriesSlice";
@@ -31,9 +24,11 @@ import { fetchCategories } from "../../features/exercises/categoriesSlice";
 const SingleExercisePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const [serverError, setServerError] = useState<string | null>(null);
+  const [serverError, _] = useState<string | null>(null);
+  const [exerciseToDelete, setExerciseToDelete] = useState<Exercise | null>(
+    null
+  );
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const finalRef = useRef(null);
   const user = useSelector((state: RootState) => state.authenticatedUser.user);
   const exercises = useSelector(
     (state: RootState) => state.exercises.exercises
@@ -72,9 +67,18 @@ const SingleExercisePage = () => {
     navigate("/exercises");
   };
 
-  const handleRemoveExercise = (exercise: Exercise) => {
-    dispatch(removeExercise(exercise.id));
-    navigate("/exercises");
+  const handleOpenModal = (exercise: Exercise) => {
+    setExerciseToDelete(exercise);
+    onOpen();
+  };
+
+  const handleRemoveExercise = () => {
+    if (exerciseToDelete) {
+      dispatch(removeExercise(exerciseToDelete.id));
+      setExerciseToDelete(null);
+      onClose();
+      navigate("/exercises");
+    }
   };
 
   const handleGoBack = () => {
@@ -105,40 +109,22 @@ const SingleExercisePage = () => {
         onSubmit={onSubmit}
         serverError={serverError}
       ></ExerciseForm>
-      <Flex gap={1} justify="center" color="lightblue" onClick={onOpen} mt={3}>
+      <Flex
+        gap={1}
+        justify="center"
+        color="lightblue"
+        onClick={() => handleOpenModal(currentExercise)}
+        mt={3}
+      >
         <RemoveCircleOutlineIcon />
         <Text fontWeight="bold">Delete exercise</Text>
+        <DeletionModal
+          isOpen={isOpen}
+          onClose={onClose}
+          onDelete={handleRemoveExercise}
+          elementType="exercise"
+        />
       </Flex>
-      <Modal
-        finalFocusRef={finalRef}
-        isOpen={isOpen}
-        onClose={onClose}
-        isCentered
-      >
-        <ModalOverlay />
-        <ModalContent pt={3} pb={3}>
-          <ModalHeader textAlign="center">Delete exercise</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Text textAlign="center">
-              Do you really want to delete this exercise?
-            </Text>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button
-              colorScheme="blue"
-              mr={3}
-              onClick={() => handleRemoveExercise(currentExercise)}
-            >
-              Delete
-            </Button>
-            <Button variant="ghost" onClick={onClose}>
-              Cancel
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
     </Container>
   );
 };

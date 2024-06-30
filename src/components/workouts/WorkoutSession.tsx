@@ -1,11 +1,13 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Workout } from "../../interfaces/workout.interface";
 import { useDispatch } from "react-redux";
 import { removeWorkout } from "../../features/workout/workoutSessionsSlice";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import WorkoutExerciseInstance from "./WorkoutExerciseInstance";
+import DeletionModal from "../../components/UI/DeletionModal";
 
-import { Flex, Text, Heading } from "@chakra-ui/react";
+import { Flex, Text, Heading, useDisclosure } from "@chakra-ui/react";
 import { AppDispatch } from "../../app/store";
 
 interface WorkoutProps {
@@ -14,9 +16,20 @@ interface WorkoutProps {
 
 const WorkoutSession: React.FC<WorkoutProps> = ({ workout: wrk }) => {
   const dispatch = useDispatch<AppDispatch>();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [workoutToDelete, setWorkoutToDelete] = useState<Workout | null>(null);
 
-  const handleRemoveWorkout = (workout: Workout) => {
-    dispatch(removeWorkout(workout.id));
+  const handleOpenModal = (workout: Workout) => {
+    setWorkoutToDelete(workout);
+    onOpen();
+  };
+
+  const handleRemoveWorkout = () => {
+    if (workoutToDelete) {
+      dispatch(removeWorkout(workoutToDelete.id));
+      setWorkoutToDelete(null);
+      onClose();
+    }
   };
 
   return (
@@ -42,10 +55,16 @@ const WorkoutSession: React.FC<WorkoutProps> = ({ workout: wrk }) => {
           gap={1}
           justify="center"
           color="lightblue"
-          onClick={() => handleRemoveWorkout(wrk)}
+          onClick={() => handleOpenModal(wrk)}
         >
           <RemoveCircleOutlineIcon />
-          <Text fontWeight="bold">Remove workout</Text>
+          <Text fontWeight="bold">Delete workout</Text>
+          <DeletionModal
+            isOpen={isOpen}
+            onClose={onClose}
+            onDelete={handleRemoveWorkout}
+            elementType="workout"
+          />
         </Flex>
       </Flex>
     </Flex>
