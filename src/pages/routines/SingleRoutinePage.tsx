@@ -21,6 +21,7 @@ import {
 } from "@chakra-ui/react";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import { UseFormSetError } from "react-hook-form";
 
 import { Routine } from "../../interfaces/routine.interface";
 
@@ -28,7 +29,7 @@ const SingleRoutinePage = () => {
   const { routineId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const [serverError, _] = useState<string | null>(null);
+  const [serverError, setServerError] = useState<string | null>(null);
   const [routineToDelete, setRoutineToDelete] = useState<Routine | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const routines: Routine[] = useSelector(
@@ -52,20 +53,32 @@ const SingleRoutinePage = () => {
     return;
   }
 
-  const onSubmit = (data: { name: string }, selectedExercises: Exercise[]) => {
+  const onSubmit = async (
+    data: { name: string },
+    selectedExercises: Exercise[],
+    setError: UseFormSetError<{ name: string }>
+  ) => {
     const currentIndex = routines.indexOf(currentRoutine);
 
-    if (currentIndex !== -1) {
-      dispatch(
-        updateRoutine({
-          id: currentRoutine.id,
-          name: data.name,
-          exerciseTypes: selectedExercises,
-          userId: user.id,
-        })
-      );
+    const routineToUpdate = {
+      id: currentRoutine.id,
+      name: data.name,
+      exerciseTypes: selectedExercises,
+      userId: user.id,
+    };
+
+    try {
+      if (currentIndex !== -1) {
+        await dispatch(updateRoutine(routineToUpdate)).unwrap();
+      }
+      navigate("/routines");
+    } catch (error) {
+      if (typeof error === "string") {
+        let errorMessage = error;
+        setServerError(error);
+        setError("name", { type: "server", message: errorMessage });
+      }
     }
-    navigate("/routines");
   };
 
   const handleOpenModal = (routine: Routine) => {

@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Category } from "../../interfaces/category.interface";
 import { useSelector, useDispatch } from "react-redux";
@@ -20,11 +20,12 @@ import DeletionModal from "../../components/UI/DeletionModal";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { Exercise } from "../../interfaces/exercise.interface";
 import { fetchCategories } from "../../features/exercises/categoriesSlice";
+import { UseFormSetError } from "react-hook-form";
 
 const SingleExercisePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const [serverError, _] = useState<string | null>(null);
+  const [serverError, setServerError] = useState<string | null>(null);
   const [exerciseToDelete, setExerciseToDelete] = useState<Exercise | null>(
     null
   );
@@ -51,20 +52,32 @@ const SingleExercisePage = () => {
     return <Text>Exercise not found.</Text>;
   }
 
-  const onSubmit = (data: { name: string }, selectedCategories: Category[]) => {
+  const onSubmit = async (
+    data: { name: string },
+    selectedCategories: Category[],
+    setError: UseFormSetError<{ name: string }>
+  ) => {
     const currentIndex = exercises.indexOf(currentExercise);
 
-    if (currentIndex !== -1) {
-      dispatch(
-        updateExercise({
-          id: currentExercise.id,
-          name: data.name,
-          categories: selectedCategories,
-          userId: user.id,
-        })
-      );
+    const exerciseToUpdate = {
+      id: currentExercise.id,
+      name: data.name,
+      categories: selectedCategories,
+      userId: user.id,
+    };
+
+    try {
+      if (currentIndex !== -1) {
+        await dispatch(updateExercise(exerciseToUpdate)).unwrap();
+      }
+      navigate("/exercises");
+    } catch (error) {
+      if (typeof error === "string") {
+        let errorMessage = error;
+        setServerError(error);
+        setError("name", { type: "server", message: errorMessage });
+      }
     }
-    navigate("/exercises");
   };
 
   const handleOpenModal = (exercise: Exercise) => {

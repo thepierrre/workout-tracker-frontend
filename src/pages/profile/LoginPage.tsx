@@ -78,7 +78,6 @@ const RegisterPage = () => {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const message = error.response?.data;
-        console.log(error.response?.data);
         if (message === "Invalid username or password.") {
           setError("username", {
             type: "server",
