@@ -33,7 +33,6 @@ const NewExercisePage = () => {
     data: { name: string },
     selectedCategories: Category[],
     setError: UseFormSetError<{ name: string }>
-    // setError: (name: string, error: { type: string; message: string }) => void
   ) => {
     const exerciseToAdd = {
       name: data.name,

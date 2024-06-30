@@ -47,7 +47,6 @@ export const addExercise = createAsyncThunk<
     if (axios.isAxiosError(error) && error.response) {
       if (error.response.status === 409) {
         errorMessage = "An exercise with this name already exists!";
-        // console.log(errorMessage);
       } else {
         errorMessage = error.response.data.message;
       }

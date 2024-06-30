@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { SearchIcon } from "@chakra-ui/icons";
 import WideButton from "../UI/WideButton";
+import { UseFormSetError } from "react-hook-form";
 import {
   Flex,
   FormControl,
@@ -45,7 +46,12 @@ interface RoutineFormProps {
   initialName?: string;
   initialSelectedExercises?: Exercise[];
   buttonText: string;
-  onSubmit: (data: FormValues, selectedExercises: Exercise[]) => void;
+  onSubmit: (
+    data: FormValues,
+    selectedExercises: Exercise[],
+    setError: UseFormSetError<FormValues>
+  ) => void;
+  serverError: string | null;
 }
 
 const RoutineForm: React.FC<RoutineFormProps> = ({
@@ -53,11 +59,13 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
   initialSelectedExercises = [],
   buttonText,
   onSubmit,
+  serverError,
 }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<FormValues>({ resolver });
 
   const [searchedExercises, setSearchedExercises] = useState<string>("");
@@ -72,32 +80,14 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
     setSelectedExercises(initialSelectedExercises);
   }, [initialSelectedExercises]);
 
-  // useEffect(() => {
-  //   const filteredExercises = initialExercises.filter(
-  //     (ex) => !initialSelectedExercises.some((selEx) => selEx.id === ex.id)
-  //   );
-  //   setExercises(filteredExercises);
-  // }, [initialExercises, initialSelectedExercises]);
+  useEffect(() => {
+    if (serverError) {
+      setError("name", { type: "server", message: serverError });
+    }
+  }, [serverError, setError]);
 
   const toast = useToast();
   const toastIdRef = useRef<ToastId | undefined>(undefined);
-
-  // const handleCheck = (exercise: Exercise) => {
-  //   if (selectedExercises.some((ex) => ex.id === exercise.id)) {
-  //     setSelectedExercises((prevSelectedExercises) =>
-  //       prevSelectedExercises.filter((ex) => ex.id !== exercise.id)
-  //     );
-  //     setExercises((prevExercises) => [...prevExercises, exercise]);
-  //   } else {
-  //     setSelectedExercises((prevSelectedExercises) => [
-  //       ...prevSelectedExercises,
-  //       exercise,
-  //     ]);
-  //     setExercises((prevExercises) =>
-  //       prevExercises.filter((ex) => ex.id !== exercise.id)
-  //     );
-  //   }
-  // };
 
   const addToast = () => {
     if (toastIdRef.current) {
@@ -148,10 +138,6 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
     setSearchedExercises(value);
   };
 
-  // const filteredExercises = exercises.filter((exercise) =>
-  //   exercise.name.toLowerCase().includes(searchedExercises.toLowerCase())
-  // );
-
   const filteredExercises = exercises.filter((exercise) =>
     exercise.name.toLowerCase().startsWith(searchedExercises.toLowerCase())
   );
@@ -163,7 +149,11 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
     !isExerciseSelected(exercise) && selectedExercises.length >= 15;
 
   return (
-    <form onSubmit={handleSubmit((data) => onSubmit(data, selectedExercises))}>
+    <form
+      onSubmit={handleSubmit((data) =>
+        onSubmit(data, selectedExercises, setError)
+      )}
+    >
       <FormControl isInvalid={!!errors.name}>
         <FormLabel fontSize="sm">Routine name</FormLabel>
         <Input

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Exercise } from "../../interfaces/exercise.interface";
 import { RootState, AppDispatch } from "../../app/store";
@@ -8,10 +9,12 @@ import { Flex, IconButton, Heading, Box, Spinner } from "@chakra-ui/react";
 import RoutineForm from "../../components/forms/RoutineForm";
 import Container from "../../components/UI/Container";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
+import { UseFormSetError } from "react-hook-form";
 
 const NewRoutinePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
+  const [serverError, setServerError] = useState<string | null>(null);
   const user = useSelector((state: RootState) => state.authenticatedUser.user);
   const exercisesState = useSelector((state: RootState) => state.exercises);
 
@@ -21,7 +24,8 @@ const NewRoutinePage = () => {
 
   const onSubmit = async (
     data: { name: string },
-    selectedExercises: Exercise[]
+    selectedExercises: Exercise[],
+    setError: UseFormSetError<{ name: string }>
   ) => {
     const routineToAdd: Omit<Routine, "id"> = {
       name: data.name,
@@ -33,7 +37,11 @@ const NewRoutinePage = () => {
       await dispatch(addRoutine(routineToAdd)).unwrap();
       navigate("/routines");
     } catch (error) {
-      console.error("Failed to add routine: ", error);
+      if (typeof error === "string") {
+        let errorMessage = error;
+        setServerError(error);
+        setError("name", { type: "server", message: errorMessage });
+      }
     }
   };
 
@@ -72,6 +80,7 @@ const NewRoutinePage = () => {
         initialSelectedExercises={[]}
         onSubmit={onSubmit}
         buttonText="Create"
+        serverError={serverError}
       ></RoutineForm>
     </Container>
   );
