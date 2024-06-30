@@ -1,10 +1,25 @@
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Category } from "../../interfaces/category.interface";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../../app/store";
 import { removeExercise } from "../../features/exercises/exercisesSlice";
-import { Text, Flex, Heading, IconButton, Box } from "@chakra-ui/react";
+import {
+  Text,
+  Flex,
+  Heading,
+  IconButton,
+  Box,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  Button,
+} from "@chakra-ui/react";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { updateExercise } from "../../features/exercises/exercisesSlice";
 import ExerciseForm from "../../components/forms/ExerciseForm";
@@ -16,6 +31,9 @@ import { fetchCategories } from "../../features/exercises/categoriesSlice";
 const SingleExercisePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
+  const [serverError, setServerError] = useState<string | null>(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const finalRef = useRef(null);
   const user = useSelector((state: RootState) => state.authenticatedUser.user);
   const exercises = useSelector(
     (state: RootState) => state.exercises.exercises
@@ -85,17 +103,42 @@ const SingleExercisePage = () => {
         initialSelectedCategories={currentExercise.categories}
         buttonText="Update"
         onSubmit={onSubmit}
+        serverError={serverError}
       ></ExerciseForm>
-      <Flex
-        gap={1}
-        justify="center"
-        color="lightblue"
-        onClick={() => handleRemoveExercise(currentExercise)}
-        mt={3}
-      >
+      <Flex gap={1} justify="center" color="lightblue" onClick={onOpen} mt={3}>
         <RemoveCircleOutlineIcon />
-        <Text fontWeight="bold">Remove exercise</Text>
+        <Text fontWeight="bold">Delete exercise</Text>
       </Flex>
+      <Modal
+        finalFocusRef={finalRef}
+        isOpen={isOpen}
+        onClose={onClose}
+        isCentered
+      >
+        <ModalOverlay />
+        <ModalContent pt={3} pb={3}>
+          <ModalHeader textAlign="center">Delete exercise</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text textAlign="center">
+              Do you really want to delete this exercise?
+            </Text>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={() => handleRemoveExercise(currentExercise)}
+            >
+              Delete
+            </Button>
+            <Button variant="ghost" onClick={onClose}>
+              Cancel
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Container>
   );
 };
