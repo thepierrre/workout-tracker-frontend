@@ -12,9 +12,13 @@ import { AppDispatch } from "../../app/store";
 
 interface WorkoutProps {
   workout: Workout;
+  onWorkoutDeleted: (workoutId: string) => void;
 }
 
-const WorkoutSession: React.FC<WorkoutProps> = ({ workout: wrk }) => {
+const WorkoutSession: React.FC<WorkoutProps> = ({
+  workout: wrk,
+  onWorkoutDeleted,
+}) => {
   const dispatch = useDispatch<AppDispatch>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [workoutToDelete, setWorkoutToDelete] = useState<Workout | null>(null);
@@ -27,6 +31,7 @@ const WorkoutSession: React.FC<WorkoutProps> = ({ workout: wrk }) => {
   const handleRemoveWorkout = () => {
     if (workoutToDelete) {
       dispatch(removeWorkout(workoutToDelete.id));
+      onWorkoutDeleted(workoutToDelete.id);
       setWorkoutToDelete(null);
       onClose();
     }
