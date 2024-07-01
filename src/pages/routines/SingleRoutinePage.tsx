@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import _ from "underscore";
 import { fetchRoutines } from "../../features/routines/routinesSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../../app/store";
@@ -67,11 +68,23 @@ const SingleRoutinePage = () => {
       userId: user.id,
     };
 
+    const compareOldAndNewRoutine = () => {
+      return (
+        routineToUpdate.id === currentRoutine.id &&
+        routineToUpdate.name === currentRoutine.name &&
+        _.isEqual(routineToUpdate.exerciseTypes, currentRoutine.exerciseTypes)
+      );
+    };
+
     try {
       if (currentIndex !== -1) {
         await dispatch(updateRoutine(routineToUpdate)).unwrap();
       }
-      navigate("/routines");
+      if (compareOldAndNewRoutine()) {
+        navigate("/routines");
+      } else {
+        navigate("/routines", { state: { routine: "updated" } });
+      }
     } catch (error) {
       if (typeof error === "string") {
         let errorMessage = error;
@@ -91,7 +104,7 @@ const SingleRoutinePage = () => {
       dispatch(removeRoutine(routineToDelete.id));
       setRoutineToDelete(null);
       onClose();
-      navigate("/routines");
+      navigate("/routines", { state: { routine: "removed" } });
     }
   };
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import _ from "underscore";
 import { Category } from "../../interfaces/category.interface";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../../app/store";
@@ -66,11 +67,23 @@ const SingleExercisePage = () => {
       userId: user.id,
     };
 
+    const compareOldAndNewEx = () => {
+      return (
+        exerciseToUpdate.id === currentExercise.id &&
+        exerciseToUpdate.name === currentExercise.name &&
+        _.isEqual(exerciseToUpdate.categories, currentExercise.categories)
+      );
+    };
+
     try {
       if (currentIndex !== -1) {
         await dispatch(updateExercise(exerciseToUpdate)).unwrap();
       }
-      navigate("/exercises");
+      if (compareOldAndNewEx()) {
+        navigate("/exercises");
+      } else {
+        navigate("/exercises", { state: { exercise: "updated" } });
+      }
     } catch (error) {
       if (typeof error === "string") {
         let errorMessage = error;
@@ -90,7 +103,7 @@ const SingleExercisePage = () => {
       dispatch(removeExercise(exerciseToDelete.id));
       setExerciseToDelete(null);
       onClose();
-      navigate("/exercises");
+      navigate("/exercises", { state: { exercise: "removed" } });
     }
   };
 

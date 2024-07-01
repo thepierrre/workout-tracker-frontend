@@ -91,10 +91,9 @@ const RegisterPage = () => {
         <Flex
           color="white"
           direction="column"
-          bg="lightblue"
           align="center"
           justify="center"
-          background="#2F855A"
+          bg="#2F855A"
           borderRadius={10}
           p={2}
           fontSize="lg"

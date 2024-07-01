@@ -9,7 +9,6 @@ import {
   ModalFooter,
   Button,
 } from "@chakra-ui/react";
-import { Workout } from "interfaces/workout.interface";
 import React from "react";
 
 interface DeletionModalProps {
@@ -26,12 +25,7 @@ const DeletionModal: React.FC<DeletionModalProps> = ({
   elementType,
 }) => {
   return (
-    <Modal
-      // finalFocusRef={finalRef}
-      isOpen={isOpen}
-      onClose={onClose}
-      isCentered
-    >
+    <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
       <ModalContent pt={3} pb={3}>
         <ModalHeader textAlign="center">Delete {elementType}</ModalHeader>

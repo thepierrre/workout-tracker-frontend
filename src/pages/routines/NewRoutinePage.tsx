@@ -35,7 +35,7 @@ const NewRoutinePage = () => {
 
     try {
       await dispatch(addRoutine(routineToAdd)).unwrap();
-      navigate("/routines");
+      navigate("/routines", { state: { routine: "created" } });
     } catch (error) {
       if (typeof error === "string") {
         let errorMessage = error;

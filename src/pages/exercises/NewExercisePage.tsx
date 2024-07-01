@@ -42,7 +42,7 @@ const NewExercisePage = () => {
 
     try {
       await dispatch(addExercise(exerciseToAdd)).unwrap();
-      navigate("/exercises");
+      navigate("/exercises", { state: { exercise: "created" } });
     } catch (error) {
       if (typeof error === "string") {
         let errorMessage = error;

@@ -127,7 +127,6 @@ const WorkoutExerciseInstancePage = () => {
   const handleAppOrUpdate = () => {
     if (activeSeries) {
       handleUpdate();
-      return;
     } else {
       handleAdd();
     }
