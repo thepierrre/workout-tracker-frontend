@@ -12,7 +12,7 @@ import { AppDispatch } from "../../app/store";
 
 interface WorkoutProps {
   workout: Workout;
-  onWorkoutDeleted: (workoutId: string) => void;
+  onWorkoutDeleted: () => void;
 }
 
 const WorkoutSession: React.FC<WorkoutProps> = ({
@@ -31,7 +31,7 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
   const handleRemoveWorkout = () => {
     if (workoutToDelete) {
       dispatch(removeWorkout(workoutToDelete.id));
-      onWorkoutDeleted(workoutToDelete.id);
+      onWorkoutDeleted();
       setWorkoutToDelete(null);
       onClose();
     }

@@ -20,37 +20,37 @@ const initialState: WorkoutSessionsState = {
 interface ExerciseInstance {
   id: string;
   exerciseTypeName: string;
-  workingSets: Series[];
+  workingSets: workingSet[];
 }
 
-interface Series {
+interface workingSet {
   id: number;
   reps: number;
   weight: number;
 }
 
-interface AddWorkingSetArgs {
+interface AddworkingSetArgs {
   exerciseInstanceId: string;
-  newSet: Omit<Series, "id">;
+  newSet: Omit<workingSet, "id">;
 }
 
-interface updateWorkingSetArgs {
+interface updateworkingSetArgs {
   exerciseInstanceId: string;
   workingSetId: number;
-  setToUpdate: Omit<Series, "id">;
+  setToUpdate: Omit<workingSet, "id">;
 }
 
-interface DeleteWorkingSetArgs {
+interface DeleteworkingSetArgs {
   exerciseInstanceId: string;
   workingSetId: number;
 }
 
 export const deleteSet = createAsyncThunk<
   ExerciseInstance,
-  DeleteWorkingSetArgs,
+  DeleteworkingSetArgs,
   { rejectValue: string }
 >(
-  "workouts/deleteWorkingSet",
+  "workouts/deleteworkingSet",
   async ({ exerciseInstanceId, workingSetId }, thunkAPI) => {
     try {
       const response = await axiosInstance.delete(
@@ -71,10 +71,10 @@ export const deleteSet = createAsyncThunk<
 
 export const addSet = createAsyncThunk<
   ExerciseInstance,
-  AddWorkingSetArgs,
+  AddworkingSetArgs,
   { rejectValue: string }
 >(
-  "workouts/addWorkingSet",
+  "workouts/addworkingSet",
   async ({ exerciseInstanceId, newSet }, thunkAPI) => {
     try {
       const response = await axiosInstance.post(
@@ -96,10 +96,10 @@ export const addSet = createAsyncThunk<
 
 export const updateSet = createAsyncThunk<
   ExerciseInstance,
-  updateWorkingSetArgs,
+  updateworkingSetArgs,
   { rejectValue: string }
 >(
-  "workouts/updateWorkingSet",
+  "workouts/updateworkingSet",
   async ({ exerciseInstanceId, workingSetId, setToUpdate }, thunkAPI) => {
     try {
       const response = await axiosInstance.patch(
@@ -298,9 +298,5 @@ const workoutSessionsSlice = createSlice({
   },
 });
 
-export const {
-  // addSeriesToWorkout,
-  // updateSeriesInWorkout,
-  // deleteSeriesFromWorkout,
-} = workoutSessionsSlice.actions;
+export const {} = workoutSessionsSlice.actions;
 export default workoutSessionsSlice.reducer;

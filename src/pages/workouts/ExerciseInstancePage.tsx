@@ -13,22 +13,24 @@ import {
   CardBody,
   Box,
   IconButton,
+  Input,
 } from "@chakra-ui/react";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
-import { Series } from "../../interfaces/series.interface";
+import { WorkingSet } from "../../interfaces/workingSet.interface";
 import {
   addSet,
   updateSet,
   deleteSet,
   fetchWorkouts,
 } from "../../features/workout/workoutSessionsSlice";
+import ExerciseWorkingSet from "./ExerciseWorkingSet";
 
 const WorkoutExerciseInstancePage = () => {
   const [reps, setReps] = useState<number>(10);
   const [weight, setWeight] = useState<number>(30);
-  const [activeSeries, setActiveSeries] = useState<Series | undefined>(
-    undefined
-  );
+  const [activeworkingSet, setActiveworkingSet] = useState<
+    WorkingSet | undefined
+  >(undefined);
 
   const navigate = useNavigate();
 
@@ -65,22 +67,22 @@ const WorkoutExerciseInstancePage = () => {
     }
   };
 
-  const handleActiveExInstance = (series: Series) => {
-    activeSeries && activeSeries.id === series.id
-      ? setActiveSeries(undefined)
-      : setActiveSeries(series);
+  const handleActiveExInstance = (workingSet: WorkingSet) => {
+    activeworkingSet && activeworkingSet.id === workingSet.id
+      ? setActiveworkingSet(undefined)
+      : setActiveworkingSet(workingSet);
   };
 
   const handleButtonText = () => {
-    return activeSeries ? "UPDATE" : "ADD NEW";
+    return activeworkingSet ? "UPDATE" : "ADD NEW";
   };
 
   const handleDisableButton = () => {
-    return activeSeries ? false : true;
+    return activeworkingSet ? false : true;
   };
 
   const handleAdd = async () => {
-    const seriesToAdd: Omit<Series, "id"> = {
+    const workingSetToAdd: Omit<WorkingSet, "id"> = {
       reps,
       weight,
     };
@@ -89,7 +91,7 @@ const WorkoutExerciseInstancePage = () => {
 
     if (exerciseInstanceId) {
       try {
-        await dispatch(addSet({ exerciseInstanceId, newSet: seriesToAdd }));
+        await dispatch(addSet({ exerciseInstanceId, newSet: workingSetToAdd }));
       } catch (error) {
         console.error("Failed to add set: ", error);
       }
@@ -100,20 +102,20 @@ const WorkoutExerciseInstancePage = () => {
 
   const handleUpdate = async () => {
     let exerciseInstanceId = exerciseInstance?.id;
-    let setId = activeSeries?.id;
+    let workingSetId = activeworkingSet?.id;
 
-    const seriesToUpdate: Omit<Series, "id"> = {
+    const workingSetToUpdate: Omit<WorkingSet, "id"> = {
       reps,
       weight,
     };
 
-    if (exerciseInstanceId && setId) {
+    if (exerciseInstanceId && workingSetId) {
       try {
         await dispatch(
           updateSet({
             exerciseInstanceId,
-            workingSetId: setId,
-            setToUpdate: seriesToUpdate,
+            workingSetId: workingSetId,
+            setToUpdate: workingSetToUpdate,
           })
         );
       } catch (error) {
@@ -125,7 +127,7 @@ const WorkoutExerciseInstancePage = () => {
   };
 
   const handleAppOrUpdate = () => {
-    if (activeSeries) {
+    if (activeworkingSet) {
       handleUpdate();
     } else {
       handleAdd();
@@ -134,14 +136,14 @@ const WorkoutExerciseInstancePage = () => {
 
   const handleDelete = async () => {
     let exerciseInstanceId = exerciseInstance?.id;
-    let setId = activeSeries?.id;
+    let workingSetId = activeworkingSet?.id;
 
-    if (exerciseInstanceId && setId) {
+    if (exerciseInstanceId && workingSetId) {
       try {
         await dispatch(
           deleteSet({
             exerciseInstanceId,
-            workingSetId: setId,
+            workingSetId: workingSetId,
           })
         );
       } catch (error) {
@@ -177,68 +179,71 @@ const WorkoutExerciseInstancePage = () => {
           </Flex>
 
           <Flex w="100%" direction="column" gap={5} mt={2}>
+            <Flex gap={3} align="center" direction="column">
+              <Text fontSize="sm">THRESHOLD</Text>
+              <Flex gap={3}>
+                <SmallButton fontSize="lg">.25</SmallButton>
+                <SmallButton fontSize="lg">.5</SmallButton>
+                <SmallButton fontSize="lg">1</SmallButton>
+                <SmallButton fontSize="lg">5</SmallButton>
+                <SmallButton fontSize="lg">10</SmallButton>
+
+                <Input
+                  w={16}
+                  borderColor="transparent"
+                  bg="#404040"
+                  _placeholder={{ color: "#B3B3B3" }}
+                  placeholder="own"
+                />
+              </Flex>
+            </Flex>
             <Flex>
-              <Flex direction="column" w="50%" gap={1}>
+              <Flex direction="column" w="50%" gap={0}>
                 <Text textAlign="center" fontSize="sm">
                   REPS
                 </Text>
-                <Flex justify="center" gap={3} align="center">
+                <Flex justify="start" align="center">
                   <SmallButton
+                    fontSize="xl"
                     onClick={() => handleRepsAndWeight("reps", "decrease")}
                   >
                     –
                   </SmallButton>
-                  <Text fontSize="3xl">{reps}</Text>
-                  <Flex
-                    bg="#404040"
-                    w={10}
-                    h={10}
-                    borderRadius={8}
-                    justify="center"
-                    align="center"
+                  <Text fontSize="2xl" w={20} textAlign="center">
+                    {reps}
+                  </Text>
+
+                  <SmallButton
+                    fontSize="xl"
+                    onClick={() => handleRepsAndWeight("reps", "increase")}
                   >
-                    <SmallButton
-                      onClick={() => handleRepsAndWeight("reps", "increase")}
-                    >
-                      +
-                    </SmallButton>
-                  </Flex>
+                    +
+                  </SmallButton>
                 </Flex>
               </Flex>
-              <Flex direction="column" w="50%" gap={1}>
+
+              <Flex direction="column" w="50%">
                 <Text textAlign="center" fontSize="sm">
                   KGS
                 </Text>
                 <Flex justify="center" gap={3} align="center">
-                  <Flex
-                    bg="#404040"
-                    w={10}
-                    h={10}
-                    borderRadius={8}
-                    justify="center"
-                    align="center"
+                  <SmallButton
+                    fontSize="xl"
+                    onClick={() => handleRepsAndWeight("weight", "decrease")}
                   >
-                    <SmallButton
-                      onClick={() => handleRepsAndWeight("weight", "decrease")}
-                    >
-                      –
-                    </SmallButton>
-                  </Flex>
-                  <Text fontSize="3xl">{weight}</Text>
-                  <Flex
-                    bg="#404040"
-                    w={10}
-                    h={10}
-                    borderRadius={8}
-                    justify="center"
-                    align="center"
+                    –
+                  </SmallButton>
+
+                  <Text fontSize="2xl" w={20} textAlign="center">
+                    {weight.toFixed(2)}
+                  </Text>
+
+                  <SmallButton
+                    fontSize="xl"
+                    onClick={() => handleRepsAndWeight("weight", "increase")}
                   >
-                    <SmallButton
-                      onClick={() => handleRepsAndWeight("weight", "increase")}
-                    >
-                      +
-                    </SmallButton>
-                  </Flex>
+                    +
+                  </SmallButton>
                 </Flex>
               </Flex>
             </Flex>
@@ -263,39 +268,14 @@ const WorkoutExerciseInstancePage = () => {
             </Flex>
           </Flex>
           <Flex direction="column" gap={2} mt={3}>
-            {exerciseInstance?.workingSets.map((set, index) => (
-              <Card
-                bg={
-                  activeSeries && activeSeries.id === set.id
-                    ? "lightblue"
-                    : "#404040"
-                }
-                w="95vw"
+            {exerciseInstance?.workingSets?.map((set, index) => (
+              <ExerciseWorkingSet
+                workingSet={set}
+                index={index}
                 key={index}
-                onClick={() => set && handleActiveExInstance(set)}
-              >
-                <CardBody p={4}>
-                  <Flex
-                    key={index}
-                    gap={10}
-                    color={
-                      activeSeries && activeSeries.id === set.id
-                        ? "#353935"
-                        : "white"
-                    }
-                  >
-                    <Text flex={0.1}>{index + 1}</Text>
-                    <Flex gap={3} flex={0.2}>
-                      <Text fontWeight="bold">{set.reps}</Text>
-                      <Text>reps</Text>
-                    </Flex>
-                    <Flex gap={3} flex={0.2}>
-                      <Text fontWeight="bold">{set.weight}</Text>
-                      <Text>kgs</Text>
-                    </Flex>
-                  </Flex>
-                </CardBody>
-              </Card>
+                activeWorkingSet={activeworkingSet}
+                handleActiveExInstance={handleActiveExInstance}
+              />
             ))}
           </Flex>
         </Flex>

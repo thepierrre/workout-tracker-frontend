@@ -58,7 +58,7 @@ export const WorkoutsPage = () => {
     });
   };
 
-  const handleWorkoutDeleted = (workoutId: string) => {
+  const handleWorkoutDeleted = () => {
     addToast();
   };
 
@@ -76,7 +76,7 @@ export const WorkoutsPage = () => {
         ))
       ) : (
         <Text textColor="white" mt={5}>
-          Add your first workout for today!
+          You don't have any workouts for this day!
         </Text>
       )}
     </Container>

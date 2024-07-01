@@ -14,15 +14,15 @@ const WorkoutExerciseInstance: React.FC<Props> = ({ exerciseInstance }) => {
           {exerciseInstance?.exerciseTypeName}
         </Text>
         <Flex color="white" direction="column">
-          {exerciseInstance?.workingSets?.map((set, index) => (
+          {exerciseInstance?.workingSets?.map((workingSet, index) => (
             <Flex key={index} gap={10}>
               <Text flex={0.1}>{index + 1}</Text>
               <Flex gap={3} flex={0.2}>
-                <Text fontWeight="bold">{set.reps}</Text>
+                <Text fontWeight="bold">{workingSet.reps}</Text>
                 <Text>reps</Text>
               </Flex>
               <Flex gap={3} flex={0.2}>
-                <Text fontWeight="bold">{set.weight}</Text>
+                <Text fontWeight="bold">{workingSet.weight}</Text>
                 <Text>kgs</Text>
               </Flex>
             </Flex>
