@@ -16,9 +16,13 @@ import { AppDispatch } from "../../app/store";
 
 interface Props {
   exerciseInstance: ExerciseInstance;
+  onExInstanceDeleted: () => void;
 }
 
-const WorkoutExerciseInstance: React.FC<Props> = ({ exerciseInstance }) => {
+const WorkoutExerciseInstance: React.FC<Props> = ({
+  exerciseInstance,
+  onExInstanceDeleted,
+}) => {
   const dispatch = useDispatch<AppDispatch>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [exInstanceToDelete, setExInstanceToDelete] =
@@ -37,7 +41,7 @@ const WorkoutExerciseInstance: React.FC<Props> = ({ exerciseInstance }) => {
   const handleRemoveExInstance = () => {
     if (exInstanceToDelete) {
       dispatch(removeExInstance(exerciseInstance.id));
-      // onWorkoutDeleted();
+      onExInstanceDeleted();
       setExInstanceToDelete(null);
       onClose();
     }
