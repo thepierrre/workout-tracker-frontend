@@ -20,7 +20,7 @@ export const WorkoutsPage = () => {
 
   useEffect(() => {
     dispatch(fetchWorkouts());
-  }, [dispatch]);
+  }, [dispatch, workouts]);
 
   useEffect(() => {
     return () => {
