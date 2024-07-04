@@ -38,7 +38,13 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
   };
 
   return (
-    <Flex direction="column" m={2}>
+    <Flex
+      direction="column"
+      m={2}
+      sx={{
+        WebkitTapHighlightColor: "transparent",
+      }}
+    >
       <Heading fontWeight="bold" fontSize="lg" textAlign="center" m={3}>
         {wrk.routineName}
       </Heading>

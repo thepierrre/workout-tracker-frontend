@@ -78,7 +78,10 @@ const App = () => {
             <Flex justify="center" width="100%" gap={0.5}>
               {tabs.map((tab) => (
                 <Tab
-                  sx={{ color: "white" }}
+                  sx={{
+                    color: "white",
+                    WebkitTapHighlightColor: "transparent",
+                  }}
                   w="23vw"
                   fontSize="md"
                   as={Link}

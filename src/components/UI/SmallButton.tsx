@@ -1,4 +1,4 @@
-import { Button, ButtonProps, background } from "@chakra-ui/react";
+import { Button, ButtonProps } from "@chakra-ui/react";
 import React from "react";
 
 interface Props extends ButtonProps {
@@ -14,8 +14,8 @@ const SmallButton: React.FC<Props> = (props) => {
       borderRadius={8}
       fontSize="3xl"
       textColor="white"
-      _active={{ outline: "none" }}
-      _focus={{ bg: "#404040", outline: "none" }}
+      _active={{ textColor: "#404040" }}
+      _focus={{ bg: "#404040" }}
       css={{
         ":focus-visible": {
           outline: "none",

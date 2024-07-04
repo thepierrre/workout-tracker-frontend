@@ -16,6 +16,7 @@ interface DeletionModalProps {
   onClose: () => void;
   onDelete: () => void;
   elementType: string;
+  text?: string;
 }
 
 const DeletionModal: React.FC<DeletionModalProps> = ({
@@ -23,6 +24,7 @@ const DeletionModal: React.FC<DeletionModalProps> = ({
   onClose,
   onDelete,
   elementType,
+  text,
 }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
@@ -32,7 +34,7 @@ const DeletionModal: React.FC<DeletionModalProps> = ({
         <ModalCloseButton />
         <ModalBody>
           <Text textAlign="center">
-            Do you really want to delete this {elementType}?
+            {text || `Do you really want to delete this ${elementType}?`}
           </Text>
         </ModalBody>
 

@@ -2,19 +2,11 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "../../app/store";
+import { useForm, Resolver } from "react-hook-form";
 import NarrowButton from "../../components/UI/NarrowButton";
 import SmallButton from "../../components/UI/SmallButton";
 import Container from "../../components/UI/Container";
-import {
-  Flex,
-  Heading,
-  Text,
-  Card,
-  CardBody,
-  Box,
-  IconButton,
-  Input,
-} from "@chakra-ui/react";
+import { Flex, Heading, Text, Box, IconButton, Input } from "@chakra-ui/react";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { WorkingSet } from "../../interfaces/workingSet.interface";
 import {
@@ -25,12 +17,31 @@ import {
 } from "../../features/workout/workoutSessionsSlice";
 import ExerciseWorkingSet from "./ExerciseWorkingSet";
 
+interface FormValues {
+  thresholdValue: number;
+}
+
+const resolver: Resolver<FormValues> = async (values) => {
+  return {
+    values: values.thresholdValue ? values : {},
+    errors: {},
+  };
+};
+
 const WorkoutExerciseInstancePage = () => {
   const [reps, setReps] = useState<number>(10);
+  const [threshold, setThreshold] = useState<number>(1);
   const [weight, setWeight] = useState<number>(30);
   const [activeworkingSet, setActiveworkingSet] = useState<
     WorkingSet | undefined
   >(undefined);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm<FormValues>({ resolver });
 
   const navigate = useNavigate();
 
@@ -54,15 +65,15 @@ const WorkoutExerciseInstancePage = () => {
   const handleRepsAndWeight = (type: string, action: string) => {
     if (type === "reps") {
       if (action === "increase") {
-        setReps(reps + 1);
+        setReps(reps + threshold);
       } else if (action === "decrease") {
-        setReps(reps - 1);
+        setReps(reps - threshold);
       }
     } else if (type === "weight") {
       if (action === "increase") {
-        setWeight(weight + 1);
+        setWeight(weight + threshold);
       } else if (action === "decrease") {
-        setWeight(weight - 1);
+        setWeight(weight - threshold);
       }
     }
   };
@@ -75,10 +86,6 @@ const WorkoutExerciseInstancePage = () => {
 
   const handleButtonText = () => {
     return activeworkingSet ? "UPDATE" : "ADD NEW";
-  };
-
-  const handleDisableButton = () => {
-    return activeworkingSet ? false : true;
   };
 
   const handleAdd = async () => {
@@ -158,6 +165,15 @@ const WorkoutExerciseInstancePage = () => {
     navigate(-1);
   };
 
+  const handleThresholdChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = parseFloat(event.target.value);
+    if (!isNaN(value)) {
+      setThreshold(value);
+    }
+  };
+
   return (
     <Container>
       {exerciseInstance?.exerciseTypeName !== undefined && (
@@ -182,18 +198,60 @@ const WorkoutExerciseInstancePage = () => {
             <Flex gap={3} align="center" direction="column">
               <Text fontSize="sm">THRESHOLD</Text>
               <Flex gap={3}>
-                <SmallButton fontSize="lg">.25</SmallButton>
-                <SmallButton fontSize="lg">.5</SmallButton>
-                <SmallButton fontSize="lg">1</SmallButton>
-                <SmallButton fontSize="lg">5</SmallButton>
-                <SmallButton fontSize="lg">10</SmallButton>
+                <SmallButton
+                  bg={threshold === 0.25 ? "lightblue" : "#404040"}
+                  textColor={threshold === 0.25 ? "#404040" : "white"}
+                  fontSize="lg"
+                  _focus={{ bg: "lightblue" }}
+                  onClick={() => setThreshold(0.25)}
+                >
+                  .25
+                </SmallButton>
+                <SmallButton
+                  bg={threshold === 0.5 ? "lightblue" : "#404040"}
+                  textColor={threshold === 0.5 ? "#404040" : "white"}
+                  fontSize="lg"
+                  _focus={{ bg: "lightblue" }}
+                  onClick={() => setThreshold(0.5)}
+                >
+                  .5
+                </SmallButton>
+                <SmallButton
+                  bg={threshold === 1 ? "lightblue" : "#404040"}
+                  textColor={threshold === 1 ? "#404040" : "white"}
+                  fontSize="lg"
+                  _focus={{ bg: "lightblue" }}
+                  onClick={() => setThreshold(1)}
+                >
+                  1
+                </SmallButton>
+                <SmallButton
+                  bg={threshold === 5 ? "lightblue" : "#404040"}
+                  textColor={threshold === 5 ? "#404040" : "white"}
+                  fontSize="lg"
+                  _focus={{ bg: "lightblue" }}
+                  onClick={() => setThreshold(5)}
+                >
+                  5
+                </SmallButton>
+                <SmallButton
+                  bg={threshold === 10 ? "lightblue" : "#404040"}
+                  textColor={threshold === 10 ? "#404040" : "white"}
+                  fontSize="lg"
+                  _focus={{ bg: "lightblue" }}
+                  onClick={() => setThreshold(10)}
+                >
+                  10
+                </SmallButton>
 
                 <Input
+                  {...register("thresholdValue")}
                   w={16}
                   borderColor="transparent"
                   bg="#404040"
                   _placeholder={{ color: "#B3B3B3" }}
                   placeholder="own"
+                  onChange={() => handleThresholdChange}
                 />
               </Flex>
             </Flex>
@@ -206,6 +264,8 @@ const WorkoutExerciseInstancePage = () => {
                   <SmallButton
                     fontSize="xl"
                     onClick={() => handleRepsAndWeight("reps", "decrease")}
+                    isDisabled={reps - threshold < 0}
+                    _focus={{ bg: "transparent" }}
                   >
                     –
                   </SmallButton>
@@ -230,6 +290,7 @@ const WorkoutExerciseInstancePage = () => {
                   <SmallButton
                     fontSize="xl"
                     onClick={() => handleRepsAndWeight("weight", "decrease")}
+                    isDisabled={weight - threshold < 0}
                   >
                     –
                   </SmallButton>
@@ -260,7 +321,6 @@ const WorkoutExerciseInstancePage = () => {
                 w={24}
                 bg="lightblue"
                 textColor="#353935"
-                isDisabled={handleDisableButton()}
                 onClick={() => handleDelete()}
               >
                 DELETE
