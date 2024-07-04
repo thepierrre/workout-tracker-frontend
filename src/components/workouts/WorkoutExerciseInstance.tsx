@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ExerciseInstance } from "../../interfaces/exerciseInstance.interface";
 import { removeExInstance } from "../../features/workout/workoutSessionsSlice";
 import { useDispatch } from "react-redux";
+
 import CustomCard from "../UI/CustomCard";
 import DeletionModal from "../../components/UI/DeletionModal";
 import {
@@ -13,6 +14,7 @@ import {
 } from "@chakra-ui/react";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { AppDispatch } from "../../app/store";
+import { Workout } from "interfaces/workout.interface";
 
 interface Props {
   exerciseInstance: ExerciseInstance;
@@ -24,6 +26,7 @@ const WorkoutExerciseInstance: React.FC<Props> = ({
   onExInstanceDeleted,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [exInstanceToDelete, setExInstanceToDelete] =
     useState<ExerciseInstance | null>(null);

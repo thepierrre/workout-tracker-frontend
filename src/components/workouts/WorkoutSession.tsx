@@ -4,6 +4,7 @@ import { Workout } from "../../interfaces/workout.interface";
 import { useDispatch } from "react-redux";
 import { removeWorkout } from "../../features/workout/workoutSessionsSlice";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import WorkoutExerciseInstance from "./WorkoutExerciseInstance";
 import DeletionModal from "../../components/UI/DeletionModal";
 
@@ -15,8 +16,10 @@ import {
   useToast,
   ToastId,
   Box,
+  Card,
 } from "@chakra-ui/react";
 import { AppDispatch } from "../../app/store";
+import CustomCard from "../../components/UI/CustomCard";
 
 interface WorkoutProps {
   workout: Workout;
@@ -92,9 +95,29 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
       <Heading fontWeight="bold" fontSize="lg" textAlign="center" m={3}>
         {wrk.routineName}
       </Heading>
-      <Flex direction="column" gap={3} textColor="white">
-        <Flex direction="column" gap={3}>
-          {wrk.exerciseInstances.map((exerciseInstance, index) => (
+      <Flex>
+        <Flex gap={1}>
+          <AddCircleOutlineIcon />
+          <Text textAlign="center" fontWeight="bold">
+            Add exercises
+          </Text>
+        </Flex>
+
+        <Flex color="lightblue" gap={1}>
+          <RemoveCircleOutlineIcon />
+          <Text fontWeight="bold">Delete workout</Text>
+        </Flex>
+      </Flex>
+
+      <Flex direction="column" gap={3}>
+        {wrk.exerciseInstances.map((exerciseInstance, index) => (
+          <Flex
+            direction="row"
+            justify="center"
+            p={3}
+            gap={3}
+            color="lightblue"
+          >
             <Link
               key={exerciseInstance.id}
               to={`/workouts/${wrk.id}/exercise-instances/${exerciseInstance.id}`}
@@ -105,23 +128,24 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
                 onExInstanceDeleted={handleExInstanceDeleted}
               />
             </Link>
-          ))}
-        </Flex>
-        <Flex
-          gap={1}
-          justify="center"
-          color="lightblue"
-          onClick={() => handleOpenModal(wrk)}
-        >
-          <RemoveCircleOutlineIcon />
-          <Text fontWeight="bold">Delete workout</Text>
-          <DeletionModal
-            isOpen={isOpen}
-            onClose={onClose}
-            onDelete={handleRemoveWorkout}
-            elementType="workout"
-          />
-        </Flex>
+          </Flex>
+        ))}
+      </Flex>
+      <Flex
+        gap={1}
+        mt={3}
+        justify="center"
+        color="lightblue"
+        onClick={() => handleOpenModal(wrk)}
+      >
+        <RemoveCircleOutlineIcon />
+        <Text fontWeight="bold">Delete workout</Text>
+        <DeletionModal
+          isOpen={isOpen}
+          onClose={onClose}
+          onDelete={handleRemoveWorkout}
+          elementType="workout"
+        />
       </Flex>
     </Flex>
   );
