@@ -96,18 +96,12 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
       <Heading fontWeight="bold" fontSize="lg" textAlign="center" m={3}>
         {wrk.routineName}
       </Heading>
-      <Flex>
-        <Flex gap={1}>
-          <AddCircleOutlineIcon />
-          <Text textAlign="center" fontWeight="bold">
-            Add exercise
-          </Text>
-        </Flex>
 
-        <Flex color="lightblue" gap={1}>
-          <RemoveCircleOutlineIcon />
-          <Text fontWeight="bold">Delete workout</Text>
-        </Flex>
+      <Flex gap={1} justify="center" color="lightblue">
+        <AddCircleOutlineIcon />
+        <Text textAlign="center" fontWeight="bold">
+          Add exercises
+        </Text>
       </Flex>
 
       <Flex direction="column" gap={3}>
@@ -135,7 +129,6 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
       </Flex>
       <Flex
         gap={1}
-        mt={3}
         justify="center"
         color="lightblue"
         onClick={() => handleOpenModal(wrk)}

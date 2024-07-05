@@ -1,12 +1,22 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../../app/store";
 import { fetchExercises } from "../../features/exercises/exercisesSlice";
 import WideButton from "../../components/UI/WideButton";
 import Container from "../../components/UI/Container";
+import { SearchIcon } from "@chakra-ui/icons";
 
-import { Flex, Text, useToast, ToastId, Box } from "@chakra-ui/react";
+import {
+  Flex,
+  Text,
+  useToast,
+  ToastId,
+  Box,
+  InputGroup,
+  Input,
+  InputLeftElement,
+} from "@chakra-ui/react";
 import SingleExercise from "../../components/exercises/SingleExercise";
 
 const ExercisesPage = () => {
@@ -14,6 +24,7 @@ const ExercisesPage = () => {
   const location = useLocation();
   const toast = useToast();
   const toastIdRef = useRef<ToastId | undefined>(undefined);
+  const [searchedExercises, setSearchedExercises] = useState<string>("");
   const exercises = useSelector(
     (state: RootState) => state.exercises.exercises
   );
@@ -77,14 +88,47 @@ const ExercisesPage = () => {
     }
   };
 
+  const filteredExercises = exercises.filter((exercise) =>
+    exercise.name.toLowerCase().startsWith(searchedExercises.toLowerCase())
+  );
+
+  const handleExerciseFiltering = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = event.target.value;
+    setSearchedExercises(value);
+  };
+
   return (
     <Container>
       <Link to="/exercises/new-exercise">
         <WideButton type="submit">New exercise</WideButton>
       </Link>
+
+      <Flex>
+        <InputGroup mt={3}>
+          <Input
+            w="95vw"
+            bg="#404040"
+            color="white"
+            borderColor="transparent"
+            _focusVisible={{
+              borderWidth: "1px",
+              borderColor: "lightblue",
+            }}
+            _placeholder={{ color: "#B3B3B3" }}
+            placeholder="Search exercises"
+            onChange={(event) => handleExerciseFiltering(event)}
+          />
+          <InputLeftElement>
+            <SearchIcon />
+          </InputLeftElement>
+        </InputGroup>
+      </Flex>
+
       <Flex direction="column" gap={2} w="95vw" align="center" mt={3}>
-        {exercises && exercises.length > 0 ? (
-          exercises.map((exercise) => (
+        {filteredExercises && filteredExercises.length > 0 ? (
+          filteredExercises.map((exercise) => (
             <Link key={exercise.id} to={`/exercises/${exercise.id}`}>
               <SingleExercise exercise={exercise} />
             </Link>
