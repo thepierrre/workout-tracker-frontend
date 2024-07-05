@@ -6,6 +6,7 @@ import { fetchRoutines } from "../../features/routines/routinesSlice";
 import SingleRoutine from "../../components/routines/SingleRoutine";
 import Container from "../../components/UI/Container";
 import { SearchIcon } from "@chakra-ui/icons";
+import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { Link, useLocation } from "react-router-dom";
 import {
   Flex,
@@ -16,6 +17,7 @@ import {
   InputGroup,
   Input,
   InputLeftElement,
+  IconButton,
 } from "@chakra-ui/react";
 
 const RoutinesPage = () => {
@@ -123,7 +125,7 @@ const RoutinesPage = () => {
         </InputGroup>
       </Flex>
 
-      <Flex direction="column" gap={2} w="95vw" align="center" mt={3}>
+      <Flex direction="column" gap={2} w="95vw" align="center" mt={2}>
         {filteredRoutines.length > 0 ? (
           filteredRoutines?.map((routine) => (
             <Link to={`/routines/${routine.id}`} key={routine.id}>

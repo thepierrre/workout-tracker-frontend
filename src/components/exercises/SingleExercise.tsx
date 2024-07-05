@@ -1,17 +1,37 @@
+import { useLocation } from "react-router-dom";
 import CustomCard from "../UI/CustomCard";
 import { CardBody, Text, Flex } from "@chakra-ui/react";
 import { Exercise } from "../../interfaces/exercise.interface";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 interface Props {
   exercise: Exercise;
+  exercisesToAddToWorkout: Exercise[];
+  setExercisesToAddToWorkout: React.Dispatch<React.SetStateAction<Exercise[]>>;
 }
 
-const SingleExercise: React.FC<Props> = ({ exercise }) => {
+const SingleExercise: React.FC<Props> = ({
+  exercise,
+  exercisesToAddToWorkout,
+  setExercisesToAddToWorkout,
+}) => {
+  const location = useLocation();
+
+  const handleAddExerciseToWorkout = (
+    e: React.MouseEvent,
+    exercise: Exercise
+  ) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setExercisesToAddToWorkout((prevExercises) => [...prevExercises, exercise]);
+    console.log(exercisesToAddToWorkout);
+  };
+
   return (
     <CustomCard>
       <CardBody>
-        <Flex direction="column" gap={1} textColor="white">
-          <Flex direction="column" gap={1}>
+        <Flex>
+          <Flex direction="column" gap={1} textColor="white" w="80%">
             <Text
               fontWeight="bold"
               data-testid={`exercise-name-${exercise.id}`}
@@ -24,16 +44,26 @@ const SingleExercise: React.FC<Props> = ({ exercise }) => {
               color="#E0E0E0"
               data-testid={`exercise-categories-${exercise.id}`}
             >
-              {exercise.categories.length > 0 ? (
-                exercise.categories
-                  .map((category) => category?.name)
-                  .join(" | ")
-                  .toUpperCase()
-              ) : (
-                <Text>{`0 categories`.toUpperCase()}</Text>
-              )}
+              {exercise.categories.length > 0
+                ? exercise.categories
+                    .map((category) => category?.name)
+                    .join(" | ")
+                    .toUpperCase()
+                : `0 categories`.toUpperCase()}
             </Text>
           </Flex>
+          {location.state && location.state.addExercises == "true" && (
+            <Flex
+              w="20%"
+              align="center"
+              justify="end"
+              mr={2}
+              color="lightblue"
+              onClick={(e) => handleAddExerciseToWorkout(e, exercise)}
+            >
+              <AddCircleOutlineIcon />
+            </Flex>
+          )}
         </Flex>
       </CardBody>
     </CustomCard>

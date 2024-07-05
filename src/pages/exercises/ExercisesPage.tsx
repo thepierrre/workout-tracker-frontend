@@ -18,6 +18,7 @@ import {
   InputLeftElement,
 } from "@chakra-ui/react";
 import SingleExercise from "../../components/exercises/SingleExercise";
+import { Exercise } from "interfaces/exercise.interface";
 
 const ExercisesPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -25,6 +26,9 @@ const ExercisesPage = () => {
   const toast = useToast();
   const toastIdRef = useRef<ToastId | undefined>(undefined);
   const [searchedExercises, setSearchedExercises] = useState<string>("");
+  const [exercisesToAddToWorkout, setExercisesToAddToWorkout] = useState<
+    Exercise[]
+  >([]);
   const exercises = useSelector(
     (state: RootState) => state.exercises.exercises
   );
@@ -126,11 +130,15 @@ const ExercisesPage = () => {
         </InputGroup>
       </Flex>
 
-      <Flex direction="column" gap={2} w="95vw" align="center" mt={3}>
+      <Flex direction="column" gap={2} w="95vw" align="center" mt={2}>
         {filteredExercises && filteredExercises.length > 0 ? (
           filteredExercises.map((exercise) => (
             <Link key={exercise.id} to={`/exercises/${exercise.id}`}>
-              <SingleExercise exercise={exercise} />
+              <SingleExercise
+                exercise={exercise}
+                setExercisesToAddToWorkout={setExercisesToAddToWorkout}
+                exercisesToAddToWorkout={exercisesToAddToWorkout}
+              />
             </Link>
           ))
         ) : (

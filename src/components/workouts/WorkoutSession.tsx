@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Workout } from "../../interfaces/workout.interface";
 import { useDispatch } from "react-redux";
 import { removeWorkout } from "../../features/workout/workoutSessionsSlice";
@@ -31,6 +31,7 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
   workout: wrk,
   onWorkoutDeleted,
 }) => {
+  const navigate = useNavigate();
   const toast = useToast();
   const toastIdRef = useRef<ToastId | undefined>(undefined);
   const dispatch = useDispatch<AppDispatch>();
@@ -85,6 +86,10 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
     addToast();
   };
 
+  const handleAddExercisesButton = () => {
+    navigate("/exercises", { state: { addExercises: "true" } });
+  };
+
   return (
     <Flex
       direction="column"
@@ -99,19 +104,22 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
 
       <Flex gap={1} justify="center" color="lightblue">
         <AddCircleOutlineIcon />
-        <Text textAlign="center" fontWeight="bold">
+        <Text
+          textAlign="center"
+          fontWeight="bold"
+          onClick={() => handleAddExercisesButton()}
+        >
           Add exercises
         </Text>
       </Flex>
 
-      <Flex direction="column" gap={3}>
+      <Flex direction="column">
         {wrk.exerciseInstances.map((exerciseInstance, index) => (
           <Flex
             key={exerciseInstance.id}
             direction="row"
             justify="center"
             p={3}
-            gap={3}
             color="lightblue"
           >
             <Link
