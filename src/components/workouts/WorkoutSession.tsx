@@ -17,6 +17,7 @@ import {
   ToastId,
   Box,
   Card,
+  Button,
 } from "@chakra-ui/react";
 import { AppDispatch } from "../../app/store";
 import CustomCard from "../../components/UI/CustomCard";
@@ -99,7 +100,7 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
         <Flex gap={1}>
           <AddCircleOutlineIcon />
           <Text textAlign="center" fontWeight="bold">
-            Add exercises
+            Add exercise
           </Text>
         </Flex>
 
@@ -112,6 +113,7 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
       <Flex direction="column" gap={3}>
         {wrk.exerciseInstances.map((exerciseInstance, index) => (
           <Flex
+            key={exerciseInstance.id}
             direction="row"
             justify="center"
             p={3}

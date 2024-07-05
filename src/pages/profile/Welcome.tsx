@@ -1,5 +1,5 @@
 import { Heading, Text, Image } from "@chakra-ui/react";
-import logo from "../../../public/logo.png";
+import logo from "/logo.png";
 
 const Welcome = () => {
   return (
