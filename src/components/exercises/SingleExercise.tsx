@@ -3,6 +3,7 @@ import CustomCard from "../UI/CustomCard";
 import { CardBody, Text, Flex } from "@chakra-ui/react";
 import { Exercise } from "../../interfaces/exercise.interface";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 
 interface Props {
   exercise: Exercise;
@@ -61,7 +62,13 @@ const SingleExercise: React.FC<Props> = ({
               color="lightblue"
               onClick={(e) => handleAddExerciseToWorkout(e, exercise)}
             >
-              <AddCircleOutlineIcon />
+              {!exercisesToAddToWorkout.includes(exercise) ? (
+                <AddCircleOutlineIcon />
+              ) : (
+                <Text fontSize="xs" fontWeight="bold">
+                  UNDO
+                </Text>
+              )}
             </Flex>
           )}
         </Flex>
