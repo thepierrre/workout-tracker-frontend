@@ -24,10 +24,14 @@ const SingleExercise: React.FC<Props> = ({ exercise }) => {
               color="#E0E0E0"
               data-testid={`exercise-categories-${exercise.id}`}
             >
-              {exercise.categories
-                .map((category) => category?.name)
-                .join(" | ")
-                .toUpperCase()}
+              {exercise.categories.length > 0 ? (
+                exercise.categories
+                  .map((category) => category?.name)
+                  .join(" | ")
+                  .toUpperCase()
+              ) : (
+                <Text>{`0 categories`.toUpperCase()}</Text>
+              )}
             </Text>
           </Flex>
         </Flex>
