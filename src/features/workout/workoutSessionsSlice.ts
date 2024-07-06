@@ -4,6 +4,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 import { Workout } from "../../interfaces/workout.interface";
+import { Exercise } from "interfaces/exercise.interface";
 
 export interface WorkoutSessionsState {
   workouts: Workout[];
@@ -43,6 +44,11 @@ interface updateworkingSetArgs {
 interface DeleteworkingSetArgs {
   exerciseInstanceId: string;
   workingSetId: number;
+}
+
+interface AddExerciseInstanceArgs {
+  exerciseType: Omit<Exercise, "id" | "categories">;
+  workoutId: string;
 }
 
 export const deleteSet = createAsyncThunk<
@@ -187,6 +193,27 @@ export const removeExInstance = createAsyncThunk<
   }
 });
 
+export const addExInstance = createAsyncThunk<
+  Workout,
+  AddExerciseInstanceArgs,
+  { rejectValue: string }
+>("workouts/addExInstance", async (args, thunkAPI) => {
+  const { workoutId, exerciseType } = args;
+  try {
+    const response = await axiosInstance.post(
+      `workouts/${workoutId}/exercise-instances`,
+      exerciseType
+    );
+    return response.data;
+  } catch (error) {
+    let errorMessage = "An unknown error occurred";
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    return thunkAPI.rejectWithValue(errorMessage);
+  }
+});
+
 const workoutSessionsSlice = createSlice({
   name: "workoutSessions",
   initialState,
@@ -238,27 +265,18 @@ const workoutSessionsSlice = createSlice({
         }
       )
       .addCase(
-        removeExInstance.rejected,
-        (state, action: PayloadAction<string | undefined>) => {
-          state.error = action.payload || "Failed to remove the workout.";
+        addExInstance.fulfilled,
+        (state, action: PayloadAction<Workout>) => {
+          state.workouts.push(action.payload);
         }
       )
-
-      //   const updatedExerciseInstance = action.payload;
-      //   const workout = state.workouts.find((workout) =>
-      //     workout.exerciseInstances.some(
-      //       (instance) => instance.id === updatedExerciseInstance.id
-      //     )
-      //   );
-      //   if (workout) {
-      //     const exerciseInstanceIndex = workout.exerciseInstances.findIndex(
-      //       (instance) => instance.id === updatedExerciseInstance.id
-      //     );
-      //     workout.exerciseInstances[exerciseInstanceIndex] =
-      //       updatedExerciseInstance;
-      //   }
-      // }
-
+      .addCase(
+        addExInstance.rejected,
+        (state, action: PayloadAction<string | undefined>) => {
+          state.error =
+            action.payload || "Failed to add the exercise to the workout.";
+        }
+      )
       .addCase(
         removeExInstance.fulfilled,
         (state, action: PayloadAction<string>) => {
@@ -270,9 +288,6 @@ const workoutSessionsSlice = createSlice({
           );
 
           if (workout) {
-            // const exInstanceIndex = workout.exerciseInstances.findIndex(
-            //   (instance) => instance.id === deletedExInstanceId
-            // );
             workout.exerciseInstances.filter(
               (exInstance) => exInstance.id !== deletedExInstanceId
             );

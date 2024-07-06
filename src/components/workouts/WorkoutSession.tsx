@@ -87,7 +87,9 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
   };
 
   const handleAddExercisesButton = () => {
-    navigate("/exercises", { state: { addExercises: "true" } });
+    navigate("/exercises", {
+      state: { addExercises: "true", workoutId: wrk.id },
+    });
   };
 
   return (

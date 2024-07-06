@@ -29,9 +29,24 @@ const ExercisesPage = () => {
   const [exercisesToAddToWorkout, setExercisesToAddToWorkout] = useState<
     Exercise[]
   >([]);
-  const exercises = useSelector(
-    (state: RootState) => state.exercises.exercises
-  );
+  const { exercises } = useSelector((state: RootState) => state.exercises);
+  const { workouts } = useSelector((state: RootState) => state.workoutSessions);
+
+  let currentWorkoutExercisesNames = [];
+
+  if (location.state && location.state.workoutId) {
+    const currentWorkout = workouts.find(
+      (wrk) => wrk.id === location.state.workoutId
+    );
+
+    if (currentWorkout) {
+      for (const ex of currentWorkout.exerciseInstances) {
+        currentWorkoutExercisesNames.push(ex.exerciseTypeName);
+      }
+    }
+  }
+
+  console.log(currentWorkoutExercisesNames);
 
   useEffect(() => {
     dispatch(fetchExercises());
@@ -138,6 +153,9 @@ const ExercisesPage = () => {
                 exercise={exercise}
                 setExercisesToAddToWorkout={setExercisesToAddToWorkout}
                 exercisesToAddToWorkout={exercisesToAddToWorkout}
+                // workoutId={
+                //   location.state.workoutId ? location.state.workoutId : null
+                // }
               />
             </Link>
           ))

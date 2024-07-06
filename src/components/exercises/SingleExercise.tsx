@@ -1,5 +1,7 @@
 import { useLocation } from "react-router-dom";
 import CustomCard from "../UI/CustomCard";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../app/store";
 import { CardBody, Text, Flex } from "@chakra-ui/react";
 import { Exercise } from "../../interfaces/exercise.interface";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
@@ -16,6 +18,18 @@ const SingleExercise: React.FC<Props> = ({
   setExercisesToAddToWorkout,
 }) => {
   const location = useLocation();
+  const dispatch = useDispatch<AppDispatch>();
+  // const { workouts } = useSelector((state: RootState) => state.workoutSessions);
+  // const { exercises } = useSelector((state: RootState) => state.exercises);
+
+  // const currentWorkout = workouts.find((wrk) => wrk.id === workoutId);
+  // let currentWorkoutExercisesTypesNames = [];
+
+  // if (currentWorkout) {
+  //   for (const ex of currentWorkout.exerciseInstances) {
+  //     console.log(ex.exerciseTypeName);
+  //   }
+  // }
 
   const handleAddExerciseToWorkout = (
     e: React.MouseEvent,
@@ -74,7 +88,7 @@ const SingleExercise: React.FC<Props> = ({
                 <AddCircleOutlineIcon />
               ) : (
                 <Text fontSize="xs" fontWeight="bold">
-                  UNDO
+                  REMOVE
                 </Text>
               )}
             </Flex>
