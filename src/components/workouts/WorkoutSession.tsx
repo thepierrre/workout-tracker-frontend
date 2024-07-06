@@ -139,6 +139,7 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
       </Flex>
       <Flex
         gap={1}
+        mt={1}
         justify="center"
         color="lightblue"
         onClick={() => handleOpenModal(wrk)}

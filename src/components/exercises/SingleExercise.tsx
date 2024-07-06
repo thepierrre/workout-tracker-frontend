@@ -85,19 +85,35 @@ const SingleExercise: React.FC<Props> = ({
 
   return (
     <CustomCard>
-      <CardBody>
+      <CardBody
+        borderRadius={5}
+        bg={
+          currentWorkoutExercisesNames?.includes(exercise.name)
+            ? "lightblue"
+            : "#414141"
+        }
+      >
         <Flex>
           <Flex direction="column" gap={1} textColor="white" w="80%">
             <Text
               fontWeight="bold"
               data-testid={`exercise-name-${exercise.id}`}
+              color={
+                currentWorkoutExercisesNames?.includes(exercise.name)
+                  ? "#414141"
+                  : "white"
+              }
             >
               {exercise.name}
             </Text>
             <Text
               fontWeight="bold"
               fontSize="xs"
-              color="#E0E0E0"
+              color={
+                currentWorkoutExercisesNames?.includes(exercise.name)
+                  ? "#414141"
+                  : "white"
+              }
               data-testid={`exercise-categories-${exercise.id}`}
             >
               {exercise.categories.length > 0
@@ -114,13 +130,15 @@ const SingleExercise: React.FC<Props> = ({
               align="center"
               justify="end"
               mr={2}
-              color="lightblue"
               onClick={(e) => handleAddExerciseToWorkout(e, exercise.name)}
             >
               {!currentWorkoutExercisesNames?.includes(exercise.name) ? (
-                <AddCircleOutlineIcon />
+                // <AddCircleOutlineIcon />
+                <Text fontSize="xs" fontWeight="bold" color="lightblue">
+                  ADD
+                </Text>
               ) : (
-                <Text fontSize="xs" fontWeight="bold">
+                <Text fontSize="xs" fontWeight="bold" color="#E53E3E">
                   REMOVE
                 </Text>
               )}
