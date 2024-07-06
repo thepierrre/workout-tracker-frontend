@@ -26,27 +26,26 @@ const ExercisesPage = () => {
   const toast = useToast();
   const toastIdRef = useRef<ToastId | undefined>(undefined);
   const [searchedExercises, setSearchedExercises] = useState<string>("");
-  const [exercisesToAddToWorkout, setExercisesToAddToWorkout] = useState<
-    Exercise[]
-  >([]);
+  const [currentWorkoutExercisesNames, setCurrentWorkoutExercisesNames] =
+    useState<string[]>([]);
   const { exercises } = useSelector((state: RootState) => state.exercises);
   const { workouts } = useSelector((state: RootState) => state.workoutSessions);
 
-  let currentWorkoutExercisesNames = [];
+  useEffect(() => {
+    if (location.state && location.state.workoutId) {
+      const currentWorkout = workouts.find(
+        (wrk) => wrk.id === location.state.workoutId
+      );
 
-  if (location.state && location.state.workoutId) {
-    const currentWorkout = workouts.find(
-      (wrk) => wrk.id === location.state.workoutId
-    );
-
-    if (currentWorkout) {
-      for (const ex of currentWorkout.exerciseInstances) {
-        currentWorkoutExercisesNames.push(ex.exerciseTypeName);
+      if (currentWorkout) {
+        const exerciseNames = currentWorkout.exerciseInstances.map(
+          (ex) => ex.exerciseTypeName
+        );
+        setCurrentWorkoutExercisesNames(exerciseNames);
       }
     }
-  }
-
-  console.log(currentWorkoutExercisesNames);
+    console.log(currentWorkoutExercisesNames);
+  }, [location.state, workouts]);
 
   useEffect(() => {
     dispatch(fetchExercises());
@@ -151,11 +150,13 @@ const ExercisesPage = () => {
             <Link key={exercise.id} to={`/exercises/${exercise.id}`}>
               <SingleExercise
                 exercise={exercise}
-                setExercisesToAddToWorkout={setExercisesToAddToWorkout}
-                exercisesToAddToWorkout={exercisesToAddToWorkout}
-                // workoutId={
-                //   location.state.workoutId ? location.state.workoutId : null
-                // }
+                setCurrentWorkoutExercisesNames={
+                  setCurrentWorkoutExercisesNames
+                }
+                workoutId={
+                  location.state.workoutId ? location.state.workoutId : null
+                }
+                currentWorkoutExercisesNames={currentWorkoutExercisesNames}
               />
             </Link>
           ))

@@ -4,23 +4,33 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../app/store";
 import { CardBody, Text, Flex } from "@chakra-ui/react";
 import { Exercise } from "../../interfaces/exercise.interface";
+import {
+  addExInstance,
+  removeExInstance,
+} from "../../features/workout/workoutSessionsSlice";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 interface Props {
+  workoutId: string;
+  currentWorkoutExercisesNames: string[];
   exercise: Exercise;
-  exercisesToAddToWorkout: Exercise[];
-  setExercisesToAddToWorkout: React.Dispatch<React.SetStateAction<Exercise[]>>;
+  // exercisesToAddToWorkout: Exercise[];
+  setCurrentWorkoutExercisesNames: React.Dispatch<
+    React.SetStateAction<string[]>
+  >;
 }
 
 const SingleExercise: React.FC<Props> = ({
+  workoutId,
+  currentWorkoutExercisesNames,
   exercise,
-  exercisesToAddToWorkout,
-  setExercisesToAddToWorkout,
+  // exercisesToAddToWorkout,
+  setCurrentWorkoutExercisesNames,
 }) => {
   const location = useLocation();
   const dispatch = useDispatch<AppDispatch>();
-  // const { workouts } = useSelector((state: RootState) => state.workoutSessions);
-  // const { exercises } = useSelector((state: RootState) => state.exercises);
+  const { workouts } = useSelector((state: RootState) => state.workoutSessions);
+  const { exercises } = useSelector((state: RootState) => state.exercises);
 
   // const currentWorkout = workouts.find((wrk) => wrk.id === workoutId);
   // let currentWorkoutExercisesTypesNames = [];
@@ -33,21 +43,40 @@ const SingleExercise: React.FC<Props> = ({
 
   const handleAddExerciseToWorkout = (
     e: React.MouseEvent,
-    exercise: Exercise
+    exerciseName: string
   ) => {
     e.stopPropagation();
     e.preventDefault();
-    if (!exercisesToAddToWorkout.includes(exercise)) {
-      setExercisesToAddToWorkout((prevExercises) => [
-        ...prevExercises,
-        exercise,
-      ]);
-    } else {
-      setExercisesToAddToWorkout((prevExercises) =>
-        prevExercises.filter((ex) => ex.id !== exercise.id)
+
+    const currentWorkout = workouts.find((wrk) => wrk.id === workoutId);
+    let exerciseInstance;
+    if (currentWorkout) {
+      exerciseInstance = currentWorkout.exerciseInstances.find(
+        (ex) => ex.exerciseTypeName === exerciseName
       );
     }
-    console.log(exercisesToAddToWorkout);
+
+    if (!currentWorkoutExercisesNames.includes(exerciseName)) {
+      setCurrentWorkoutExercisesNames((prevExercises) => [
+        ...prevExercises,
+        exerciseName,
+      ]);
+
+      const exerciseType = exercises.find((ex) => ex.name === exerciseName);
+
+      if (exerciseType) {
+        dispatch(addExInstance({ exerciseType, workoutId }));
+      }
+    } else {
+      setCurrentWorkoutExercisesNames((prevExercises) =>
+        prevExercises.filter((name) => name !== exerciseName)
+      );
+      if (exerciseInstance && exerciseInstance.id) {
+        let exInstanceId = exerciseInstance.id;
+        dispatch(removeExInstance(exInstanceId));
+      }
+    }
+    // console.log(currentWorkoutExercisesNames);
   };
 
   return (
@@ -82,9 +111,9 @@ const SingleExercise: React.FC<Props> = ({
               justify="end"
               mr={2}
               color="lightblue"
-              onClick={(e) => handleAddExerciseToWorkout(e, exercise)}
+              onClick={(e) => handleAddExerciseToWorkout(e, exercise.name)}
             >
-              {!exercisesToAddToWorkout.includes(exercise) ? (
+              {!currentWorkoutExercisesNames?.includes(exercise.name) ? (
                 <AddCircleOutlineIcon />
               ) : (
                 <Text fontSize="xs" fontWeight="bold">
