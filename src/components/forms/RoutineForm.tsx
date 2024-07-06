@@ -2,8 +2,9 @@ import { useEffect, useState, useRef } from "react";
 import { useForm, Resolver } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { Exercise } from "../../interfaces/exercise.interface";
-import { useSelector } from "react-redux";
-import { RootState } from "../../app/store";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, AppDispatch } from "../../app/store";
+import { fetchExercises } from "../../features/exercises/exercisesSlice";
 import { SearchIcon } from "@chakra-ui/icons";
 import WideButton from "../UI/WideButton";
 import { UseFormSetError } from "react-hook-form";
@@ -68,6 +69,8 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
     setError,
   } = useForm<FormValues>({ resolver });
 
+  const dispatch = useDispatch<AppDispatch>();
+  const [loading, setLoading] = useState(true);
   const [searchedExercises, setSearchedExercises] = useState<string>("");
   const [selectedExercises, setSelectedExercises] = useState<Exercise[]>(
     initialSelectedExercises
@@ -85,6 +88,20 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
       setError("name", { type: "server", message: serverError });
     }
   }, [serverError, setError]);
+
+  useEffect(() => {
+    dispatch(fetchExercises());
+  }, [dispatch]);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     setLoading(true);
+  //     await dispatch(fetchExercises());
+  //     setLoading(false);
+  //   };
+
+  //   fetchData();
+  // }, [dispatch]);
 
   const toast = useToast();
   const toastIdRef = useRef<ToastId | undefined>(undefined);

@@ -18,7 +18,6 @@ import {
   InputLeftElement,
 } from "@chakra-ui/react";
 import SingleExercise from "../../components/exercises/SingleExercise";
-import { Exercise } from "interfaces/exercise.interface";
 
 const ExercisesPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -30,6 +29,8 @@ const ExercisesPage = () => {
     useState<string[]>([]);
   const { exercises } = useSelector((state: RootState) => state.exercises);
   const { workouts } = useSelector((state: RootState) => state.workoutSessions);
+
+  const workoutId = location.state?.workoutId || null;
 
   useEffect(() => {
     if (location.state && location.state.workoutId) {
@@ -44,7 +45,6 @@ const ExercisesPage = () => {
         setCurrentWorkoutExercisesNames(exerciseNames);
       }
     }
-    console.log(currentWorkoutExercisesNames);
   }, [location.state, workouts]);
 
   useEffect(() => {
@@ -153,9 +153,7 @@ const ExercisesPage = () => {
                 setCurrentWorkoutExercisesNames={
                   setCurrentWorkoutExercisesNames
                 }
-                workoutId={
-                  location.state.workoutId ? location.state.workoutId : null
-                }
+                workoutId={workoutId}
                 currentWorkoutExercisesNames={currentWorkoutExercisesNames}
               />
             </Link>

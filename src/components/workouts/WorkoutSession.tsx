@@ -115,13 +115,13 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
         </Text>
       </Flex>
 
-      <Flex direction="column">
+      <Flex direction="column" mt={2}>
         {wrk.exerciseInstances.map((exerciseInstance, index) => (
           <Flex
             key={exerciseInstance.id}
             direction="row"
             justify="center"
-            p={3}
+            p={1}
             color="lightblue"
           >
             <Link

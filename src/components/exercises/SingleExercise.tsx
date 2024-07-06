@@ -11,7 +11,7 @@ import {
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 interface Props {
-  workoutId: string;
+  workoutId: string | null;
   currentWorkoutExercisesNames: string[];
   exercise: Exercise;
   // exercisesToAddToWorkout: Exercise[];
@@ -48,34 +48,38 @@ const SingleExercise: React.FC<Props> = ({
     e.stopPropagation();
     e.preventDefault();
 
-    const currentWorkout = workouts.find((wrk) => wrk.id === workoutId);
-    let exerciseInstance;
-    if (currentWorkout) {
-      exerciseInstance = currentWorkout.exerciseInstances.find(
-        (ex) => ex.exerciseTypeName === exerciseName
-      );
+    if (workoutId !== null) {
+      const currentWorkout = workouts.find((wrk) => wrk.id === workoutId);
+      let exerciseInstance;
+
+      if (currentWorkout) {
+        exerciseInstance = currentWorkout.exerciseInstances.find(
+          (ex) => ex.exerciseTypeName === exerciseName
+        );
+      }
+
+      if (!currentWorkoutExercisesNames.includes(exerciseName)) {
+        setCurrentWorkoutExercisesNames((prevExercises) => [
+          ...prevExercises,
+          exerciseName,
+        ]);
+
+        const exerciseType = exercises.find((ex) => ex.name === exerciseName);
+
+        if (exerciseType) {
+          dispatch(addExInstance({ exerciseType, workoutId }));
+        }
+      } else {
+        setCurrentWorkoutExercisesNames((prevExercises) =>
+          prevExercises.filter((name) => name !== exerciseName)
+        );
+        if (exerciseInstance && exerciseInstance.id) {
+          let exInstanceId = exerciseInstance.id;
+          dispatch(removeExInstance(exInstanceId));
+        }
+      }
     }
 
-    if (!currentWorkoutExercisesNames.includes(exerciseName)) {
-      setCurrentWorkoutExercisesNames((prevExercises) => [
-        ...prevExercises,
-        exerciseName,
-      ]);
-
-      const exerciseType = exercises.find((ex) => ex.name === exerciseName);
-
-      if (exerciseType) {
-        dispatch(addExInstance({ exerciseType, workoutId }));
-      }
-    } else {
-      setCurrentWorkoutExercisesNames((prevExercises) =>
-        prevExercises.filter((name) => name !== exerciseName)
-      );
-      if (exerciseInstance && exerciseInstance.id) {
-        let exInstanceId = exerciseInstance.id;
-        dispatch(removeExInstance(exInstanceId));
-      }
-    }
     // console.log(currentWorkoutExercisesNames);
   };
 

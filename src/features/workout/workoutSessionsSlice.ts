@@ -194,7 +194,7 @@ export const removeExInstance = createAsyncThunk<
 });
 
 export const addExInstance = createAsyncThunk<
-  Workout,
+  ExerciseInstance,
   AddExerciseInstanceArgs,
   { rejectValue: string }
 >("workouts/addExInstance", async (args, thunkAPI) => {
@@ -266,9 +266,7 @@ const workoutSessionsSlice = createSlice({
       )
       .addCase(
         addExInstance.fulfilled,
-        (state, action: PayloadAction<Workout>) => {
-          state.workouts.push(action.payload);
-        }
+        (state, action: PayloadAction<ExerciseInstance>) => {}
       )
       .addCase(
         addExInstance.rejected,
