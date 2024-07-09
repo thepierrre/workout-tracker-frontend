@@ -18,6 +18,7 @@ import {
   Box,
   Card,
   Button,
+  CardBody,
 } from "@chakra-ui/react";
 import { AppDispatch } from "../../app/store";
 import CustomCard from "../../components/UI/CustomCard";
@@ -111,31 +112,43 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
           fontWeight="bold"
           onClick={() => handleAddExercisesButton()}
         >
-          Add exercises
+          Edit exercises
         </Text>
       </Flex>
 
       <Flex direction="column" mt={2}>
-        {wrk.exerciseInstances.map((exerciseInstance, index) => (
-          <Flex
-            key={exerciseInstance.id}
-            direction="row"
-            justify="center"
-            p={1}
-            color="lightblue"
-          >
-            <Link
+        {wrk.exerciseInstances.length > 0 ? (
+          wrk.exerciseInstances.map((exerciseInstance, index) => (
+            <Flex
               key={exerciseInstance.id}
-              to={`/workouts/${wrk.id}/exercise-instances/${exerciseInstance.id}`}
+              direction="row"
+              justify="center"
+              p={1}
+              color="lightblue"
             >
-              <WorkoutExerciseInstance
-                key={index}
-                exerciseInstance={exerciseInstance}
-                onExInstanceDeleted={handleExInstanceDeleted}
-              />
-            </Link>
+              <Link
+                key={exerciseInstance.id}
+                to={`/workouts/${wrk.id}/exercise-instances/${exerciseInstance.id}`}
+              >
+                <WorkoutExerciseInstance
+                  key={index}
+                  exerciseInstance={exerciseInstance}
+                  onExInstanceDeleted={handleExInstanceDeleted}
+                />
+              </Link>
+            </Flex>
+          ))
+        ) : (
+          <Flex mt={2} mb={2}>
+            <CustomCard>
+              <CardBody p={4}>
+                <Text color="white" textAlign="center">
+                  This workout has no exercises yet.
+                </Text>
+              </CardBody>
+            </CustomCard>
           </Flex>
-        ))}
+        )}
       </Flex>
       <Flex
         gap={1}

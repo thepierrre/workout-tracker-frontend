@@ -3,6 +3,7 @@ import axiosInstance from "../../util/axiosInstance";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { User } from "../../interfaces/user.interface";
+import { UserSettings } from "interfaces/userSettings.interface";
 
 export interface authenticatedUserState {
   user: User | undefined;

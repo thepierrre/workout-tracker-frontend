@@ -18,6 +18,7 @@ import {
   InputLeftElement,
 } from "@chakra-ui/react";
 import SingleExercise from "../../components/exercises/SingleExercise";
+import DeletionModal from "../../components/UI/DeletionModal";
 
 const ExercisesPage = () => {
   const dispatch = useDispatch<AppDispatch>();

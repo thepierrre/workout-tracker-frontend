@@ -6,6 +6,7 @@ import authenticatedUserReducer from "../features/auth/authenticatedUserSlice";
 import exercisesReducer from "../features/exercises/exercisesSlice";
 import routinesReducer from "../features/routines/routinesSlice";
 import categoriesReducer from "../features/exercises/categoriesSlice";
+import userSettingsReducer from "../features/settings/userSettingsSlice";
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     exercises: exercisesReducer,
     routines: routinesReducer,
     categories: categoriesReducer,
+    userSettings: userSettingsReducer,
   },
 });
 

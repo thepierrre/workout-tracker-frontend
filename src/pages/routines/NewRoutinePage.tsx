@@ -49,15 +49,15 @@ const NewRoutinePage = () => {
     navigate(-1);
   };
 
-  if (exercisesState.loading) {
-    return (
-      <Container>
-        <Flex align="center" justify="center" h="100vh">
-          <Spinner size="xl" />
-        </Flex>
-      </Container>
-    );
-  }
+  // if (exercisesState.loading) {
+  //   return (
+  //     <Container>
+  //       <Flex align="center" justify="center" h="100vh">
+  //         <Spinner size="xl" />
+  //       </Flex>
+  //     </Container>
+  //   );
+  // }
 
   return (
     <Container>

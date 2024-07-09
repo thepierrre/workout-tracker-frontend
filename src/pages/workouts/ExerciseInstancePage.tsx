@@ -16,6 +16,8 @@ import {
   fetchWorkouts,
 } from "../../features/workout/workoutSessionsSlice";
 import ExerciseWorkingSet from "./ExerciseWorkingSet";
+import { UserSettings } from "interfaces/userSettings.interface";
+import { fetchUserSettings } from "../../features/settings/userSettingsSlice";
 
 interface FormValues {
   thresholdValue: number;
@@ -50,6 +52,9 @@ const WorkoutExerciseInstancePage = () => {
   const workoutSessions = useSelector(
     (state: RootState) => state.workoutSessions
   );
+  const userSettings: UserSettings | undefined = useSelector(
+    (state: RootState) => state.userSettings.userSettings
+  );
 
   const wrk = workoutSessions.workouts.find((w) => w.id === workoutId);
   const exerciseInstance = wrk?.exerciseInstances.find(
@@ -60,6 +65,11 @@ const WorkoutExerciseInstancePage = () => {
 
   useEffect(() => {
     dispatch(fetchWorkouts);
+  }, [wrk]);
+
+  useEffect(() => {
+    dispatch(fetchUserSettings());
+    console.log(userSettings);
   }, [wrk]);
 
   const handleRepsAndWeight = (type: string, action: string) => {
