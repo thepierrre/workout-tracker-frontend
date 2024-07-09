@@ -43,6 +43,7 @@ const WorkoutExerciseInstancePage = () => {
     handleSubmit,
     formState: { errors },
     setError,
+    setValue,
   } = useForm<FormValues>({ resolver });
 
   const navigate = useNavigate();
@@ -69,8 +70,17 @@ const WorkoutExerciseInstancePage = () => {
 
   useEffect(() => {
     dispatch(fetchUserSettings());
-    console.log(userSettings);
-  }, [wrk]);
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (userSettings) {
+      const fetchedThreshold = userSettings.changeThreshold;
+      setThreshold(fetchedThreshold);
+      if ([0.25, 0.5, 1, 5, 10].includes(fetchedThreshold)) {
+        setValue("thresholdValue", fetchedThreshold);
+      }
+    }
+  }, [userSettings, setValue]);
 
   const handleRepsAndWeight = (type: string, action: string) => {
     if (type === "reps") {
@@ -262,6 +272,9 @@ const WorkoutExerciseInstancePage = () => {
                   _placeholder={{ color: "#B3B3B3" }}
                   placeholder="own"
                   onChange={() => handleThresholdChange}
+                  value={
+                    ![0.25, 0.5, 1, 5, 10].includes(threshold) ? threshold : ""
+                  }
                 />
               </Flex>
             </Flex>
