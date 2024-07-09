@@ -23,6 +23,7 @@ export const fetchUserSettings = createAsyncThunk<
 >("user/fetchUserSettings", async (_, thunkAPI) => {
   try {
     const response = await axiosInstance.get(`users/user-settings`);
+    console.log(response.data);
     return response.data;
   } catch (error) {
     let errorMessage = "An unknown error occurred";
