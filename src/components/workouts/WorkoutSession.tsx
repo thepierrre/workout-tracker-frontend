@@ -26,12 +26,12 @@ import CustomCard from "../../components/UI/CustomCard";
 
 interface WorkoutProps {
   workout: Workout;
-  onWorkoutDeleted: () => void;
+  onRemoveWorkout: (id: string) => void;
 }
 
 const WorkoutSession: React.FC<WorkoutProps> = ({
   workout: wrk,
-  onWorkoutDeleted,
+  onRemoveWorkout,
 }) => {
   const navigate = useNavigate();
   const toast = useToast();
@@ -55,8 +55,7 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
 
   const handleRemoveWorkout = () => {
     if (workoutToDelete) {
-      dispatch(removeWorkout(workoutToDelete.id));
-      onWorkoutDeleted();
+      onRemoveWorkout(workoutToDelete.id);
       setWorkoutToDelete(null);
       onClose();
     }
