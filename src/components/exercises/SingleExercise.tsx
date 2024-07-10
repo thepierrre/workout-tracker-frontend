@@ -118,7 +118,7 @@ const SingleExercise: React.FC<Props> = ({
           borderRadius={5}
           bg={
             currentWorkoutExercisesNames?.includes(exercise.name)
-              ? "#e6e6e6"
+              ? "lightblue"
               : "#414141"
           }
         >

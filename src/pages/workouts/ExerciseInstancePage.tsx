@@ -13,7 +13,8 @@ import {
   Box,
   IconButton,
   Input,
-  FormLabel,
+  Spinner,
+  Button,
 } from "@chakra-ui/react";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { WorkingSet } from "../../interfaces/workingSet.interface";
@@ -25,7 +26,10 @@ import {
 } from "../../features/workout/workoutSessionsSlice";
 import ExerciseWorkingSet from "./ExerciseWorkingSet";
 import { UserSettings } from "interfaces/userSettings.interface";
-import { fetchUserSettings } from "../../features/settings/userSettingsSlice";
+import {
+  fetchUserSettings,
+  updateChangeThreshold,
+} from "../../features/settings/userSettingsSlice";
 
 interface FormValues {
   thresholdValue: number | null;
@@ -40,7 +44,7 @@ const resolver: Resolver<FormValues> = async (values) => {
 
 const WorkoutExerciseInstancePage = () => {
   const [reps, setReps] = useState<number>(10);
-  const [threshold, setThreshold] = useState<number>(1);
+  const [threshold, setThreshold] = useState<number | undefined>(undefined);
   const [weight, setWeight] = useState<number>(30);
   const [activeworkingSet, setActiveworkingSet] = useState<
     WorkingSet | undefined
@@ -61,8 +65,8 @@ const WorkoutExerciseInstancePage = () => {
   const workoutSessions = useSelector(
     (state: RootState) => state.workoutSessions
   );
-  const userSettings: UserSettings | undefined = useSelector(
-    (state: RootState) => state.userSettings.userSettings
+  const { userSettings, loading } = useSelector(
+    (state: RootState) => state.userSettings
   );
 
   const wrk = workoutSessions.workouts.find((w) => w.id === workoutId);
@@ -197,20 +201,45 @@ const WorkoutExerciseInstancePage = () => {
     navigate(-1);
   };
 
-  const handleThresholdInputChange = (
+  const handleThresholdButtonClick = async (value: number) => {
+    const userSettingsToUpdate: Omit<UserSettings, "id" | "username"> = {
+      changeThreshold: value,
+    };
+    try {
+      await dispatch(updateChangeThreshold(userSettingsToUpdate));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleRepsInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = parseInt(event.target.value, 10);
+    if (!isNaN(value)) {
+      setReps(value);
+    }
+  };
+
+  const handleWeightInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const value = parseFloat(event.target.value);
     if (!isNaN(value)) {
-      setThreshold(value);
-      console.log(threshold);
+      setWeight(value);
     }
   };
 
-  const handleThresholdButtonClick = (value: number) => {
-    setThreshold(value);
-    console.log(threshold);
-  };
+  if (loading) {
+    return (
+      <Container>
+        <Flex direction="column" align="center" gap={5} mt="15rem" h="100%">
+          <Spinner />
+          <Text>One moment...</Text>
+        </Flex>
+      </Container>
+    );
+  }
 
   return (
     <Container>
@@ -281,76 +310,126 @@ const WorkoutExerciseInstancePage = () => {
                 >
                   10
                 </SmallButton>
-
-                <Input
-                  {...register("thresholdValue")}
-                  w={16}
-                  borderColor="transparent"
-                  // borderColor={
-                  //   threshold && ![0.25, 0.5, 1, 5, 10].includes(threshold)
-                  //     ? "lightblue"
-                  //     : "transparent"
-                  // }
-                  bg="#404040"
-                  _placeholder={{ color: "#B3B3B3" }}
-                  placeholder="own"
-                  onChange={handleThresholdInputChange}
-                  defaultValue={
-                    ![0.25, 0.5, 1, 5, 10].includes(threshold) ? threshold : 56
-                  }
-                />
+                <SmallButton
+                  bg={threshold === 50 ? "lightblue" : "#404040"}
+                  textColor={threshold === 50 ? "#404040" : "white"}
+                  fontSize="lg"
+                  _focus={{ bg: "lightblue" }}
+                  onClick={() => handleThresholdButtonClick(50)}
+                >
+                  50
+                </SmallButton>
+                <SmallButton
+                  bg={threshold === 100 ? "lightblue" : "#404040"}
+                  textColor={threshold === 100 ? "#404040" : "white"}
+                  fontSize="lg"
+                  _focus={{ bg: "lightblue" }}
+                  onClick={() => handleThresholdButtonClick(100)}
+                >
+                  100
+                </SmallButton>
               </Flex>
             </Flex>
-            <Flex>
-              <Flex direction="column" w="50%" gap={0}>
+            <Flex justify="center" gap={8}>
+              <Flex direction="column" gap={1}>
                 <Text textAlign="center" fontSize="sm">
                   REPS
                 </Text>
-                <Flex justify="start" align="center">
-                  <SmallButton
+                <Flex justify="start" align="center" gap={2}>
+                  <Button
                     fontSize="xl"
+                    w={10}
+                    bg="#404040"
+                    color="white"
                     onClick={() => handleRepsAndWeight("reps", "decrease")}
-                    isDisabled={reps - threshold < 0}
-                    _focus={{ bg: "transparent" }}
+                    _focus={{ bg: "#404040" }}
+                    isDisabled={threshold !== undefined && reps - threshold < 0}
+                    css={{
+                      ":active": {
+                        background: "lightblue",
+                        color: "#404040",
+                      },
+                    }}
                   >
                     –
-                  </SmallButton>
-                  <Text fontSize="2xl" w={20} textAlign="center">
-                    {reps}
-                  </Text>
+                  </Button>
 
-                  <SmallButton
+                  <Input
+                    w={16}
+                    value={reps}
+                    textAlign="center"
+                    type="number"
+                    onChange={(event) => handleRepsInputChange(event)}
+                  />
+
+                  <Button
                     fontSize="xl"
+                    w={10}
+                    bg="#404040"
+                    color="white"
                     onClick={() => handleRepsAndWeight("reps", "increase")}
+                    _focus={{ bg: "#404040" }}
+                    css={{
+                      ":active": {
+                        background: "lightblue",
+                        color: "#404040",
+                      },
+                    }}
                   >
                     +
-                  </SmallButton>
+                  </Button>
                 </Flex>
               </Flex>
 
-              <Flex direction="column" w="50%">
+              <Flex direction="column" gap={1}>
                 <Text textAlign="center" fontSize="sm">
                   KGS
                 </Text>
-                <Flex justify="center" gap={3} align="center">
-                  <SmallButton
+                <Flex justify="center" gap={2} align="center">
+                  <Button
                     fontSize="xl"
+                    w={10}
+                    bg="#404040"
+                    color="white"
                     onClick={() => handleRepsAndWeight("weight", "decrease")}
-                    isDisabled={weight - threshold < 0}
+                    _focus={{ bg: "#404040" }}
+                    isDisabled={
+                      threshold !== undefined && weight - threshold < 0
+                    }
+                    css={{
+                      ":active": {
+                        background: "lightblue",
+                        color: "#404040",
+                      },
+                    }}
                   >
                     –
-                  </SmallButton>
+                  </Button>
 
-                  <Text fontSize="2xl" w={20} textAlign="center">
-                    {weight.toFixed(2)}
-                  </Text>
+                  <Input
+                    w={16}
+                    value={weight}
+                    textAlign="center"
+                    type="number"
+                    onChange={(event) => handleWeightInputChange(event)}
+                  />
 
-                  <SmallButton
+                  <Button
                     fontSize="xl"
+                    w={10}
+                    bg="#404040"
+                    color="white"
                     onClick={() => handleRepsAndWeight("weight", "increase")}
+                    _focus={{ bg: "#404040" }}
+                    css={{
+                      ":active": {
+                        background: "lightblue",
+                        color: "#404040",
+                      },
+                    }}
                   >
                     +
-                  </SmallButton>
+                  </Button>
                 </Flex>
               </Flex>
             </Flex>
@@ -367,6 +446,7 @@ const WorkoutExerciseInstancePage = () => {
                 w={24}
                 bg="lightblue"
                 textColor="#353935"
+                isDisabled={activeworkingSet ? false : true}
                 onClick={() => handleDelete()}
               >
                 DELETE

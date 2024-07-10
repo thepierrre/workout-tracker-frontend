@@ -22,13 +22,36 @@ export const fetchUserSettings = createAsyncThunk<
   { rejectValue: string }
 >("user/fetchUserSettings", async (_, thunkAPI) => {
   try {
-    const response = await axiosInstance.get(`users/user-settings`);
-    console.log(response.data);
+    const response = await axiosInstance.get("users/user-settings");
     return response.data;
   } catch (error) {
     let errorMessage = "An unknown error occurred";
     if (error instanceof Error) {
       errorMessage = error.message;
+    }
+    return thunkAPI.rejectWithValue(errorMessage);
+  }
+});
+
+export const updateChangeThreshold = createAsyncThunk<
+  UserSettings,
+  Omit<UserSettings, "id" | "username">,
+  { rejectValue: string }
+>("user/updateChangeThreshold", async (userSettings, thunkAPI) => {
+  try {
+    const response = await axiosInstance.patch(
+      "users/user-settings",
+      userSettings
+    );
+    return response.data;
+  } catch (error) {
+    let errorMessage = "An unknown error occurred";
+    if (axios.isAxiosError(error) && error.response) {
+      if (error.response.status === 409) {
+        errorMessage = "A routine with this name already exists!";
+      } else {
+        errorMessage = error.response.data.message;
+      }
     }
     return thunkAPI.rejectWithValue(errorMessage);
   }
@@ -55,7 +78,23 @@ const userSettingsSlice = createSlice({
         fetchUserSettings.rejected,
         (state, action: PayloadAction<string | undefined>) => {
           state.loading = false;
-          state.error = action.payload || "Failed to fetch routines.";
+          state.error = action.payload || "Failed to fetch user settings.";
+        }
+      )
+      .addCase(
+        updateChangeThreshold.fulfilled,
+        (state, action: PayloadAction<UserSettings>) => {
+          state.loading = false;
+          state.userSettings = action.payload;
+        }
+      )
+      .addCase(
+        updateChangeThreshold.rejected,
+        (state, action: PayloadAction<string | undefined>) => {
+          state.loading = false;
+          state.error =
+            action.payload ||
+            "Failed to update the change threshold for reps and weight.";
         }
       );
   },
