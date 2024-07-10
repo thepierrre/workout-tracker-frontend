@@ -467,7 +467,7 @@ const WorkoutExerciseInstancePage = () => {
                 />
               ))
             ) : (
-              <Text>No sets for this exercise!</Text>
+              <Text>This exercise has no sets.</Text>
             )}
           </Flex>
         </Flex>
