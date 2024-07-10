@@ -3,9 +3,9 @@ import { render, screen } from "@testing-library/react";
 import { ChakraProvider } from "@chakra-ui/react";
 import LogIn from "../profile/LogIn";
 import "@testing-library/jest-dom";
-import RegisterPage from "../../pages/profile/RegisterPage";
+import RegisterPage from "../../../pages/profile/RegisterPage";
 import { Provider } from "react-redux";
-import { store } from "../../app/store";
+import { store } from "../../../app/store";
 import { BrowserRouter } from "react-router-dom";
 
 const renderWithProviders = (ui: React.ReactElement) => {

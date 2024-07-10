@@ -14,11 +14,10 @@ import {
 } from "@chakra-ui/react";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { AppDispatch } from "../../app/store";
-import { Workout } from "interfaces/workout.interface";
 
 interface Props {
   exerciseInstance: ExerciseInstance;
-  onExInstanceDeleted: () => void;
+  onExInstanceDeleted: (id: string) => void;
 }
 
 const WorkoutExerciseInstance: React.FC<Props> = ({
@@ -41,12 +40,16 @@ const WorkoutExerciseInstance: React.FC<Props> = ({
     onOpen();
   };
 
-  const handleRemoveExInstance = () => {
+  const handleRemoveExInstance = async () => {
     if (exInstanceToDelete) {
-      dispatch(removeExInstance(exerciseInstance.id));
-      onExInstanceDeleted();
-      setExInstanceToDelete(null);
-      onClose();
+      try {
+        await dispatch(removeExInstance(exInstanceToDelete.id)).unwrap();
+        onExInstanceDeleted(exInstanceToDelete.id);
+        setExInstanceToDelete(null);
+        onClose();
+      } catch (error) {
+        console.error("Failed to delete exercise instance:", error);
+      }
     }
   };
 

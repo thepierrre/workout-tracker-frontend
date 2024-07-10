@@ -2,10 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Workout } from "../../interfaces/workout.interface";
 import { useDispatch } from "react-redux";
-import {
-  fetchWorkouts,
-  removeWorkout,
-} from "../../features/workout/workoutSessionsSlice";
+import { removeWorkout } from "../../features/workout/workoutSessionsSlice";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import WorkoutExerciseInstance from "./WorkoutExerciseInstance";
@@ -23,6 +20,7 @@ import {
 } from "@chakra-ui/react";
 import { AppDispatch } from "../../app/store";
 import CustomCard from "../../components/UI/CustomCard";
+import { ExerciseInstance } from "interfaces/exerciseInstance.interface";
 
 interface WorkoutProps {
   workout: Workout;
@@ -36,9 +34,15 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
   const navigate = useNavigate();
   const toast = useToast();
   const toastIdRef = useRef<ToastId | undefined>(undefined);
-  const dispatch = useDispatch<AppDispatch>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [workoutToDelete, setWorkoutToDelete] = useState<Workout | null>(null);
+  const [localExerciseInstances, setLocalExerciseInstances] = useState<
+    ExerciseInstance[]
+  >(wrk.exerciseInstances);
+
+  useEffect(() => {
+    setLocalExerciseInstances(wrk.exerciseInstances);
+  }, [wrk.exerciseInstances]);
 
   useEffect(() => {
     return () => {
@@ -46,7 +50,7 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
         toast.close(toastIdRef.current);
       }
     };
-  }, [location, toast]);
+  }, [toast]);
 
   const handleOpenModal = (workout: Workout) => {
     setWorkoutToDelete(workout);
@@ -61,7 +65,7 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
     }
   };
 
-  const addToast = () => {
+  const addToast = (message: string) => {
     if (toastIdRef.current) {
       toast.close(toastIdRef.current);
     }
@@ -77,14 +81,17 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
           fontSize="lg"
           mb={10}
         >
-          <Text textAlign="center">Exercise deleted from workout</Text>
+          <Text textAlign="center">{message}</Text>
         </Box>
       ),
     });
   };
 
-  const handleExInstanceDeleted = () => {
-    addToast();
+  const handleExInstanceDeleted = (exInstanceId: string) => {
+    setLocalExerciseInstances((prevInstances) =>
+      prevInstances.filter((instance) => instance.id !== exInstanceId)
+    );
+    addToast("Exercise deleted from workout");
   };
 
   const handleAddExercisesButton = () => {
@@ -117,8 +124,8 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
       </Flex>
 
       <Flex direction="column" mt={2}>
-        {wrk.exerciseInstances.length > 0 ? (
-          wrk.exerciseInstances.map((exerciseInstance, index) => (
+        {localExerciseInstances.length > 0 ? (
+          localExerciseInstances.map((exerciseInstance, index) => (
             <Flex
               key={exerciseInstance.id}
               direction="row"
