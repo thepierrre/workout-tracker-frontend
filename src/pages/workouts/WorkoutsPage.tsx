@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchWorkouts } from "../../features/workout/workoutSessionsSlice";
 import Datepicker from "../../components/workouts/Datepicker";
@@ -7,8 +7,7 @@ import WorkoutSession from "../../components/workouts/WorkoutSession";
 import { RootState, AppDispatch } from "../../app/store";
 import { format } from "date-fns";
 import Container from "../../components/UI/Container";
-
-import { Text, useToast, ToastId, Box, Flex, Spinner } from "@chakra-ui/react";
+import { Text, useToast, ToastId, Box } from "@chakra-ui/react";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
 
 export const WorkoutsPage = () => {
@@ -18,23 +17,14 @@ export const WorkoutsPage = () => {
   const { workouts, loading: loadingWorkouts } = useSelector(
     (state: RootState) => state.workoutSessions
   );
+  const chosenDay = useSelector((state: RootState) => state.chosenDay.day);
 
   useEffect(() => {
     dispatch(fetchWorkouts());
   }, [dispatch]);
 
-  useEffect(() => {
-    return () => {
-      if (toastIdRef.current) {
-        toast.close(toastIdRef.current);
-      }
-    };
-  }, [location, toast]);
-
-  const chosenDay = useSelector((state: RootState) => state.chosenDay.day);
-
   const filteredWorkouts = workouts?.filter(
-    (wrk) => format(wrk.creationDate, "dd/MM/yyyy") === chosenDay
+    (wrk) => format(new Date(wrk.creationDate), "dd/MM/yyyy") === chosenDay
   );
 
   const addToast = () => {
@@ -72,7 +62,7 @@ export const WorkoutsPage = () => {
       <Datepicker />
       <NewWorkout />
       {filteredWorkouts?.length > 0 ? (
-        filteredWorkouts?.map((workout) => (
+        filteredWorkouts.map((workout) => (
           <WorkoutSession
             key={workout.id}
             workout={workout}

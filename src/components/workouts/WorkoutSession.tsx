@@ -2,7 +2,10 @@ import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Workout } from "../../interfaces/workout.interface";
 import { useDispatch } from "react-redux";
-import { removeWorkout } from "../../features/workout/workoutSessionsSlice";
+import {
+  fetchWorkouts,
+  removeWorkout,
+} from "../../features/workout/workoutSessionsSlice";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import WorkoutExerciseInstance from "./WorkoutExerciseInstance";
