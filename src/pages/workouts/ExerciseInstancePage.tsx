@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "../../app/store";
@@ -30,6 +30,7 @@ import {
   fetchUserSettings,
   updateChangeThreshold,
 } from "../../features/settings/userSettingsSlice";
+import SpinnerComponent from "../../components/UI/SpinnerComponent";
 
 interface FormValues {
   thresholdValue: number | null;
@@ -65,7 +66,7 @@ const WorkoutExerciseInstancePage = () => {
   const workoutSessions = useSelector(
     (state: RootState) => state.workoutSessions
   );
-  const { userSettings, loading } = useSelector(
+  const { userSettings, loading: loadingUserSettings } = useSelector(
     (state: RootState) => state.userSettings
   );
 
@@ -96,6 +97,12 @@ const WorkoutExerciseInstancePage = () => {
     }
   }, [userSettings, setValue]);
 
+  useEffect(() => {
+    if (exerciseInstance?.workingSets?.length === 0) {
+      setActiveworkingSet(undefined);
+    }
+  }, [exerciseInstance]);
+
   const handleRepsAndWeight = (type: string, action: string) => {
     if (threshold) {
       if (type === "reps") {
@@ -120,9 +127,9 @@ const WorkoutExerciseInstancePage = () => {
       : setActiveworkingSet(workingSet);
   };
 
-  const handleButtonText = () => {
+  const buttonText = useMemo(() => {
     return activeworkingSet ? "UPDATE" : "ADD NEW";
-  };
+  }, [activeworkingSet]);
 
   const handleAdd = async () => {
     const workingSetToAdd: Omit<WorkingSet, "id"> = {
@@ -167,6 +174,7 @@ const WorkoutExerciseInstancePage = () => {
     } else {
       console.error("Exercise instance ID or set ID is missing");
     }
+    setActiveworkingSet(undefined);
   };
 
   const handleAppOrUpdate = () => {
@@ -195,6 +203,7 @@ const WorkoutExerciseInstancePage = () => {
     } else {
       console.error("Exercise instance ID or set ID is missing");
     }
+    setActiveworkingSet(undefined);
   };
 
   const handleGoBack = () => {
@@ -230,15 +239,8 @@ const WorkoutExerciseInstancePage = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <Container>
-        <Flex direction="column" align="center" gap={5} mt="15rem" h="100%">
-          <Spinner />
-          <Text>One moment...</Text>
-        </Flex>
-      </Container>
-    );
+  if (loadingUserSettings) {
+    return <SpinnerComponent />;
   }
 
   return (
@@ -440,7 +442,7 @@ const WorkoutExerciseInstancePage = () => {
                 textColor="#353935"
                 onClick={() => handleAppOrUpdate()}
               >
-                {handleButtonText()}
+                {buttonText}
               </NarrowButton>
               <NarrowButton
                 w={24}
@@ -453,16 +455,20 @@ const WorkoutExerciseInstancePage = () => {
               </NarrowButton>
             </Flex>
           </Flex>
-          <Flex direction="column" gap={2} mt={3}>
-            {exerciseInstance?.workingSets?.map((set, index) => (
-              <ExerciseWorkingSet
-                workingSet={set}
-                index={index}
-                key={index}
-                activeWorkingSet={activeworkingSet}
-                handleActiveExInstance={handleActiveExInstance}
-              />
-            ))}
+          <Flex direction="column" gap={2} mt={3} align="center">
+            {exerciseInstance?.workingSets?.length > 0 ? (
+              exerciseInstance?.workingSets?.map((set, index) => (
+                <ExerciseWorkingSet
+                  workingSet={set}
+                  index={index}
+                  key={index}
+                  activeWorkingSet={activeworkingSet}
+                  handleActiveExInstance={handleActiveExInstance}
+                />
+              ))
+            ) : (
+              <Text>No sets for this exercise!</Text>
+            )}
           </Flex>
         </Flex>
       )}

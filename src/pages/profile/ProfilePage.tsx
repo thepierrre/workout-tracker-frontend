@@ -9,22 +9,25 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { clearUser } from "../../features/auth/authenticatedUserSlice";
 import { Workout } from "../../interfaces/workout.interface";
-import { Button, Heading } from "@chakra-ui/react";
+import { Button, Heading, Flex, Spinner } from "@chakra-ui/react";
 import { format, getDate, getYear } from "date-fns";
 import Container from "../../components/UI/Container";
 import Statistics from "../../components/profile/Statistics";
 import WorkoutHistory from "../../components/profile/WorkoutHistory";
+import SpinnerComponent from "../../components/UI/SpinnerComponent";
 
 const ProfilePage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.authenticatedUser.user);
-  const workouts = useSelector(
-    (state: RootState) => state.workoutSessions.workouts
+  const { workouts, loading: loadingWorkouts } = useSelector(
+    (state: RootState) => state.workoutSessions
   );
-  const routines = useSelector((state: RootState) => state.routines.routines);
-  const exercises = useSelector(
-    (state: RootState) => state.exercises.exercises
+  const { routines, loading: loadingRoutines } = useSelector(
+    (state: RootState) => state.routines
+  );
+  const { exercises, loading: loadingExercises } = useSelector(
+    (state: RootState) => state.exercises
   );
 
   const [chosenDay, setChosenDay] = useState<number | undefined>(undefined);
@@ -179,6 +182,10 @@ const ProfilePage = () => {
     }
     handleFilteredWorkouts();
   };
+
+  if (loadingWorkouts || loadingRoutines || loadingExercises) {
+    return <SpinnerComponent />;
+  }
 
   return (
     <Container>

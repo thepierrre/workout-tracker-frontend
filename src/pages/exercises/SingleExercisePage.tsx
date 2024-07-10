@@ -12,6 +12,7 @@ import {
   IconButton,
   Box,
   useDisclosure,
+  Spinner,
 } from "@chakra-ui/react";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { updateExercise } from "../../features/exercises/exercisesSlice";
@@ -22,6 +23,7 @@ import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { Exercise } from "../../interfaces/exercise.interface";
 import { fetchCategories } from "../../features/exercises/categoriesSlice";
 import { UseFormSetError } from "react-hook-form";
+import SpinnerComponent from "../../components/UI/SpinnerComponent";
 
 const SingleExercisePage = () => {
   const navigate = useNavigate();
@@ -31,9 +33,11 @@ const SingleExercisePage = () => {
     null
   );
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const user = useSelector((state: RootState) => state.authenticatedUser.user);
-  const exercises = useSelector(
-    (state: RootState) => state.exercises.exercises
+  const { user, loading: loadingUser } = useSelector(
+    (state: RootState) => state.authenticatedUser
+  );
+  const { exercises, loading: loadingExercises } = useSelector(
+    (state: RootState) => state.exercises
   );
   const { exerciseId } = useParams();
 
@@ -110,6 +114,10 @@ const SingleExercisePage = () => {
   const handleGoBack = () => {
     navigate(-1);
   };
+
+  if (loadingUser || loadingExercises) {
+    return <SpinnerComponent />;
+  }
 
   return (
     <Container>

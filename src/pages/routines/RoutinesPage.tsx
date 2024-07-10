@@ -18,7 +18,9 @@ import {
   Input,
   InputLeftElement,
   IconButton,
+  Spinner,
 } from "@chakra-ui/react";
+import SpinnerComponent from "../../components/UI/SpinnerComponent";
 
 const RoutinesPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -26,7 +28,9 @@ const RoutinesPage = () => {
   const toast = useToast();
   const toastIdRef = useRef<ToastId | undefined>(undefined);
   const [searchedRoutines, setSearchedRoutines] = useState<string>("");
-  const routines = useSelector((state: RootState) => state.routines.routines);
+  const { routines, loading: loadingRoutines } = useSelector(
+    (state: RootState) => state.routines
+  );
 
   useEffect(() => {
     dispatch(fetchRoutines());
@@ -97,6 +101,10 @@ const RoutinesPage = () => {
     const value = event.target.value;
     setSearchedRoutines(value);
   };
+
+  if (loadingRoutines) {
+    return <SpinnerComponent />;
+  }
 
   return (
     <Container>

@@ -18,9 +18,12 @@ import {
   useToast,
   Box,
   ToastId,
+  Container,
+  Spinner,
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { UseFormSetError } from "react-hook-form";
+import SpinnerComponent from "../../components/UI/SpinnerComponent";
 
 interface FormValues {
   name: string;
@@ -71,8 +74,8 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
   const [selectedCategories, setSelectedCategories] = useState<Category[]>(
     initialSelectedCategories
   );
-  const categories = useSelector(
-    (state: RootState) => state.categories.categories
+  const { categories, loading: loadingCategories } = useSelector(
+    (state: RootState) => state.categories
   );
 
   useEffect(() => {
@@ -146,6 +149,10 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
 
   const isCheckboxDisabled = (category: Category) =>
     !isCategorySelected(category) && selectedCategories.length >= 5;
+
+  if (loadingCategories) {
+    return <SpinnerComponent />;
+  }
 
   return (
     <form

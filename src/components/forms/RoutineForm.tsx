@@ -22,7 +22,10 @@ import {
   useToast,
   Box,
   ToastId,
+  Container,
+  Spinner,
 } from "@chakra-ui/react";
+import SpinnerComponent from "../../components/UI/SpinnerComponent";
 
 interface FormValues {
   name: string;
@@ -70,13 +73,12 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
   } = useForm<FormValues>({ resolver });
 
   const dispatch = useDispatch<AppDispatch>();
-  const [loading, setLoading] = useState(true);
   const [searchedExercises, setSearchedExercises] = useState<string>("");
   const [selectedExercises, setSelectedExercises] = useState<Exercise[]>(
     initialSelectedExercises
   );
-  const exercises = useSelector(
-    (state: RootState) => state.exercises.exercises
+  const { exercises, loading: loadingExercises } = useSelector(
+    (state: RootState) => state.exercises
   );
 
   useEffect(() => {
@@ -92,16 +94,6 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
   useEffect(() => {
     dispatch(fetchExercises());
   }, [dispatch]);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     setLoading(true);
-  //     await dispatch(fetchExercises());
-  //     setLoading(false);
-  //   };
-
-  //   fetchData();
-  // }, [dispatch]);
 
   const toast = useToast();
   const toastIdRef = useRef<ToastId | undefined>(undefined);
@@ -164,6 +156,10 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
 
   const isCheckboxDisabled = (exercise: Exercise) =>
     !isExerciseSelected(exercise) && selectedExercises.length >= 15;
+
+  if (loadingExercises) {
+    return <SpinnerComponent />;
+  }
 
   return (
     <form

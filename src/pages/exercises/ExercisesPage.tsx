@@ -16,9 +16,10 @@ import {
   InputGroup,
   Input,
   InputLeftElement,
+  Spinner,
 } from "@chakra-ui/react";
 import SingleExercise from "../../components/exercises/SingleExercise";
-import DeletionModal from "../../components/UI/DeletionModal";
+import SpinnerComponent from "../../components/UI/SpinnerComponent";
 
 const ExercisesPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -28,8 +29,12 @@ const ExercisesPage = () => {
   const [searchedExercises, setSearchedExercises] = useState<string>("");
   const [currentWorkoutExercisesNames, setCurrentWorkoutExercisesNames] =
     useState<string[]>([]);
-  const { exercises } = useSelector((state: RootState) => state.exercises);
-  const { workouts } = useSelector((state: RootState) => state.workoutSessions);
+  const { exercises, loading: loadingExercises } = useSelector(
+    (state: RootState) => state.exercises
+  );
+  const { workouts, loading: loadingWorkouts } = useSelector(
+    (state: RootState) => state.workoutSessions
+  );
 
   const workoutId = location.state?.workoutId || null;
 
@@ -117,6 +122,10 @@ const ExercisesPage = () => {
     const value = event.target.value;
     setSearchedExercises(value);
   };
+
+  if (loadingExercises || loadingWorkouts) {
+    return <SpinnerComponent />;
+  }
 
   return (
     <Container>

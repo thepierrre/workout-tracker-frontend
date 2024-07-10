@@ -10,7 +10,6 @@ const Container: React.FC<ContainerProps> = (props) => {
     <Flex
       align="center"
       w="100vw"
-      h="100%"
       color="white"
       direction="column"
       padding={2}

@@ -19,12 +19,14 @@ import {
   Box,
   Text,
   useDisclosure,
+  Spinner,
 } from "@chakra-ui/react";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { UseFormSetError } from "react-hook-form";
 
 import { Routine } from "../../interfaces/routine.interface";
+import SpinnerComponent from "../../components/UI/SpinnerComponent";
 
 const SingleRoutinePage = () => {
   const { routineId } = useParams();
@@ -33,14 +35,16 @@ const SingleRoutinePage = () => {
   const [serverError, setServerError] = useState<string | null>(null);
   const [routineToDelete, setRoutineToDelete] = useState<Routine | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const routines: Routine[] = useSelector(
-    (state: RootState) => state.routines.routines
+  const { routines, loading: loadingRoutines } = useSelector(
+    (state: RootState) => state.routines
   );
   const currentRoutine: Routine | undefined = routines.find(
     (routine) => routine.id === routineId
   );
 
-  const user = useSelector((state: RootState) => state.authenticatedUser.user);
+  const { user, loading: loadingUser } = useSelector(
+    (state: RootState) => state.authenticatedUser
+  );
 
   useEffect(() => {
     dispatch(fetchRoutines());
@@ -111,6 +115,10 @@ const SingleRoutinePage = () => {
   const handleGoBack = () => {
     navigate(-1);
   };
+
+  if (loadingRoutines || loadingUser) {
+    return <SpinnerComponent />;
+  }
 
   return (
     <Container>

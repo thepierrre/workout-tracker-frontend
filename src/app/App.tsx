@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "./store";
-import { Tabs, TabList, Tab, Flex, Spinner } from "@chakra-ui/react";
+import { Tabs, TabList, Tab, Flex, Text, Spinner } from "@chakra-ui/react";
 import { initializeUser } from "../features/auth/authenticatedUserSlice";
 import { useEffect, useMemo, useState } from "react";
 import { AppDispatch } from "./store";
@@ -62,10 +62,13 @@ const App = () => {
         bg="#1a1a1a"
         minH="100vh"
         paddingTop={3}
+        direction="column"
         align="center"
         justify="center"
+        gap={2}
       >
-        <Spinner size="xl" color="white" />
+        <Spinner color="white" />
+        <Text color="white">One moment...</Text>
       </Flex>
     );
   }

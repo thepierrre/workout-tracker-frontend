@@ -10,13 +10,15 @@ import RoutineForm from "../../components/forms/RoutineForm";
 import Container from "../../components/UI/Container";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { UseFormSetError } from "react-hook-form";
+import SpinnerComponent from "../../components/UI/SpinnerComponent";
 
 const NewRoutinePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const [serverError, setServerError] = useState<string | null>(null);
-  const user = useSelector((state: RootState) => state.authenticatedUser.user);
-  const exercisesState = useSelector((state: RootState) => state.exercises);
+  const { user, loading: loadingUser } = useSelector(
+    (state: RootState) => state.authenticatedUser
+  );
 
   if (!user) {
     return;
@@ -49,15 +51,9 @@ const NewRoutinePage = () => {
     navigate(-1);
   };
 
-  // if (exercisesState.loading) {
-  //   return (
-  //     <Container>
-  //       <Flex align="center" justify="center" h="100vh">
-  //         <Spinner size="xl" />
-  //       </Flex>
-  //     </Container>
-  //   );
-  // }
+  if (loadingUser) {
+    return <SpinnerComponent />;
+  }
 
   return (
     <Container>

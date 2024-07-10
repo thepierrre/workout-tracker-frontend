@@ -11,6 +11,7 @@ import Container from "../../components/UI/Container";
 import { UseFormSetError } from "react-hook-form";
 
 import { Flex, Heading, IconButton, Box, Spinner } from "@chakra-ui/react";
+import SpinnerComponent from "../../components/UI/SpinnerComponent";
 
 const NewExercisePage = () => {
   const navigate = useNavigate();
@@ -57,13 +58,7 @@ const NewExercisePage = () => {
   };
 
   if (categoriesState.loading) {
-    return (
-      <Container>
-        <Flex align="center" justify="center" h="100vh">
-          <Spinner size="xl" />
-        </Flex>
-      </Container>
-    );
+    return <SpinnerComponent />;
   }
 
   return (

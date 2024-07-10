@@ -16,8 +16,6 @@ import {
   useToast,
   ToastId,
   Box,
-  Card,
-  Button,
   CardBody,
 } from "@chakra-ui/react";
 import { AppDispatch } from "../../app/store";

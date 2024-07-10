@@ -8,19 +8,20 @@ import { RootState, AppDispatch } from "../../app/store";
 import { format } from "date-fns";
 import Container from "../../components/UI/Container";
 
-import { Text, useToast, ToastId, Box } from "@chakra-ui/react";
+import { Text, useToast, ToastId, Box, Flex, Spinner } from "@chakra-ui/react";
+import SpinnerComponent from "../../components/UI/SpinnerComponent";
 
 export const WorkoutsPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const toast = useToast();
   const toastIdRef = useRef<ToastId | undefined>(undefined);
-  const workouts = useSelector(
-    (state: RootState) => state.workoutSessions.workouts
+  const { workouts, loading: loadingWorkouts } = useSelector(
+    (state: RootState) => state.workoutSessions
   );
 
   useEffect(() => {
     dispatch(fetchWorkouts());
-  }, [dispatch, workouts]);
+  }, [dispatch]);
 
   useEffect(() => {
     return () => {
@@ -61,6 +62,10 @@ export const WorkoutsPage = () => {
   const handleWorkoutDeleted = () => {
     addToast();
   };
+
+  if (loadingWorkouts) {
+    return <SpinnerComponent />;
+  }
 
   return (
     <Container>

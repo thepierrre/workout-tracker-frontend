@@ -77,17 +77,8 @@ const SingleExercise: React.FC<Props> = ({
         }
       } else {
         handleOpenModal();
-        // setCurrentWorkoutExercisesNames((prevExercises) =>
-        //   prevExercises.filter((name) => name !== exerciseName)
-        // );
-        // if (exerciseInstance && exerciseInstance.id) {
-        //   let exInstanceId = exerciseInstance.id;
-        //   dispatch(removeExInstance(exInstanceId));
-        // }
       }
     }
-
-    // console.log(currentWorkoutExercisesNames);
   };
 
   const handleRemoveExInstance = (exerciseName: string) => {
