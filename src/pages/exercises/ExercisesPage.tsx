@@ -20,6 +20,7 @@ import {
 } from "@chakra-ui/react";
 import SingleExercise from "../../components/exercises/SingleExercise";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
+import { fetchWorkouts } from "../../features/workout/workoutSessionsSlice";
 
 const ExercisesPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -55,6 +56,7 @@ const ExercisesPage = () => {
 
   useEffect(() => {
     dispatch(fetchExercises());
+    dispatch(fetchWorkouts());
   }, [dispatch]);
 
   useEffect(() => {
