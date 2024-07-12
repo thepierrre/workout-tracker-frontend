@@ -1,13 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Workout } from "../../interfaces/workout.interface";
-import { useDispatch } from "react-redux";
-import { removeWorkout } from "../../features/workout/workoutSessionsSlice";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import WorkoutExerciseInstance from "./WorkoutExerciseInstance";
 import DeletionModal from "../../components/UI/DeletionModal";
-
 import {
   Flex,
   Text,
@@ -18,7 +15,6 @@ import {
   Box,
   CardBody,
 } from "@chakra-ui/react";
-import { AppDispatch } from "../../app/store";
 import CustomCard from "../../components/UI/CustomCard";
 import { ExerciseInstance } from "interfaces/exerciseInstance.interface";
 
@@ -119,7 +115,7 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
           fontWeight="bold"
           onClick={() => handleAddExercisesButton()}
         >
-          Edit exercises
+          Manage exercises
         </Text>
       </Flex>
 

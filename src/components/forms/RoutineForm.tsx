@@ -22,8 +22,6 @@ import {
   useToast,
   Box,
   ToastId,
-  Container,
-  Spinner,
 } from "@chakra-ui/react";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
 

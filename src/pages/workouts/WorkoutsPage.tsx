@@ -63,7 +63,7 @@ export const WorkoutsPage = () => {
       setLocalWorkouts((prevWorkouts) =>
         prevWorkouts.filter((workout) => workout.id !== id)
       );
-      //addToast();
+      addToast();
     } catch (error) {
       console.error("Failed to delete workout:", error);
     }

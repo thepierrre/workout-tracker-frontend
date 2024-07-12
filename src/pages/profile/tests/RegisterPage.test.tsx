@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { ChakraProvider } from "@chakra-ui/react";
 import { BrowserRouter } from "react-router-dom";
-import RegisterPage from "./RegisterPage";
+import RegisterPage from "../RegisterPage";
 import "@testing-library/jest-dom";
 
 const renderWithProviders = (ui: React.ReactElement) => {

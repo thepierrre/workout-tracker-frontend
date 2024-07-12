@@ -1,24 +1,24 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import RoutinesPage from "./RoutinesPage";
+import RoutinesPage from "../RoutinesPage";
 import { Provider } from "react-redux";
 import { ChakraProvider } from "@chakra-ui/react";
 import { BrowserRouter } from "react-router-dom";
 import "@testing-library/jest-dom";
 import { configureStore } from "@reduxjs/toolkit";
-import workoutSessionsReducer from "../../features/workout/workoutSessionsSlice";
-import chosenDayReducer from "../../features/workout/dayInCalendarSlice";
-import activeExerciseInstanceReducer from "../../features/workout/activeExerciseInstanceSlice";
-import authenticatedUserReducer from "../../features/auth/authenticatedUserSlice";
-import exercisesReducer from "../../features/exercises/exercisesSlice";
-import routinesReducer from "../../features/routines/routinesSlice";
-import categoriesReducer from "../../features/exercises/categoriesSlice";
+import workoutSessionsReducer from "../../../features/workout/workoutSessionsSlice";
+import chosenDayReducer from "../../../features/workout/dayInCalendarSlice";
+import activeExerciseInstanceReducer from "../../../features/workout/activeExerciseInstanceSlice";
+import authenticatedUserReducer from "../../../features/auth/authenticatedUserSlice";
+import exercisesReducer from "../../../features/exercises/exercisesSlice";
+import routinesReducer from "../../../features/routines/routinesSlice";
+import categoriesReducer from "../../../features/exercises/categoriesSlice";
 import {
   mockUser,
   mockExerciseTypes,
   mockWorkouts,
   mockCategories,
   mockRoutines,
-} from "../../util/testData";
+} from "../../../util/testData";
 
 const store = configureStore({
   reducer: {

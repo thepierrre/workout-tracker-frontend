@@ -20,8 +20,8 @@ interface Props {
   setFormError?: (
     field: keyof FormValues,
     error: { type: string; message: string }
-  ) => void; // Adjusted type for setting form errors
-  errors?: any; // Accept errors prop
+  ) => void;
+  errors?: any;
 }
 
 const AuthForm: React.FC<Props> = ({
@@ -32,7 +32,7 @@ const AuthForm: React.FC<Props> = ({
   onSubmit,
   isRegistration,
   setFormError,
-  errors, // Receive errors prop
+  errors,
 }) => {
   const resolver: Resolver<FormValues> = async (values) => {
     const errors = {
