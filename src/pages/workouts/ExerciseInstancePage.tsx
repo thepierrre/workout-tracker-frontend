@@ -401,6 +401,11 @@ const WorkoutExerciseInstancePage = () => {
                         {...register("repsValue")}
                         w={16}
                         value={reps}
+                        _focus={{
+                          boxShadow: "none",
+                          borderWidth: "2px",
+                          borderColor: errors.repsValue ? "#E53E3E" : "#3182CE",
+                        }}
                         textAlign="center"
                         onChange={(event) => handleRepsInputChange(event)}
                       />
@@ -457,6 +462,13 @@ const WorkoutExerciseInstancePage = () => {
                         w={16}
                         value={weight}
                         textAlign="center"
+                        _focus={{
+                          boxShadow: "none",
+                          borderWidth: "2px",
+                          borderColor: errors.weightValue
+                            ? "#E53E3E"
+                            : "#3182CE",
+                        }}
                         onChange={(event) => handleWeightInputChange(event)}
                       />
                     </FormControl>
