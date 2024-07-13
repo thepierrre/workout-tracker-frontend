@@ -141,7 +141,7 @@ const RoutinesPage = () => {
             </Link>
           ))
         ) : (
-          <Text mt={5}>No routines yet. Add your first one!</Text>
+          <Text mt={5}>No routines.</Text>
         )}
       </Flex>
     </Container>

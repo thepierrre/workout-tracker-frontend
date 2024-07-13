@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { RootState, AppDispatch } from "../../app/store";
 import { Workout } from "../../interfaces/workout.interface";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
@@ -17,6 +18,14 @@ import {
 } from "@chakra-ui/react";
 import CustomCard from "../../components/UI/CustomCard";
 import { ExerciseInstance } from "interfaces/exerciseInstance.interface";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserSettings } from "../../features/settings/userSettingsSlice";
+import { UserSettings } from "../../interfaces/userSettings.interface";
+
+const defaultUserSettings: UserSettings = {
+  changeThreshold: 1,
+  weightUnit: "kgs",
+};
 
 interface WorkoutProps {
   workout: Workout;
@@ -28,6 +37,7 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
   onRemoveWorkout,
 }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
   const toast = useToast();
   const toastIdRef = useRef<ToastId | undefined>(undefined);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -35,6 +45,14 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
   const [localExerciseInstances, setLocalExerciseInstances] = useState<
     ExerciseInstance[]
   >(wrk.exerciseInstances);
+
+  const { userSettings, loading: loadingUserSettings } = useSelector(
+    (state: RootState) => state.userSettings
+  );
+
+  useEffect(() => {
+    dispatch(fetchUserSettings());
+  }, [dispatch]);
 
   useEffect(() => {
     setLocalExerciseInstances(wrk.exerciseInstances);
@@ -134,6 +152,7 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
                 to={`/workouts/${wrk.id}/exercise-instances/${exerciseInstance.id}`}
               >
                 <WorkoutExerciseInstance
+                  userSettings={userSettings || defaultUserSettings}
                   key={index}
                   exerciseInstance={exerciseInstance}
                   onExInstanceDeleted={handleExInstanceDeleted}

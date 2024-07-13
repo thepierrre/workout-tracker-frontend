@@ -15,7 +15,7 @@ import {
 import axios from "axios";
 import { useForm, SubmitHandler, Resolver } from "react-hook-form";
 import axiosInstance from "../../util/axiosInstance";
-import Welcome from "./Welcome";
+import Welcome from "../../components/profile/Welcome";
 
 type FormValues = {
   username: string;

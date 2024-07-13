@@ -30,10 +30,15 @@ import ExerciseWorkingSet from "./ExerciseWorkingSet";
 import { UserSettings } from "interfaces/userSettings.interface";
 import {
   fetchUserSettings,
-  updateChangeThreshold,
+  updateUserSettings,
 } from "../../features/settings/userSettingsSlice";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
 import { values } from "underscore";
+
+const defaultUserSettings: UserSettings = {
+  changeThreshold: 1,
+  weightUnit: "kgs",
+};
 
 interface FormValues {
   repsValue: string | null;
@@ -82,6 +87,7 @@ const WorkoutExerciseInstancePage = () => {
     formState: { errors },
     setError,
     setValue,
+    getValues,
   } = useForm<FormValues>({ resolver });
 
   const navigate = useNavigate();
@@ -123,8 +129,15 @@ const WorkoutExerciseInstancePage = () => {
     }
   }, [exerciseInstance]);
 
-  const handleRepsAndWeight = (type: string, action: string) => {
+  const handleRepsAndWeight = (
+    type: string,
+    action: string,
+    values?: FormValues
+  ) => {
     if (threshold) {
+      if (type === "reps" && !values?.repsValue) {
+        return;
+      }
       if (type === "reps") {
         const newValue =
           action === "increase"
@@ -204,9 +217,9 @@ const WorkoutExerciseInstancePage = () => {
 
     if (repsValue && weightValue) {
       if (activeworkingSet) {
-        await handleUpdate(repsValue, weightValue);
+        await handleUpdate(repsValue, parseFloat(weightValue).toFixed(2));
       } else {
-        await handleAdd(repsValue, weightValue);
+        await handleAdd(repsValue, parseFloat(weightValue).toFixed(2));
       }
     }
   };
@@ -237,11 +250,14 @@ const WorkoutExerciseInstancePage = () => {
   };
 
   const handleThresholdButtonClick = async (value: number) => {
-    const userSettingsToUpdate: Omit<UserSettings, "id" | "username"> = {
+    const userSettingsToUpdate: Omit<
+      UserSettings,
+      "id" | "user" | "weightUnit"
+    > = {
       changeThreshold: value,
     };
     try {
-      await dispatch(updateChangeThreshold(userSettingsToUpdate));
+      await dispatch(updateUserSettings(userSettingsToUpdate));
     } catch (error) {
       console.error(error);
     }
@@ -265,13 +281,26 @@ const WorkoutExerciseInstancePage = () => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const value = event.target.value;
+
     if (value === "") {
       setWeight("");
     } else {
-      const parsedValue = parseFloat(value);
-      if (!isNaN(parsedValue)) {
-        setWeight(parsedValue.toString());
+      const regex = /^\d*\.?\d{0,2}$/;
+      if (regex.test(value)) {
+        const parsedValue = parseFloat(value);
+        if (!isNaN(parsedValue)) {
+          setWeight(parsedValue.toString());
+        }
       }
+    }
+  };
+
+  const handleWeightUnitText = () => {
+    if (userSettings?.weightUnit === "kgs") {
+      return "kgs";
+    }
+    if (userSettings?.weightUnit === "lbs") {
+      return "lbs";
     }
   };
 
@@ -380,7 +409,9 @@ const WorkoutExerciseInstancePage = () => {
                       w={10}
                       bg="#404040"
                       color="white"
-                      onClick={() => handleRepsAndWeight("reps", "decrease")}
+                      onClick={() =>
+                        handleRepsAndWeight("reps", "decrease", getValues())
+                      }
                       _focus={{ bg: "#404040" }}
                       isDisabled={
                         threshold !== undefined &&
@@ -400,7 +431,9 @@ const WorkoutExerciseInstancePage = () => {
                       <Input
                         {...register("repsValue")}
                         w={16}
+                        p={1}
                         value={reps}
+                        padding={0}
                         _focus={{
                           boxShadow: "none",
                           borderWidth: "2px",
@@ -416,7 +449,9 @@ const WorkoutExerciseInstancePage = () => {
                       w={10}
                       bg="#404040"
                       color="white"
-                      onClick={() => handleRepsAndWeight("reps", "increase")}
+                      onClick={() =>
+                        handleRepsAndWeight("reps", "increase", getValues())
+                      }
                       _focus={{ bg: "#404040" }}
                       css={{
                         ":active": {
@@ -432,7 +467,7 @@ const WorkoutExerciseInstancePage = () => {
 
                 <Flex direction="column" gap={1}>
                   <Text textAlign="center" fontSize="sm">
-                    KGS
+                    {handleWeightUnitText()?.toUpperCase()}
                   </Text>
                   <Flex justify="center" gap={2} align="center">
                     <Button
@@ -460,6 +495,8 @@ const WorkoutExerciseInstancePage = () => {
                       <Input
                         {...register("weightValue")}
                         w={16}
+                        p={1}
+                        type="number"
                         value={weight}
                         textAlign="center"
                         _focus={{
@@ -540,6 +577,7 @@ const WorkoutExerciseInstancePage = () => {
                   key={set.id}
                   activeWorkingSet={activeworkingSet}
                   handleActiveExInstance={handleActiveExInstance}
+                  userSettings={userSettings || defaultUserSettings}
                 />
               ))
             ) : (

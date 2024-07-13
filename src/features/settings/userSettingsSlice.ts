@@ -33,9 +33,9 @@ export const fetchUserSettings = createAsyncThunk<
   }
 });
 
-export const updateChangeThreshold = createAsyncThunk<
+export const updateUserSettings = createAsyncThunk<
   UserSettings,
-  Omit<UserSettings, "id" | "username">,
+  Omit<UserSettings, "id" | "user">,
   { rejectValue: string }
 >("user/updateChangeThreshold", async (userSettings, thunkAPI) => {
   try {
@@ -82,14 +82,14 @@ const userSettingsSlice = createSlice({
         }
       )
       .addCase(
-        updateChangeThreshold.fulfilled,
+        updateUserSettings.fulfilled,
         (state, action: PayloadAction<UserSettings>) => {
           state.loading = false;
           state.userSettings = action.payload;
         }
       )
       .addCase(
-        updateChangeThreshold.rejected,
+        updateUserSettings.rejected,
         (state, action: PayloadAction<string | undefined>) => {
           state.loading = false;
           state.error =

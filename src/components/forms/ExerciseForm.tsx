@@ -226,7 +226,7 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
           </Wrap>
         ) : (
           <Text textAlign="center" mt={4} mb={4}>
-            There aren't any categories to choose.
+            No categories.
           </Text>
         )}
       </Flex>

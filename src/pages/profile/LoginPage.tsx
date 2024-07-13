@@ -15,7 +15,7 @@ import { useForm, SubmitHandler, Resolver } from "react-hook-form";
 import { setUser } from "../../features/auth/authenticatedUserSlice";
 import axiosInstance from "../../util/axiosInstance";
 import { useDispatch } from "react-redux";
-import Welcome from "./Welcome";
+import Welcome from "../../components/profile/Welcome";
 
 type FormValues = {
   username: string;

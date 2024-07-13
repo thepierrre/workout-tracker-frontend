@@ -5,6 +5,7 @@ import { RootState, AppDispatch } from "../../app/store";
 import { fetchWorkouts } from "../../features/workout/workoutSessionsSlice";
 import { fetchExercises } from "../../features/exercises/exercisesSlice";
 import { fetchRoutines } from "../../features/routines/routinesSlice";
+import { fetchUserSettings } from "../../features/settings/userSettingsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { clearUser } from "../../features/auth/authenticatedUserSlice";
@@ -15,6 +16,7 @@ import Container from "../../components/UI/Container";
 import Statistics from "../../components/profile/Statistics";
 import WorkoutHistory from "../../components/profile/WorkoutHistory";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
+import Weight from "../../components/profile/Weight";
 
 const ProfilePage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -28,6 +30,9 @@ const ProfilePage = () => {
   );
   const { exercises, loading: loadingExercises } = useSelector(
     (state: RootState) => state.exercises
+  );
+  const { userSettings, loading: loadingUserSettings } = useSelector(
+    (state: RootState) => state.userSettings
   );
 
   const [chosenDay, setChosenDay] = useState<number | undefined>(undefined);
@@ -45,6 +50,7 @@ const ProfilePage = () => {
     dispatch(fetchWorkouts());
     dispatch(fetchRoutines());
     dispatch(fetchExercises());
+    dispatch(fetchUserSettings());
   }, [dispatch]);
 
   const filteredWorkouts = workouts.filter((workout: Workout) => {
@@ -208,6 +214,7 @@ const ProfilePage = () => {
           exercises={exercises}
           workouts={workouts}
         />
+        {userSettings && <Weight userSettings={userSettings} />}
         <Button
           w="95vw"
           bg="lightblue"

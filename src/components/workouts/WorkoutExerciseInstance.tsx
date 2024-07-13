@@ -14,14 +14,17 @@ import {
 } from "@chakra-ui/react";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { AppDispatch } from "../../app/store";
+import { UserSettings } from "../../interfaces/userSettings.interface";
 
 interface Props {
   exerciseInstance: ExerciseInstance;
+  userSettings: UserSettings;
   onExInstanceDeleted: (id: string) => void;
 }
 
 const WorkoutExerciseInstance: React.FC<Props> = ({
   exerciseInstance,
+  userSettings,
   onExInstanceDeleted,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
@@ -53,6 +56,15 @@ const WorkoutExerciseInstance: React.FC<Props> = ({
     }
   };
 
+  const handleWeightUnitText = () => {
+    if (userSettings.weightUnit === "kgs") {
+      return "kgs";
+    }
+    if (userSettings.weightUnit === "lbs") {
+      return "lbs";
+    }
+  };
+
   return (
     <>
       <CustomCard>
@@ -72,7 +84,7 @@ const WorkoutExerciseInstance: React.FC<Props> = ({
                   </Flex>
                   <Flex gap={3} flex={0.2}>
                     <Text fontWeight="bold">{workingSet.weight}</Text>
-                    <Text>kgs</Text>
+                    <Text>{handleWeightUnitText()}</Text>
                   </Flex>
                 </Flex>
               ))
