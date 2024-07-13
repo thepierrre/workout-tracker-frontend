@@ -1,5 +1,5 @@
 export interface WorkingSet {
-  id: number;
+  id: string;
   reps: number;
   weight: number;
 }

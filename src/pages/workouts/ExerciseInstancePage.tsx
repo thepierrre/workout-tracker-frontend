@@ -537,7 +537,7 @@ const WorkoutExerciseInstancePage = () => {
                 <ExerciseWorkingSet
                   workingSet={set}
                   index={index}
-                  key={index}
+                  key={set.id}
                   activeWorkingSet={activeworkingSet}
                   handleActiveExInstance={handleActiveExInstance}
                 />

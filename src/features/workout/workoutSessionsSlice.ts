@@ -25,7 +25,7 @@ interface ExerciseInstance {
 }
 
 interface workingSet {
-  id: number;
+  id: string;
   reps: number;
   weight: number;
 }
@@ -37,13 +37,13 @@ interface AddworkingSetArgs {
 
 interface updateworkingSetArgs {
   exerciseInstanceId: string;
-  workingSetId: number;
+  workingSetId: string;
   setToUpdate: Omit<workingSet, "id">;
 }
 
 interface DeleteworkingSetArgs {
   exerciseInstanceId: string;
-  workingSetId: number;
+  workingSetId: string;
 }
 
 interface AddExerciseInstanceArgs {
