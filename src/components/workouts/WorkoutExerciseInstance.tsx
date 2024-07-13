@@ -13,7 +13,10 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import { handleWeightUnitText } from "../../util/weightUnitConverting";
+import {
+  convertKgsToLbs,
+  handleWeightUnitText,
+} from "../../util/weightUnitConverting";
 import { AppDispatch } from "../../app/store";
 import { UserSettings } from "../../interfaces/userSettings.interface";
 
@@ -80,7 +83,11 @@ const WorkoutExerciseInstance: React.FC<Props> = ({
                     <Text>reps</Text>
                   </Flex>
                   <Flex gap={3} flex={0.2}>
-                    <Text fontWeight="bold">{workingSet.weight}</Text>
+                    <Text fontWeight="bold">
+                      {userSettings?.weightUnit === "kgs"
+                        ? workingSet.weight
+                        : convertKgsToLbs(workingSet.weight)}
+                    </Text>
                     <Text>
                       {handleWeightUnitText(
                         userSettings.weightUnit ||

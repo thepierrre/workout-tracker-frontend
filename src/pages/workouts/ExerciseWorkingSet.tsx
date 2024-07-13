@@ -1,6 +1,10 @@
 import { Card, CardBody, Flex, Text } from "@chakra-ui/react";
 import { UserSettings } from "interfaces/userSettings.interface";
 import { WorkingSet } from "interfaces/workingSet.interface";
+import {
+  convertKgsToLbs,
+  handleWeightUnitText,
+} from "../../util/weightUnitConverting";
 
 interface ExerciseWorkingSetProps {
   userSettings: UserSettings;
@@ -17,31 +21,6 @@ const ExerciseWorkingSet: React.FC<ExerciseWorkingSetProps> = ({
   index,
   handleActiveExInstance,
 }) => {
-  const handleWeightUnitText = () => {
-    if (userSettings.weightUnit === "kgs") {
-      return "kgs";
-    }
-    if (userSettings.weightUnit === "lbs") {
-      return "lbs";
-    }
-  };
-
-  const convertKgsToLbs = (kgs: number) => {
-    const lbs = kgs * 2.20462;
-    const integerPart = Math.floor(lbs);
-    const decimalPart = lbs - integerPart;
-
-    if (decimalPart < 0.5) {
-      return integerPart;
-    }
-    if (decimalPart === 0.5) {
-      return integerPart + 0.5;
-    }
-    if (decimalPart > 0.5) {
-      return integerPart + 1;
-    }
-  };
-
   return (
     <Card
       bg={
@@ -69,8 +48,12 @@ const ExerciseWorkingSet: React.FC<ExerciseWorkingSetProps> = ({
             <Text>reps</Text>
           </Flex>
           <Flex gap={3} flex={0.2}>
-            <Text fontWeight="bold">{workingSet.weight}</Text>
-            <Text>{handleWeightUnitText()}</Text>
+            <Text fontWeight="bold">
+              {userSettings?.weightUnit === "kgs"
+                ? workingSet.weight
+                : convertKgsToLbs(workingSet.weight)}
+            </Text>
+            <Text>{handleWeightUnitText(userSettings.weightUnit)}</Text>
           </Flex>
         </Flex>
       </CardBody>
