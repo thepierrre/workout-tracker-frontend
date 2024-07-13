@@ -1,5 +1,5 @@
 import axios from "axios";
-import axiosInstance from "../../util/axiosInstance";
+import axiosInstance from "../../util/axiosInstance.ts";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { User } from "../../interfaces/user.interface";

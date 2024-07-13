@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import axiosInstance from "../../util/axiosInstance";
+import axiosInstance from "../../util/axiosInstance.ts";
 import { RootState, AppDispatch } from "../../app/store";
 import { fetchWorkouts } from "../../features/workout/workoutSessionsSlice";
 import { fetchExercises } from "../../features/exercises/exercisesSlice";

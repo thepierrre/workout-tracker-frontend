@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useForm, SubmitHandler, Resolver } from "react-hook-form";
-import axiosInstance from "../../util/axiosInstance";
+import axiosInstance from "../../util/axiosInstance.ts";
 import Welcome from "../../components/profile/Welcome";
 
 type FormValues = {

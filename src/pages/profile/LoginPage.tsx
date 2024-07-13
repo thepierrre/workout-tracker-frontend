@@ -13,7 +13,7 @@ import {
 import axios from "axios";
 import { useForm, SubmitHandler, Resolver } from "react-hook-form";
 import { setUser } from "../../features/auth/authenticatedUserSlice";
-import axiosInstance from "../../util/axiosInstance";
+import axiosInstance from "../../util/axiosInstance.ts";
 import { useDispatch } from "react-redux";
 import Welcome from "../../components/profile/Welcome";
 

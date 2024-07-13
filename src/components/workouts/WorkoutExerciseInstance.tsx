@@ -13,8 +13,14 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import { handleWeightUnitText } from "../../util/weightUnitConverting";
 import { AppDispatch } from "../../app/store";
 import { UserSettings } from "../../interfaces/userSettings.interface";
+
+const defaultUserSettings: UserSettings = {
+  changeThreshold: 1,
+  weightUnit: "kgs",
+};
 
 interface Props {
   exerciseInstance: ExerciseInstance;
@@ -56,15 +62,6 @@ const WorkoutExerciseInstance: React.FC<Props> = ({
     }
   };
 
-  const handleWeightUnitText = () => {
-    if (userSettings.weightUnit === "kgs") {
-      return "kgs";
-    }
-    if (userSettings.weightUnit === "lbs") {
-      return "lbs";
-    }
-  };
-
   return (
     <>
       <CustomCard>
@@ -84,7 +81,12 @@ const WorkoutExerciseInstance: React.FC<Props> = ({
                   </Flex>
                   <Flex gap={3} flex={0.2}>
                     <Text fontWeight="bold">{workingSet.weight}</Text>
-                    <Text>{handleWeightUnitText()}</Text>
+                    <Text>
+                      {handleWeightUnitText(
+                        userSettings.weightUnit ||
+                          defaultUserSettings.weightUnit
+                      )}
+                    </Text>
                   </Flex>
                 </Flex>
               ))
