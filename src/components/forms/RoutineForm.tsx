@@ -6,8 +6,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../../app/store";
 import { fetchExercises } from "../../features/exercises/exercisesSlice";
 import { SearchIcon } from "@chakra-ui/icons";
+import EditIcon from "@mui/icons-material/Edit";
 import WideButton from "../UI/WideButton";
 import { UseFormSetError } from "react-hook-form";
+import { List, arrayMove } from "react-movable";
 import {
   Flex,
   FormControl,
@@ -22,8 +24,12 @@ import {
   useToast,
   Box,
   ToastId,
+  Heading,
+  Card,
+  Switch,
 } from "@chakra-ui/react";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
+import CustomCard from "../../components/UI/CustomCard";
 
 interface FormValues {
   name: string;
@@ -71,6 +77,8 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
   } = useForm<FormValues>({ resolver });
 
   const dispatch = useDispatch<AppDispatch>();
+  const [exercisesReordering, setExercisesReordering] =
+    useState<boolean>(false);
   const [searchedExercises, setSearchedExercises] = useState<string>("");
   const [selectedExercises, setSelectedExercises] = useState<Exercise[]>(
     initialSelectedExercises
@@ -138,6 +146,11 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
     });
   };
 
+  const remainingExercises = exercises.filter(
+    (ex) =>
+      !initialSelectedExercises.some((selectedEx) => selectedEx.id == ex.id)
+  );
+
   const handleExerciseFiltering = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -145,7 +158,7 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
     setSearchedExercises(value);
   };
 
-  const filteredExercises = exercises.filter((exercise) =>
+  const filteredExercises = remainingExercises.filter((exercise) =>
     exercise.name.toLowerCase().startsWith(searchedExercises.toLowerCase())
   );
 
@@ -187,31 +200,19 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
       </FormControl>
 
       <Flex direction="column" w="100%" mt={5}>
-        <FormLabel textColor="white" fontSize="sm">
-          Filter exercises
-        </FormLabel>
-        <InputGroup>
-          <Input
-            w="95vw"
-            bg="#404040"
-            color="white"
-            borderColor="transparent"
-            _focusVisible={{
-              borderWidth: "1px",
-              borderColor: "lightblue",
-            }}
-            _placeholder={{ color: "#B3B3B3" }}
-            placeholder="Search"
-            onChange={(event) => handleExerciseFiltering(event)}
+        <FormControl display="flex" alignItems="center" justifyContent="center">
+          <FormLabel htmlFor="exercise-order-switch" mb={0}>
+            Changing order?
+          </FormLabel>
+          <Switch
+            id="exercise-order-switch"
+            onChange={() => setExercisesReordering(!exercisesReordering)}
           />
-          <InputLeftElement>
-            <SearchIcon />
-          </InputLeftElement>
-        </InputGroup>
+        </FormControl>
 
-        {filteredExercises.length > 0 ? (
+        {initialSelectedExercises.length > 0 && !exercisesReordering && (
           <Wrap w="90vw" mt={4} mb={4} ml={2} mr={2} direction="column">
-            {filteredExercises.map((exercise) => (
+            {initialSelectedExercises.map((exercise) => (
               <Flex
                 key={exercise.id}
                 gap={5}
@@ -231,22 +232,106 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
               </Flex>
             ))}
           </Wrap>
-        ) : (
+        )}
+
+        {initialSelectedExercises.length > 0 && exercisesReordering && (
+          <List
+            values={selectedExercises}
+            onChange={({ oldIndex, newIndex }) =>
+              setSelectedExercises(
+                arrayMove(selectedExercises, oldIndex, newIndex)
+              )
+            }
+            renderList={({ children, props }) => (
+              <ul
+                {...props}
+                style={{
+                  listStyleType: "none",
+                  padding: 0,
+                  marginTop: 8,
+                  width: "95vw",
+                }}
+              >
+                {children}
+              </ul>
+            )}
+            renderItem={({ value, props }) => (
+              <li {...props} key={value.id}>
+                <Card mt={2} mb={2} bg="#404040" w="95vw">
+                  <Flex
+                    gap={5}
+                    p={3}
+                    onClick={() => handleToast(isExerciseSelected(value))}
+                  >
+                    <Text
+                      fontWeight={isExerciseSelected(value) ? "bold" : ""}
+                      color="white"
+                    >
+                      {value.name.charAt(0).toLocaleUpperCase() +
+                        value.name.slice(1)}
+                    </Text>
+                  </Flex>
+                </Card>
+              </li>
+            )}
+          />
+        )}
+
+        {initialSelectedExercises.length === 0 && (
           <Flex direction="column">
             <Text textAlign="center" mt={4}>
-              You don't have any exercises.
+              This routine has no exercises.
             </Text>
-            <Link to="/exercises">
-              <Text
-                textAlign="center"
-                mb={4}
-                color="lightblue"
-                fontWeight="bold"
-              >
-                Create some now!
-              </Text>
-            </Link>
           </Flex>
+        )}
+
+        {!exercisesReordering && (
+          <>
+            <Flex direction="column" w="100%" mt={3}>
+              <FormLabel textColor="white" fontSize="sm">
+                Filter exercises to add
+              </FormLabel>
+              <InputGroup>
+                <Input
+                  w="95vw"
+                  bg="#404040"
+                  color="white"
+                  borderColor="transparent"
+                  _focusVisible={{
+                    borderWidth: "1px",
+                    borderColor: "lightblue",
+                  }}
+                  _placeholder={{ color: "#B3B3B3" }}
+                  placeholder="Search"
+                  onChange={(event) => handleExerciseFiltering(event)}
+                />
+                <InputLeftElement>
+                  <SearchIcon />
+                </InputLeftElement>
+              </InputGroup>
+            </Flex>
+            <Wrap w="90vw" mt={4} mb={4} ml={2} mr={2} direction="column">
+              {filteredExercises.map((exercise) => (
+                <Flex
+                  key={exercise.id}
+                  gap={5}
+                  w="48%"
+                  onClick={() => handleToast(isExerciseSelected(exercise))}
+                >
+                  <Checkbox
+                    isChecked={isExerciseSelected(exercise)}
+                    isDisabled={isCheckboxDisabled(exercise)}
+                    onChange={() => handleCheck(exercise)}
+                    data-testid="not selected checkbox"
+                    fontWeight={isExerciseSelected(exercise) ? "bold" : ""}
+                  >
+                    {exercise.name.charAt(0).toLocaleUpperCase() +
+                      exercise.name.slice(1)}
+                  </Checkbox>
+                </Flex>
+              ))}
+            </Wrap>
+          </>
         )}
       </Flex>
 
