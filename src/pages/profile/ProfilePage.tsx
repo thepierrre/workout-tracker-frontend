@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { clearUser } from "../../features/auth/authenticatedUserSlice";
 import { Workout } from "../../interfaces/workout.interface";
-import { Button, Heading, Flex, Spinner } from "@chakra-ui/react";
+import { Button, Heading } from "@chakra-ui/react";
 import { format, getDate, getYear } from "date-fns";
 import Container from "../../components/UI/Container";
 import Statistics from "../../components/profile/Statistics";
@@ -189,7 +189,12 @@ const ProfilePage = () => {
     handleFilteredWorkouts();
   };
 
-  if (loadingWorkouts || loadingRoutines || loadingExercises) {
+  if (
+    loadingWorkouts ||
+    loadingRoutines ||
+    loadingExercises ||
+    loadingUserSettings
+  ) {
     return <SpinnerComponent />;
   }
 

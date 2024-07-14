@@ -1,5 +1,5 @@
 import { Button, ButtonProps } from "@chakra-ui/react";
-import { forwardRef } from "react"; // Import forwardRef
+import { forwardRef } from "react";
 
 interface Props extends ButtonProps {
   children: string;

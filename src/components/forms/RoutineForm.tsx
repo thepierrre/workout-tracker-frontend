@@ -1,15 +1,12 @@
 import { useEffect, useState, useRef } from "react";
 import { useForm, Resolver } from "react-hook-form";
-import { Link } from "react-router-dom";
 import { Exercise } from "../../interfaces/exercise.interface";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../../app/store";
 import { fetchExercises } from "../../features/exercises/exercisesSlice";
 import { SearchIcon } from "@chakra-ui/icons";
-import EditIcon from "@mui/icons-material/Edit";
 import WideButton from "../UI/WideButton";
 import { UseFormSetError } from "react-hook-form";
-import { List, arrayMove } from "react-movable";
 import {
   Flex,
   FormControl,
@@ -24,12 +21,8 @@ import {
   useToast,
   Box,
   ToastId,
-  Heading,
-  Card,
-  Switch,
 } from "@chakra-ui/react";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
-import CustomCard from "../../components/UI/CustomCard";
 
 interface FormValues {
   name: string;

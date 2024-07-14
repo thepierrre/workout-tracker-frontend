@@ -10,7 +10,7 @@ import ExerciseForm from "../../components/forms/ExerciseForm";
 import Container from "../../components/UI/Container";
 import { UseFormSetError } from "react-hook-form";
 
-import { Flex, Heading, IconButton, Box, Spinner } from "@chakra-ui/react";
+import { Flex, Heading, IconButton, Box } from "@chakra-ui/react";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
 
 const NewExercisePage = () => {

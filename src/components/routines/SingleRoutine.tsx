@@ -38,9 +38,3 @@ const SingleRoutine: React.FC<Props> = ({ routine }) => {
 };
 
 export default SingleRoutine;
-
-{
-  /* <Fragment key={exercise?.id}>
-                {index > 0 && " | "} {exercise?.name}
-              </Fragment> */
-}

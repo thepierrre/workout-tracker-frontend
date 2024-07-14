@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import _ from "underscore";
 import { fetchRoutines } from "../../features/routines/routinesSlice";
@@ -19,7 +19,6 @@ import {
   Box,
   Text,
   useDisclosure,
-  Spinner,
 } from "@chakra-ui/react";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";

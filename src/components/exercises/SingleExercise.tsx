@@ -8,14 +8,12 @@ import {
   addExInstance,
   removeExInstance,
 } from "../../features/workout/workoutSessionsSlice";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import DeletionModal from "../../components/UI/DeletionModal";
 
 interface Props {
   workoutId: string | null;
   currentWorkoutExercisesNames: string[];
   exercise: Exercise;
-  // exercisesToAddToWorkout: Exercise[];
   setCurrentWorkoutExercisesNames: React.Dispatch<
     React.SetStateAction<string[]>
   >;
@@ -25,7 +23,6 @@ const SingleExercise: React.FC<Props> = ({
   workoutId,
   currentWorkoutExercisesNames,
   exercise,
-  // exercisesToAddToWorkout,
   setCurrentWorkoutExercisesNames,
 }) => {
   const location = useLocation();
@@ -33,15 +30,6 @@ const SingleExercise: React.FC<Props> = ({
   const dispatch = useDispatch<AppDispatch>();
   const { workouts } = useSelector((state: RootState) => state.workoutSessions);
   const { exercises } = useSelector((state: RootState) => state.exercises);
-
-  // const currentWorkout = workouts.find((wrk) => wrk.id === workoutId);
-  // let currentWorkoutExercisesTypesNames = [];
-
-  // if (currentWorkout) {
-  //   for (const ex of currentWorkout.exerciseInstances) {
-  //     console.log(ex.exerciseTypeName);
-  //   }
-  // }
 
   const handleOpenModal = () => {
     onOpen();

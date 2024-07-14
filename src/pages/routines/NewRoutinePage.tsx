@@ -5,7 +5,7 @@ import { RootState, AppDispatch } from "../../app/store";
 import { Routine } from "../../interfaces/routine.interface";
 import { addRoutine } from "../../features/routines/routinesSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { Flex, IconButton, Heading, Box, Spinner } from "@chakra-ui/react";
+import { Flex, IconButton, Heading, Box } from "@chakra-ui/react";
 import RoutineForm from "../../components/forms/RoutineForm";
 import Container from "../../components/UI/Container";
 import { ChevronLeftIcon } from "@chakra-ui/icons";

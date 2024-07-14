@@ -6,7 +6,6 @@ import { fetchRoutines } from "../../features/routines/routinesSlice";
 import SingleRoutine from "../../components/routines/SingleRoutine";
 import Container from "../../components/UI/Container";
 import { SearchIcon } from "@chakra-ui/icons";
-import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { Link, useLocation } from "react-router-dom";
 import {
   Flex,
@@ -17,8 +16,6 @@ import {
   InputGroup,
   Input,
   InputLeftElement,
-  IconButton,
-  Spinner,
 } from "@chakra-ui/react";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
 

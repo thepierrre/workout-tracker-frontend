@@ -16,7 +16,6 @@ import {
   InputGroup,
   Input,
   InputLeftElement,
-  Spinner,
 } from "@chakra-ui/react";
 import SingleExercise from "../../components/exercises/SingleExercise";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";

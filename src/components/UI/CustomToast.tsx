@@ -20,9 +20,9 @@ const useCustomToast = () => {
 
   const addToast = ({
     message,
-    bgColor = "#2F855A", // Default background color
-    duration = 2500, // Default duration
-    position = "bottom", // Default position
+    bgColor = "#2F855A",
+    duration = 2500,
+    position = "bottom",
   }: ToastOptions) => {
     if (toastIdRef.current) {
       toast.close(toastIdRef.current);
