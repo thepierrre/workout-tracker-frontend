@@ -87,10 +87,13 @@ const ThresholdForm: React.FC<Props> = ({
         return;
       }
       if (type === "reps") {
-        const newValue =
-          action === "increase"
-            ? parseInt(reps) + threshold
-            : parseInt(reps) - threshold;
+        let increment;
+        if (threshold === 0.25 || threshold === 0.5) {
+          increment = action === "increase" ? 1 : -1;
+        } else {
+          increment = action === "increase" ? threshold : -threshold;
+        }
+        const newValue = parseInt(reps) + increment;
         setReps(newValue.toString());
         setValue("repsValue", newValue.toString());
       } else if (type === "weight") {
