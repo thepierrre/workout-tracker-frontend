@@ -18,6 +18,7 @@ import {
   InputLeftElement,
   Wrap,
   FormLabel,
+  Heading,
   useToast,
   Box,
   ToastId,
@@ -207,85 +208,84 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
       </FormControl>
 
       <Flex direction="column" w="100%" mt={5}>
-        <Wrap w="90vw" mt={4} mb={4} direction="column">
-          <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId="droppable">
-              {(provided) => (
-                <ul
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                  style={{ listStyleType: "none", padding: 0 }}
-                >
-                  {selectedExercises.map((exercise, index) => (
-                    <Draggable
-                      key={exercise.id}
-                      draggableId={exercise.id}
-                      index={index}
-                    >
-                      {(provided, snapshot) => (
-                        <li
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          style={{
-                            ...provided.draggableProps.style,
-                            margin: "8px 0",
-                            borderRadius: "5px",
-                            backgroundColor: snapshot.isDragging
-                              ? "transparent"
-                              : "#404040",
-                          }}
+        <Heading fontSize="md" textAlign="center" mb={1}>
+          Current exercises
+        </Heading>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="droppable">
+            {(provided) => (
+              <ul
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                style={{ listStyleType: "none", padding: 0 }}
+              >
+                {selectedExercises.map((exercise, index) => (
+                  <Draggable
+                    key={exercise.id}
+                    draggableId={exercise.id}
+                    index={index}
+                  >
+                    {(provided, snapshot) => (
+                      <li
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        style={{
+                          ...provided.draggableProps.style,
+                          margin: "8px 0",
+                          borderRadius: "5px",
+                          backgroundColor: snapshot.isDragging
+                            ? "transparent"
+                            : "#404040",
+                        }}
+                      >
+                        <Card
+                          mt={2}
+                          mb={2}
+                          bg="#404040"
+                          w="95vw"
+                          borderRadius={5}
                         >
-                          <Card
-                            mt={2}
-                            mb={2}
-                            bg="#404040"
-                            w="95vw"
-                            borderRadius={5}
-                          >
-                            <Flex gap={5} p={3} alignItems="center">
-                              <Checkbox
-                                color="white"
-                                isChecked={isExerciseSelected(exercise)}
-                                isDisabled={isCheckboxDisabled(exercise)}
-                                onChange={(e) => {
-                                  e.stopPropagation();
-                                  handleCheck(exercise);
-                                }}
-                                data-testid="not selected checkbox"
-                                fontWeight={
-                                  isExerciseSelected(exercise) ? "bold" : ""
-                                }
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                {exercise.name.charAt(0).toLocaleUpperCase() +
-                                  exercise.name.slice(1)}
-                              </Checkbox>
-                            </Flex>
-                          </Card>
-                        </li>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </ul>
-              )}
-            </Droppable>
-          </DragDropContext>
-        </Wrap>
+                          <Flex gap={5} p={3} alignItems="center">
+                            <Checkbox
+                              color="white"
+                              isChecked={isExerciseSelected(exercise)}
+                              isDisabled={isCheckboxDisabled(exercise)}
+                              onChange={(e) => {
+                                e.stopPropagation();
+                                handleCheck(exercise);
+                              }}
+                              data-testid="not selected checkbox"
+                              fontWeight={
+                                isExerciseSelected(exercise) ? "bold" : ""
+                              }
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {exercise.name.charAt(0).toLocaleUpperCase() +
+                                exercise.name.slice(1)}
+                            </Checkbox>
+                          </Flex>
+                        </Card>
+                      </li>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </ul>
+            )}
+          </Droppable>
+        </DragDropContext>
 
         {!selectedExercises.length && (
-          <Flex direction="column">
-            <Text textAlign="center" mt={4}>
-              This routine has no exercises.
-            </Text>
-          </Flex>
+          <Box mt={2} mb={2}>
+            <Text textAlign="center">This routine is empty!</Text>
+          </Box>
         )}
 
         <Flex direction="column" w="100%" mt={3}>
-          <FormLabel textColor="white" fontSize="sm">
-            Filter exercises to add
-          </FormLabel>
+          <Heading fontSize="md" textAlign="center" mb={3}>
+            Add exercises
+          </Heading>
           <InputGroup>
             <Input
               w="95vw"
@@ -297,7 +297,7 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
                 borderColor: "lightblue",
               }}
               _placeholder={{ color: "#B3B3B3" }}
-              placeholder="Search"
+              placeholder="Filter"
               onChange={(event) => handleExerciseFiltering(event)}
             />
             <InputLeftElement>
@@ -305,7 +305,7 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
             </InputLeftElement>
           </InputGroup>
         </Flex>
-        <Flex direction="column" gap={2} mt={5} ml={2}>
+        <Flex direction="column" gap={2} mt={5} ml={2} mb={2}>
           {filteredExercises.map((exercise) => (
             <Flex
               key={exercise.id}
