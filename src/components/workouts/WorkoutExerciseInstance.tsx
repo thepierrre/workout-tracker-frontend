@@ -16,6 +16,7 @@ import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import {
   convertKgsToLbs,
   handleWeightUnitText,
+  roundKgs,
 } from "../../util/weightUnitConverting";
 import { AppDispatch } from "../../app/store";
 import { UserSettings } from "../../interfaces/userSettings.interface";
@@ -85,7 +86,7 @@ const WorkoutExerciseInstance: React.FC<Props> = ({
                   <Flex gap={3} flex={0.2}>
                     <Text fontWeight="bold">
                       {userSettings?.weightUnit === "kgs"
-                        ? workingSet.weight
+                        ? roundKgs(workingSet.weight)
                         : convertKgsToLbs(workingSet.weight)}
                     </Text>
                     <Text>

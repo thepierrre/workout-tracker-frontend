@@ -4,6 +4,7 @@ import { WorkingSet } from "interfaces/workingSet.interface";
 import {
   convertKgsToLbs,
   handleWeightUnitText,
+  roundKgs,
 } from "../../util/weightUnitConverting";
 
 interface ExerciseWorkingSetProps {
@@ -50,7 +51,7 @@ const ExerciseWorkingSet: React.FC<ExerciseWorkingSetProps> = ({
           <Flex gap={3} flex={0.2}>
             <Text fontWeight="bold">
               {userSettings?.weightUnit === "kgs"
-                ? workingSet.weight
+                ? roundKgs(workingSet.weight)
                 : convertKgsToLbs(workingSet.weight)}
             </Text>
             <Text>{handleWeightUnitText(userSettings.weightUnit)}</Text>
