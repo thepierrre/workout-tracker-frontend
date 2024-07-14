@@ -65,6 +65,7 @@ export const updateRoutine = createAsyncThunk<
       `routines/${updatedRoutine.id}`,
       updatedRoutine
     );
+    console.log(response.data);
     return response.data;
   } catch (error) {
     let errorMessage = "An unknown error occurred";

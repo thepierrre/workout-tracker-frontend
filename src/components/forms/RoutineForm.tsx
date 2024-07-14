@@ -310,11 +310,10 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
                 </InputLeftElement>
               </InputGroup>
             </Flex>
-            <Wrap w="90vw" mt={4} mb={4} ml={2} mr={2} direction="column">
+            <Flex direction="column" gap={2} mt={5} ml={2}>
               {filteredExercises.map((exercise) => (
                 <Flex
                   key={exercise.id}
-                  gap={5}
                   w="48%"
                   onClick={() => handleToast(isExerciseSelected(exercise))}
                 >
@@ -330,8 +329,16 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
                   </Checkbox>
                 </Flex>
               ))}
-            </Wrap>
+            </Flex>
           </>
+        )}
+
+        {filteredExercises.length === 0 && (
+          <Flex direction="column">
+            <Text textAlign="center" mt={0} mb={2}>
+              No exercises found.
+            </Text>
+          </Flex>
         )}
       </Flex>
 
