@@ -333,7 +333,7 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
           </>
         )}
 
-        {filteredExercises.length === 0 && (
+        {filteredExercises.length === 0 && !exercisesReordering && (
           <Flex direction="column">
             <Text textAlign="center" mt={0} mb={2}>
               No exercises found.
