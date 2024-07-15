@@ -46,7 +46,7 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
     ExerciseInstance[]
   >(wrk.exerciseInstances);
 
-  const { userSettings, loading: loadingUserSettings } = useSelector(
+  const { userSettings } = useSelector(
     (state: RootState) => state.userSettings
   );
 

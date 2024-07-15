@@ -57,7 +57,7 @@ const NewRoutinePage = () => {
 
   return (
     <Container>
-      <Flex align="center" w="100%" mb={3}>
+      <Flex align="center" w={["95vw", "85vw", "70vw", "50vw", "40vw"]} mb={3}>
         <IconButton
           aria-label="Go back"
           variant="link"

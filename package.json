@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "test": "jest",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
@@ -26,12 +27,17 @@
     "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.2",
+    "react-movable": "^3.2.0",
     "react-redux": "^9.1.0",
     "react-router-dom": "^6.22.3",
     "typescript-cookie": "^1.0.6",
     "underscore": "^1.13.6"
   },
   "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.24.7",
+    "@babel/preset-env": "^7.24.8",
+    "@babel/preset-react": "^7.24.7",
+    "@babel/preset-typescript": "^7.24.7",
     "@testing-library/dom": "^10.1.0",
     "@testing-library/react": "^16.0.0",
     "@types/jest": "^29.5.12",
@@ -43,13 +49,14 @@
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "@vitejs/plugin-react": "^4.2.1",
+    "babel-jest": "^29.7.0",
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "redux-mock-store": "^1.5.4",
-    "ts-jest": "^29.1.5",
+    "ts-jest": "^29.2.2",
     "typescript": "^5.2.2",
     "vite": "^5.2.0"
   }

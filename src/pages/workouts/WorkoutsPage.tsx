@@ -11,15 +11,12 @@ import { RootState, AppDispatch } from "../../app/store";
 import { format } from "date-fns";
 import Container from "../../components/UI/Container";
 import { Text, useToast, ToastId, Box } from "@chakra-ui/react";
-import SpinnerComponent from "../../components/UI/SpinnerComponent";
 
 export const WorkoutsPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const toast = useToast();
   const toastIdRef = useRef<ToastId | undefined>(undefined);
-  const { workouts, loading: loadingWorkouts } = useSelector(
-    (state: RootState) => state.workoutSessions
-  );
+  const { workouts } = useSelector((state: RootState) => state.workoutSessions);
   const [localWorkouts, setLocalWorkouts] = useState(workouts);
   const chosenDay = useSelector((state: RootState) => state.chosenDay.day);
 
@@ -68,10 +65,6 @@ export const WorkoutsPage = () => {
       console.error("Failed to delete workout:", error);
     }
   };
-
-  if (loadingWorkouts) {
-    return <SpinnerComponent />;
-  }
 
   return (
     <Container>

@@ -102,7 +102,7 @@ const SingleExercise: React.FC<Props> = ({
           }
         >
           <Flex>
-            <Flex direction="column" gap={1} textColor="white" w="80%">
+            <Flex direction="column" gap={1} textColor="white">
               <Text
                 fontWeight="bold"
                 data-testid={`exercise-name-${exercise.id}`}
@@ -134,7 +134,7 @@ const SingleExercise: React.FC<Props> = ({
             </Flex>
             {location.state && location.state.addExercises == "true" && (
               <Flex
-                w="20%"
+                w="100%"
                 align="center"
                 justify="end"
                 mr={2}

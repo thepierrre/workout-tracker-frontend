@@ -221,7 +221,7 @@ const ProfilePage = () => {
         />
         {userSettings && <Weight userSettings={userSettings} />}
         <Button
-          w="95vw"
+          w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
           bg="lightblue"
           textColor="#353935"
           type="submit"

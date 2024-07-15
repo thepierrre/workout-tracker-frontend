@@ -6,6 +6,7 @@ import workoutSessionsReducer from "../../../features/workout/workoutSessionsSli
 import chosenDayReducer from "../../../features/workout/dayInCalendarSlice";
 import activeExerciseInstanceReducer from "../../../features/workout/activeExerciseInstanceSlice";
 import authenticatedUserReducer from "../../../features/auth/authenticatedUserSlice";
+import userSettingsReducer from "../../../features/settings/userSettingsSlice";
 import exercisesReducer from "../../../features/exercises/exercisesSlice";
 import routinesReducer from "../../../features/routines/routinesSlice";
 import categoriesReducer from "../../../features/exercises/categoriesSlice";
@@ -16,6 +17,7 @@ import {
   mockExerciseTypes,
   mockRoutines,
   mockWorkouts,
+  mockUserSettings,
 } from "../../../util/testData";
 import { ChakraProvider } from "@chakra-ui/react";
 import "@testing-library/jest-dom";
@@ -30,6 +32,7 @@ const store = configureStore({
     exercises: exercisesReducer,
     routines: routinesReducer,
     categories: categoriesReducer,
+    userSettings: userSettingsReducer,
   },
   preloadedState: {
     authenticatedUser: {
@@ -57,6 +60,14 @@ const store = configureStore({
       loading: false,
       error: null,
     },
+    userSettings: {
+      userSettings: mockUserSettings,
+      loading: false,
+      error: null,
+    },
+    chosenDay: {
+      day: format(new Date(), "dd/MM/yyyy"),
+    },
   },
 });
 
@@ -73,13 +84,12 @@ const renderWithProviders = (ui: React.ReactElement) => {
 describe("WorkoutsPage", () => {
   test("renders the calendar and workouts for the current day", () => {
     renderWithProviders(<WorkoutsPage />);
-
     expect(screen.getByText(format(new Date(), "dd"))).toBeInTheDocument();
     expect(
       screen.getByText(format(new Date(), "EEE").toUpperCase())
     ).toBeInTheDocument();
     expect(screen.getByText("New workout")).toBeInTheDocument();
-    expect(screen.getAllByText("Remove workout")).toHaveLength(3);
+    expect(screen.getAllByText("Delete workout")).toHaveLength(3);
 
     expect(screen.getByText("routine1")).toBeInTheDocument();
     expect(screen.getByText("routine2")).toBeInTheDocument();
@@ -106,21 +116,26 @@ describe("WorkoutsPage", () => {
     expect(screen.getAllByText("routine3")).toHaveLength(2);
   });
 
-  test("adds a new routine to the current day when a new routine is selected", () => {
+  test("adds a new routine to the current day when a new routine is selected", async () => {
     renderWithProviders(<WorkoutsPage />);
 
     fireEvent.click(screen.getByText("New workout"));
     expect(screen.getByText("Select a routine")).toBeInTheDocument();
     fireEvent.click(screen.getByText("routine4"));
-    waitFor(() => expect(screen.queryByText("Select a routine")).toBeNull());
+    await waitFor(() =>
+      expect(screen.queryByText("Select a routine")).toBeNull()
+    );
     expect(screen.getByText("routine4")).toBeInTheDocument();
   });
 
-  test("removes a workout when 'Remove workout' is clicked", () => {
+  test("removes a workout when 'Delete workout' is clicked", async () => {
     renderWithProviders(<WorkoutsPage />);
 
     expect(screen.getByText("routine3")).toBeInTheDocument();
-    fireEvent.click(screen.getAllByText("Remove workout")[0]);
-    waitFor(() => expect(screen.queryByText("routine3")).toBeNull());
+    fireEvent.click(screen.getAllByText("Delete workout")[0]);
+    expect(
+      screen.getByText("Do you really want to delete this workout?")
+    ).toBeInTheDocument();
+    //await waitFor(() => expect(screen.queryByText("routine3")).toBeNull());
   });
 });

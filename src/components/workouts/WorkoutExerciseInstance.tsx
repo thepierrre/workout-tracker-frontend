@@ -76,7 +76,7 @@ const WorkoutExerciseInstance: React.FC<Props> = ({
 
           <Flex color="white" direction="column">
             {exerciseInstance?.workingSets?.length > 0 ? (
-              exerciseInstance?.workingSets?.map((workingSet, index) => (
+              exerciseInstance.workingSets.map((workingSet, index) => (
                 <Flex key={index} gap={10}>
                   <Text flex={0.1}>{index + 1}</Text>
                   <Flex gap={3} flex={0.2}>
@@ -91,7 +91,7 @@ const WorkoutExerciseInstance: React.FC<Props> = ({
                     </Text>
                     <Text>
                       {handleWeightUnitText(
-                        userSettings.weightUnit ||
+                        userSettings?.weightUnit ||
                           defaultUserSettings.weightUnit
                       )}
                     </Text>

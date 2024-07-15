@@ -4,6 +4,7 @@ import { Workout } from "interfaces/workout.interface";
 import { Exercise } from "interfaces/exercise.interface";
 import { Category } from "interfaces/category.interface";
 import { format } from "date-fns";
+import { UserSettings } from "interfaces/userSettings.interface";
 
 export const mockUser: User = {
   id: "1",
@@ -358,3 +359,8 @@ export const mockWorkouts: Workout[] = [
     routineName: "routine3",
   },
 ];
+
+export const mockUserSettings: UserSettings = {
+  changeThreshold: 1,
+  weightUnit: "kgs",
+};

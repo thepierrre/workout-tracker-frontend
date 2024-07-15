@@ -48,7 +48,11 @@ const NewWorkout = () => {
 
   return (
     <Flex direction="column" gap={6}>
-      <WideButton ref={btnRef} onClick={onOpen}>
+      <WideButton
+        w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+        ref={btnRef}
+        onClick={onOpen}
+      >
         New workout
       </WideButton>
       <Drawer
@@ -58,7 +62,12 @@ const NewWorkout = () => {
         finalFocusRef={btnRef}
       >
         <DrawerOverlay />
-        <DrawerContent height="50vh" bg="#404040">
+        <DrawerContent
+          height="50vh"
+          bg="#404040"
+          w={["100vw", "100vw", "70vw", "65vw", "65vw"]}
+          margin="0 auto"
+        >
           <DrawerHeader textColor="white" textAlign="center" fontSize="2xl">
             Select a routine
           </DrawerHeader>

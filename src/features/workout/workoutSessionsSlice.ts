@@ -194,7 +194,7 @@ export const removeExInstance = createAsyncThunk<
 });
 
 export const addExInstance = createAsyncThunk<
-  ExerciseInstance,
+  { workoutId: string; exerciseInstance: ExerciseInstance },
   AddExerciseInstanceArgs,
   { rejectValue: string }
 >("workouts/addExInstance", async (args, thunkAPI) => {
@@ -204,7 +204,7 @@ export const addExInstance = createAsyncThunk<
       `workouts/${workoutId}/exercise-instances`,
       exerciseType
     );
-    return response.data;
+    return { workoutId, exerciseInstance: response.data };
   } catch (error) {
     let errorMessage = "An unknown error occurred";
     if (error instanceof Error) {
@@ -266,7 +266,19 @@ const workoutSessionsSlice = createSlice({
       )
       .addCase(
         addExInstance.fulfilled,
-        (state, action: PayloadAction<ExerciseInstance>) => {}
+        (
+          state,
+          action: PayloadAction<{
+            workoutId: string;
+            exerciseInstance: ExerciseInstance;
+          }>
+        ) => {
+          const { workoutId, exerciseInstance } = action.payload;
+          const workout = state.workouts.find((w) => w.id === workoutId);
+          if (workout) {
+            workout.exerciseInstances.push(exerciseInstance);
+          }
+        }
       )
       .addCase(
         addExInstance.rejected,

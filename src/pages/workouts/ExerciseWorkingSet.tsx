@@ -29,7 +29,7 @@ const ExerciseWorkingSet: React.FC<ExerciseWorkingSetProps> = ({
           ? "lightblue"
           : "#404040"
       }
-      w="95vw"
+      w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
       key={index}
       onClick={() => workingSet && handleActiveExInstance(workingSet)}
     >

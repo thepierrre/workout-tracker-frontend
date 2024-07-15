@@ -7,7 +7,12 @@ interface Props extends BoxProps {
 
 const CustomCard: React.FC<Props> = ({ children, ...rest }) => {
   return (
-    <Card {...rest} bg="#404040" w="95vw" p={0}>
+    <Card
+      {...rest}
+      bg="#404040"
+      w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+      p={0}
+    >
       {children}
     </Card>
   );

@@ -131,10 +131,12 @@ const ExercisesPage = () => {
   return (
     <Container>
       <Link to="/exercises/new-exercise">
-        <WideButton type="submit">New exercise</WideButton>
+        <WideButton w={["95vw", "85vw", "70vw", "50vw", "40vw"]} type="submit">
+          New exercise
+        </WideButton>
       </Link>
 
-      <Flex>
+      <Flex w={["95vw", "85vw", "70vw", "50vw", "40vw"]}>
         <InputGroup mt={3}>
           <Input
             w="95vw"
@@ -155,7 +157,7 @@ const ExercisesPage = () => {
         </InputGroup>
       </Flex>
 
-      <Flex direction="column" gap={2} w="95vw" align="center" mt={2}>
+      <Flex direction="column" gap={2} align="center" mt={2}>
         {filteredExercises && filteredExercises.length > 0 ? (
           filteredExercises.map((exercise) => (
             <Link key={exercise.id} to={`/exercises/${exercise.id}`}>

@@ -113,7 +113,7 @@ const RegisterPage = () => {
           <FormControl isInvalid={!!errors?.username}>
             <Input
               {...register("username")}
-              w="95vw"
+              w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
               bg="#404040"
               borderWidth="1px"
               borderColor="#CBD5E0"
@@ -133,7 +133,7 @@ const RegisterPage = () => {
           <FormControl isInvalid={!!errors?.password}>
             <Input
               {...register("password")}
-              w="95vw"
+              w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
               bg="#404040"
               borderWidth="1px"
               borderColor="#CBD5E0"
@@ -150,7 +150,12 @@ const RegisterPage = () => {
               {errors?.password && errors.password.message}
             </FormErrorMessage>
           </FormControl>
-          <WideButton type="submit">Sign in</WideButton>
+          <WideButton
+            type="submit"
+            w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+          >
+            Sign in
+          </WideButton>
         </Flex>
       </form>
     </Container>

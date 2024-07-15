@@ -6,7 +6,6 @@ import { fetchExercises } from "../../features/exercises/exercisesSlice";
 import { UseFormSetError } from "react-hook-form";
 import { SearchIcon } from "@chakra-ui/icons";
 import WideButton from "../../components/UI/WideButton";
-import { List, arrayMove } from "react-movable";
 import {
   Flex,
   FormControl,
@@ -16,7 +15,6 @@ import {
   Checkbox,
   InputGroup,
   InputLeftElement,
-  Wrap,
   FormLabel,
   Heading,
   useToast,
@@ -167,6 +165,17 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
   const isCheckboxDisabled = (exercise: Exercise) =>
     !isExerciseSelected(exercise) && selectedExercises.length >= 15;
 
+  const arrayMove = (arr: any[], oldIndex: number, newIndex: number) => {
+    if (newIndex >= arr.length) {
+      let k = newIndex - arr.length + 1;
+      while (k--) {
+        arr.push(undefined);
+      }
+    }
+    arr.splice(newIndex, 0, arr.splice(oldIndex, 1)[0]);
+    return arr;
+  };
+
   const onDragEnd = (result: any) => {
     const { source, destination } = result;
     if (!destination) {
@@ -190,11 +199,14 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
         onSubmit(data, selectedExercises, setError)
       )}
     >
-      <FormControl isInvalid={!!errors.name}>
+      <FormControl
+        isInvalid={!!errors.name}
+        width={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+      >
         <FormLabel fontSize="sm">Routine name</FormLabel>
         <Input
           {...register("name")}
-          w="95vw"
+          w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
           bg="#404040"
           color="white"
           borderWidth="1px"
@@ -249,7 +261,7 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
                           mt={2}
                           mb={2}
                           bg="#404040"
-                          w="95vw"
+                          w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
                           borderRadius={5}
                         >
                           <Flex gap={5} p={3} alignItems="center">
@@ -284,7 +296,7 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
 
         {!selectedExercises.length && (
           <Box mt={2} mb={2}>
-            <Text textAlign="center">This routine is empty!</Text>
+            <Text textAlign="center">Add some exercises to your routine!</Text>
           </Box>
         )}
 
@@ -292,9 +304,13 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
           <Heading fontSize="md" textAlign="center" mb={3}>
             Add exercises
           </Heading>
-          <InputGroup>
+          <InputGroup
+            flexDirection="column"
+            alignItems="flex-start"
+            width={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+          >
             <Input
-              w="95vw"
+              w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
               bg="#404040"
               color="white"
               borderWidth="1px"
@@ -343,7 +359,9 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
         )}
       </Flex>
 
-      <WideButton type="submit">{buttonText}</WideButton>
+      <WideButton w={["95vw", "85vw", "70vw", "50vw", "40vw"]} type="submit">
+        {buttonText}
+      </WideButton>
     </form>
   );
 };

@@ -29,7 +29,7 @@ const WorkoutHistory: React.FC<Props> = ({
       <Heading fontSize="lg" mb={4}>
         Workout history
       </Heading>
-      <Flex gap={2} w="95vw" mb={3}>
+      <Flex gap={2} w={["95vw", "85vw", "70vw", "50vw", "40vw"]} mb={3}>
         <Select
           placeholder="Day"
           onChange={(event) => handleDaySelection(event)}
@@ -71,7 +71,12 @@ const WorkoutHistory: React.FC<Props> = ({
             key={workout.id}
             data-testid="workout-item"
           >
-            <Card bg="#404040" color="white" padding={4} w="95vw">
+            <Card
+              bg="#404040"
+              color="white"
+              padding={4}
+              w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+            >
               <Flex direction="column" gap={1}>
                 <Text fontSize="sm">
                   {`${getDate(workout.creationDate)} ${format(

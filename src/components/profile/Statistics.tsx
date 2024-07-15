@@ -18,7 +18,13 @@ const Statistics: React.FC<Props> = ({ workouts, routines, exercises }) => {
         Statistics
       </Heading>
       <Link to="/workouts">
-        <Card bg="#404040" color="white" padding={4} w="95vw" gap={2}>
+        <Card
+          bg="#404040"
+          color="white"
+          padding={4}
+          w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+          gap={2}
+        >
           <Flex gap={2}>
             <Text fontWeight="bold">Workouts:</Text>
             <Text>{workouts.length}</Text>
@@ -27,7 +33,13 @@ const Statistics: React.FC<Props> = ({ workouts, routines, exercises }) => {
       </Link>
 
       <Link to="/routines">
-        <Card bg="#404040" color="white" padding={4} w="95vw" gap={2}>
+        <Card
+          bg="#404040"
+          color="white"
+          padding={4}
+          w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+          gap={2}
+        >
           <Flex gap={2}>
             <Text fontWeight="bold">Routines:</Text>
             <Text>{routines.length}</Text>
@@ -36,7 +48,13 @@ const Statistics: React.FC<Props> = ({ workouts, routines, exercises }) => {
       </Link>
 
       <Link to="/exercises">
-        <Card bg="#404040" color="white" padding={4} w="95vw" gap={2}>
+        <Card
+          bg="#404040"
+          color="white"
+          padding={4}
+          w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+          gap={2}
+        >
           <Flex gap={2}>
             <Text fontWeight="bold">Exercises:</Text>
             <Text>{exercises.length}</Text>

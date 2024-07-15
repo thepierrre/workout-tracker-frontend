@@ -106,13 +106,15 @@ const RoutinesPage = () => {
   return (
     <Container>
       <Link to="/routines/new-routine">
-        <WideButton type="submit">New routine</WideButton>
+        <WideButton w={["95vw", "85vw", "70vw", "50vw", "40vw"]} type="submit">
+          New routine
+        </WideButton>
       </Link>
 
       <Flex>
         <InputGroup mt={3}>
           <Input
-            w="95vw"
+            w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
             bg="#404040"
             color="white"
             borderColor="transparent"

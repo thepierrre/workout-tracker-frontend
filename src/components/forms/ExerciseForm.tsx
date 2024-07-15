@@ -239,13 +239,12 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
               mt={5}
               mb={5}
               w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
-              spacing="20px"
+              spacing={2}
               justify="left"
             >
               {filteredCategories.map((category) => (
                 <Flex
                   direction="column"
-                  gap={2}
                   ml={2}
                   w="45%"
                   key={category.name}
