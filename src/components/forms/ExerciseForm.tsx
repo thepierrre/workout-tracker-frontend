@@ -153,88 +153,134 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
   }
 
   return (
-    <form
-      onSubmit={handleSubmit((data) =>
-        onSubmit(data, selectedCategories, setError)
-      )}
-    >
-      <FormControl isInvalid={!!errors.name}>
-        <FormLabel fontSize="sm">Exercise name</FormLabel>
-        <Input
-          {...register("name")}
-          w="95vw"
-          bg="#404040"
-          borderWidth="1px"
-          borderColor="#CBD5E0"
-          _focus={{
-            boxShadow: "none",
-            borderWidth: "2px",
-            borderColor: errors.name ? "#E53E3E" : "#3182CE",
-          }}
-          _placeholder={{ color: "#B3B3B3" }}
-          placeholder="Enter a name"
-          defaultValue={initialName}
-        />
-        <FormErrorMessage>
-          {errors.name && errors.name.message}
-        </FormErrorMessage>
-      </FormControl>
-
-      <Flex direction="column" w="100%" mt={5}>
-        <FormLabel textColor="white" fontSize="sm">
-          Filter categories
-        </FormLabel>
-        <InputGroup>
+    <Flex direction="column">
+      <form
+        onSubmit={handleSubmit((data) =>
+          onSubmit(data, selectedCategories, setError)
+        )}
+        style={{
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <FormControl
+          isInvalid={!!errors.name}
+          display="flex"
+          flexDirection="column"
+          alignItems="flex-start"
+          width={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+        >
+          <FormLabel fontSize="sm">Exercise name</FormLabel>
           <Input
-            w="95vw"
+            {...register("name")}
+            w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
             bg="#404040"
             borderWidth="1px"
             borderColor="#CBD5E0"
             _focus={{
               boxShadow: "none",
               borderWidth: "2px",
-              borderColor: "#3182CE",
+              borderColor: errors.name ? "#E53E3E" : "#3182CE",
             }}
             _placeholder={{ color: "#B3B3B3" }}
-            placeholder="Search"
-            onChange={(event) => handleCategoryFiltering(event)}
+            placeholder="Enter a name"
+            defaultValue={initialName}
           />
-          <InputLeftElement>
-            <SearchIcon />
-          </InputLeftElement>
-        </InputGroup>
 
-        {filteredCategories.length > 0 ? (
-          <Wrap w="90vw" mt={4} mb={4} ml={2} mr={2}>
-            {filteredCategories.map((category) => (
-              <Flex
-                gap={5}
-                w="48%"
-                key={category.name}
-                onClick={() => handleToast(isCategorySelected(category))}
-              >
-                <Checkbox
-                  isChecked={isCategorySelected(category)}
-                  isDisabled={isCheckboxDisabled(category)}
-                  onChange={() => handleCheck(category)}
-                  data-testid="not selected checkbox"
-                  fontWeight={isCategorySelected(category) ? "bold" : ""}
+          <FormErrorMessage>
+            {errors.name && errors.name.message}
+          </FormErrorMessage>
+        </FormControl>
+
+        <Flex
+          direction="column"
+          align="center"
+          justify="center"
+          w="100%"
+          mt={5}
+        >
+          <Flex
+            direction="column"
+            align="flex-start"
+            w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+          >
+            <FormLabel textColor="white" fontSize="sm">
+              Filter categories
+            </FormLabel>
+            <InputGroup
+              flexDirection="column"
+              alignItems="flex-start"
+              width={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+            >
+              <Input
+                w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+                bg="#404040"
+                borderWidth="1px"
+                borderColor="#CBD5E0"
+                _focus={{
+                  boxShadow: "none",
+                  borderWidth: "2px",
+                  borderColor: "#3182CE",
+                }}
+                _placeholder={{ color: "#B3B3B3" }}
+                placeholder="Search"
+                onChange={(event) => handleCategoryFiltering(event)}
+              />
+              <InputLeftElement>
+                <SearchIcon />
+              </InputLeftElement>
+            </InputGroup>
+          </Flex>
+
+          {filteredCategories.length > 0 ? (
+            <Wrap
+              mt={5}
+              mb={5}
+              w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+              spacing="20px"
+              justify="left"
+            >
+              {filteredCategories.map((category) => (
+                <Flex
+                  direction="column"
+                  gap={2}
+                  ml={2}
+                  w="45%"
+                  key={category.name}
+                  onClick={() => handleToast(isCategorySelected(category))}
                 >
-                  {category.name.charAt(0).toLocaleUpperCase() +
-                    category.name.slice(1)}
-                </Checkbox>
-              </Flex>
-            ))}
-          </Wrap>
-        ) : (
-          <Text textAlign="center" mt={4} mb={4}>
-            No categories.
-          </Text>
-        )}
-      </Flex>
+                  <Checkbox
+                    isChecked={isCategorySelected(category)}
+                    isDisabled={isCheckboxDisabled(category)}
+                    onChange={() => handleCheck(category)}
+                    data-testid="not selected checkbox"
+                    fontWeight={isCategorySelected(category) ? "bold" : ""}
+                  >
+                    {category.name.charAt(0).toLocaleUpperCase() +
+                      category.name.slice(1)}
+                  </Checkbox>
+                </Flex>
+              ))}
+            </Wrap>
+          ) : (
+            <Text textAlign="center" mt={4} mb={4}>
+              No categories.
+            </Text>
+          )}
+        </Flex>
 
-      <WideButton type="submit">{buttonText}</WideButton>
-    </form>
+        <Flex justify="center">
+          <WideButton
+            type="submit"
+            w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+          >
+            {buttonText}
+          </WideButton>
+        </Flex>
+      </form>
+    </Flex>
   );
 };
 
