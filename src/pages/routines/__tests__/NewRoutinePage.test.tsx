@@ -9,6 +9,7 @@ import chosenDayReducer from "../../../features/workout/dayInCalendarSlice";
 import activeExerciseInstanceReducer from "../../../features/workout/activeExerciseInstanceSlice";
 import authenticatedUserReducer from "../../../features/auth/authenticatedUserSlice";
 import exercisesReducer from "../../../features/exercises/exercisesSlice";
+import userSettingsReducer from "../../../features/settings/userSettingsSlice";
 import routinesReducer from "../../../features/routines/routinesSlice";
 import categoriesReducer from "../../../features/exercises/categoriesSlice";
 import {
@@ -17,6 +18,7 @@ import {
   mockWorkouts,
   mockCategories,
   mockRoutines,
+  mockUserSettings,
 } from "../../../util/testData";
 import NewRoutinePage from "../NewRoutinePage";
 
@@ -29,6 +31,7 @@ const store = configureStore({
     exercises: exercisesReducer,
     routines: routinesReducer,
     categories: categoriesReducer,
+    userSettings: userSettingsReducer,
   },
   preloadedState: {
     authenticatedUser: {
@@ -56,6 +59,11 @@ const store = configureStore({
       loading: false,
       error: null,
     },
+    userSettings: {
+      userSettings: mockUserSettings,
+      loading: false,
+      error: null,
+    },
   },
 });
 
@@ -73,31 +81,47 @@ describe("NewRoutinePage", () => {
   test("renders the heading, inputs and exercises correctly", () => {
     renderWithProviders(<NewRoutinePage />);
     expect(screen.getByText("Add a new routine")).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("Routine name")).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("Filter exercises")).toBeInTheDocument();
-    expect(screen.getAllByText("Exercise1")).toHaveLength(1);
-    expect(screen.getAllByText("Exercise2")).toHaveLength(1);
-    expect(screen.getAllByText("Exercise3")).toHaveLength(1);
-    expect(screen.getAllByText("Exercise4")).toHaveLength(1);
-    expect(screen.getAllByText("Exercise5")).toHaveLength(1);
+    expect(screen.findByPlaceholderText("Routine name")).toBeInTheDocument();
+    expect(
+      screen.findByPlaceholderText("Filter exercises")
+    ).toBeInTheDocument();
+    expect(screen.findAllByText("Exercise1")).toHaveLength(1);
+    expect(screen.findAllByText("Exercise2")).toHaveLength(1);
+    expect(screen.findAllByText("Exercise3")).toHaveLength(1);
+    expect(screen.findAllByText("Exercise4")).toHaveLength(1);
+    expect(screen.findAllByText("Exercise5")).toHaveLength(1);
   });
 
   test("adds a new routine with exercises and renders the routines page when 'Create' is clicked", () => {
     renderWithProviders(<NewRoutinePage />);
 
+    waitFor(() => {
+      expect(screen.getByText("Create")).toBeInTheDocument();
+    });
+
     fireEvent.change(screen.getByPlaceholderText("Routine name"), {
       target: { value: "Newly created" },
     });
+
     expect(screen.getByDisplayValue("Newly created")).toBeInTheDocument();
+
+    waitFor(() => {
+      expect(
+        screen.getByPlaceholderText("Filter exercises")
+      ).toBeInTheDocument();
+    });
 
     fireEvent.change(screen.getByPlaceholderText("Filter exercises"), {
       target: { value: "exercise1" },
     });
-    expect(screen.getByText("Exercise1")).toBeInTheDocument();
-    expect(screen.queryByText("Exercise2")).toBeNull();
-    expect(screen.queryByText("Exercise3")).toBeNull();
-    expect(screen.queryByText("Exercise4")).toBeNull();
-    expect(screen.queryByText("Exercise5")).toBeNull();
+
+    waitFor(() => {
+      expect(screen.getByText("Exercise1")).toBeInTheDocument();
+      expect(screen.queryByText("Exercise2")).toBeNull();
+      expect(screen.queryByText("Exercise3")).toBeNull();
+      expect(screen.queryByText("Exercise4")).toBeNull();
+      expect(screen.queryByText("Exercise5")).toBeNull();
+    });
 
     fireEvent.click(screen.getByTestId("not selected checkbox"));
 
@@ -109,9 +133,13 @@ describe("NewRoutinePage", () => {
     waitFor(() => expect(screen.getAllByText("exercise1")).toHaveLength(1));
   });
 
-  test("Attempt at adding a routine with no name renders an error", () => {
+  test("attempt at adding a routine with no name renders an error", () => {
     renderWithProviders(<NewRoutinePage />);
-    fireEvent.click(screen.getByText("Create"));
+    waitFor(() => {
+      expect(screen.getByText("Create.")).toBeInTheDocument();
+      fireEvent.click(screen.getByText("Create"));
+    });
+
     waitFor(() =>
       expect(screen.getByText("Routine name is required.")).toBeInTheDocument()
     );

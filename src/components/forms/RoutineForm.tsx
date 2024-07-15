@@ -165,15 +165,11 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
   const isCheckboxDisabled = (exercise: Exercise) =>
     !isExerciseSelected(exercise) && selectedExercises.length >= 15;
 
-  const arrayMove = (arr: any[], oldIndex: number, newIndex: number) => {
-    if (newIndex >= arr.length) {
-      let k = newIndex - arr.length + 1;
-      while (k--) {
-        arr.push(undefined);
-      }
-    }
-    arr.splice(newIndex, 0, arr.splice(oldIndex, 1)[0]);
-    return arr;
+  const arrayMove = (arr: any[], fromIndex: number, toIndex: number) => {
+    const newArr = [...arr];
+    const element = newArr.splice(fromIndex, 1)[0];
+    newArr.splice(toIndex, 0, element);
+    return newArr;
   };
 
   const onDragEnd = (result: any) => {

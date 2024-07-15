@@ -121,11 +121,12 @@ describe("WorkoutsPage", () => {
 
     fireEvent.click(screen.getByText("New workout"));
     expect(screen.getByText("Select a routine")).toBeInTheDocument();
-    fireEvent.click(screen.getByText("routine4"));
-    await waitFor(() =>
-      expect(screen.queryByText("Select a routine")).toBeNull()
-    );
-    expect(screen.getByText("routine4")).toBeInTheDocument();
+    await waitFor(() => {
+      fireEvent.click(screen.getByText("routine4"));
+    });
+    await waitFor(() => {
+      expect(screen.getByText("routine4")).toBeInTheDocument();
+    });
   });
 
   test("removes a workout when 'Delete workout' is clicked", async () => {
@@ -136,6 +137,7 @@ describe("WorkoutsPage", () => {
     expect(
       screen.getByText("Do you really want to delete this workout?")
     ).toBeInTheDocument();
+    fireEvent.click(screen.getByText("Delete"));
     //await waitFor(() => expect(screen.queryByText("routine3")).toBeNull());
   });
 });

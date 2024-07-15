@@ -77,7 +77,7 @@ const NewRoutinePage = () => {
         onSubmit={onSubmit}
         buttonText="Create"
         serverError={serverError}
-      ></RoutineForm>
+      />
     </Container>
   );
 };
