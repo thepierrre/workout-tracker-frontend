@@ -279,10 +279,11 @@ const ThresholdForm: React.FC<Props> = ({
                 p={1}
                 value={reps}
                 padding={0}
+                borderColor="#CBD5E0"
                 _focus={{
                   boxShadow: "none",
                   borderWidth: "2px",
-                  borderColor: errors.repsValue ? "#E53E3E" : "#3182CE",
+                  borderColor: errors.weightValue ? "#E53E3E" : "#3182CE",
                 }}
                 textAlign="center"
                 onChange={(event) => handleRepsInputChange(event)}
@@ -343,6 +344,7 @@ const ThresholdForm: React.FC<Props> = ({
                 type="number"
                 value={weight}
                 textAlign="center"
+                borderColor="#CBD5E0"
                 _focus={{
                   boxShadow: "none",
                   borderWidth: "2px",

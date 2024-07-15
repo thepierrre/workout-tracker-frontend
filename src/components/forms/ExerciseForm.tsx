@@ -164,10 +164,12 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
           {...register("name")}
           w="95vw"
           bg="#404040"
-          borderColor="transparent"
-          _focusVisible={{
-            borderWidth: "1px",
-            borderColor: "lightblue",
+          borderWidth="1px"
+          borderColor="#CBD5E0"
+          _focus={{
+            boxShadow: "none",
+            borderWidth: "2px",
+            borderColor: errors.name ? "#E53E3E" : "#3182CE",
           }}
           _placeholder={{ color: "#B3B3B3" }}
           placeholder="Enter a name"
@@ -186,10 +188,12 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
           <Input
             w="95vw"
             bg="#404040"
-            borderColor="transparent"
-            _focusVisible={{
-              borderWidth: "1px",
-              borderColor: "lightblue",
+            borderWidth="1px"
+            borderColor="#CBD5E0"
+            _focus={{
+              boxShadow: "none",
+              borderWidth: "2px",
+              borderColor: "#3182CE",
             }}
             _placeholder={{ color: "#B3B3B3" }}
             placeholder="Search"

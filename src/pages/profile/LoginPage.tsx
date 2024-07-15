@@ -115,10 +115,12 @@ const RegisterPage = () => {
               {...register("username")}
               w="95vw"
               bg="#404040"
-              borderColor="transparent"
-              _focusVisible={{
-                borderWidth: "1px",
-                borderColor: "lightblue",
+              borderWidth="1px"
+              borderColor="#CBD5E0"
+              _focus={{
+                boxShadow: "none",
+                borderWidth: "2px",
+                borderColor: errors.username ? "#E53E3E" : "#3182CE",
               }}
               _placeholder={{ color: "#B3B3B3" }}
               placeholder="Username"
@@ -133,10 +135,12 @@ const RegisterPage = () => {
               {...register("password")}
               w="95vw"
               bg="#404040"
-              borderColor="transparent"
-              _focusVisible={{
-                borderWidth: "1px",
-                borderColor: "lightblue",
+              borderWidth="1px"
+              borderColor="#CBD5E0"
+              _focus={{
+                boxShadow: "none",
+                borderWidth: "2px",
+                borderColor: errors.password ? "#E53E3E" : "#3182CE",
               }}
               _placeholder={{ color: "#B3B3B3" }}
               placeholder="Password"

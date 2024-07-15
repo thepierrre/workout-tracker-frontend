@@ -157,6 +157,10 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
     exercise.name.toLowerCase().startsWith(searchedExercises.toLowerCase())
   );
 
+  const remainingFilteredExercises = filteredExercises.filter(
+    (exercise) => !selectedExercises.some((ex) => ex.id === exercise.id)
+  );
+
   const isExerciseSelected = (exercise: Exercise) =>
     selectedExercises.some((ex) => ex.id === exercise.id);
 
@@ -193,10 +197,12 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
           w="95vw"
           bg="#404040"
           color="white"
-          borderColor="transparent"
-          _focusVisible={{
-            borderWidth: "1px",
-            borderColor: "lightblue",
+          borderWidth="1px"
+          borderColor="#CBD5E0"
+          _focus={{
+            boxShadow: "none",
+            borderWidth: "2px",
+            borderColor: errors.name ? "#E53E3E" : "#3182CE",
           }}
           _placeholder={{ color: "#B3B3B3" }}
           placeholder="Enter a name"
@@ -291,10 +297,12 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
               w="95vw"
               bg="#404040"
               color="white"
-              borderColor="transparent"
-              _focusVisible={{
-                borderWidth: "1px",
-                borderColor: "lightblue",
+              borderWidth="1px"
+              borderColor="#CBD5E0"
+              _focus={{
+                boxShadow: "none",
+                borderWidth: "2px",
+                borderColor: "#3182CE",
               }}
               _placeholder={{ color: "#B3B3B3" }}
               placeholder="Filter"
@@ -306,7 +314,7 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
           </InputGroup>
         </Flex>
         <Flex direction="column" gap={2} mt={5} ml={2} mb={2}>
-          {filteredExercises.map((exercise) => (
+          {remainingFilteredExercises.map((exercise) => (
             <Flex
               key={exercise.id}
               w="48%"
@@ -326,7 +334,7 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
           ))}
         </Flex>
 
-        {!filteredExercises.length && (
+        {!remainingFilteredExercises.length && (
           <Flex direction="column">
             <Text textAlign="center" mt={0} mb={2}>
               No exercises found.
