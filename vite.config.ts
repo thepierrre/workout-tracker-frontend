@@ -9,4 +9,7 @@ export default defineConfig({
       usePolling: true, // This can help with some file system issues
     },
   },
+  optimizeDeps: {
+    exclude: ["js-big-decimal"],
+  },
 });

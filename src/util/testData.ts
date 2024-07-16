@@ -8,12 +8,12 @@ import { UserSettings } from "interfaces/userSettings.interface";
 
 export const mockUser: User = {
   id: "1",
-  username: "testuser",
-  password: "abc",
+  username: "testUser",
+  password: "",
   routines: [],
   workoutSessions: [],
   exercises: [],
-  email: "test@example.com",
+  email: "testuser@example.com",
 };
 
 export const mockCategories: Category[] = [

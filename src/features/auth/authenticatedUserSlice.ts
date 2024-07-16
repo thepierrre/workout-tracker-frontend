@@ -16,23 +16,6 @@ const initialState: authenticatedUserState = {
   error: null,
 };
 
-export const fetchUser = createAsyncThunk<
-  User, // Return type of the fulfilled action
-  string, // Argument type (username or user ID)
-  { rejectValue: string } // Type of the reject value
->("user/fetchUser", async (username, thunkAPI) => {
-  try {
-    const response = await axiosInstance.get(`users/${username}`);
-    return response.data;
-  } catch (error) {
-    let errorMessage = "An unknown error occurred";
-    if (error instanceof Error) {
-      errorMessage = error.message;
-    }
-    return thunkAPI.rejectWithValue(errorMessage);
-  }
-});
-
 export const initializeUser = createAsyncThunk<
   User | undefined,
   void,
@@ -58,6 +41,7 @@ const authenticatedUserSlice = createSlice({
   reducers: {
     setUser(state, action: PayloadAction<User | undefined>) {
       state.user = action.payload;
+      console.log(state.user);
     },
     clearUser(state) {
       state.user = undefined;

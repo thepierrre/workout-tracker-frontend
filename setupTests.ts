@@ -1,6 +1,7 @@
 import "@testing-library/jest-dom";
+import "cross-fetch/polyfill";
 import { TextEncoder, TextDecoder } from "util";
-import { server } from "./src/mocks/node.ts";
+import { server } from "./src/mockData/node";
 
 // @ts-ignore
 global.TextEncoder = TextEncoder;

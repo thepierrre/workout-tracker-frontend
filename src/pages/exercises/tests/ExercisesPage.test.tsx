@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import ExercisesPage from "../ExercisesPage";
 import { Provider } from "react-redux";
 import { ChakraProvider } from "@chakra-ui/react";
@@ -12,12 +12,10 @@ import authenticatedUserReducer from "../../../features/auth/authenticatedUserSl
 import exercisesReducer from "../../../features/exercises/exercisesSlice";
 import routinesReducer from "../../../features/routines/routinesSlice";
 import categoriesReducer from "../../../features/exercises/categoriesSlice";
-import {
-  mockUser,
-  mockExerciseTypes,
-  mockWorkouts,
-  mockCategories,
-} from "../../../util/testData";
+import { workoutsForUser } from "../../../mockData/getHandlers/getWorkoutsForUserHandler";
+import { categories } from "../../../mockData/getHandlers/getCategoriesHandler";
+import { initializedUser } from "../../../mockData/authHandlers/initializeUserHandler";
+import { exerciseTypesForUser } from "../../../mockData/getHandlers/getExerciseTypesForUserHandler";
 
 const store = configureStore({
   reducer: {
@@ -31,22 +29,22 @@ const store = configureStore({
   },
   preloadedState: {
     authenticatedUser: {
-      user: mockUser,
+      user: initializedUser,
       loading: false,
       error: null,
     },
     workoutSessions: {
-      workouts: mockWorkouts,
+      workouts: workoutsForUser,
       loading: false,
       error: null,
     },
     exercises: {
-      exercises: mockExerciseTypes,
+      exercises: exerciseTypesForUser,
       loading: false,
       error: null,
     },
     categories: {
-      categories: mockCategories,
+      categories: categories,
       loading: false,
       error: null,
     },
@@ -64,17 +62,18 @@ const renderWithProviders = (ui: React.ReactElement) => {
 };
 
 describe("ExercisesPage", () => {
-  test("renders the 'New exercise' button correctly", () => {
+  test("renders the correct number of exercises and their categories", async () => {
     renderWithProviders(<ExercisesPage />);
-    expect(screen.getByText("New exercise")).toBeInTheDocument();
-  });
 
-  test("renders the correct number of exercises and their categories", () => {
-    renderWithProviders(<ExercisesPage />);
-    const exerciseElements = screen.getAllByTestId(/^exercise-name-/);
-    expect(exerciseElements).toHaveLength(mockExerciseTypes.length);
+    await waitFor(() => {
+      expect(screen.getByText("New exercise")).toBeInTheDocument();
+    });
 
-    mockExerciseTypes.forEach((exercise) => {
+    expect(screen.getAllByTestId(/^exercise-name-/)).toHaveLength(
+      exerciseTypesForUser.length
+    );
+
+    exerciseTypesForUser.forEach((exercise) => {
       const exerciseElement = screen.getByTestId(
         `exercise-name-${exercise.id}`
       );
@@ -94,8 +93,12 @@ describe("ExercisesPage", () => {
     });
   });
 
-  test("renders the 'New exercise' page when the 'New exercise' button is clicked", () => {
+  test("renders the 'New exercise' page when the 'New exercise' button is clicked", async () => {
     renderWithProviders(<ExercisesPage />);
+    await waitFor(() => {
+      expect(screen.getByText("New exercise")).toBeInTheDocument();
+    });
+
     fireEvent.click(screen.getByText("New exercise"));
     waitFor(() =>
       expect(screen.getByText("Add a new exercise")).toBeInTheDocument()
