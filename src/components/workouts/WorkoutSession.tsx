@@ -44,11 +44,11 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
   const [workoutToDelete, setWorkoutToDelete] = useState<Workout | null>(null);
   const [localExerciseInstances, setLocalExerciseInstances] = useState<
     ExerciseInstance[]
-  >(wrk.exerciseInstances);
+  >(wrk?.exerciseInstances);
 
-  const { userSettings } = useSelector(
-    (state: RootState) => state.userSettings
-  );
+  const userSettings =
+    useSelector((state: RootState) => state.userSettings?.userSettings) ||
+    defaultUserSettings;
 
   useEffect(() => {
     dispatch(fetchUserSettings());

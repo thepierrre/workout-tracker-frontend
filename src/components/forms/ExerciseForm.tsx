@@ -247,6 +247,7 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
                   direction="column"
                   ml={2}
                   w="45%"
+                  data-testid={`category-name-${category.name}`}
                   key={category.name}
                   onClick={() => handleToast(isCategorySelected(category))}
                 >
@@ -254,7 +255,7 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
                     isChecked={isCategorySelected(category)}
                     isDisabled={isCheckboxDisabled(category)}
                     onChange={() => handleCheck(category)}
-                    data-testid="not selected checkbox"
+                    data-testid={`checkbox-category-name-${category.name}`}
                     fontWeight={isCategorySelected(category) ? "bold" : ""}
                   >
                     {category.name.charAt(0).toLocaleUpperCase() +

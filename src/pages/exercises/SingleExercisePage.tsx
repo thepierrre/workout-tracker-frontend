@@ -12,7 +12,6 @@ import {
   IconButton,
   Box,
   useDisclosure,
-  Spinner,
 } from "@chakra-ui/react";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { updateExercise } from "../../features/exercises/exercisesSlice";

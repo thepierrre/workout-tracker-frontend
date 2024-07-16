@@ -121,7 +121,32 @@ export const exerciseTypesForUser: Exercise[] = [
 ];
 
 export const getExerciseTypesForUserHandler = [
-  rest.get("http://localhost:8080/api/users/me", (_, res, ctx) => {
+  rest.get("http://localhost:8080/api/user-exercise-types", (_, res, ctx) => {
     return res(ctx.status(200), ctx.json(exerciseTypesForUser));
+  }),
+
+  rest.put("http://localhost:8080/api/exercise-types/:id", (req, res, ctx) => {
+    const { id } = req.params;
+    const updatedExercise = req.body as Exercise;
+    const index = exerciseTypesForUser.findIndex((ex) => ex.id === id);
+
+    // Check if the name is taken by any other exercise
+    const nameTaken = exerciseTypesForUser.some(
+      (ex) => ex.name === updatedExercise.name && ex.id !== id
+    );
+
+    if (nameTaken) {
+      return res(
+        ctx.status(409),
+        ctx.json({ message: "An exercise with this name already exists!" })
+      );
+    }
+
+    if (index !== -1) {
+      exerciseTypesForUser[index] = updatedExercise;
+      return res(ctx.status(200), ctx.json(exerciseTypesForUser[index]));
+    }
+
+    return res(ctx.status(404), ctx.json({ message: "Exercise not found" }));
   }),
 ];

@@ -49,10 +49,14 @@ export const categories = [
     id: "650e8400-c29b-41d4-a716-446655440010",
     name: "middle deltoids",
   },
+  {
+    id: "100e8400-c29c-41d4-a716-446655440010",
+    name: "test category",
+  },
 ];
 
 export const getCategoriesHandler = [
-  rest.get("http://localhost:8080/api/users/me", (_, res, ctx) => {
+  rest.get("http://localhost:8080/api/categories", (_, res, ctx) => {
     return res(ctx.status(200), ctx.json(categories));
   }),
 ];

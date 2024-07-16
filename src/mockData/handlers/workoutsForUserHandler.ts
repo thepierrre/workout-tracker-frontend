@@ -114,7 +114,7 @@ export const workoutsForUser = [
 ];
 
 export const getWorkoutsForUserHandler = [
-  rest.get("http://localhost:8080/api/users/me", (_, res, ctx) => {
+  rest.get("http://localhost:8080/api/user-workouts", (_, res, ctx) => {
     return res(ctx.status(200), ctx.json(workoutsForUser));
   }),
 ];

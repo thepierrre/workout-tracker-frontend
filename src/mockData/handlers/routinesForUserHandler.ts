@@ -112,7 +112,7 @@ export const routinesForUser = [
 ];
 
 export const getRoutinesForUserHandler = [
-  rest.get("http://localhost:8080/api/users/me", (_, res, ctx) => {
+  rest.get("http://localhost:8080/api/user-routines", (_, res, ctx) => {
     return res(ctx.status(200), ctx.json(routinesForUser));
   }),
 ];

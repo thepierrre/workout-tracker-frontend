@@ -8,7 +8,7 @@ export const userSettings = {
 };
 
 export const getUserSettingsHandler = [
-  rest.get("http://localhost:8080/api/users/me", (_, res, ctx) => {
+  rest.get("http://localhost:8080/api/users/user-settings", (_, res, ctx) => {
     return res(ctx.status(200), ctx.json(userSettings));
   }),
 ];
