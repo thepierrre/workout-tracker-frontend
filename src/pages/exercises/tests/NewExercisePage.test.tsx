@@ -5,7 +5,7 @@ import {
   fireEvent,
   act,
 } from "@testing-library/react";
-import NewExercisePage from "../NewExercisePage";
+import ExercisesPage from "../ExercisesPage";
 import { Provider } from "react-redux";
 import { ChakraProvider } from "@chakra-ui/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
@@ -19,46 +19,90 @@ import exercisesReducer from "../../../features/exercises/exercisesSlice";
 import routinesReducer from "../../../features/routines/routinesSlice";
 import categoriesReducer from "../../../features/exercises/categoriesSlice";
 import { workoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
+import { exerciseTypesForUser as mutableExerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
+import { categories as initialCategories } from "../../../mockData/handlers/categoriesHandler";
 import { categories } from "../../../mockData/handlers/categoriesHandler";
 import { initializedUser } from "../../../mockData/authHandlers/initializeUserHandler";
-import { exerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
-import ExercisesPage from "../ExercisesPage";
+import NewExercisePage from "../NewExercisePage";
+import { User } from "../../../interfaces/user.interface";
+import { Workout } from "../../../interfaces/workout.interface";
+import { Exercise } from "../../../interfaces/exercise.interface";
+import { Category } from "../../../interfaces/category.interface";
 
-const store = configureStore({
-  reducer: {
-    workoutSessions: workoutSessionsReducer,
-    chosenDay: chosenDayReducer,
-    activeExerciseInstance: activeExerciseInstanceReducer,
-    authenticatedUser: authenticatedUserReducer,
-    exercises: exercisesReducer,
-    routines: routinesReducer,
-    categories: categoriesReducer,
+const deepClone = (obj: any) => JSON.parse(JSON.stringify(obj));
+
+const initialExerciseTypesList = deepClone(mutableExerciseTypesForUser);
+
+interface AuthenticatedUserState {
+  user: User;
+  loading: boolean;
+  error: any;
+}
+
+interface WorkoutSessionsState {
+  workouts: Workout[];
+  loading: boolean;
+  error: any;
+}
+
+interface ExercisesState {
+  exercises: Exercise[];
+  loading: boolean;
+  error: any;
+}
+
+interface CategoriesState {
+  categories: Category[];
+  loading: boolean;
+  error: any;
+}
+
+interface InitialState {
+  authenticatedUser: AuthenticatedUserState;
+  workoutSessions: WorkoutSessionsState;
+  exercises: ExercisesState;
+  categories: CategoriesState;
+}
+
+const createInitialState = () => ({
+  authenticatedUser: {
+    user: initializedUser,
+    loading: false,
+    error: null,
   },
-  preloadedState: {
-    authenticatedUser: {
-      user: initializedUser,
-      loading: false,
-      error: null,
-    },
-    workoutSessions: {
-      workouts: workoutsForUser,
-      loading: false,
-      error: null,
-    },
-    exercises: {
-      exercises: exerciseTypesForUser,
-      loading: false,
-      error: null,
-    },
-    categories: {
-      categories: categories,
-      loading: false,
-      error: null,
-    },
+  workoutSessions: {
+    workouts: workoutsForUser,
+    loading: false,
+    error: null,
+  },
+  exercises: {
+    exercises: deepClone(initialExerciseTypesList),
+    loading: false,
+    error: null,
+  },
+  categories: {
+    categories: deepClone(initialCategories),
+    loading: false,
+    error: null,
   },
 });
 
-const renderWithProviders = (ui: React.ReactElement) => {
+const createStore = (initialState: InitialState) => {
+  return configureStore({
+    reducer: {
+      workoutSessions: workoutSessionsReducer,
+      chosenDay: chosenDayReducer,
+      activeExerciseInstance: activeExerciseInstanceReducer,
+      authenticatedUser: authenticatedUserReducer,
+      exercises: exercisesReducer,
+      routines: routinesReducer,
+      categories: categoriesReducer,
+    },
+    preloadedState: initialState,
+  });
+};
+
+const renderWithProviders = (ui: React.ReactElement, store: any) => {
   return render(
     <ChakraProvider>
       <Provider store={store}>
@@ -74,8 +118,18 @@ const renderWithProviders = (ui: React.ReactElement) => {
 };
 
 describe("NewExercisePage", () => {
+  let store: any;
+
+  beforeEach(() => {
+    mutableExerciseTypesForUser.length = 0;
+    mutableExerciseTypesForUser.push(...deepClone(initialExerciseTypesList));
+
+    const initialState = createInitialState();
+    store = createStore(initialState);
+  });
+
   test("renders the heading, inputs and categories correctly", () => {
-    renderWithProviders(<NewExercisePage />);
+    renderWithProviders(<NewExercisePage />, store);
 
     waitFor(() => {
       expect(screen.getByText("Add a new exercise")).toBeInTheDocument();
@@ -94,7 +148,7 @@ describe("NewExercisePage", () => {
   });
 
   test("renders only filtered categories when the filter input is used", async () => {
-    renderWithProviders(<NewExercisePage />);
+    renderWithProviders(<NewExercisePage />, store);
 
     await waitFor(() => {
       expect(screen.getByText("Add a new exercise")).toBeInTheDocument();
@@ -123,7 +177,7 @@ describe("NewExercisePage", () => {
   });
 
   test("displays an error when an exercise with no name is submitted", async () => {
-    renderWithProviders(<NewExercisePage />);
+    renderWithProviders(<NewExercisePage />, store);
 
     await waitFor(() =>
       expect(screen.getByText("Add a new exercise")).toBeInTheDocument()
@@ -138,7 +192,7 @@ describe("NewExercisePage", () => {
   });
 
   test("displays an error when the exercise name coincides with another exercise", async () => {
-    renderWithProviders(<NewExercisePage />);
+    renderWithProviders(<NewExercisePage />, store);
 
     await waitFor(() =>
       expect(screen.getByText("Add a new exercise")).toBeInTheDocument()
@@ -158,7 +212,7 @@ describe("NewExercisePage", () => {
   });
 
   test("renders the exercise page with a new exercise when a correct exercise is submitted", async () => {
-    renderWithProviders(<NewExercisePage />);
+    renderWithProviders(<NewExercisePage />, store);
 
     await waitFor(() =>
       expect(screen.getByText("Add a new exercise")).toBeInTheDocument()

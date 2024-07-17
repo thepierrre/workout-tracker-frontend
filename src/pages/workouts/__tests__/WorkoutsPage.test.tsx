@@ -19,38 +19,42 @@ import exercisesReducer from "../../../features/exercises/exercisesSlice";
 import routinesReducer from "../../../features/routines/routinesSlice";
 import categoriesReducer from "../../../features/exercises/categoriesSlice";
 import { workoutsForUser as mutableWorkoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
-import { categories as initialCategories } from "../../../mockData/handlers/categoriesHandler";
+import { exerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
+import { categories } from "../../../mockData/handlers/categoriesHandler";
 import { initializedUser } from "../../../mockData/authHandlers/initializeUserHandler";
-import { exerciseTypesForUser as initialExerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
 import ExercisesPage from "../../exercises/ExercisesPage";
 import WorkoutsPage from "../WorkoutsPage";
+import { User } from "../../../interfaces/user.interface";
+import { Workout } from "../../../interfaces/workout.interface";
+import { Exercise } from "../../../interfaces/exercise.interface";
+import { Category } from "../../../interfaces/category.interface";
 
 const deepClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 
 const initialWorkoutsList = deepClone(mutableWorkoutsForUser);
 
 interface AuthenticatedUserState {
-  user: any; // Replace with the actual type
+  user: User;
   loading: boolean;
-  error: any; // Replace with the actual type
+  error: any;
 }
 
 interface WorkoutSessionsState {
-  workouts: any[]; // Replace with the actual type
+  workouts: Workout[];
   loading: boolean;
-  error: any; // Replace with the actual type
+  error: any;
 }
 
 interface ExercisesState {
-  exercises: any[]; // Replace with the actual type
+  exercises: Exercise[];
   loading: boolean;
-  error: any; // Replace with the actual type
+  error: any;
 }
 
 interface CategoriesState {
-  categories: any[]; // Replace with the actual type
+  categories: Category[];
   loading: boolean;
-  error: any; // Replace with the actual type
+  error: any;
 }
 
 interface InitialState {
@@ -72,12 +76,12 @@ const createInitialState = () => ({
     error: null,
   },
   exercises: {
-    exercises: deepClone(initialExerciseTypesForUser),
+    exercises: exerciseTypesForUser,
     loading: false,
     error: null,
   },
   categories: {
-    categories: deepClone(initialCategories),
+    categories: categories,
     loading: false,
     error: null,
   },
@@ -117,13 +121,13 @@ describe("WorkoutsPage", () => {
   let store: any;
 
   beforeEach(() => {
-    // Reset the mutableWorkoutsForUser to the initial state before each test
     mutableWorkoutsForUser.length = 0;
     mutableWorkoutsForUser.push(...deepClone(initialWorkoutsList));
 
     const initialState = createInitialState();
     store = createStore(initialState);
   });
+
   test("renders the calendar and workouts for the current day", async () => {
     renderWithProviders(<WorkoutsPage />, store);
 

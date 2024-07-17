@@ -13,46 +13,90 @@ import exercisesReducer from "../../../features/exercises/exercisesSlice";
 import routinesReducer from "../../../features/routines/routinesSlice";
 import categoriesReducer from "../../../features/exercises/categoriesSlice";
 import { workoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
+import { exerciseTypesForUser as mutableExerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
+import { categories as initialCategories } from "../../../mockData/handlers/categoriesHandler";
 import { categories } from "../../../mockData/handlers/categoriesHandler";
 import { initializedUser } from "../../../mockData/authHandlers/initializeUserHandler";
-import { exerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
 import NewExercisePage from "../NewExercisePage";
+import { User } from "../../../interfaces/user.interface";
+import { Workout } from "../../../interfaces/workout.interface";
+import { Exercise } from "../../../interfaces/exercise.interface";
+import { Category } from "../../../interfaces/category.interface";
 
-const store = configureStore({
-  reducer: {
-    workoutSessions: workoutSessionsReducer,
-    chosenDay: chosenDayReducer,
-    activeExerciseInstance: activeExerciseInstanceReducer,
-    authenticatedUser: authenticatedUserReducer,
-    exercises: exercisesReducer,
-    routines: routinesReducer,
-    categories: categoriesReducer,
+const deepClone = (obj: any) => JSON.parse(JSON.stringify(obj));
+
+const initialExerciseTypesList = deepClone(mutableExerciseTypesForUser);
+
+interface AuthenticatedUserState {
+  user: User;
+  loading: boolean;
+  error: any;
+}
+
+interface WorkoutSessionsState {
+  workouts: Workout[];
+  loading: boolean;
+  error: any;
+}
+
+interface ExercisesState {
+  exercises: Exercise[];
+  loading: boolean;
+  error: any;
+}
+
+interface CategoriesState {
+  categories: Category[];
+  loading: boolean;
+  error: any;
+}
+
+interface InitialState {
+  authenticatedUser: AuthenticatedUserState;
+  workoutSessions: WorkoutSessionsState;
+  exercises: ExercisesState;
+  categories: CategoriesState;
+}
+
+const createInitialState = () => ({
+  authenticatedUser: {
+    user: initializedUser,
+    loading: false,
+    error: null,
   },
-  preloadedState: {
-    authenticatedUser: {
-      user: initializedUser,
-      loading: false,
-      error: null,
-    },
-    workoutSessions: {
-      workouts: workoutsForUser,
-      loading: false,
-      error: null,
-    },
-    exercises: {
-      exercises: exerciseTypesForUser,
-      loading: false,
-      error: null,
-    },
-    categories: {
-      categories: categories,
-      loading: false,
-      error: null,
-    },
+  workoutSessions: {
+    workouts: workoutsForUser,
+    loading: false,
+    error: null,
+  },
+  exercises: {
+    exercises: deepClone(initialExerciseTypesList),
+    loading: false,
+    error: null,
+  },
+  categories: {
+    categories: deepClone(initialCategories),
+    loading: false,
+    error: null,
   },
 });
 
-const renderWithProviders = (ui: React.ReactElement) => {
+const createStore = (initialState: InitialState) => {
+  return configureStore({
+    reducer: {
+      workoutSessions: workoutSessionsReducer,
+      chosenDay: chosenDayReducer,
+      activeExerciseInstance: activeExerciseInstanceReducer,
+      authenticatedUser: authenticatedUserReducer,
+      exercises: exercisesReducer,
+      routines: routinesReducer,
+      categories: categoriesReducer,
+    },
+    preloadedState: initialState,
+  });
+};
+
+const renderWithProviders = (ui: React.ReactElement, store: any) => {
   return render(
     <ChakraProvider>
       <Provider store={store}>
@@ -71,8 +115,18 @@ const renderWithProviders = (ui: React.ReactElement) => {
 };
 
 describe("ExercisesPage", () => {
+  let store: any;
+
+  beforeEach(() => {
+    mutableExerciseTypesForUser.length = 0;
+    mutableExerciseTypesForUser.push(...deepClone(initialExerciseTypesList));
+
+    const initialState = createInitialState();
+    store = createStore(initialState);
+  });
+
   test("renders the correct number of exercises and their categories", async () => {
-    renderWithProviders(<ExercisesPage />);
+    renderWithProviders(<ExercisesPage />, store);
 
     await waitFor(() => {
       expect(screen.getByText("New exercise")).toBeInTheDocument();
@@ -82,10 +136,10 @@ describe("ExercisesPage", () => {
     });
 
     expect(screen.getAllByTestId(/^exercise-name-/)).toHaveLength(
-      exerciseTypesForUser.length
+      mutableExerciseTypesForUser.length
     );
 
-    exerciseTypesForUser.forEach((exercise) => {
+    mutableExerciseTypesForUser.forEach((exercise: Exercise) => {
       const exerciseElement = screen.getByTestId(
         `exercise-name-${exercise.id}`
       );
@@ -96,7 +150,7 @@ describe("ExercisesPage", () => {
         `exercise-categories-${exercise.id}`
       );
       const expectedCategories = exercise.categories
-        .map((category) => category?.name)
+        .map((category: Category) => category?.name)
         .join(" | ")
         .toUpperCase()
         .trim();
@@ -106,7 +160,7 @@ describe("ExercisesPage", () => {
   });
 
   test("renders the 'New exercise' page when the 'New exercise' button is clicked", async () => {
-    renderWithProviders(<ExercisesPage />);
+    renderWithProviders(<ExercisesPage />, store);
 
     await waitFor(() => {
       expect(screen.getByText("New exercise")).toBeInTheDocument();
@@ -131,7 +185,7 @@ describe("ExercisesPage", () => {
   });
 
   test("renders only filtered exercises when the filter input is used", async () => {
-    renderWithProviders(<ExercisesPage />);
+    renderWithProviders(<ExercisesPage />, store);
 
     await waitFor(() => {
       expect(screen.getByText("New exercise")).toBeInTheDocument();

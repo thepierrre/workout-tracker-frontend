@@ -8,9 +8,10 @@ import Datepicker from "../../components/workouts/Datepicker";
 import NewWorkout from "../../components/workouts/NewWorkout";
 import WorkoutSession from "../../components/workouts/WorkoutSession";
 import { RootState, AppDispatch } from "../../app/store";
-import { format } from "date-fns";
+import { format, isValid, parseISO } from "date-fns";
 import Container from "../../components/UI/Container";
 import { Text, useToast, ToastId, Box } from "@chakra-ui/react";
+import { Workout } from "../../interfaces/workout.interface";
 
 export const WorkoutsPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -28,9 +29,23 @@ export const WorkoutsPage = () => {
     setLocalWorkouts(workouts);
   }, [workouts]);
 
-  const filteredWorkouts = localWorkouts?.filter(
-    (wrk) => format(new Date(wrk.creationDate), "dd/MM/yyyy") === chosenDay
-  );
+  console.log(localWorkouts);
+
+  const filteredWorkouts = localWorkouts?.filter((wrk: Workout) => {
+    if (!wrk.creationDate) {
+      console.warn(`Missing date: ${wrk.id}`);
+      return false;
+    }
+
+    let creationDate = parseISO(wrk.creationDate);
+
+    if (!isValid(creationDate)) {
+      console.warn(`Invalid date: ${wrk.creationDate}`);
+      return false;
+    }
+
+    return format(creationDate, "dd/MM/yyyy") === chosenDay;
+  });
 
   const addToast = () => {
     if (toastIdRef.current) {

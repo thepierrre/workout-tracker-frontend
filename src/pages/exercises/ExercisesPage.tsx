@@ -20,6 +20,7 @@ import {
 import SingleExercise from "../../components/exercises/SingleExercise";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
 import { fetchWorkouts } from "../../features/workout/workoutSessionsSlice";
+import { Exercise } from "../../interfaces/exercise.interface";
 
 const ExercisesPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -113,8 +114,8 @@ const ExercisesPage = () => {
     }
   };
 
-  const filteredExercises = exercises.filter((exercise) =>
-    exercise.name.toLowerCase().startsWith(searchedExercises.toLowerCase())
+  const filteredExercises = exercises.filter((exercise: Exercise) =>
+    exercise?.name?.toLowerCase().startsWith(searchedExercises.toLowerCase())
   );
 
   const handleExerciseFiltering = (

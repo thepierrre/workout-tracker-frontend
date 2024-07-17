@@ -5,8 +5,8 @@ import { ExerciseInstance } from "interfaces/exerciseInstance.interface";
 
 const deepClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 
-// Initial immutable state
-const initialWorkoutsList = [
+// immutable, for each test to start
+const initialWorkoutsForUser = [
   {
     id: "05fa8b17-08ee-41f1-b80e-5112c98c2c3e",
     creationDate: format(new Date(), "yyyy-MM-dd"),
@@ -118,8 +118,8 @@ const initialWorkoutsList = [
   },
 ];
 
-// Mutable list that will be reset before each test
-export let workoutsForUser = deepClone(initialWorkoutsList);
+// mutable list, reset before each test
+export let workoutsForUser = deepClone(initialWorkoutsForUser);
 
 const newWorkoutExercises: ExerciseInstance[] = [
   {
@@ -248,10 +248,12 @@ export const workoutsForUserHandler = [
   http.delete(
     "http://localhost:8080/api/workouts/05fa8b17-08ee-41f1-b80e-5112c98c2c3e",
     async () => {
-      workoutsForUser = workoutsForUser.filter(
-        (workout: Workout) =>
-          workout.id !== "05fa8b17-08ee-41f1-b80e-5112c98c2c3e"
-      );
+      workoutsForUser = [
+        ...workoutsForUser.filter(
+          (workout: Workout) =>
+            workout.id !== "05fa8b17-08ee-41f1-b80e-5112c98c2c3e"
+        ),
+      ];
 
       return new HttpResponse(null, { status: 204 });
     }

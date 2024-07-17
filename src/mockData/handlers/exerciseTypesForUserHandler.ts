@@ -1,7 +1,9 @@
 import { Exercise } from "interfaces/exercise.interface";
 import { http, HttpResponse } from "msw";
 
-export let exerciseTypesForUser: Exercise[] = [
+const deepClone = (obj: any) => JSON.parse(JSON.stringify(obj));
+
+export const initialExerciseTypesForUser: Exercise[] = [
   {
     id: "a6647d9c-a926-499e-9a5f-e9f16690bfda",
     name: "squats",
@@ -120,6 +122,8 @@ export let exerciseTypesForUser: Exercise[] = [
   },
 ];
 
+export let exerciseTypesForUser = deepClone(initialExerciseTypesForUser);
+
 export const exerciseTypesForUserHandler = [
   http.get("http://localhost:8080/api/user-exercise-types", () => {
     return HttpResponse.json(exerciseTypesForUser);
@@ -131,11 +135,12 @@ export const exerciseTypesForUserHandler = [
       const updatedExercise = (await request.json()) as Exercise;
 
       const index = exerciseTypesForUser.findIndex(
-        (ex) => ex.id === updatedExercise.id
+        (ex: Exercise) => ex.id === updatedExercise.id
       );
 
       const nameAlreadyTaken = exerciseTypesForUser.some(
-        (ex) => ex.name === updatedExercise.name && ex.id !== updatedExercise.id
+        (ex: Exercise) =>
+          ex.name === updatedExercise.name && ex.id !== updatedExercise.id
       );
 
       if (nameAlreadyTaken) {
