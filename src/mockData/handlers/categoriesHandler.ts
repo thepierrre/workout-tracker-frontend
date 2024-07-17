@@ -1,4 +1,5 @@
-import { rest } from "msw";
+// import { http, rest } from "msw";
+import { http, HttpResponse } from "msw";
 
 export const categories = [
   {
@@ -56,7 +57,7 @@ export const categories = [
 ];
 
 export const getCategoriesHandler = [
-  rest.get("http://localhost:8080/api/categories", (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json(categories));
+  http.get("http://localhost:8080/api/categories", () => {
+    return HttpResponse.json(categories);
   }),
 ];

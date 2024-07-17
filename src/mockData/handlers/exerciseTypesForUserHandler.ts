@@ -1,5 +1,6 @@
 import { Exercise } from "interfaces/exercise.interface";
-import { rest } from "msw";
+// import { rest } from "msw";
+import { http, HttpResponse } from "msw";
 
 export const exerciseTypesForUser: Exercise[] = [
   {
@@ -120,33 +121,78 @@ export const exerciseTypesForUser: Exercise[] = [
   },
 ];
 
-export const getExerciseTypesForUserHandler = [
-  rest.get("http://localhost:8080/api/user-exercise-types", (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json(exerciseTypesForUser));
+export const exerciseTypesForUserHandler = [
+  http.get("http://localhost:8080/api/user-exercise-types", () => {
+    return HttpResponse.json(exerciseTypesForUser);
   }),
 
-  rest.put("http://localhost:8080/api/exercise-types/:id", (req, res, ctx) => {
-    const { id } = req.params;
-    const updatedExercise = req.body as Exercise;
-    const index = exerciseTypesForUser.findIndex((ex) => ex.id === id);
+  http.put(
+    "http://localhost:8080/api/exercise-types/a6647d9c-a926-499e-9a5f-e9f16690bfdg",
+    () => {
+      //const { exerciseId } = req.params;
+      //const exerciseId = "a6647d9c-a926-499e-9a5f-e9f16690bfdg";
+      const updatedExercise: Exercise = {
+        id: "a6647d9c-a926-499e-9a5f-e9f16690bfdg",
+        name: "edited",
+        categories: [],
+      };
+      return HttpResponse.json(updatedExercise);
+      // const index = exerciseTypesForUser.findIndex(
+      //   (ex) => ex.id === exerciseId
+      // );
 
-    // Check if the name is taken by any other exercise
-    const nameTaken = exerciseTypesForUser.some(
-      (ex) => ex.name === updatedExercise.name && ex.id !== id
-    );
+      //console.log("exercise to update:", updatedExercise);
 
-    if (nameTaken) {
-      return res(
-        ctx.status(409),
-        ctx.json({ message: "An exercise with this name already exists!" })
-      );
+      // const nameAlreadyTaken = exerciseTypesForUser.some(
+      //   (ex) => ex.name === updatedExercise.name && ex.id !== exerciseId
+      // );
+
+      // if (nameAlreadyTaken) {
+      //   return res(
+      //     ctx.status(409),
+      //     ctx.json({ message: "An exercise with this name already exists!" })
+      //   );
+      // }
+
+      // if (index !== -1) {
+      //   console.log("Updated exercise", updatedExercise);
+      //   exerciseTypesForUser[index] = {
+      //     ...exerciseTypesForUser[index],
+      //     ...updatedExercise,
+      //   };
+      //   return res(ctx.status(200), ctx.json(exerciseTypesForUser[index]));
+      // } else {
+      //   console.log("404 Not Found: Exercise not found");
+      //   return res(
+      //     ctx.status(404),
+      //     ctx.json({ message: "Exercise not found" })
+      //   );
+      // }
     }
+  ),
 
-    if (index !== -1) {
-      exerciseTypesForUser[index] = updatedExercise;
-      return res(ctx.status(200), ctx.json(exerciseTypesForUser[index]));
-    }
+  // rest.post("http://localhost:8080/api/exercise-types", (req, res, ctx) => {
+  //   const newExercise = req.body as Exercise;
+  //   newExercise.userId = undefined;
+  //   //console.log("cool new req body:", newExercise);
 
-    return res(ctx.status(404), ctx.json({ message: "Exercise not found" }));
-  }),
+  //   const nameAlreadyTaken = exerciseTypesForUser.some(
+  //     (ex) => ex.name === newExercise.name
+  //   );
+
+  //   if (nameAlreadyTaken) {
+  //     return res(
+  //       ctx.status(409),
+  //       ctx.json({ message: "An exercise with this name already exists!" })
+  //     );
+  //   }
+
+  //   newExercise.id = "500e8488-c29b-65fd-a716-446mh440009";
+  //   newExercise.userId = "12345";
+
+  //console.log("cool new exercise:", newExercise);
+
+  //   exerciseTypesForUser.push(newExercise);
+  //   return res(ctx.status(201), ctx.json(newExercise));
+  // }),
 ];

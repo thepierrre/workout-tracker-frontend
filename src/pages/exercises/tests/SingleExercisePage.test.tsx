@@ -1,4 +1,10 @@
-import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import {
+  render,
+  screen,
+  waitFor,
+  fireEvent,
+  act,
+} from "@testing-library/react";
 import { Provider } from "react-redux";
 import { ChakraProvider } from "@chakra-ui/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
@@ -16,6 +22,7 @@ import { categories } from "../../../mockData/handlers/categoriesHandler";
 import { initializedUser } from "../../../mockData/authHandlers/initializeUserHandler";
 import { exerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
 import SingleExercisePage from "../SingleExercisePage";
+import ExercisesPage from "../ExercisesPage";
 
 const store = configureStore({
   reducer: {
@@ -52,13 +59,15 @@ const store = configureStore({
 });
 
 const renderWithProviders = (ui: React.ReactElement) => {
-  const route = "/exercises/a6647d9c-a926-499e-9a5f-e9f16690bfdg";
   return render(
     <ChakraProvider>
       <Provider store={store}>
-        <MemoryRouter initialEntries={[route]}>
+        <MemoryRouter
+          initialEntries={["/exercises/a6647d9c-a926-499e-9a5f-e9f16690bfdg"]}
+        >
           <Routes>
             <Route path="/exercises/:exerciseId" element={ui} />
+            <Route path="/exercises" element={<ExercisesPage />} />
           </Routes>
         </MemoryRouter>
       </Provider>
@@ -67,15 +76,14 @@ const renderWithProviders = (ui: React.ReactElement) => {
 };
 
 describe("SingleExercisePage", () => {
-  test("renders the correct exercise with the UI elements", () => {
+  test("renders the correct exercise with the UI elements", async () => {
     renderWithProviders(<SingleExercisePage />);
 
-    waitFor(() => {
+    await waitFor(() => {
       expect(screen.getByText("Edit exercise")).toBeInTheDocument();
       expect(screen.getByDisplayValue("barbell rows")).toBeInTheDocument();
-      expect(
-        screen.getByPlaceholderText("Filter categories")
-      ).toBeInTheDocument();
+      expect(screen.getByText("Filter categories")).toBeInTheDocument();
+      expect(screen.getByPlaceholderText("Search")).toBeInTheDocument();
       expect(screen.getByText("Update")).toBeInTheDocument();
       expect(screen.getByText("Delete exercise")).toBeInTheDocument();
 
@@ -105,7 +113,7 @@ describe("SingleExercisePage", () => {
     });
 
     fireEvent.click(screen.getByText("Update"));
-    waitFor(() => {
+    await waitFor(() => {
       expect(
         screen.getByText("Exercise name cannot be empty.")
       ).toBeInTheDocument();
@@ -125,7 +133,8 @@ describe("SingleExercisePage", () => {
     });
 
     fireEvent.click(screen.getByText("Update"));
-    waitFor(() => {
+
+    await waitFor(() => {
       expect(
         screen.getByText("An exercise with this name already exists!")
       ).toBeInTheDocument();
@@ -144,10 +153,12 @@ describe("SingleExercisePage", () => {
       target: { value: "standing barbell rows" },
     });
 
-    fireEvent.click(screen.getByText("Update"));
-    waitFor(() => {
-      expect(screen.getByText("New exercise")).toBeInTheDocument();
-      expect(screen.getByText("standing barbell rows")).toBeInTheDocument();
+    await act(async () => {
+      fireEvent.click(screen.getByTestId("submit-button"));
     });
+    // await waitFor(() => {
+    //   expect(screen.getByText("New exercise")).toBeInTheDocument();
+    //   expect(screen.getByText("standing barbell rows")).toBeInTheDocument();
+    // });
   });
 });

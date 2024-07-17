@@ -2,7 +2,7 @@ import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import NewExercisePage from "../NewExercisePage";
 import { Provider } from "react-redux";
 import { ChakraProvider } from "@chakra-ui/react";
-import { BrowserRouter } from "react-router-dom";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import "@testing-library/jest-dom";
 import { configureStore } from "@reduxjs/toolkit";
 import workoutSessionsReducer from "../../../features/workout/workoutSessionsSlice";
@@ -16,6 +16,7 @@ import { workoutsForUser } from "../../../mockData/handlers/workoutsForUserHandl
 import { categories } from "../../../mockData/handlers/categoriesHandler";
 import { initializedUser } from "../../../mockData/authHandlers/initializeUserHandler";
 import { exerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
+import ExercisesPage from "../ExercisesPage";
 
 const store = configureStore({
   reducer: {
@@ -55,7 +56,12 @@ const renderWithProviders = (ui: React.ReactElement) => {
   return render(
     <ChakraProvider>
       <Provider store={store}>
-        <BrowserRouter>{ui}</BrowserRouter>
+        <MemoryRouter initialEntries={["/exercises/new-exercise"]}>
+          <Routes>
+            <Route path="/exercises/new-exercise" element={ui} />
+            <Route path="/exercises" element={<ExercisesPage />} />
+          </Routes>
+        </MemoryRouter>
       </Provider>
     </ChakraProvider>
   );
@@ -125,34 +131,33 @@ describe("NewExercisePage", () => {
     });
   });
 
-  // test("renders the exercise page with a new exercise when a correct exercise is submitted", () => {
-  //   renderWithProviders(<NewExercisePage />);
+  test("renders the exercise page with a new exercise when a correct exercise is submitted", async () => {
+    renderWithProviders(<NewExercisePage />);
 
-  //   waitFor(() =>
-  //     expect(screen.getByText("Add a new exercise")).toBeInTheDocument()
-  //   );
+    await waitFor(() =>
+      expect(screen.getByText("Add a new exercise")).toBeInTheDocument()
+    );
 
-  //   fireEvent.change(screen.getByPlaceholderText("Enter a name"), {
-  //     target: { value: "test exercise" },
-  //   });
-  //   expect(screen.getByDisplayValue("test exercise")).toBeInTheDocument();
+    fireEvent.change(screen.getByPlaceholderText("Enter a name"), {
+      target: { value: "new exercise" },
+    });
+    expect(screen.getByDisplayValue("new exercise")).toBeInTheDocument();
 
-  //   fireEvent.change(screen.getByPlaceholderText("Search"), {
-  //     target: { value: "test" },
-  //   });
-  //   waitFor(() => {
-  //     expect(screen.getByDisplayValue("Test category")).toBeInTheDocument();
-  //     fireEvent.click(
-  //       screen.getByTestId("checkbox-categry-name-test category")
-  //     );
-  //   });
+    fireEvent.change(screen.getByPlaceholderText("Search"), {
+      target: { value: "test" },
+    });
+    expect(screen.getByText("Test category")).toBeInTheDocument();
 
-  //   fireEvent.click(screen.getByText("Create"));
+    fireEvent.click(screen.getByTestId("checkbox-category-name-test category"));
 
-  //   waitFor(() => {
-  //     expect(screen.getByText("New exercise")).toBeInTheDocument();
-  //     expect(screen.getByText("test exercise")).toBeInTheDocument();
-  //     expect(screen.getByText("Test category")).toBeInTheDocument();
-  //   });
-  // });
+    // await act(async () => {
+    //   fireEvent.click(screen.getByTestId("submit-button"));
+    // });
+
+    // await waitFor(() => {
+    //   expect(screen.getByText("New exercise")).toBeInTheDocument();
+    //   expect(screen.getByText("test exercise")).toBeInTheDocument();
+    //   expect(screen.getByText("Test category")).toBeInTheDocument();
+    // });
+  });
 });

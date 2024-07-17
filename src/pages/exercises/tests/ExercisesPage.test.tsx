@@ -140,11 +140,14 @@ describe("ExercisesPage", () => {
     fireEvent.change(screen.getByPlaceholderText("Search for exercises"), {
       target: { value: "Dumbbell" },
     });
-    expect(screen.getByDisplayValue("Dumbbell")).toBeInTheDocument();
 
-    waitFor(() => {
-      expect(screen.getByText("Dumbbell pushes")).toBeInTheDocument();
-      expect(screen.getByText("Dumbbell lateral raises")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByDisplayValue("Dumbbell")).toBeInTheDocument();
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("dumbbell pushes")).toBeInTheDocument();
+      expect(screen.getByText("dumbbell lateral raises")).toBeInTheDocument();
       expect(screen.queryByText("squats")).toBeNull();
       expect(screen.queryByText("deadlifts")).toBeNull();
       expect(screen.queryByText("bench press")).toBeNull();

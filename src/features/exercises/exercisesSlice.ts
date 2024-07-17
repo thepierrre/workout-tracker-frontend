@@ -45,11 +45,17 @@ export const addExercise = createAsyncThunk<
   } catch (error) {
     let errorMessage = "An unknown error occurred";
     if (axios.isAxiosError(error) && error.response) {
+      console.log("Axios error response:", error.response);
       if (error.response.status === 409) {
         errorMessage = "An exercise with this name already exists!";
       } else {
         errorMessage = error.response.data.message;
       }
+    } else if (error instanceof Error) {
+      console.log("Non-Axios error:", error);
+      errorMessage = error.message;
+    } else {
+      console.log("Unexpected error type:", error);
     }
     return thunkAPI.rejectWithValue(errorMessage);
   }
@@ -61,6 +67,7 @@ export const updateExercise = createAsyncThunk<
   { rejectValue: string }
 >("exercises/updateExercise", async (updatedExercise, thunkAPI) => {
   try {
+    //console.log(updatedExercise);
     const response = await axiosInstance.put(
       `exercise-types/${updatedExercise.id}`,
       updatedExercise
@@ -69,11 +76,17 @@ export const updateExercise = createAsyncThunk<
   } catch (error) {
     let errorMessage = "An unknown error occurred";
     if (axios.isAxiosError(error) && error.response) {
+      console.log("Axios error response:", error.response);
       if (error.response.status === 409) {
         errorMessage = "An exercise with this name already exists!";
       } else {
         errorMessage = error.response.data.message;
       }
+    } else if (error instanceof Error) {
+      console.log("Non-Axios error:", error);
+      errorMessage = error.message;
+    } else {
+      console.log("Unexpected error type:", error);
     }
     return thunkAPI.rejectWithValue(errorMessage);
   }

@@ -1,4 +1,4 @@
-import { User } from "interfaces/user.interface";
+// import { User } from "interfaces/user.interface";
 import { Routine } from "interfaces/routine.interface";
 import { Workout } from "interfaces/workout.interface";
 import { Exercise } from "interfaces/exercise.interface";
@@ -6,15 +6,15 @@ import { Category } from "interfaces/category.interface";
 import { format } from "date-fns";
 import { UserSettings } from "interfaces/userSettings.interface";
 
-export const mockUser: User = {
-  id: "1",
-  username: "testUser",
-  password: "",
-  routines: [],
-  workoutSessions: [],
-  exercises: [],
-  email: "testuser@example.com",
-};
+// export const mockUser: User = {
+//   id: "1",
+//   username: "testUser",
+//   password: "",
+//   routines: [],
+//   workoutSessions: [],
+//   exercises: [],
+//   email: "testuser@example.com",
+// };
 
 export const mockCategories: Category[] = [
   { id: "1", name: "category1" },

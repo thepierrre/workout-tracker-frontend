@@ -3,7 +3,7 @@ import { format } from "date-fns";
 import { User } from "../../interfaces/user.interface";
 
 export const initializedUser: User = {
-  id: "1",
+  id: "12345",
   username: "testUser",
   password: "",
   routines: [],
@@ -14,6 +14,7 @@ export const initializedUser: User = {
 
 export const fetchedUser = {
   username: "testUser",
+  id: "12345",
   email: "testuser@example.com",
   routines: [
     {
