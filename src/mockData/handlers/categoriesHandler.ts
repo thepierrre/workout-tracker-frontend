@@ -1,7 +1,7 @@
-// import { http, rest } from "msw";
+import { Category } from "../../interfaces/category.interface";
 import { http, HttpResponse } from "msw";
 
-export const categories = [
+export const categories: Category[] = [
   {
     id: "100e8400-e29b-41d4-a716-446655440001",
     name: "glutes",
@@ -56,7 +56,7 @@ export const categories = [
   },
 ];
 
-export const getCategoriesHandler = [
+export const categoriesHandler = [
   http.get("http://localhost:8080/api/categories", () => {
     return HttpResponse.json(categories);
   }),

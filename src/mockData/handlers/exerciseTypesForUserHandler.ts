@@ -1,5 +1,4 @@
 import { Exercise } from "interfaces/exercise.interface";
-// import { rest } from "msw";
 import { http, HttpResponse } from "msw";
 
 export let exerciseTypesForUser: Exercise[] = [
@@ -128,19 +127,15 @@ export const exerciseTypesForUserHandler = [
 
   http.put(
     "http://localhost:8080/api/exercise-types/a6647d9c-a926-499e-9a5f-e9f16690bfdk",
-    async () => {
-      const updatedExercise: Exercise = {
-        id: "a6647d9c-a926-499e-9a5f-e9f16690bfdg",
-        name: "bench press",
-        categories: [],
-      };
+    async ({ request }) => {
+      const updatedExercise = (await request.json()) as Exercise;
 
       const index = exerciseTypesForUser.findIndex(
         (ex) => ex.id === updatedExercise.id
       );
 
       const nameAlreadyTaken = exerciseTypesForUser.some(
-        (ex) => ex.name === "bench press" && ex.id !== updatedExercise.id
+        (ex) => ex.name === updatedExercise.name && ex.id !== updatedExercise.id
       );
 
       if (nameAlreadyTaken) {
@@ -163,12 +158,8 @@ export const exerciseTypesForUserHandler = [
 
   http.put(
     "http://localhost:8080/api/exercise-types/a6647d9c-a926-499e-9a5f-e9f16690bfdi",
-    async () => {
-      const updatedExercise: Exercise = {
-        id: "a6647d9c-a926-499e-9a5f-e9f16690bfdi",
-        name: "edited exercise",
-        categories: [],
-      };
+    async ({ request }) => {
+      const updatedExercise = (await request.json()) as Exercise;
 
       exerciseTypesForUser = [...exerciseTypesForUser, updatedExercise];
       return HttpResponse.json(updatedExercise);

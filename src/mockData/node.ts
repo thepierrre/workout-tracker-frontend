@@ -1,14 +1,14 @@
 import { setupServer } from "msw/node";
-import { getCategoriesHandler } from "./handlers/categoriesHandler.ts";
+import { categoriesHandler } from "./handlers/categoriesHandler.ts";
 import { exerciseTypesForUserHandler } from "./handlers/exerciseTypesForUserHandler.ts";
-import { getRoutinesForUserHandler } from "./handlers/routinesForUserHandler.ts";
-import { getUserSettingsHandler } from "./handlers/userSettingsHandler.ts";
-// import { getWorkoutsForUserHandler } from "./handlers/workoutsForUserHandler.ts";
+import { routinesForUserHandler } from "./handlers/routinesForUserHandler.ts";
+import { userSettingsHandler } from "./handlers/userSettingsHandler.ts";
+import { workoutsForUserHandler } from "./handlers/workoutsForUserHandler.ts";
 
 export const server = setupServer(
-  ...getCategoriesHandler,
+  ...categoriesHandler,
   ...exerciseTypesForUserHandler,
-  ...getRoutinesForUserHandler,
-  ...getUserSettingsHandler
-  // ...getWorkoutsForUserHandler
+  ...routinesForUserHandler,
+  ...userSettingsHandler,
+  ...workoutsForUserHandler
 );

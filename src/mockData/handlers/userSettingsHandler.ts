@@ -7,7 +7,7 @@ export const userSettings = {
   weightUnit: "kgs",
 };
 
-export const getUserSettingsHandler = [
+export const userSettingsHandler = [
   http.get("http://localhost:8080/api/users/user-settings", () => {
     return HttpResponse.json(userSettings);
   }),

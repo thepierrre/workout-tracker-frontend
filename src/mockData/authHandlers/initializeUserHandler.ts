@@ -1,6 +1,7 @@
-// import { rest } from "msw";
+import { http, HttpResponse } from "msw";
 import { format } from "date-fns";
 import { User } from "../../interfaces/user.interface";
+import { userSettings } from "../../mockData/handlers/userSettingsHandler";
 
 export const initializedUser: User = {
   id: "12345",
@@ -162,7 +163,7 @@ export const fetchedUser = {
           ],
         },
         {
-          id: "5fe33ee8-fcf2-49b5-b247-b4a7aeda4b5b",
+          id: "5fe33ee8-eeef2-49b5-b247-b4a7aeda4b5b",
           exerciseTypeName: "barbell rows",
           workingSets: [
             {
@@ -186,7 +187,7 @@ export const fetchedUser = {
           ],
         },
         {
-          id: "5fe33ee8-fcf2-49b5-b247-b4a7aeda4b5b",
+          id: "5fe33ee8-fcf2-49b5-b247-b4a7da4b5b",
           exerciseTypeName: "squats",
           workingSets: [
             {
@@ -210,7 +211,7 @@ export const fetchedUser = {
           ],
         },
         {
-          id: "5fe33ee8-fcf2-49b5-b247-b4a7aeda4b5b",
+          id: "5fe33ee8-ggggcf2-49b5-b247-b4a7aeda4b5b",
           exerciseTypeName: "dumbbell pushes",
           workingSets: [
             {
@@ -357,8 +358,8 @@ export const fetchedUser = {
   ],
 };
 
-// export const initializeUserHandler = [
-//   rest.get("http://localhost:8080/api/users/me", (_, res, ctx) => {
-//     return res(ctx.status(200), ctx.json(fetchedUser));
-//   }),
-// ];
+export const initializeUserHandler = [
+  http.get("http://localhost:8080/api/users/me", () => {
+    return HttpResponse.json(userSettings);
+  }),
+];

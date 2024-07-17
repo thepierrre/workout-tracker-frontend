@@ -180,7 +180,9 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
         onClick={() => handleOpenModal(wrk)}
       >
         <RemoveCircleOutlineIcon />
-        <Text fontWeight="bold">Delete workout</Text>
+        <Text fontWeight="bold" data-testid="delete-workout-button">
+          Delete workout
+        </Text>
         <DeletionModal
           isOpen={isOpen}
           onClose={onClose}

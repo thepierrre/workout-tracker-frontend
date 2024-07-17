@@ -160,8 +160,9 @@ const ExercisesPage = () => {
       <Flex direction="column" gap={2} align="center" mt={2}>
         {filteredExercises && filteredExercises.length > 0 ? (
           filteredExercises.map((exercise) => (
-            <Link key={exercise.id} to={`/exercises/${exercise.id}`}>
+            <Link key={exercise.name} to={`/exercises/${exercise.id}`}>
               <SingleExercise
+                key={exercise.id}
                 exercise={exercise}
                 setCurrentWorkoutExercisesNames={
                   setCurrentWorkoutExercisesNames

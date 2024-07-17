@@ -169,13 +169,19 @@ export const removeWorkout = createAsyncThunk<
     return workoutId;
   } catch (error) {
     let errorMessage = "An unknown error occurred";
-    if (error instanceof Error) {
+    if (axios.isAxiosError(error) && error.response) {
+      console.log("Axios error response:", error.response);
+
+      errorMessage = error.response.data.message;
+    } else if (error instanceof Error) {
+      console.log("Non-Axios error:", error);
       errorMessage = error.message;
+    } else {
+      console.log("Unexpected error type:", error);
     }
     return thunkAPI.rejectWithValue(errorMessage);
   }
 });
-
 export const removeExInstance = createAsyncThunk<
   string,
   string,

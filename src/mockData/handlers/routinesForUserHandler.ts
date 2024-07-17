@@ -1,7 +1,9 @@
+import { Routine } from "../../interfaces/routine.interface";
 import { http, HttpResponse } from "msw";
 
-export const routinesForUser = [
+export const routinesForUser: Routine[] = [
   {
+    userId: "12345",
     id: "916ee32a-728f-4eea-a3g6-d0e097b22b21",
     name: "Full Body Workout A",
     exerciseTypes: [
@@ -56,6 +58,7 @@ export const routinesForUser = [
     ],
   },
   {
+    userId: "12345",
     id: "916ee32a-728f-4ood-a3g6-d0e097b22c54",
     name: "Full Body Workout B",
     exerciseTypes: [
@@ -111,8 +114,8 @@ export const routinesForUser = [
   },
 ];
 
-export const getRoutinesForUserHandler = [
-  http.get("http://localhost:8080/api/user-exercise-types", () => {
+export const routinesForUserHandler = [
+  http.get("http://localhost:8080/api/user-routines", () => {
     return HttpResponse.json(routinesForUser);
   }),
 ];
