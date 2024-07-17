@@ -58,13 +58,11 @@ const store = configureStore({
   },
 });
 
-const renderWithProviders = (ui: React.ReactElement) => {
+const renderWithProviders = (ui: React.ReactElement, id: string) => {
   return render(
     <ChakraProvider>
       <Provider store={store}>
-        <MemoryRouter
-          initialEntries={["/exercises/a6647d9c-a926-499e-9a5f-e9f16690bfdg"]}
-        >
+        <MemoryRouter initialEntries={[`/exercises/${id}`]}>
           <Routes>
             <Route path="/exercises/:exerciseId" element={ui} />
             <Route path="/exercises" element={<ExercisesPage />} />
@@ -77,7 +75,10 @@ const renderWithProviders = (ui: React.ReactElement) => {
 
 describe("SingleExercisePage", () => {
   test("renders the correct exercise with the UI elements", async () => {
-    renderWithProviders(<SingleExercisePage />);
+    renderWithProviders(
+      <SingleExercisePage />,
+      "a6647d9c-a926-499e-9a5f-e9f16690bfdg"
+    );
 
     await waitFor(() => {
       expect(screen.getByText("Edit exercise")).toBeInTheDocument();
@@ -101,7 +102,10 @@ describe("SingleExercisePage", () => {
   });
 
   test("throws an error when the name for a submitted exercise is empty", async () => {
-    renderWithProviders(<SingleExercisePage />);
+    renderWithProviders(
+      <SingleExercisePage />,
+      "a6647d9c-a926-499e-9a5f-e9f16690bfdg"
+    );
 
     await waitFor(() => {
       expect(screen.getByText("Edit exercise")).toBeInTheDocument();
@@ -121,14 +125,19 @@ describe("SingleExercisePage", () => {
   });
 
   test("throws an error when the name for a submitted exercise coincides with another exercise's name", async () => {
-    renderWithProviders(<SingleExercisePage />);
+    renderWithProviders(
+      <SingleExercisePage />,
+      "a6647d9c-a926-499e-9a5f-e9f16690bfdk"
+    );
 
     await waitFor(() => {
       expect(screen.getByText("Edit exercise")).toBeInTheDocument();
-      expect(screen.getByDisplayValue("barbell rows")).toBeInTheDocument();
+      expect(
+        screen.getByDisplayValue("dumbbell lateral raises")
+      ).toBeInTheDocument();
     });
 
-    fireEvent.change(screen.getByDisplayValue("barbell rows"), {
+    fireEvent.change(screen.getByDisplayValue("dumbbell lateral raises"), {
       target: { value: "bench press" },
     });
 
@@ -142,23 +151,26 @@ describe("SingleExercisePage", () => {
   });
 
   test("render's the exercises page with the edited exercise if a correct exercise is submitted", async () => {
-    renderWithProviders(<SingleExercisePage />);
+    renderWithProviders(
+      <SingleExercisePage />,
+      "a6647d9c-a926-499e-9a5f-e9f16690bfdi"
+    );
 
     await waitFor(() => {
       expect(screen.getByText("Edit exercise")).toBeInTheDocument();
-      expect(screen.getByDisplayValue("barbell rows")).toBeInTheDocument();
+      expect(screen.getByDisplayValue("pull-downs")).toBeInTheDocument();
     });
 
-    fireEvent.change(screen.getByDisplayValue("barbell rows"), {
-      target: { value: "standing barbell rows" },
+    fireEvent.change(screen.getByDisplayValue("pull-downs"), {
+      target: { value: "edited exercise" },
     });
 
     await act(async () => {
       fireEvent.click(screen.getByTestId("submit-button"));
     });
-    // await waitFor(() => {
-    //   expect(screen.getByText("New exercise")).toBeInTheDocument();
-    //   expect(screen.getByText("standing barbell rows")).toBeInTheDocument();
-    // });
+    await waitFor(() => {
+      expect(screen.getByText("New exercise")).toBeInTheDocument();
+      expect(screen.getByText("edited exercise")).toBeInTheDocument();
+    });
   });
 });

@@ -1,4 +1,4 @@
-import { rest } from "msw";
+import { http, HttpResponse } from "msw";
 
 export const userSettings = {
   id: "ed8af7bb-5ad2-46d1-a67d-d1c954c76405",
@@ -8,7 +8,7 @@ export const userSettings = {
 };
 
 export const getUserSettingsHandler = [
-  rest.get("http://localhost:8080/api/users/user-settings", (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json(userSettings));
+  http.get("http://localhost:8080/api/users/user-settings", () => {
+    return HttpResponse.json(userSettings);
   }),
 ];

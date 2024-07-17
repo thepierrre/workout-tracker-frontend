@@ -1,4 +1,4 @@
-import { rest } from "msw";
+// import { rest } from "msw";
 import { format } from "date-fns";
 
 export const workoutsForUser = [
@@ -113,8 +113,8 @@ export const workoutsForUser = [
   },
 ];
 
-export const getWorkoutsForUserHandler = [
-  rest.get("http://localhost:8080/api/user-workouts", (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json(workoutsForUser));
-  }),
-];
+// export const getWorkoutsForUserHandler = [
+//   rest.get("http://localhost:8080/api/user-workouts", (_, res, ctx) => {
+//     return res(ctx.status(200), ctx.json(workoutsForUser));
+//   }),
+// ];

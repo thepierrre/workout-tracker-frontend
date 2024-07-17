@@ -1,4 +1,10 @@
-import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import {
+  render,
+  screen,
+  waitFor,
+  fireEvent,
+  act,
+} from "@testing-library/react";
 import NewExercisePage from "../NewExercisePage";
 import { Provider } from "react-redux";
 import { ChakraProvider } from "@chakra-ui/react";
@@ -131,6 +137,26 @@ describe("NewExercisePage", () => {
     });
   });
 
+  test("displays an error when the exercise name coincides with another exercise", async () => {
+    renderWithProviders(<NewExercisePage />);
+
+    await waitFor(() =>
+      expect(screen.getByText("Add a new exercise")).toBeInTheDocument()
+    );
+
+    fireEvent.change(screen.getByPlaceholderText("Enter a name"), {
+      target: { value: "bench press" },
+    });
+    expect(screen.getByDisplayValue("bench press")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByText("Create"));
+    await waitFor(() => {
+      expect(
+        screen.getByText("An exercise with this name already exists!")
+      ).toBeInTheDocument();
+    });
+  });
+
   test("renders the exercise page with a new exercise when a correct exercise is submitted", async () => {
     renderWithProviders(<NewExercisePage />);
 
@@ -139,25 +165,28 @@ describe("NewExercisePage", () => {
     );
 
     fireEvent.change(screen.getByPlaceholderText("Enter a name"), {
-      target: { value: "new exercise" },
+      target: { value: "brand-new exercise" },
     });
-    expect(screen.getByDisplayValue("new exercise")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("brand-new exercise")).toBeInTheDocument();
 
     fireEvent.change(screen.getByPlaceholderText("Search"), {
       target: { value: "test" },
     });
     expect(screen.getByText("Test category")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByTestId("checkbox-category-name-test category"));
+    expect(screen.queryAllByRole("checkbox")).toHaveLength(1);
+    await act(async () => {
+      fireEvent.click(screen.getByRole("checkbox"));
+    });
 
-    // await act(async () => {
-    //   fireEvent.click(screen.getByTestId("submit-button"));
-    // });
+    await act(async () => {
+      fireEvent.click(screen.getByText("Create"));
+    });
 
-    // await waitFor(() => {
-    //   expect(screen.getByText("New exercise")).toBeInTheDocument();
-    //   expect(screen.getByText("test exercise")).toBeInTheDocument();
-    //   expect(screen.getByText("Test category")).toBeInTheDocument();
-    // });
+    await waitFor(() => {
+      expect(screen.getByText("New exercise")).toBeInTheDocument();
+      expect(screen.getByText("brand-new exercise")).toBeInTheDocument();
+      expect(screen.getByText("TEST CATEGORY")).toBeInTheDocument();
+    });
   });
 });

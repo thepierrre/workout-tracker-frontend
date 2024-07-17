@@ -1,4 +1,4 @@
-import { rest } from "msw";
+// import { rest } from "msw";
 import { format } from "date-fns";
 import { User } from "../../interfaces/user.interface";
 
@@ -357,8 +357,8 @@ export const fetchedUser = {
   ],
 };
 
-export const initializeUserHandler = [
-  rest.get("http://localhost:8080/api/users/me", (_, res, ctx) => {
-    return res(ctx.status(200), ctx.json(fetchedUser));
-  }),
-];
+// export const initializeUserHandler = [
+//   rest.get("http://localhost:8080/api/users/me", (_, res, ctx) => {
+//     return res(ctx.status(200), ctx.json(fetchedUser));
+//   }),
+// ];

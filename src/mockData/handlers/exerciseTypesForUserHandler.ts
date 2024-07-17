@@ -2,7 +2,7 @@ import { Exercise } from "interfaces/exercise.interface";
 // import { rest } from "msw";
 import { http, HttpResponse } from "msw";
 
-export const exerciseTypesForUser: Exercise[] = [
+export let exerciseTypesForUser: Exercise[] = [
   {
     id: "a6647d9c-a926-499e-9a5f-e9f16690bfda",
     name: "squats",
@@ -127,72 +127,66 @@ export const exerciseTypesForUserHandler = [
   }),
 
   http.put(
-    "http://localhost:8080/api/exercise-types/a6647d9c-a926-499e-9a5f-e9f16690bfdg",
-    () => {
-      //const { exerciseId } = req.params;
-      //const exerciseId = "a6647d9c-a926-499e-9a5f-e9f16690bfdg";
+    "http://localhost:8080/api/exercise-types/a6647d9c-a926-499e-9a5f-e9f16690bfdk",
+    async () => {
       const updatedExercise: Exercise = {
         id: "a6647d9c-a926-499e-9a5f-e9f16690bfdg",
-        name: "edited",
+        name: "bench press",
         categories: [],
       };
-      return HttpResponse.json(updatedExercise);
-      // const index = exerciseTypesForUser.findIndex(
-      //   (ex) => ex.id === exerciseId
-      // );
 
-      //console.log("exercise to update:", updatedExercise);
+      const index = exerciseTypesForUser.findIndex(
+        (ex) => ex.id === updatedExercise.id
+      );
 
-      // const nameAlreadyTaken = exerciseTypesForUser.some(
-      //   (ex) => ex.name === updatedExercise.name && ex.id !== exerciseId
-      // );
+      const nameAlreadyTaken = exerciseTypesForUser.some(
+        (ex) => ex.name === "bench press" && ex.id !== updatedExercise.id
+      );
 
-      // if (nameAlreadyTaken) {
-      //   return res(
-      //     ctx.status(409),
-      //     ctx.json({ message: "An exercise with this name already exists!" })
-      //   );
-      // }
+      if (nameAlreadyTaken) {
+        return new HttpResponse("Conflict", {
+          status: 409,
+          statusText: "An exercise with this name already exists!",
+        });
+      }
 
-      // if (index !== -1) {
-      //   console.log("Updated exercise", updatedExercise);
-      //   exerciseTypesForUser[index] = {
-      //     ...exerciseTypesForUser[index],
-      //     ...updatedExercise,
-      //   };
-      //   return res(ctx.status(200), ctx.json(exerciseTypesForUser[index]));
-      // } else {
-      //   console.log("404 Not Found: Exercise not found");
-      //   return res(
-      //     ctx.status(404),
-      //     ctx.json({ message: "Exercise not found" })
-      //   );
-      // }
+      if (index !== -1) {
+        console.log("Updated exercise", updatedExercise);
+        exerciseTypesForUser[index] = {
+          ...exerciseTypesForUser[index],
+          ...updatedExercise,
+        };
+        return HttpResponse.json(updatedExercise);
+      }
     }
   ),
 
-  // rest.post("http://localhost:8080/api/exercise-types", (req, res, ctx) => {
-  //   const newExercise = req.body as Exercise;
-  //   newExercise.userId = undefined;
-  //   //console.log("cool new req body:", newExercise);
+  http.put(
+    "http://localhost:8080/api/exercise-types/a6647d9c-a926-499e-9a5f-e9f16690bfdi",
+    async () => {
+      const updatedExercise: Exercise = {
+        id: "a6647d9c-a926-499e-9a5f-e9f16690bfdi",
+        name: "edited exercise",
+        categories: [],
+      };
 
-  //   const nameAlreadyTaken = exerciseTypesForUser.some(
-  //     (ex) => ex.name === newExercise.name
-  //   );
+      exerciseTypesForUser = [...exerciseTypesForUser, updatedExercise];
+      return HttpResponse.json(updatedExercise);
+    }
+  ),
 
-  //   if (nameAlreadyTaken) {
-  //     return res(
-  //       ctx.status(409),
-  //       ctx.json({ message: "An exercise with this name already exists!" })
-  //     );
-  //   }
+  http.post("http://localhost:8080/api/exercise-types", async ({ request }) => {
+    const newExercise = (await request.json()) as Exercise;
 
-  //   newExercise.id = "500e8488-c29b-65fd-a716-446mh440009";
-  //   newExercise.userId = "12345";
+    const nameAlreadyTaken = "bench press";
+    if (newExercise.name === nameAlreadyTaken) {
+      return new HttpResponse("Conflict", {
+        status: 409,
+        statusText: "An exercise with this name already exists!",
+      });
+    }
 
-  //console.log("cool new exercise:", newExercise);
-
-  //   exerciseTypesForUser.push(newExercise);
-  //   return res(ctx.status(201), ctx.json(newExercise));
-  // }),
+    exerciseTypesForUser = [...exerciseTypesForUser, newExercise];
+    return HttpResponse.json(newExercise);
+  }),
 ];
