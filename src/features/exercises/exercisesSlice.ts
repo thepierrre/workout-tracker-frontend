@@ -67,7 +67,6 @@ export const updateExercise = createAsyncThunk<
   { rejectValue: string }
 >("exercises/updateExercise", async (updatedExercise, thunkAPI) => {
   try {
-    //console.log(updatedExercise);
     const response = await axiosInstance.put(
       `exercise-types/${updatedExercise.id}`,
       updatedExercise

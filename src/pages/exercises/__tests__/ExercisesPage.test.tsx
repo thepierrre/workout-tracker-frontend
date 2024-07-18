@@ -16,7 +16,7 @@ import { workoutsForUser } from "../../../mockData/handlers/workoutsForUserHandl
 import { exerciseTypesForUser as mutableExerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
 import { categories as initialCategories } from "../../../mockData/handlers/categoriesHandler";
 import { categories } from "../../../mockData/handlers/categoriesHandler";
-import { initializedUser } from "../../../mockData/authHandlers/initializeUserHandler";
+import { initializedUser } from "../../../mockData/authHandlers/userHandler";
 import NewExercisePage from "../NewExercisePage";
 import { User } from "../../../interfaces/user.interface";
 import { Workout } from "../../../interfaces/workout.interface";

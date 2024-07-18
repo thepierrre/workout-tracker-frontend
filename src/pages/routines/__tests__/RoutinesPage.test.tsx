@@ -13,15 +13,14 @@ import userSettingsReducer from "../../../features/settings/userSettingsSlice";
 import exercisesReducer from "../../../features/exercises/exercisesSlice";
 import routinesReducer from "../../../features/routines/routinesSlice";
 import categoriesReducer from "../../../features/exercises/categoriesSlice";
-import {
-  mockUser,
-  mockExerciseTypes,
-  mockWorkouts,
-  mockCategories,
-  mockRoutines,
-  mockUserSettings,
-} from "../../../util/testData";
 import NewRoutinePage from "../NewRoutinePage";
+import { initializedUser } from "../../../mockData/authHandlers/userHandler";
+import { workoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
+import { routinesForUser } from "../../../mockData/handlers/routinesForUserHandler";
+import { exerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
+import { categories } from "../../../mockData/handlers/categoriesHandler";
+import { Routine } from "../../../interfaces/routine.interface";
+import { userSettings } from "../../../mockData/handlers/userSettingsHandler";
 
 const store = configureStore({
   reducer: {
@@ -36,32 +35,32 @@ const store = configureStore({
   },
   preloadedState: {
     authenticatedUser: {
-      user: mockUser,
+      user: initializedUser,
       loading: false,
       error: null,
     },
     workoutSessions: {
-      workouts: mockWorkouts,
+      workouts: workoutsForUser,
       loading: false,
       error: null,
     },
     routines: {
-      routines: mockRoutines,
+      routines: routinesForUser,
       loading: false,
       error: null,
     },
     exercises: {
-      exercises: mockExerciseTypes,
+      exercises: exerciseTypesForUser,
       loading: false,
       error: null,
     },
     categories: {
-      categories: mockCategories,
+      categories: categories,
       loading: false,
       error: null,
     },
     userSettings: {
-      userSettings: mockUserSettings,
+      userSettings: userSettings,
       loading: false,
       error: null,
     },
@@ -84,20 +83,13 @@ const renderWithProviders = (ui: React.ReactElement) => {
 };
 
 describe("RoutinesPage", () => {
-  test("renders the 'New routine' button correctly", async () => {
-    renderWithProviders(<RoutinesPage />);
-    await waitFor(() =>
-      expect(screen.getByText("New routine")).toBeInTheDocument()
-    );
-  });
-
   test("renders the correct number of routines and their exercises", async () => {
     renderWithProviders(<RoutinesPage />);
     await waitFor(() => {
       const routineElements = screen.getAllByTestId(/^routine-name-/);
-      expect(routineElements).toHaveLength(mockRoutines.length);
+      expect(routineElements).toHaveLength(routinesForUser.length);
 
-      mockRoutines.forEach((routine) => {
+      routinesForUser.forEach((routine: Routine) => {
         const routineElement = screen.getByTestId(`routine-name-${routine.id}`);
         expect(routineElement).toBeInTheDocument();
         expect(routineElement).toHaveTextContent(routine.name);
@@ -117,10 +109,11 @@ describe("RoutinesPage", () => {
   test("renders the 'New routine' page when the 'New routine' button is clicked", async () => {
     renderWithProviders(<RoutinesPage />);
 
-    waitFor(() => {
+    await waitFor(() => {
       expect(screen.getByText("New routine")).toBeInTheDocument();
-      fireEvent.click(screen.getByText("New routine"));
     });
+
+    fireEvent.click(screen.getByText("New routine"));
 
     await waitFor(() => {
       expect(screen.getByText("Add a new routine")).toBeInTheDocument();

@@ -151,7 +151,6 @@ export const exerciseTypesForUserHandler = [
       }
 
       if (index !== -1) {
-        console.log("Updated exercise", updatedExercise);
         exerciseTypesForUser[index] = {
           ...exerciseTypesForUser[index],
           ...updatedExercise,

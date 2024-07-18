@@ -71,8 +71,6 @@ const SingleRoutinePage = () => {
       userId: user.id,
     };
 
-    console.log(routineToUpdate);
-
     const compareOldAndNewRoutine = () => {
       return (
         routineToUpdate.id === currentRoutine.id &&

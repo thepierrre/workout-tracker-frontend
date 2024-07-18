@@ -21,7 +21,7 @@ import categoriesReducer from "../../../features/exercises/categoriesSlice";
 import { workoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
 import { exerciseTypesForUser as mutableExerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
 import { categories as initialCategories } from "../../../mockData/handlers/categoriesHandler";
-import { initializedUser } from "../../../mockData/authHandlers/initializeUserHandler";
+import { initializedUser } from "../../../mockData/authHandlers/userHandler";
 import { User } from "../../../interfaces/user.interface";
 import { Workout } from "../../../interfaces/workout.interface";
 import { Exercise } from "../../../interfaces/exercise.interface";

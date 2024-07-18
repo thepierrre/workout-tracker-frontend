@@ -7,7 +7,7 @@ import { Flex, Heading, Text, Box, IconButton } from "@chakra-ui/react";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { WorkingSet } from "../../interfaces/workingSet.interface";
 import { fetchWorkouts } from "../../features/workout/workoutSessionsSlice";
-import ExerciseWorkingSet from "./ExerciseWorkingSet";
+import ExerciseWorkingSet from "../../components/workouts/ExerciseWorkingSet";
 import { UserSettings } from "interfaces/userSettings.interface";
 import { fetchUserSettings } from "../../features/settings/userSettingsSlice";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";

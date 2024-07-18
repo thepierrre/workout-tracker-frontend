@@ -171,7 +171,6 @@ export const removeWorkout = createAsyncThunk<
     let errorMessage = "An unknown error occurred";
     if (axios.isAxiosError(error) && error.response) {
       console.log("Axios error response:", error.response);
-
       errorMessage = error.response.data.message;
     } else if (error instanceof Error) {
       console.log("Non-Axios error:", error);

@@ -1,11 +1,4 @@
-import { format } from "date-fns";
-import {
-  render,
-  screen,
-  waitFor,
-  fireEvent,
-  act,
-} from "@testing-library/react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { ChakraProvider } from "@chakra-ui/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
@@ -18,20 +11,21 @@ import authenticatedUserReducer from "../../../features/auth/authenticatedUserSl
 import exercisesReducer from "../../../features/exercises/exercisesSlice";
 import routinesReducer from "../../../features/routines/routinesSlice";
 import categoriesReducer from "../../../features/exercises/categoriesSlice";
-import { workoutsForUser as mutableWorkoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
+import { workoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
 import { exerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
 import { categories } from "../../../mockData/handlers/categoriesHandler";
 import { initializedUser } from "../../../mockData/authHandlers/userHandler";
-import ExercisesPage from "../../exercises/ExercisesPage";
-import WorkoutsPage from "../WorkoutsPage";
+import { routinesForUser as mutableRoutinesForUser } from "../../../mockData/handlers/routinesForUserHandler";
 import { User } from "../../../interfaces/user.interface";
 import { Workout } from "../../../interfaces/workout.interface";
 import { Exercise } from "../../../interfaces/exercise.interface";
 import { Category } from "../../../interfaces/category.interface";
+import RoutinesPage from "../RoutinesPage";
+import NewRoutinePage from "../NewRoutinePage";
 
 const deepClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 
-const initialWorkoutsList = deepClone(mutableWorkoutsForUser);
+const initialRoutinesList = deepClone(mutableRoutinesForUser);
 
 interface AuthenticatedUserState {
   user: User;
@@ -71,7 +65,7 @@ const createInitialState = () => ({
     error: null,
   },
   workoutSessions: {
-    workouts: deepClone(initialWorkoutsList),
+    workouts: workoutsForUser,
     loading: false,
     error: null,
   },
@@ -106,10 +100,10 @@ const renderWithProviders = (ui: React.ReactElement, store: any) => {
   return render(
     <ChakraProvider>
       <Provider store={store}>
-        <MemoryRouter initialEntries={["/workouts"]}>
+        <MemoryRouter initialEntries={["/routines/new-routine"]}>
           <Routes>
-            <Route path="/workouts" element={ui} />
-            <Route path="/exercises" element={<ExercisesPage />} />
+            <Route path="/routines/new-routine" element={ui} />
+            <Route path="/routines" element={<RoutinesPage />} />
           </Routes>
         </MemoryRouter>
       </Provider>
@@ -117,92 +111,94 @@ const renderWithProviders = (ui: React.ReactElement, store: any) => {
   );
 };
 
-describe("WorkoutsPage", () => {
+describe("NewRoutinePage", () => {
   let store: any;
 
   beforeEach(() => {
-    mutableWorkoutsForUser.length = 0;
-    mutableWorkoutsForUser.push(...deepClone(initialWorkoutsList));
+    mutableRoutinesForUser.length = 0;
+    mutableRoutinesForUser.push(...deepClone(initialRoutinesList));
 
     const initialState = createInitialState();
     store = createStore(initialState);
   });
 
-  test("renders the calendar and workouts for the current day", async () => {
-    renderWithProviders(<WorkoutsPage />, store);
-
+  test("renders the heading, inputs and exercises correctly", async () => {
+    renderWithProviders(<NewRoutinePage />, store);
     await waitFor(() => {
-      expect(
-        screen.getByText(format(new Date(), "EEE").toUpperCase())
-      ).toBeInTheDocument();
+      expect(screen.getByText("Add a new routine")).toBeInTheDocument();
     });
 
-    expect(screen.getByText("New workout")).toBeInTheDocument();
-    expect(screen.getByText("Full Body Workout A")).toBeInTheDocument();
-    expect(screen.getByText("bench press")).toBeInTheDocument();
-    expect(screen.getByText("barbell rows")).toBeInTheDocument();
-    expect(screen.getByText("squats")).toBeInTheDocument();
-    expect(screen.getByText("dumbbell pushes")).toBeInTheDocument();
-    expect(screen.getAllByText("Delete workout")).toHaveLength(1);
+    expect(screen.getByPlaceholderText("Enter a name")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Filter")).toBeInTheDocument();
   });
 
-  test("opens the sliding element with all routines when 'New workout' is clicked", async () => {
-    renderWithProviders(<WorkoutsPage />, store);
+  test("adds a new routine with exercises and renders the routines page when 'Create' is clicked", async () => {
+    renderWithProviders(<NewRoutinePage />, store);
 
     await waitFor(() => {
-      expect(screen.getByText("New workout")).toBeInTheDocument();
+      expect(screen.getByText("Create")).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getByText("New workout"));
-    expect(screen.getByText("Select a routine")).toBeInTheDocument();
-    expect(screen.queryAllByText("Full Body Workout A")).toHaveLength(2);
-    expect(screen.getByText("Full Body Workout B")).toBeInTheDocument();
-  });
+    fireEvent.change(screen.getByPlaceholderText("Enter a name"), {
+      target: { value: "brand-new routine" },
+    });
 
-  test("adds a new routine to the current day when a new routine is selected", async () => {
-    renderWithProviders(<WorkoutsPage />, store);
+    expect(screen.getByDisplayValue("brand-new routine")).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(screen.getByText("New workout")).toBeInTheDocument();
+      expect(screen.getByPlaceholderText("Filter")).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getByText("New workout"));
-
-    await act(async () => {
-      fireEvent.click(screen.getByText("Full Body Workout B"));
+    fireEvent.change(screen.getByPlaceholderText("Filter"), {
+      target: { value: "bench press" },
     });
 
+    await waitFor(() => {
+      expect(screen.getByDisplayValue("bench press")).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByTestId("not selected checkbox"));
+
+    fireEvent.click(screen.getByText("Create"));
     await waitFor(() =>
-      expect(screen.queryAllByText("Select a routine")).toHaveLength(0)
+      expect(screen.getByText("New routine")).toBeInTheDocument()
     );
-
-    await waitFor(() => {
-      expect(screen.getByText("Full Body Workout A")).toBeInTheDocument();
-      expect(screen.getByText("Full Body Workout B")).toBeInTheDocument();
-    });
+    await waitFor(() =>
+      expect(screen.getByText("brand-new routine")).toBeInTheDocument()
+    );
   });
 
-  test("removes a workout when 'Delete workout' is clicked", async () => {
-    renderWithProviders(<WorkoutsPage />, store);
-
-    await waitFor(() => {
-      expect(screen.getByText("Full Body Workout A")).toBeInTheDocument();
-      expect(screen.queryAllByText("Full Body Workout B")).toHaveLength(0);
+  test("attempt at adding a routine with no name renders an error", () => {
+    renderWithProviders(<NewRoutinePage />, store);
+    waitFor(() => {
+      expect(screen.getByText("Create")).toBeInTheDocument();
+      fireEvent.click(screen.getByText("Create"));
     });
 
-    fireEvent.click(screen.getByText("Delete workout"));
-    await waitFor(() => {
+    waitFor(() =>
       expect(
-        screen.getByText("Do you really want to delete this workout?")
-      ).toBeInTheDocument();
-    });
-    await act(async () => {
-      fireEvent.click(screen.getByText("Delete"));
-    });
+        screen.getByText("Routine name cannot be empty.")
+      ).toBeInTheDocument()
+    );
+  });
+
+  test("attempt at adding a routine with a name that already exists renders an error", async () => {
+    renderWithProviders(<NewRoutinePage />, store);
 
     await waitFor(() => {
-      expect(screen.queryByText("Full Body Workout A")).toBeNull();
-      expect(screen.queryByText("Delete workout")).toBeNull();
+      expect(screen.getByText("Create")).toBeInTheDocument();
     });
+
+    fireEvent.change(screen.getByPlaceholderText("Enter a name"), {
+      target: { value: "Full Body Workout A" },
+    });
+
+    fireEvent.click(screen.getByText("Create"));
+
+    waitFor(() =>
+      expect(
+        screen.getByText("A routine with this name already exists!")
+      ).toBeInTheDocument()
+    );
   });
 });

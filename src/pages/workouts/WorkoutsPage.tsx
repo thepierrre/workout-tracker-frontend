@@ -29,8 +29,6 @@ export const WorkoutsPage = () => {
     setLocalWorkouts(workouts);
   }, [workouts]);
 
-  console.log(localWorkouts);
-
   const filteredWorkouts = localWorkouts?.filter((wrk: Workout) => {
     if (!wrk.creationDate) {
       console.warn(`Missing date: ${wrk.id}`);

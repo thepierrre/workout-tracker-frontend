@@ -1,7 +1,9 @@
 import { Routine } from "../../interfaces/routine.interface";
 import { http, HttpResponse } from "msw";
 
-export const routinesForUser: Routine[] = [
+const deepClone = (obj: any) => JSON.parse(JSON.stringify(obj));
+
+const initialRoutinesForUser: Routine[] = [
   {
     userId: "12345",
     id: "916ee32a-728f-4eea-a3g6-d0e097b22b21",
@@ -114,8 +116,18 @@ export const routinesForUser: Routine[] = [
   },
 ];
 
+export let routinesForUser = deepClone(initialRoutinesForUser);
+
 export const routinesForUserHandler = [
   http.get("http://localhost:8080/api/user-routines", () => {
     return HttpResponse.json(routinesForUser);
+  }),
+
+  http.post("http://localhost:8080/api/routines", async ({ request }) => {
+    const newRoutine = (await request.json()) as Routine;
+
+    newRoutine.id = "05f000xyzxyz017-08ee-41f1-b80e-5112c98c43";
+    routinesForUser = [...routinesForUser, newRoutine];
+    return HttpResponse.json(newRoutine);
   }),
 ];

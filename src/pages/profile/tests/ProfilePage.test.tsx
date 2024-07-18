@@ -12,12 +12,12 @@ import authenticatedUserReducer from "../../../features/auth/authenticatedUserSl
 import exercisesReducer from "../../../features/exercises/exercisesSlice";
 import routinesReducer from "../../../features/routines/routinesSlice";
 import categoriesReducer from "../../../features/exercises/categoriesSlice";
-import {
-  mockUser,
-  mockWorkouts,
-  mockExerciseTypes,
-  mockRoutines,
-} from "../../../util/testData";
+import userSettingsReducer from "../../../features/settings/userSettingsSlice";
+import { initializedUser } from "../../../mockData/authHandlers/userHandler";
+import { workoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
+import { routinesForUser } from "../../../mockData/handlers/routinesForUserHandler";
+import { exerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
+import { userSettings } from "../../../mockData/handlers/userSettingsHandler";
 
 const store = configureStore({
   reducer: {
@@ -28,25 +28,31 @@ const store = configureStore({
     exercises: exercisesReducer,
     routines: routinesReducer,
     categories: categoriesReducer,
+    userSettings: userSettingsReducer,
   },
   preloadedState: {
     authenticatedUser: {
-      user: mockUser,
+      user: initializedUser,
       loading: false,
       error: null,
     },
     workoutSessions: {
-      workouts: mockWorkouts,
+      workouts: workoutsForUser,
       loading: false,
       error: null,
     },
     routines: {
-      routines: mockRoutines,
+      routines: routinesForUser,
       loading: false,
       error: null,
     },
     exercises: {
-      exercises: mockExerciseTypes,
+      exercises: exerciseTypesForUser,
+      loading: false,
+      error: null,
+    },
+    userSettings: {
+      userSettings: userSettings,
       loading: false,
       error: null,
     },
@@ -64,13 +70,20 @@ const renderWithProviders = (ui: React.ReactElement) => {
 };
 
 describe("ProfilePage", () => {
-  test("renders the heading", () => {
+  test("renders the heading", async () => {
     renderWithProviders(<ProfilePage />);
-    expect(screen.getByText("Hello, testuser")).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(screen.getByText("Hello, testUser")).toBeInTheDocument();
+    });
   });
 
-  test("filters workouts by day", () => {
+  test("filters workouts by day", async () => {
     renderWithProviders(<ProfilePage />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Hello, testUser")).toBeInTheDocument();
+    });
     fireEvent.change(screen.getByTestId("day-select"), {
       target: { value: "15" },
     });
@@ -78,26 +91,41 @@ describe("ProfilePage", () => {
     expect(filteredWorkouts).toHaveLength(1);
   });
 
-  test("filters workouts by month", () => {
+  test("filters workouts by month", async () => {
     renderWithProviders(<ProfilePage />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Hello, testUser")).toBeInTheDocument();
+    });
+
     fireEvent.change(screen.getByTestId("month-select"), {
       target: { value: "March" },
     });
     const filteredWorkouts = screen.getAllByTestId("workout-item");
-    expect(filteredWorkouts).toHaveLength(2);
+    expect(filteredWorkouts).toHaveLength(1);
   });
 
-  test("filters workouts by year", () => {
+  test("filters workouts by year", async () => {
     renderWithProviders(<ProfilePage />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Hello, testUser")).toBeInTheDocument();
+    });
+
     fireEvent.change(screen.getByTestId("year-select"), {
       target: { value: "2024" },
     });
     const filteredWorkouts = screen.getAllByTestId("workout-item");
-    expect(filteredWorkouts).toHaveLength(6);
+    expect(filteredWorkouts).toHaveLength(1);
   });
 
-  test("renders statistics", () => {
+  test("renders statistics", async () => {
     renderWithProviders(<ProfilePage />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Hello, testUser")).toBeInTheDocument();
+    });
+
     const numberOfWorkouts = store.getState().workoutSessions.workouts.length;
     const numberOfRoutines = store.getState().routines.routines.length;
     const numberOfExercises = store.getState().exercises.exercises.length;
@@ -111,6 +139,10 @@ describe("ProfilePage", () => {
 
   test("the logout button triggers logout", async () => {
     renderWithProviders(<ProfilePage />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Hello, testUser")).toBeInTheDocument();
+    });
 
     fireEvent.click(screen.getByText("Log out"));
     waitFor(() => expect(screen.getByText("Hello there!")).toBeInTheDocument());
