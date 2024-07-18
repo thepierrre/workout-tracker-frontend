@@ -1,5 +1,5 @@
 import axios from "axios";
-import axiosInstance from "../../util/axiosInstance";
+import axiosInstance from "../../util/axiosInstance.ts";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { User } from "../../interfaces/user.interface";
@@ -16,27 +16,10 @@ const initialState: authenticatedUserState = {
   error: null,
 };
 
-export const fetchUser = createAsyncThunk<
-  User, // Return type of the fulfilled action
-  string, // Argument type (username or user ID)
-  { rejectValue: string } // Type of the reject value
->("user/fetchUser", async (username, thunkAPI) => {
-  try {
-    const response = await axiosInstance.get(`users/${username}`);
-    return response.data;
-  } catch (error) {
-    let errorMessage = "An unknown error occurred";
-    if (error instanceof Error) {
-      errorMessage = error.message;
-    }
-    return thunkAPI.rejectWithValue(errorMessage);
-  }
-});
-
 export const initializeUser = createAsyncThunk<
-  User | undefined, // Return type of the fulfilled action
-  void, // Argument type (not needed here, so void)
-  { rejectValue: string } // Type of the reject value
+  User | undefined,
+  void,
+  { rejectValue: string }
 >("user/initializeUser", async (_, thunkAPI) => {
   try {
     const response = await axiosInstance.get("users/me");

@@ -1,9 +1,10 @@
 import axios from "axios";
-import axiosInstance from "../../util/axiosInstance";
+import axiosInstance from "../../util/axiosInstance.ts";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 import { Workout } from "../../interfaces/workout.interface";
+import { Exercise } from "interfaces/exercise.interface";
 
 export interface WorkoutSessionsState {
   workouts: Workout[];
@@ -20,43 +21,47 @@ const initialState: WorkoutSessionsState = {
 interface ExerciseInstance {
   id: string;
   exerciseTypeName: string;
-  workingSets: Series[];
+  workingSets: workingSet[];
 }
 
-interface Series {
-  id: number;
+interface workingSet {
+  id: string;
   reps: number;
   weight: number;
 }
 
-interface AddWorkingSetArgs {
+interface AddworkingSetArgs {
   exerciseInstanceId: string;
-  newSet: Omit<Series, "id">;
+  newSet: Omit<workingSet, "id">;
 }
 
-interface updateWorkingSetArgs {
+interface updateworkingSetArgs {
   exerciseInstanceId: string;
-  workingSetId: number;
-  setToUpdate: Omit<Series, "id">;
+  workingSetId: string;
+  setToUpdate: Omit<workingSet, "id">;
 }
 
-interface DeleteWorkingSetArgs {
+interface DeleteworkingSetArgs {
   exerciseInstanceId: string;
-  workingSetId: number;
+  workingSetId: string;
+}
+
+interface AddExerciseInstanceArgs {
+  exerciseType: Omit<Exercise, "id" | "categories">;
+  workoutId: string;
 }
 
 export const deleteSet = createAsyncThunk<
   ExerciseInstance,
-  DeleteWorkingSetArgs,
+  DeleteworkingSetArgs,
   { rejectValue: string }
 >(
-  "workouts/deleteWorkingSet",
+  "workouts/deleteworkingSet",
   async ({ exerciseInstanceId, workingSetId }, thunkAPI) => {
     try {
       const response = await axiosInstance.delete(
         `exercise-instances/${exerciseInstanceId}/sets/${workingSetId}`
       );
-      console.log(response.data);
       return response.data;
     } catch (error) {
       let errorMessage = "An unknown error occurred";
@@ -72,17 +77,16 @@ export const deleteSet = createAsyncThunk<
 
 export const addSet = createAsyncThunk<
   ExerciseInstance,
-  AddWorkingSetArgs,
+  AddworkingSetArgs,
   { rejectValue: string }
 >(
-  "workouts/addWorkingSet",
+  "workouts/addworkingSet",
   async ({ exerciseInstanceId, newSet }, thunkAPI) => {
     try {
       const response = await axiosInstance.post(
         `exercise-instances/${exerciseInstanceId}/sets`,
         newSet
       );
-      console.log(response.data);
       return response.data;
     } catch (error) {
       let errorMessage = "An unknown error occurred";
@@ -98,17 +102,16 @@ export const addSet = createAsyncThunk<
 
 export const updateSet = createAsyncThunk<
   ExerciseInstance,
-  updateWorkingSetArgs,
+  updateworkingSetArgs,
   { rejectValue: string }
 >(
-  "workouts/updateWorkingSet",
+  "workouts/updateworkingSet",
   async ({ exerciseInstanceId, workingSetId, setToUpdate }, thunkAPI) => {
     try {
       const response = await axiosInstance.patch(
         `exercise-instances/${exerciseInstanceId}/sets/${workingSetId}`,
         setToUpdate
       );
-      console.log(response.data);
       return response.data;
     } catch (error) {
       let errorMessage = "An unknown error occurred";
@@ -129,7 +132,6 @@ export const fetchWorkouts = createAsyncThunk<
 >("workouts/fetchWorkouts", async (_, thunkAPI) => {
   try {
     const response = await axiosInstance.get("user-workouts");
-    // console.log(response.data);
     return response.data;
   } catch (error) {
     let errorMessage = "An unknown error occurred";
@@ -146,9 +148,7 @@ export const addWorkout = createAsyncThunk<
   { rejectValue: string } // Type of the reject value
 >("workouts/addWorkout", async (newWorkout, thunkAPI) => {
   try {
-    // console.log(newWorkout);
     const response = await axiosInstance.post("workouts", newWorkout);
-    // console.log(response.data);
     return response.data;
   } catch (error) {
     let errorMessage = "An unknown error occurred";
@@ -167,6 +167,49 @@ export const removeWorkout = createAsyncThunk<
   try {
     await axiosInstance.delete(`workouts/${workoutId}`);
     return workoutId;
+  } catch (error) {
+    let errorMessage = "An unknown error occurred";
+    if (axios.isAxiosError(error) && error.response) {
+      console.log("Axios error response:", error.response);
+      errorMessage = error.response.data.message;
+    } else if (error instanceof Error) {
+      console.log("Non-Axios error:", error);
+      errorMessage = error.message;
+    } else {
+      console.log("Unexpected error type:", error);
+    }
+    return thunkAPI.rejectWithValue(errorMessage);
+  }
+});
+export const removeExInstance = createAsyncThunk<
+  string,
+  string,
+  { rejectValue: string }
+>("workouts/removeExInstance", async (exInstanceId, thunkAPI) => {
+  try {
+    await axiosInstance.delete(`exercise-instances/${exInstanceId}`);
+    return exInstanceId;
+  } catch (error) {
+    let errorMessage = "An unknown error occurred";
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    return thunkAPI.rejectWithValue(errorMessage);
+  }
+});
+
+export const addExInstance = createAsyncThunk<
+  { workoutId: string; exerciseInstance: ExerciseInstance },
+  AddExerciseInstanceArgs,
+  { rejectValue: string }
+>("workouts/addExInstance", async (args, thunkAPI) => {
+  const { workoutId, exerciseType } = args;
+  try {
+    const response = await axiosInstance.post(
+      `workouts/${workoutId}/exercise-instances`,
+      exerciseType
+    );
+    return { workoutId, exerciseInstance: response.data };
   } catch (error) {
     let errorMessage = "An unknown error occurred";
     if (error instanceof Error) {
@@ -224,6 +267,46 @@ const workoutSessionsSlice = createSlice({
         removeWorkout.rejected,
         (state, action: PayloadAction<string | undefined>) => {
           state.error = action.payload || "Failed to remove the workout.";
+        }
+      )
+      .addCase(
+        addExInstance.fulfilled,
+        (
+          state,
+          action: PayloadAction<{
+            workoutId: string;
+            exerciseInstance: ExerciseInstance;
+          }>
+        ) => {
+          const { workoutId, exerciseInstance } = action.payload;
+          const workout = state.workouts.find((w) => w.id === workoutId);
+          if (workout) {
+            workout.exerciseInstances.push(exerciseInstance);
+          }
+        }
+      )
+      .addCase(
+        addExInstance.rejected,
+        (state, action: PayloadAction<string | undefined>) => {
+          state.error =
+            action.payload || "Failed to add the exercise to the workout.";
+        }
+      )
+      .addCase(
+        removeExInstance.fulfilled,
+        (state, action: PayloadAction<string>) => {
+          const deletedExInstanceId = action.payload;
+          const workout = state.workouts.find((workout) =>
+            workout.exerciseInstances.some(
+              (instance) => instance.id === deletedExInstanceId
+            )
+          );
+
+          if (workout) {
+            workout.exerciseInstances.filter(
+              (exInstance) => exInstance.id !== deletedExInstanceId
+            );
+          }
         }
       )
       .addCase(
@@ -304,9 +387,5 @@ const workoutSessionsSlice = createSlice({
   },
 });
 
-export const {
-  // addSeriesToWorkout,
-  // updateSeriesInWorkout,
-  // deleteSeriesFromWorkout,
-} = workoutSessionsSlice.actions;
+export const {} = workoutSessionsSlice.actions;
 export default workoutSessionsSlice.reducer;

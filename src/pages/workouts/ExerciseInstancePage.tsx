@@ -2,33 +2,28 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "../../app/store";
-import NarrowButton from "../../components/UI/NarrowButton";
-import SmallButton from "../../components/UI/SmallButton";
 import Container from "../../components/UI/Container";
-import {
-  Flex,
-  Heading,
-  Text,
-  Card,
-  CardBody,
-  Box,
-  IconButton,
-} from "@chakra-ui/react";
+import { Flex, Heading, Text, Box, IconButton } from "@chakra-ui/react";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
-import { Series } from "../../interfaces/series.interface";
-import {
-  addSet,
-  updateSet,
-  deleteSet,
-  fetchWorkouts,
-} from "../../features/workout/workoutSessionsSlice";
+import { WorkingSet } from "../../interfaces/workingSet.interface";
+import { fetchWorkouts } from "../../features/workout/workoutSessionsSlice";
+import ExerciseWorkingSet from "../../components/workouts/ExerciseWorkingSet";
+import { UserSettings } from "interfaces/userSettings.interface";
+import { fetchUserSettings } from "../../features/settings/userSettingsSlice";
+import SpinnerComponent from "../../components/UI/SpinnerComponent";
+import ThresholdHandler from "../../components/workouts/ThresholdHandler";
+import ThresholdForm from "../../components/forms/ThresholdForm";
+
+const defaultUserSettings: UserSettings = {
+  changeThreshold: 1,
+  weightUnit: "kgs",
+};
 
 const WorkoutExerciseInstancePage = () => {
-  const [reps, setReps] = useState<number>(10);
-  const [weight, setWeight] = useState<number>(30);
-  const [activeSeries, setActiveSeries] = useState<Series | undefined>(
-    undefined
-  );
+  const [threshold, setThreshold] = useState<number | undefined>(undefined);
+  const [activeWorkingSet, setActiveWorkingSet] = useState<
+    WorkingSet | undefined
+  >(undefined);
 
   const navigate = useNavigate();
 
@@ -36,6 +31,9 @@ const WorkoutExerciseInstancePage = () => {
 
   const workoutSessions = useSelector(
     (state: RootState) => state.workoutSessions
+  );
+  const { userSettings, loading: loadingUserSettings } = useSelector(
+    (state: RootState) => state.userSettings
   );
 
   const wrk = workoutSessions.workouts.find((w) => w.id === workoutId);
@@ -49,113 +47,36 @@ const WorkoutExerciseInstancePage = () => {
     dispatch(fetchWorkouts);
   }, [wrk]);
 
-  const handleRepsAndWeight = (type: string, action: string) => {
-    if (type === "reps") {
-      if (action === "increase") {
-        setReps(reps + 1);
-      } else if (action === "decrease") {
-        setReps(reps - 1);
-      }
-    } else if (type === "weight") {
-      if (action === "increase") {
-        setWeight(weight + 1);
-      } else if (action === "decrease") {
-        setWeight(weight - 1);
-      }
+  useEffect(() => {
+    dispatch(fetchUserSettings());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (userSettings) {
+      const fetchedThreshold = userSettings.changeThreshold;
+      setThreshold(fetchedThreshold);
     }
-  };
+  }, [userSettings]);
 
-  const handleActiveExInstance = (series: Series) => {
-    activeSeries && activeSeries.id === series.id
-      ? setActiveSeries(undefined)
-      : setActiveSeries(series);
-  };
-
-  const handleButtonText = () => {
-    return activeSeries ? "UPDATE" : "ADD NEW";
-  };
-
-  const handleDisableButton = () => {
-    return activeSeries ? false : true;
-  };
-
-  const handleAdd = async () => {
-    const seriesToAdd: Omit<Series, "id"> = {
-      reps,
-      weight,
-    };
-
-    let exerciseInstanceId = exerciseInstance?.id;
-
-    if (exerciseInstanceId) {
-      try {
-        await dispatch(addSet({ exerciseInstanceId, newSet: seriesToAdd }));
-      } catch (error) {
-        console.error("Failed to add set: ", error);
-      }
-    } else {
-      console.error("Exercise instance ID is missing");
+  useEffect(() => {
+    if (exerciseInstance?.workingSets?.length === 0) {
+      setActiveWorkingSet(undefined);
     }
-  };
+  }, [exerciseInstance]);
 
-  const handleUpdate = async () => {
-    let exerciseInstanceId = exerciseInstance?.id;
-    let setId = activeSeries?.id;
-
-    const seriesToUpdate: Omit<Series, "id"> = {
-      reps,
-      weight,
-    };
-
-    if (exerciseInstanceId && setId) {
-      try {
-        await dispatch(
-          updateSet({
-            exerciseInstanceId,
-            workingSetId: setId,
-            setToUpdate: seriesToUpdate,
-          })
-        );
-      } catch (error) {
-        console.error("Failed to update set: ", error);
-      }
-    } else {
-      console.error("Exercise instance ID or set ID is missing");
-    }
-  };
-
-  const handleAppOrUpdate = () => {
-    if (activeSeries) {
-      handleUpdate();
-      return;
-    } else {
-      handleAdd();
-    }
-  };
-
-  const handleDelete = async () => {
-    let exerciseInstanceId = exerciseInstance?.id;
-    let setId = activeSeries?.id;
-
-    if (exerciseInstanceId && setId) {
-      try {
-        await dispatch(
-          deleteSet({
-            exerciseInstanceId,
-            workingSetId: setId,
-          })
-        );
-      } catch (error) {
-        console.error("Failed to delete set: ", error);
-      }
-    } else {
-      console.error("Exercise instance ID or set ID is missing");
-    }
+  const handleActiveExInstance = (workingSet: WorkingSet) => {
+    activeWorkingSet && activeWorkingSet.id === workingSet.id
+      ? setActiveWorkingSet(undefined)
+      : setActiveWorkingSet(workingSet);
   };
 
   const handleGoBack = () => {
     navigate(-1);
   };
+
+  if (loadingUserSettings) {
+    return <SpinnerComponent />;
+  }
 
   return (
     <Container>
@@ -178,126 +99,34 @@ const WorkoutExerciseInstancePage = () => {
           </Flex>
 
           <Flex w="100%" direction="column" gap={5} mt={2}>
-            <Flex>
-              <Flex direction="column" w="50%" gap={1}>
-                <Text textAlign="center" fontSize="sm">
-                  REPS
-                </Text>
-                <Flex justify="center" gap={3} align="center">
-                  <SmallButton
-                    onClick={() => handleRepsAndWeight("reps", "decrease")}
-                  >
-                    –
-                  </SmallButton>
-                  <Text fontSize="3xl">{reps}</Text>
-                  <Flex
-                    bg="#404040"
-                    w={10}
-                    h={10}
-                    borderRadius={8}
-                    justify="center"
-                    align="center"
-                  >
-                    <SmallButton
-                      onClick={() => handleRepsAndWeight("reps", "increase")}
-                    >
-                      +
-                    </SmallButton>
-                  </Flex>
-                </Flex>
-              </Flex>
-              <Flex direction="column" w="50%" gap={1}>
-                <Text textAlign="center" fontSize="sm">
-                  KGS
-                </Text>
-                <Flex justify="center" gap={3} align="center">
-                  <Flex
-                    bg="#404040"
-                    w={10}
-                    h={10}
-                    borderRadius={8}
-                    justify="center"
-                    align="center"
-                  >
-                    <SmallButton
-                      onClick={() => handleRepsAndWeight("weight", "decrease")}
-                    >
-                      –
-                    </SmallButton>
-                  </Flex>
-                  <Text fontSize="3xl">{weight}</Text>
-                  <Flex
-                    bg="#404040"
-                    w={10}
-                    h={10}
-                    borderRadius={8}
-                    justify="center"
-                    align="center"
-                  >
-                    <SmallButton
-                      onClick={() => handleRepsAndWeight("weight", "increase")}
-                    >
-                      +
-                    </SmallButton>
-                  </Flex>
-                </Flex>
-              </Flex>
-            </Flex>
-            <Flex justify="center" gap={5}>
-              <NarrowButton
-                w={24}
-                bg="lightblue"
-                textColor="#353935"
-                onClick={() => handleAppOrUpdate()}
-              >
-                {handleButtonText()}
-              </NarrowButton>
-              <NarrowButton
-                w={24}
-                bg="lightblue"
-                textColor="#353935"
-                isDisabled={handleDisableButton()}
-                onClick={() => handleDelete()}
-              >
-                DELETE
-              </NarrowButton>
-            </Flex>
+            <ThresholdHandler
+              threshold={threshold}
+              userSettings={userSettings || defaultUserSettings}
+            />
+
+            <ThresholdForm
+              threshold={threshold}
+              userSettings={userSettings || defaultUserSettings}
+              activeWorkingSet={activeWorkingSet || undefined}
+              setActiveWorkingSet={setActiveWorkingSet}
+              exerciseInstance={exerciseInstance}
+            />
           </Flex>
-          <Flex direction="column" gap={2} mt={3}>
-            {exerciseInstance?.workingSets.map((set, index) => (
-              <Card
-                bg={
-                  activeSeries && activeSeries.id === set.id
-                    ? "lightblue"
-                    : "#404040"
-                }
-                w="95vw"
-                key={index}
-                onClick={() => set && handleActiveExInstance(set)}
-              >
-                <CardBody p={4}>
-                  <Flex
-                    key={index}
-                    gap={10}
-                    color={
-                      activeSeries && activeSeries.id === set.id
-                        ? "#353935"
-                        : "white"
-                    }
-                  >
-                    <Text flex={0.1}>{index + 1}</Text>
-                    <Flex gap={3} flex={0.2}>
-                      <Text fontWeight="bold">{set.reps}</Text>
-                      <Text>reps</Text>
-                    </Flex>
-                    <Flex gap={3} flex={0.2}>
-                      <Text fontWeight="bold">{set.weight}</Text>
-                      <Text>kgs</Text>
-                    </Flex>
-                  </Flex>
-                </CardBody>
-              </Card>
-            ))}
+          <Flex direction="column" gap={2} mt={3} align="center">
+            {exerciseInstance?.workingSets?.length > 0 ? (
+              exerciseInstance?.workingSets?.map((set, index) => (
+                <ExerciseWorkingSet
+                  workingSet={set}
+                  index={index}
+                  key={set.id}
+                  activeWorkingSet={activeWorkingSet}
+                  handleActiveExInstance={handleActiveExInstance}
+                  userSettings={userSettings || defaultUserSettings}
+                />
+              ))
+            ) : (
+              <Text>This exercise has no sets.</Text>
+            )}
           </Flex>
         </Flex>
       )}

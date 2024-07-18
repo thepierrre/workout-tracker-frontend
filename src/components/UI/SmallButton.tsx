@@ -14,6 +14,20 @@ const SmallButton: React.FC<Props> = (props) => {
       borderRadius={8}
       fontSize="3xl"
       textColor="white"
+      _active={{ textColor: "#404040" }}
+      _focus={{ bg: "#404040" }}
+      css={{
+        ":focus-visible": {
+          outline: "none",
+        },
+        ":active": {
+          background: "lightblue",
+        },
+        ":focus": {
+          outline: "none",
+        },
+        WebkitTapHighlightColor: "transparent",
+      }}
       {...props}
     >
       {props.children}

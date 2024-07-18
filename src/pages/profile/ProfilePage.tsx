@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import axiosInstance from "../../util/axiosInstance";
+import axiosInstance from "../../util/axiosInstance.ts";
 import { RootState, AppDispatch } from "../../app/store";
 import { fetchWorkouts } from "../../features/workout/workoutSessionsSlice";
 import { fetchExercises } from "../../features/exercises/exercisesSlice";
 import { fetchRoutines } from "../../features/routines/routinesSlice";
+import { fetchUserSettings } from "../../features/settings/userSettingsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { clearUser } from "../../features/auth/authenticatedUserSlice";
@@ -14,18 +15,24 @@ import { format, getDate, getYear } from "date-fns";
 import Container from "../../components/UI/Container";
 import Statistics from "../../components/profile/Statistics";
 import WorkoutHistory from "../../components/profile/WorkoutHistory";
-import LogIn from "../../components/profile/LogIn";
+import SpinnerComponent from "../../components/UI/SpinnerComponent";
+import Weight from "../../components/profile/Weight";
 
 const ProfilePage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.authenticatedUser.user);
-  const workouts = useSelector(
-    (state: RootState) => state.workoutSessions.workouts
+  const { workouts, loading: loadingWorkouts } = useSelector(
+    (state: RootState) => state.workoutSessions
   );
-  const routines = useSelector((state: RootState) => state.routines.routines);
-  const exercises = useSelector(
-    (state: RootState) => state.exercises.exercises
+  const { routines, loading: loadingRoutines } = useSelector(
+    (state: RootState) => state.routines
+  );
+  const { exercises, loading: loadingExercises } = useSelector(
+    (state: RootState) => state.exercises
+  );
+  const { userSettings, loading: loadingUserSettings } = useSelector(
+    (state: RootState) => state.userSettings
   );
 
   const [chosenDay, setChosenDay] = useState<number | undefined>(undefined);
@@ -43,6 +50,7 @@ const ProfilePage = () => {
     dispatch(fetchWorkouts());
     dispatch(fetchRoutines());
     dispatch(fetchExercises());
+    dispatch(fetchUserSettings());
   }, [dispatch]);
 
   const filteredWorkouts = workouts.filter((workout: Workout) => {
@@ -181,50 +189,48 @@ const ProfilePage = () => {
     handleFilteredWorkouts();
   };
 
+  if (
+    loadingWorkouts ||
+    loadingRoutines ||
+    loadingExercises ||
+    loadingUserSettings
+  ) {
+    return <SpinnerComponent />;
+  }
+
   return (
     <Container>
-      {user !== undefined ? (
-        <>
-          <Heading fontSize="2xl" mb={5}>
-            Hello, {user?.username || "noname"}
-          </Heading>
-          <WorkoutHistory
-            workouts={workouts}
-            filteredWorkouts={filteredWorkouts}
-            handleDaySelection={handleDaySelection}
-            handleMonthSelection={handleMonthSelection}
-            handleYearSelection={handleYearSelection}
-            years={years}
-            months={months}
-            days={days}
-          />
-          <Statistics
-            routines={routines}
-            exercises={exercises}
-            workouts={workouts}
-          />
-          <Button
-            w="95vw"
-            bg="lightblue"
-            textColor="#353935"
-            type="submit"
-            mt={3}
-            onClick={() => handleLogout()}
-          >
-            Log out
-          </Button>
-        </>
-      ) : (
-        <>
-          <Heading fontSize="lg" mb={3}>
-            Sign in to your account
-          </Heading>
-          <LogIn />
-          {/* <Link to="/profile/sign-up">
-            <WideButton>No account? Sign up</WideButton>
-          </Link> */}
-        </>
-      )}
+      <>
+        <Heading fontSize="2xl" mb={5}>
+          Hello, {user?.username || "noname"}
+        </Heading>
+        <WorkoutHistory
+          workouts={workouts}
+          filteredWorkouts={filteredWorkouts}
+          handleDaySelection={handleDaySelection}
+          handleMonthSelection={handleMonthSelection}
+          handleYearSelection={handleYearSelection}
+          years={years}
+          months={months}
+          days={days}
+        />
+        <Statistics
+          routines={routines}
+          exercises={exercises}
+          workouts={workouts}
+        />
+        {userSettings && <Weight userSettings={userSettings} />}
+        <Button
+          w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+          bg="lightblue"
+          textColor="#353935"
+          type="submit"
+          mt={3}
+          onClick={() => handleLogout()}
+        >
+          Log out
+        </Button>
+      </>
     </Container>
   );
 };

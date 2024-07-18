@@ -1,4 +1,5 @@
-import axiosInstance from "../../util/axiosInstance";
+import axiosInstance from "../../util/axiosInstance.ts";
+import axios from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
@@ -34,37 +35,52 @@ export const fetchRoutines = createAsyncThunk<
 });
 
 export const addRoutine = createAsyncThunk<
-  Routine, // Return type of the fulfilled action
-  Omit<Routine, "id">, // Argument type (without id)
-  { rejectValue: string } // Type of the reject value
+  Routine,
+  Omit<Routine, "id">,
+  { rejectValue: string }
 >("routines/addRoutine", async (newRoutine, thunkAPI) => {
   try {
     const response = await axiosInstance.post("routines", newRoutine);
     return response.data;
   } catch (error) {
     let errorMessage = "An unknown error occurred";
-    if (error instanceof Error) {
+    if (axios.isAxiosError(error) && error.response) {
+      console.log("Axios error response:", error.response);
+      if (error.response.status === 409) {
+        errorMessage = "An exercise with this name already exists!";
+      } else {
+        errorMessage = error.response.data.message;
+      }
+    } else if (error instanceof Error) {
+      console.log("Non-Axios error:", error);
       errorMessage = error.message;
+    } else {
+      console.log("Unexpected error type:", error);
     }
     return thunkAPI.rejectWithValue(errorMessage);
   }
 });
 
 export const updateRoutine = createAsyncThunk<
-  Routine, // Return type of the fulfilled action
-  Routine, // Argument type (without id)
-  { rejectValue: string } // Type of the reject value
+  Routine,
+  Routine,
+  { rejectValue: string }
 >("routines/updateRoutine", async (updatedRoutine, thunkAPI) => {
   try {
     const response = await axiosInstance.put(
       `routines/${updatedRoutine.id}`,
       updatedRoutine
     );
+    console.log(response.data);
     return response.data;
   } catch (error) {
     let errorMessage = "An unknown error occurred";
-    if (error instanceof Error) {
-      errorMessage = error.message;
+    if (axios.isAxiosError(error) && error.response) {
+      if (error.response.status === 409) {
+        errorMessage = "A routine with this name already exists!";
+      } else {
+        errorMessage = error.response.data.message;
+      }
     }
     return thunkAPI.rejectWithValue(errorMessage);
   }

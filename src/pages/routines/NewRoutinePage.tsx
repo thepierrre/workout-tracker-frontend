@@ -1,19 +1,24 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Exercise } from "../../interfaces/exercise.interface";
 import { RootState, AppDispatch } from "../../app/store";
 import { Routine } from "../../interfaces/routine.interface";
 import { addRoutine } from "../../features/routines/routinesSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { Flex, IconButton, Heading, Box, Spinner } from "@chakra-ui/react";
+import { Flex, IconButton, Heading, Box } from "@chakra-ui/react";
 import RoutineForm from "../../components/forms/RoutineForm";
 import Container from "../../components/UI/Container";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
+import { UseFormSetError } from "react-hook-form";
+import SpinnerComponent from "../../components/UI/SpinnerComponent";
 
 const NewRoutinePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const user = useSelector((state: RootState) => state.authenticatedUser.user);
-  const exercisesState = useSelector((state: RootState) => state.exercises);
+  const [serverError, setServerError] = useState<string | null>(null);
+  const { user, loading: loadingUser } = useSelector(
+    (state: RootState) => state.authenticatedUser
+  );
 
   if (!user) {
     return;
@@ -21,7 +26,8 @@ const NewRoutinePage = () => {
 
   const onSubmit = async (
     data: { name: string },
-    selectedExercises: Exercise[]
+    selectedExercises: Exercise[],
+    setError: UseFormSetError<{ name: string }>
   ) => {
     const routineToAdd: Omit<Routine, "id"> = {
       name: data.name,
@@ -31,9 +37,13 @@ const NewRoutinePage = () => {
 
     try {
       await dispatch(addRoutine(routineToAdd)).unwrap();
-      navigate("/routines");
+      navigate("/routines", { state: { routine: "created" } });
     } catch (error) {
-      console.error("Failed to add routine: ", error);
+      if (typeof error === "string") {
+        let errorMessage = error;
+        setServerError(error);
+        setError("name", { type: "server", message: errorMessage });
+      }
     }
   };
 
@@ -41,19 +51,13 @@ const NewRoutinePage = () => {
     navigate(-1);
   };
 
-  if (exercisesState.loading) {
-    return (
-      <Container>
-        <Flex align="center" justify="center" h="100vh">
-          <Spinner size="xl" />
-        </Flex>
-      </Container>
-    );
+  if (loadingUser) {
+    return <SpinnerComponent />;
   }
 
   return (
     <Container>
-      <Flex align="center" w="100%" mb={3}>
+      <Flex align="center" w={["95vw", "85vw", "70vw", "50vw", "40vw"]} mb={3}>
         <IconButton
           aria-label="Go back"
           variant="link"
@@ -64,7 +68,7 @@ const NewRoutinePage = () => {
         />
 
         <Heading w="70%" fontSize="lg" textAlign="center" color="white">
-          New routine
+          Add a new routine
         </Heading>
         <Box w="16%" />
       </Flex>
@@ -72,7 +76,8 @@ const NewRoutinePage = () => {
         initialSelectedExercises={[]}
         onSubmit={onSubmit}
         buttonText="Create"
-      ></RoutineForm>
+        serverError={serverError}
+      />
     </Container>
   );
 };

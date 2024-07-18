@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchCategories } from "../../features/exercises/categoriesSlice";
 import { useSelector, useDispatch } from "react-redux";
@@ -8,12 +8,15 @@ import { addExercise } from "../../features/exercises/exercisesSlice";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
 import ExerciseForm from "../../components/forms/ExerciseForm";
 import Container from "../../components/UI/Container";
+import { UseFormSetError } from "react-hook-form";
 
-import { Flex, Heading, IconButton, Box, Spinner } from "@chakra-ui/react";
+import { Flex, Heading, IconButton, Box } from "@chakra-ui/react";
+import SpinnerComponent from "../../components/UI/SpinnerComponent";
 
 const NewExercisePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
+  const [serverError, setServerError] = useState<string | null>(null);
   const user = useSelector((state: RootState) => state.authenticatedUser.user);
   const categoriesState = useSelector((state: RootState) => state.categories);
 
@@ -29,7 +32,8 @@ const NewExercisePage = () => {
 
   const onSubmit = async (
     data: { name: string },
-    selectedCategories: Category[]
+    selectedCategories: Category[],
+    setError: UseFormSetError<{ name: string }>
   ) => {
     const exerciseToAdd = {
       name: data.name,
@@ -39,11 +43,14 @@ const NewExercisePage = () => {
 
     try {
       await dispatch(addExercise(exerciseToAdd)).unwrap();
-      navigate("/exercises");
+      navigate("/exercises", { state: { exercise: "created" } });
     } catch (error) {
-      console.error("Failed to add exercise: ", error);
+      if (typeof error === "string") {
+        let errorMessage = error;
+        setServerError(error);
+        setError("name", { type: "server", message: errorMessage });
+      }
     }
-    navigate("/exercises");
   };
 
   const handleGoBack = () => {
@@ -51,18 +58,12 @@ const NewExercisePage = () => {
   };
 
   if (categoriesState.loading) {
-    return (
-      <Container>
-        <Flex align="center" justify="center" h="100vh">
-          <Spinner size="xl" />
-        </Flex>
-      </Container>
-    );
+    return <SpinnerComponent />;
   }
 
   return (
     <Container>
-      <Flex align="center" w="100%" mb={3}>
+      <Flex align="center" w={["95vw", "85vw", "70vw", "50vw", "40vw"]} mb={3}>
         <IconButton
           aria-label="Go back"
           variant="link"
@@ -73,7 +74,7 @@ const NewExercisePage = () => {
         />
 
         <Heading w="70%" fontSize="lg" textAlign="center">
-          New exercise
+          Add a new exercise
         </Heading>
         <Box w="16%" />
       </Flex>
@@ -81,6 +82,7 @@ const NewExercisePage = () => {
         initialSelectedCategories={[]}
         onSubmit={onSubmit}
         buttonText="Create"
+        serverError={serverError}
       ></ExerciseForm>
     </Container>
   );

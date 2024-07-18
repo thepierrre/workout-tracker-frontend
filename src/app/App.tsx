@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "./store";
-import { Tabs, TabList, Tab, Flex, Spinner } from "@chakra-ui/react";
+import { Tabs, TabList, Tab, Flex, Text, Spinner } from "@chakra-ui/react";
 import { initializeUser } from "../features/auth/authenticatedUserSlice";
 import { useEffect, useMemo, useState } from "react";
 import { AppDispatch } from "./store";
@@ -27,7 +27,9 @@ const App = () => {
     if (user) {
       navigate("/workouts");
     } else {
-      navigate("/profile");
+      if (location.pathname !== "/sign-up") {
+        navigate("/");
+      }
     }
   }, [user, navigate]);
 
@@ -50,7 +52,7 @@ const App = () => {
     },
   ];
 
-  const defaultIndex = useMemo(() => {
+  const activeIndex = useMemo(() => {
     return tabs.findIndex((tab) => location.pathname.startsWith(tab.url));
   }, [activeTab]);
 
@@ -60,23 +62,29 @@ const App = () => {
         bg="#1a1a1a"
         minH="100vh"
         paddingTop={3}
+        direction="column"
         align="center"
         justify="center"
+        gap={2}
       >
-        <Spinner size="xl" color="white" />
+        <Spinner color="white" />
+        <Text color="white">One moment...</Text>
       </Flex>
     );
   }
 
   return (
     <Flex bg="#1a1a1a" minH="100vh" paddingTop={3}>
-      <Tabs variant="soft-rounded" defaultIndex={defaultIndex}>
+      <Tabs variant="soft-rounded" index={activeIndex}>
         {user && (
           <TabList width="100%">
             <Flex justify="center" width="100%" gap={0.5}>
               {tabs.map((tab) => (
                 <Tab
-                  sx={{ color: "white" }}
+                  sx={{
+                    color: "white",
+                    WebkitTapHighlightColor: "transparent",
+                  }}
                   w="23vw"
                   fontSize="md"
                   as={Link}

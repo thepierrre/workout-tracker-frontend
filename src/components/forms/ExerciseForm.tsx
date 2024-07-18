@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Category } from "../../interfaces/category.interface";
 import { useForm, Resolver } from "react-hook-form";
 import { useSelector } from "react-redux";
@@ -13,22 +13,29 @@ import {
   Checkbox,
   InputGroup,
   InputLeftElement,
+  FormLabel,
   Wrap,
+  useToast,
+  Box,
+  ToastId,
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
+import { UseFormSetError } from "react-hook-form";
+import SpinnerComponent from "../../components/UI/SpinnerComponent";
 
 interface FormValues {
   name: string;
 }
 
 const resolver: Resolver<FormValues> = async (values) => {
+  const trimmedName = values.name.trim();
   return {
-    values: values.name ? values : {},
-    errors: !values.name
+    values: trimmedName ? { name: trimmedName } : {},
+    errors: !trimmedName
       ? {
           name: {
             type: "required",
-            message: "Exercise name is required.",
+            message: "Exercise name cannot be empty.",
           },
         }
       : {},
@@ -39,7 +46,12 @@ interface ExerciseFormProps {
   initialName?: string;
   initialSelectedCategories?: Category[];
   buttonText: string;
-  onSubmit: (data: FormValues, selectedCategories: Category[]) => void;
+  onSubmit: (
+    data: FormValues,
+    selectedCategories: Category[],
+    setError: UseFormSetError<FormValues>
+  ) => void;
+  serverError: string | null;
 }
 
 const ExerciseForm: React.FC<ExerciseFormProps> = ({
@@ -47,46 +59,76 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
   initialSelectedCategories = [],
   onSubmit,
   buttonText,
+  serverError,
 }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<FormValues>({ resolver });
 
   const [searchedCategories, setSearchedCategories] = useState<string>("");
   const [selectedCategories, setSelectedCategories] = useState<Category[]>(
     initialSelectedCategories
   );
-  const [categories, setCategories] = useState<Category[]>([]);
-
-  const initialCategories = useSelector(
-    (state: RootState) => state.categories.categories
+  const { categories, loading: loadingCategories } = useSelector(
+    (state: RootState) => state.categories
   );
 
   useEffect(() => {
-    const filteredCategories = initialCategories.filter(
-      (ex) => !initialSelectedCategories.some((selCat) => selCat.id === ex.id)
-    );
-    setCategories(filteredCategories);
-  }, [initialCategories, initialSelectedCategories]);
+    setSelectedCategories(initialSelectedCategories);
+  }, [initialSelectedCategories]);
+
+  useEffect(() => {
+    if (serverError) {
+      setError("name", { type: "server", message: serverError });
+    }
+  }, [serverError, setError]);
+
+  const toast = useToast();
+  const toastIdRef = useRef<ToastId | undefined>(undefined);
+
+  const addToast = () => {
+    if (toastIdRef.current) {
+      toast.close(toastIdRef.current);
+    }
+    toastIdRef.current = toast({
+      position: "bottom",
+      duration: 2500,
+      render: () => (
+        <Box
+          color="white"
+          bg="lightblue"
+          background="#F56565"
+          borderRadius={10}
+          p={3}
+          fontSize="lg"
+          mb={10}
+        >
+          <Text>You cannot add more than 5 categories!</Text>
+        </Box>
+      ),
+    });
+  };
+
+  const handleToast = (isCategorySelected: boolean) => {
+    if (!isCategorySelected && selectedCategories.length >= 5) {
+      addToast();
+    }
+  };
 
   const handleCheck = (category: Category) => {
-    if (selectedCategories.includes(category)) {
-      setTimeout(() => {
-        setSelectedCategories((prevSelectedCategories) =>
-          prevSelectedCategories.filter((cat) => cat.id !== category.id)
-        );
-        setCategories([...categories, category]);
-      }, 250);
-    } else {
-      setTimeout(() => {
-        setSelectedCategories([...selectedCategories, category]);
-        setCategories((prevCategories) =>
-          prevCategories.filter((cat) => cat.id !== category.id)
-        );
-      }, 250);
-    }
+    setSelectedCategories((prevSelectedCategories) => {
+      if (prevSelectedCategories.find((cat) => cat.id === category.id)) {
+        return prevSelectedCategories.filter((cat) => cat.id !== category.id);
+      } else {
+        if (selectedCategories.length >= 5) {
+          return prevSelectedCategories;
+        }
+        return [...prevSelectedCategories, category];
+      }
+    });
   };
 
   const handleCategoryFiltering = (
@@ -100,76 +142,146 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
     category.name.toLowerCase().startsWith(searchedCategories.toLowerCase())
   );
 
+  const isCategorySelected = (category: Category) =>
+    selectedCategories.some((cat) => cat.id === category.id);
+
+  const isCheckboxDisabled = (category: Category) =>
+    !isCategorySelected(category) && selectedCategories.length >= 5;
+
+  if (loadingCategories) {
+    return <SpinnerComponent />;
+  }
+
   return (
-    <form onSubmit={handleSubmit((data) => onSubmit(data, selectedCategories))}>
-      <FormControl isInvalid={!!errors.name}>
-        <Input
-          {...register("name")}
-          w="95vw"
-          bg="#404040"
-          borderColor="transparent"
-          _focusVisible={{
-            borderWidth: "1px",
-            borderColor: "lightblue",
-          }}
-          _placeholder={{ color: "#B3B3B3" }}
-          placeholder="Exercise name"
-          defaultValue={initialName}
-        />
-        <FormErrorMessage>
-          {errors.name && errors.name.message}
-        </FormErrorMessage>
-      </FormControl>
-
-      <Wrap w="90vw" mt={4} mb={4} ml={2} mr={2}>
-        {selectedCategories.map((category) => (
-          <Flex gap={5} w="48%" key={category.name}>
-            <Checkbox
-              defaultChecked={true}
-              onChange={() => handleCheck(category)}
-            ></Checkbox>
-            <Text textColor="white">
-              {category.name.charAt(0).toLocaleUpperCase() +
-                category.name.slice(1)}
-            </Text>
-          </Flex>
-        ))}
-      </Wrap>
-
-      <Flex direction="column" w="100%" gap={2}>
-        <InputGroup>
+    <Flex direction="column">
+      <form
+        onSubmit={handleSubmit((data) =>
+          onSubmit(data, selectedCategories, setError)
+        )}
+        style={{
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <FormControl
+          isInvalid={!!errors.name}
+          display="flex"
+          flexDirection="column"
+          alignItems="flex-start"
+          width={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+        >
+          <FormLabel fontSize="sm">Exercise name</FormLabel>
           <Input
-            w="95vw"
+            {...register("name")}
+            w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
             bg="#404040"
-            borderColor="transparent"
-            _focusVisible={{
-              borderWidth: "1px",
-              borderColor: "lightblue",
+            borderWidth="1px"
+            borderColor="#CBD5E0"
+            _focus={{
+              boxShadow: "none",
+              borderWidth: "2px",
+              borderColor: errors.name ? "#E53E3E" : "#3182CE",
             }}
             _placeholder={{ color: "#B3B3B3" }}
-            placeholder="Filter categories"
-            onChange={(event) => handleCategoryFiltering(event)}
+            placeholder="Enter a name"
+            defaultValue={initialName}
           />
-          <InputLeftElement>
-            <SearchIcon />
-          </InputLeftElement>
-        </InputGroup>
 
-        <Wrap w="90vw" mt={4} mb={4} ml={2} mr={2}>
-          {filteredCategories.map((category) => (
-            <Flex gap={5} w="48%" key={category.name}>
-              <Checkbox onChange={() => handleCheck(category)}></Checkbox>
-              <Text textColor="white">
-                {category.name.charAt(0).toLocaleUpperCase() +
-                  category.name.slice(1)}
-              </Text>
-            </Flex>
-          ))}
-        </Wrap>
-      </Flex>
+          <FormErrorMessage>
+            {errors.name && errors.name.message}
+          </FormErrorMessage>
+        </FormControl>
 
-      <WideButton type="submit">{buttonText}</WideButton>
-    </form>
+        <Flex
+          direction="column"
+          align="center"
+          justify="center"
+          w="100%"
+          mt={5}
+        >
+          <Flex
+            direction="column"
+            align="flex-start"
+            w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+          >
+            <FormLabel textColor="white" fontSize="sm">
+              Filter categories
+            </FormLabel>
+            <InputGroup
+              flexDirection="column"
+              alignItems="flex-start"
+              width={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+            >
+              <Input
+                w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+                bg="#404040"
+                borderWidth="1px"
+                borderColor="#CBD5E0"
+                _focus={{
+                  boxShadow: "none",
+                  borderWidth: "2px",
+                  borderColor: "#3182CE",
+                }}
+                _placeholder={{ color: "#B3B3B3" }}
+                placeholder="Search"
+                onChange={(event) => handleCategoryFiltering(event)}
+              />
+              <InputLeftElement>
+                <SearchIcon />
+              </InputLeftElement>
+            </InputGroup>
+          </Flex>
+
+          {filteredCategories.length > 0 ? (
+            <Wrap
+              mt={5}
+              mb={5}
+              w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+              spacing={2}
+              justify="left"
+            >
+              {filteredCategories.map((category) => (
+                <Flex
+                  direction="column"
+                  ml={2}
+                  w="45%"
+                  data-testid={`category-name-${category.name}`}
+                  key={category.name}
+                  onClick={() => handleToast(isCategorySelected(category))}
+                >
+                  <Checkbox
+                    isChecked={isCategorySelected(category)}
+                    isDisabled={isCheckboxDisabled(category)}
+                    onChange={() => handleCheck(category)}
+                    data-testid={`checkbox-category-name-${category.name}`}
+                    fontWeight={isCategorySelected(category) ? "bold" : ""}
+                  >
+                    {category.name.charAt(0).toLocaleUpperCase() +
+                      category.name.slice(1)}
+                  </Checkbox>
+                </Flex>
+              ))}
+            </Wrap>
+          ) : (
+            <Text textAlign="center" mt={4} mb={4}>
+              No categories.
+            </Text>
+          )}
+        </Flex>
+
+        <Flex justify="center">
+          <WideButton
+            type="submit"
+            data-testid={"submit-button"}
+            w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+          >
+            {buttonText}
+          </WideButton>
+        </Flex>
+      </form>
+    </Flex>
   );
 };
 

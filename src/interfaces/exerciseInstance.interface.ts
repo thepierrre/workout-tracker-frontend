@@ -1,7 +1,7 @@
-import { Series } from "./series.interface";
+import { WorkingSet } from "./workingSet.interface";
 
 export interface ExerciseInstance {
   id: string;
   exerciseTypeName: string;
-  workingSets: Series[];
+  workingSets: WorkingSet[];
 }
