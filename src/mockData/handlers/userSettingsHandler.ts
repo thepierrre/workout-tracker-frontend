@@ -1,4 +1,5 @@
 import { http, HttpResponse } from "msw";
+import { baseURL } from "../../mockData/node";
 
 export const userSettings = {
   id: "ed8af7bb-5ad2-46d1-a67d-d1c954c76405",
@@ -8,7 +9,7 @@ export const userSettings = {
 };
 
 export const userSettingsHandler = [
-  http.get("http://localhost:8080/api/users/user-settings", () => {
+  http.get(`${baseURL}users/user-settings`, () => {
     return HttpResponse.json(userSettings);
   }),
 ];

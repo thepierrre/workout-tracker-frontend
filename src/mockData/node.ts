@@ -12,3 +12,5 @@ export const server = setupServer(
   ...userSettingsHandler,
   ...workoutsForUserHandler
 );
+
+export const baseURL = "https://workout-tracker-service-2.onrender.com/api/";

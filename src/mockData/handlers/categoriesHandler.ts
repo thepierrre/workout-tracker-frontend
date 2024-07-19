@@ -1,5 +1,6 @@
 import { Category } from "../../interfaces/category.interface";
 import { http, HttpResponse } from "msw";
+import { baseURL } from "../../mockData/node";
 
 export const categories: Category[] = [
   {
@@ -57,7 +58,7 @@ export const categories: Category[] = [
 ];
 
 export const categoriesHandler = [
-  http.get("http://localhost:8080/api/categories", () => {
+  http.get(`${baseURL}categories`, () => {
     return HttpResponse.json(categories);
   }),
 ];

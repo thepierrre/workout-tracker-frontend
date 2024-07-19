@@ -1,6 +1,7 @@
 import { http, HttpResponse } from "msw";
 import { format } from "date-fns";
 import { User } from "../../interfaces/user.interface";
+import { baseURL } from "../../mockData/node";
 
 export const initializedUser: User = {
   id: "12345",
@@ -358,7 +359,7 @@ export const fetchedUser = {
 };
 
 export const userHandler = [
-  http.get("http://localhost:8080/api/users/me", () => {
+  http.get(`${baseURL}me`, () => {
     return HttpResponse.json(initializedUser);
   }),
 ];
