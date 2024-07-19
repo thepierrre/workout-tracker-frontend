@@ -102,9 +102,9 @@ const SingleRoutinePage = () => {
     onOpen();
   };
 
-  const handleRemoveRoutine = () => {
+  const handleRemoveRoutine = async () => {
     if (routineToDelete) {
-      dispatch(removeRoutine(routineToDelete.id));
+      await dispatch(removeRoutine(routineToDelete.id));
       setRoutineToDelete(null);
       onClose();
       navigate("/routines", { state: { routine: "removed" } });

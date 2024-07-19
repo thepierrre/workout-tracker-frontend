@@ -107,7 +107,6 @@ const SingleExercisePage = () => {
   const handleRemoveExercise = async () => {
     if (exerciseToDelete) {
       await dispatch(removeExercise(exerciseToDelete.id));
-      dispatch(fetchExercises());
       setExerciseToDelete(null);
       onClose();
       navigate("/exercises", { state: { exercise: "removed" } });
