@@ -1,4 +1,4 @@
-import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { ChakraProvider } from "@chakra-ui/react";
 import { BrowserRouter } from "react-router-dom";
 import NewWorkout from "../NewWorkout";

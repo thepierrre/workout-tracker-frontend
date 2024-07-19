@@ -4,10 +4,7 @@ import _ from "underscore";
 import { Category } from "../../interfaces/category.interface";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../../app/store";
-import {
-  fetchExercises,
-  removeExercise,
-} from "../../features/exercises/exercisesSlice";
+import { removeExercise } from "../../features/exercises/exercisesSlice";
 import {
   Text,
   Flex,
