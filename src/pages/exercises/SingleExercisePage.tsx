@@ -4,7 +4,10 @@ import _ from "underscore";
 import { Category } from "../../interfaces/category.interface";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../../app/store";
-import { removeExercise } from "../../features/exercises/exercisesSlice";
+import {
+  fetchExercises,
+  removeExercise,
+} from "../../features/exercises/exercisesSlice";
 import {
   Text,
   Flex,
@@ -101,9 +104,9 @@ const SingleExercisePage = () => {
     onOpen();
   };
 
-  const handleRemoveExercise = () => {
+  const handleRemoveExercise = async () => {
     if (exerciseToDelete) {
-      dispatch(removeExercise(exerciseToDelete.id));
+      await dispatch(removeExercise(exerciseToDelete.id));
       setExerciseToDelete(null);
       onClose();
       navigate("/exercises", { state: { exercise: "removed" } });
