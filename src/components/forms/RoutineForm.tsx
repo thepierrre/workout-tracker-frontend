@@ -140,8 +140,7 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
   };
 
   const remainingExercises = exercises.filter(
-    (ex) =>
-      !initialSelectedExercises.some((selectedEx) => selectedEx.id == ex.id)
+    (ex) => !selectedExercises.some((selectedEx) => selectedEx.id == ex.id)
   );
 
   const handleExerciseFiltering = (
