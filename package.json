@@ -9,7 +9,7 @@
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "start": "serve dist -s"
+    "start": "vite"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
