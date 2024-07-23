@@ -8,4 +8,4 @@ Visit https://my-gym-tracker.work/ <br />
 Username: testuser <br />
 Password: testp@ss124
 
-#### (The application may be initially sleeping to save the dynos on Heroku, a few seconds of patience please :))
+#### (The application may be initially sleeping to save the dynos on Heroku, <br /> a few seconds of patience please :))
