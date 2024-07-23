@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import WideButton from "../../components/UI/WideButton";
 import Container from "../../components/UI/Container";
@@ -11,6 +11,7 @@ import {
   FormErrorMessage,
   useToast,
   ToastId,
+  Spinner,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useForm, SubmitHandler, Resolver } from "react-hook-form";
@@ -79,6 +80,8 @@ const RegisterPage = () => {
     setError,
     formState: { errors },
   } = useForm<FormValues>({ resolver });
+  const [registrationInProgress, setRegistrationInProgress] =
+    useState<boolean>(false);
 
   const toast = useToast();
   const toastIdRef = useRef<ToastId | undefined>(undefined);
@@ -110,8 +113,10 @@ const RegisterPage = () => {
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
+      setRegistrationInProgress(true);
       const response = await axiosInstance.post("/auth/register", data);
       if (response.data === `User "${data.username}" registered.`) {
+        setRegistrationInProgress(false);
         addToast();
       }
     } catch (error) {
@@ -215,6 +220,9 @@ const RegisterPage = () => {
               {errors?.password && errors.password.message}
             </FormErrorMessage>
           </FormControl>
+          <Flex direction="column" align="center" mt={2}>
+            {registrationInProgress && <Spinner />}
+          </Flex>
 
           <WideButton
             type="submit"
