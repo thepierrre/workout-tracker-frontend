@@ -1,9 +1,10 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "https://my-gym-tracker.work/api/",
+  //baseURL: "https://my-gym-tracker.work/api/",
   //baseURL: "http://localhost:8080/api/",
-  //baseURL: "https://piotrs-workout-tracker-73c6b58b5e5a.herokuapp.com/api/",
+  baseURL:
+    "https://workout-tracker-piotr-server-82acd6a044c6.herokuapp.com/api/",
   withCredentials: true,
 });
 
