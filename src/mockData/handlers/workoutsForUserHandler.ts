@@ -2,6 +2,7 @@ import { format } from "date-fns";
 import { Workout } from "../../interfaces/workout.interface";
 import { http, HttpResponse } from "msw";
 import { ExerciseInstance } from "interfaces/exerciseInstance.interface";
+import { baseURL } from "../../mockData/node";
 
 const deepClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 
@@ -221,11 +222,11 @@ const newWorkoutExercises: ExerciseInstance[] = [
 ];
 
 export const workoutsForUserHandler = [
-  http.get("http://localhost:8080/api/user-workouts", () => {
+  http.get(`${baseURL}user-workouts`, () => {
     return HttpResponse.json([...workoutsForUser]);
   }),
 
-  http.post("http://localhost:8080/api/workouts", async ({ request }) => {
+  http.post(`${baseURL}workouts`, async ({ request }) => {
     const newWorkout = (await request.json()) as Workout;
     newWorkout.exerciseInstances = newWorkoutExercises.map((exercise) => ({
       ...exercise,
@@ -235,7 +236,7 @@ export const workoutsForUserHandler = [
     return HttpResponse.json(newWorkout);
   }),
 
-  http.post("http://localhost:8080/api/workouts", async ({ request }) => {
+  http.post(`${baseURL}workouts`, async ({ request }) => {
     const newWorkout = (await request.json()) as Workout;
     newWorkout.exerciseInstances = newWorkoutExercises.map((exercise) => ({
       ...exercise,
@@ -246,7 +247,7 @@ export const workoutsForUserHandler = [
   }),
 
   http.delete(
-    "http://localhost:8080/api/workouts/05fa8b17-08ee-41f1-b80e-5112c98c2c3e",
+    `${baseURL}workouts/05fa8b17-08ee-41f1-b80e-5112c98c2c3e`,
     async () => {
       workoutsForUser = [
         ...workoutsForUser.filter(

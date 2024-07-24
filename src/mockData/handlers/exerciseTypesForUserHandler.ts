@@ -1,5 +1,6 @@
 import { Exercise } from "interfaces/exercise.interface";
 import { http, HttpResponse } from "msw";
+import { baseURL } from "../../mockData/node";
 
 const deepClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 
@@ -125,12 +126,12 @@ export const initialExerciseTypesForUser: Exercise[] = [
 export let exerciseTypesForUser = deepClone(initialExerciseTypesForUser);
 
 export const exerciseTypesForUserHandler = [
-  http.get("http://localhost:8080/api/user-exercise-types", () => {
+  http.get(`${baseURL}user-exercise-types`, () => {
     return HttpResponse.json(exerciseTypesForUser);
   }),
 
   http.put(
-    "http://localhost:8080/api/exercise-types/a6647d9c-a926-499e-9a5f-e9f16690bfdk",
+    `${baseURL}exercise-types/a6647d9c-a926-499e-9a5f-e9f16690bfdk`,
     async ({ request }) => {
       const updatedExercise = (await request.json()) as Exercise;
 
@@ -161,7 +162,7 @@ export const exerciseTypesForUserHandler = [
   ),
 
   http.put(
-    "http://localhost:8080/api/exercise-types/a6647d9c-a926-499e-9a5f-e9f16690bfdi",
+    `${baseURL}exercise-types/a6647d9c-a926-499e-9a5f-e9f16690bfdi`,
     async ({ request }) => {
       const updatedExercise = (await request.json()) as Exercise;
 
@@ -170,7 +171,7 @@ export const exerciseTypesForUserHandler = [
     }
   ),
 
-  http.post("http://localhost:8080/api/exercise-types", async ({ request }) => {
+  http.post(`${baseURL}exercise-types`, async ({ request }) => {
     const newExercise = (await request.json()) as Exercise;
 
     const nameAlreadyTaken = "bench press";

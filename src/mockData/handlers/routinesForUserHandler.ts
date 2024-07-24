@@ -1,5 +1,6 @@
 import { Routine } from "../../interfaces/routine.interface";
 import { http, HttpResponse } from "msw";
+import { baseURL } from "../../mockData/node";
 
 const deepClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 
@@ -119,11 +120,11 @@ const initialRoutinesForUser: Routine[] = [
 export let routinesForUser = deepClone(initialRoutinesForUser);
 
 export const routinesForUserHandler = [
-  http.get("http://localhost:8080/api/user-routines", () => {
+  http.get(`${baseURL}user-routines`, () => {
     return HttpResponse.json(routinesForUser);
   }),
 
-  http.post("http://localhost:8080/api/routines", async ({ request }) => {
+  http.post(`${baseURL}routines`, async ({ request }) => {
     const newRoutine = (await request.json()) as Routine;
 
     newRoutine.id = "05f000xyzxyz017-08ee-41f1-b80e-5112c98c43";

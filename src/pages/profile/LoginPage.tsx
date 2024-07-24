@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import WideButton from "../../components/UI/WideButton";
 import { User } from "interfaces/user.interface";
@@ -9,6 +10,7 @@ import {
   FormControl,
   Input,
   FormErrorMessage,
+  Spinner,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useForm, SubmitHandler, Resolver } from "react-hook-form";
@@ -49,6 +51,7 @@ const resolver: Resolver<FormValues> = async (values) => {
 };
 
 const RegisterPage = () => {
+  const [loginInProgress, setLoginInProgress] = useState<boolean>(false);
   const dispatch = useDispatch();
 
   const {
@@ -60,6 +63,7 @@ const RegisterPage = () => {
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
+      setLoginInProgress(true);
       await axiosInstance.post("/auth/login", data);
 
       const userResponse = await axiosInstance.get("users/me");
@@ -75,7 +79,9 @@ const RegisterPage = () => {
       };
 
       dispatch(setUser(authenticatedUser));
+      setLoginInProgress(false);
     } catch (error) {
+      setLoginInProgress(false);
       if (axios.isAxiosError(error)) {
         const message = error.response?.data;
         if (message === "Invalid username or password.") {
@@ -150,6 +156,9 @@ const RegisterPage = () => {
               {errors?.password && errors.password.message}
             </FormErrorMessage>
           </FormControl>
+          <Flex direction="column" align="center" mt={2}>
+            {loginInProgress && <Spinner />}
+          </Flex>
           <WideButton
             type="submit"
             w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
