@@ -117,10 +117,10 @@ const RoutinesPage = () => {
             w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
             bg="#404040"
             color="white"
-            borderColor="transparent"
-            _focusVisible={{
+            borderColor="#CBD5E0"
+            _focus={{
               borderWidth: "1px",
-              borderColor: "lightblue",
+              borderColor: "#3182CE",
             }}
             _placeholder={{ color: "#B3B3B3" }}
             placeholder="Search routines"

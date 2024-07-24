@@ -6,6 +6,9 @@ import { fetchExercises } from "../../features/exercises/exercisesSlice";
 import { UseFormSetError } from "react-hook-form";
 import { SearchIcon } from "@chakra-ui/icons";
 import WideButton from "../../components/UI/WideButton";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import EditIcon from "@mui/icons-material/Edit";
 import {
   Flex,
   FormControl,
@@ -21,6 +24,7 @@ import {
   Box,
   ToastId,
   Card,
+  IconButton,
 } from "@chakra-ui/react";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
@@ -233,55 +237,73 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
                 style={{ listStyleType: "none", padding: 0 }}
               >
                 {selectedExercises.map((exercise, index) => (
-                  <Draggable
-                    key={exercise.id}
-                    draggableId={exercise.id}
-                    index={index}
-                  >
-                    {(provided, snapshot) => (
-                      <li
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        style={{
-                          ...provided.draggableProps.style,
-                          margin: "8px 0",
-                          borderRadius: "5px",
-                          backgroundColor: snapshot.isDragging
-                            ? "transparent"
-                            : "#404040",
-                        }}
-                      >
-                        <Card
-                          mt={2}
-                          mb={2}
-                          bg="#404040"
-                          w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
-                          borderRadius={5}
+                  <Flex key={exercise.id}>
+                    <Draggable draggableId={exercise.id} index={index}>
+                      {(provided, snapshot) => (
+                        <li
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          style={{
+                            ...provided.draggableProps.style,
+                            borderRadius: "5px",
+                            marginTop: "8px",
+                            backgroundColor: snapshot.isDragging
+                              ? "transparent"
+                              : "#404040",
+                          }}
                         >
-                          <Flex gap={5} p={3} alignItems="center">
-                            <Checkbox
-                              color="white"
-                              isChecked={isExerciseSelected(exercise)}
-                              isDisabled={isCheckboxDisabled(exercise)}
-                              onChange={(e) => {
-                                e.stopPropagation();
-                                handleCheck(exercise);
-                              }}
-                              data-testid="not selected checkbox"
-                              fontWeight={
-                                isExerciseSelected(exercise) ? "bold" : ""
-                              }
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              {exercise.name.charAt(0).toLocaleUpperCase() +
-                                exercise.name.slice(1)}
-                            </Checkbox>
-                          </Flex>
-                        </Card>
-                      </li>
-                    )}
-                  </Draggable>
+                          <Card
+                            bg="#404040"
+                            w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+                            borderRadius={5}
+                          >
+                            <Flex gap={2} p={3} direction="row">
+                              <Flex direction="column" gap={2} w="50%">
+                                <Checkbox
+                                  color="white"
+                                  isChecked={isExerciseSelected(exercise)}
+                                  isDisabled={isCheckboxDisabled(exercise)}
+                                  onChange={(e) => {
+                                    e.stopPropagation();
+                                    handleCheck(exercise);
+                                  }}
+                                  data-testid="not selected checkbox"
+                                  fontWeight={
+                                    isExerciseSelected(exercise) ? "bold" : ""
+                                  }
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  {exercise.name.charAt(0).toLocaleUpperCase() +
+                                    exercise.name.slice(1)}
+                                </Checkbox>
+                                <Flex ml={6}>
+                                  <Text textColor="#E2E8F0" fontSize="sm">
+                                    3 SETS x 8 REPS
+                                  </Text>
+                                </Flex>
+                              </Flex>
+                              <Flex justify="end" align="center" w="50%">
+                                <IconButton
+                                  variant="ghost"
+                                  color="#E2E8F0"
+                                  sx={{
+                                    _focus: {
+                                      boxShadow: "none",
+                                      bg: "transparent",
+                                    },
+                                    _hover: { bg: "transparent" },
+                                  }}
+                                  aria-label="toggle exercise details"
+                                  icon={<EditIcon />}
+                                />
+                              </Flex>
+                            </Flex>
+                          </Card>
+                        </li>
+                      )}
+                    </Draggable>
+                  </Flex>
                 ))}
                 {provided.placeholder}
               </ul>
@@ -308,7 +330,7 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
               w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
               bg="#404040"
               color="white"
-              borderWidth="1px"
+              borderWidth="2px"
               borderColor="#CBD5E0"
               _focus={{
                 boxShadow: "none",
@@ -328,19 +350,27 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
           {remainingFilteredExercises.map((exercise) => (
             <Flex
               key={exercise.id}
-              w="48%"
               onClick={() => handleToast(isExerciseSelected(exercise))}
+              m={0}
             >
-              <Checkbox
-                isChecked={isExerciseSelected(exercise)}
-                isDisabled={isCheckboxDisabled(exercise)}
-                onChange={() => handleCheck(exercise)}
-                data-testid="not selected checkbox"
-                fontWeight={isExerciseSelected(exercise) ? "bold" : ""}
+              <Card
+                bg="#404040"
+                w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+                borderRadius={5}
+                p={4}
+                color="white"
               >
-                {exercise.name.charAt(0).toLocaleUpperCase() +
-                  exercise.name.slice(1)}
-              </Checkbox>
+                <Checkbox
+                  isChecked={isExerciseSelected(exercise)}
+                  isDisabled={isCheckboxDisabled(exercise)}
+                  onChange={() => handleCheck(exercise)}
+                  data-testid="not selected checkbox"
+                  fontWeight={isExerciseSelected(exercise) ? "bold" : ""}
+                >
+                  {exercise.name.charAt(0).toLocaleUpperCase() +
+                    exercise.name.slice(1)}
+                </Checkbox>
+              </Card>
             </Flex>
           ))}
         </Flex>

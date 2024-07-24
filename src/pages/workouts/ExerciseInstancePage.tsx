@@ -13,6 +13,7 @@ import { fetchUserSettings } from "../../features/settings/userSettingsSlice";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
 import ThresholdHandler from "../../components/workouts/ThresholdHandler";
 import ThresholdForm from "../../components/forms/ThresholdForm";
+import NotesForm from "../../components/forms/NotesForm";
 
 const defaultUserSettings: UserSettings = {
   changeThreshold: 1,
@@ -112,7 +113,7 @@ const WorkoutExerciseInstancePage = () => {
               exerciseInstance={exerciseInstance}
             />
           </Flex>
-          <Flex direction="column" gap={2} mt={3} align="center">
+          <Flex direction="column" gap={2} mt={3} mb={3} align="center">
             {exerciseInstance?.workingSets?.length > 0 ? (
               exerciseInstance?.workingSets?.map((set, index) => (
                 <ExerciseWorkingSet
@@ -128,6 +129,7 @@ const WorkoutExerciseInstancePage = () => {
               <Text>This exercise has no sets.</Text>
             )}
           </Flex>
+          <NotesForm />
         </Flex>
       )}
     </Container>

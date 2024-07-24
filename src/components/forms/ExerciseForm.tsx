@@ -177,7 +177,7 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
             {...register("name")}
             w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
             bg="#404040"
-            borderWidth="1px"
+            borderWidth="2px"
             borderColor="#CBD5E0"
             _focus={{
               boxShadow: "none",

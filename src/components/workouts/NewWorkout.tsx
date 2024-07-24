@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRef, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Routine } from "../../interfaces/routine.interface";
@@ -20,9 +20,12 @@ import {
   DrawerBody,
   Text,
   Box,
+  Spinner,
 } from "@chakra-ui/react";
 
 const NewWorkout = () => {
+  const [workoutAddingInProgress, setWorkoutAddingInProgress] =
+    useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef<HTMLButtonElement>(null);
@@ -36,14 +39,20 @@ const NewWorkout = () => {
     dispatch(fetchRoutines());
   }, [dispatch]);
 
-  const handleAddWorkout = (routine: Routine) => {
-    const workoutToAdd: Omit<Workout, "id" | "exerciseInstances"> = {
-      routineName: routine.name,
-      creationDate: format(chosenDayAsDate, "yyyy-MM-dd"),
-    };
-
-    dispatch(addWorkout(workoutToAdd));
-    onClose();
+  const handleAddWorkout = async (routine: Routine) => {
+    try {
+      setWorkoutAddingInProgress(true);
+      const workoutToAdd: Omit<Workout, "id" | "exerciseInstances"> = {
+        routineName: routine.name,
+        creationDate: format(chosenDayAsDate, "yyyy-MM-dd"),
+      };
+      onClose();
+      await dispatch(addWorkout(workoutToAdd));
+      setWorkoutAddingInProgress(false);
+    } catch (error) {
+      setWorkoutAddingInProgress(false);
+      console.log(error);
+    }
   };
 
   return (
@@ -55,6 +64,11 @@ const NewWorkout = () => {
       >
         New workout
       </WideButton>
+      {workoutAddingInProgress && (
+        <Flex justify="center">
+          <Spinner />
+        </Flex>
+      )}
       <Drawer
         isOpen={isOpen}
         placement="bottom"
