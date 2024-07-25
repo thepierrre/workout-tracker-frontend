@@ -18,6 +18,9 @@ import {
   useToast,
   Box,
   ToastId,
+  Radio,
+  RadioGroup,
+  Stack,
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { UseFormSetError } from "react-hook-form";
@@ -193,6 +196,22 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
             {errors.name && errors.name.message}
           </FormErrorMessage>
         </FormControl>
+
+        <Flex w="100%" direction="row" justify="start" gap={5} mt={5}>
+          <Text fontSize="lg" fontWeight="bold">
+            Type:
+          </Text>
+          <RadioGroup>
+            <Stack spacing={4} direction="row">
+              <Radio value="2" size="lg">
+                With reps
+              </Radio>
+              <Radio value="3" size="lg">
+                Timed
+              </Radio>
+            </Stack>
+          </RadioGroup>
+        </Flex>
 
         <Flex
           direction="column"

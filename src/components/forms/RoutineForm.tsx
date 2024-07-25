@@ -346,7 +346,7 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
             </InputLeftElement>
           </InputGroup>
         </Flex>
-        <Flex direction="column" gap={2} mt={5} ml={2} mb={2}>
+        <Flex direction="column" gap={2} mt={5} mb={2}>
           {remainingFilteredExercises.map((exercise) => (
             <Flex
               key={exercise.id}
@@ -357,7 +357,7 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
                 bg="#404040"
                 w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
                 borderRadius={5}
-                p={4}
+                p={[6, 2, 6, 2]}
                 color="white"
               >
                 <Checkbox

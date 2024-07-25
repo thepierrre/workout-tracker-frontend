@@ -55,7 +55,8 @@ const NotesForm = () => {
             {...register("content")}
             _placeholder={{ color: "#B3B3B3" }}
             w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
-            placeholder="Add notes for this exercise..."
+            placeholder="Add notes for this exercise"
+            p={2}
             size="md"
             bg="#404040"
             color="white"
@@ -67,11 +68,11 @@ const NotesForm = () => {
               borderColor: "#3182CE",
             }}
             resize="vertical"
-            maxLength={400}
+            maxLength={300}
             onChange={handleNotesInputChange}
           />
           <Flex justify="end" mt={1}>
-            <Text fontSize="sm">{usedCharacters}/400</Text>
+            <Text fontSize="sm">{usedCharacters}/300</Text>
           </Flex>
         </FormControl>
       </form>
