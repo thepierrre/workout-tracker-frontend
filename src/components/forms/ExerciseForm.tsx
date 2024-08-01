@@ -21,6 +21,7 @@ import {
   Radio,
   RadioGroup,
   Stack,
+  Heading,
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { UseFormSetError } from "react-hook-form";
@@ -47,11 +48,13 @@ const resolver: Resolver<FormValues> = async (values) => {
 
 interface ExerciseFormProps {
   initialName?: string;
+  initialRepsOrTimed: string;
   initialSelectedCategories?: Category[];
   buttonText: string;
   onSubmit: (
     data: FormValues,
     selectedCategories: Category[],
+    repsOrTimed: string,
     setError: UseFormSetError<FormValues>
   ) => void;
   serverError: string | null;
@@ -59,6 +62,7 @@ interface ExerciseFormProps {
 
 const ExerciseForm: React.FC<ExerciseFormProps> = ({
   initialName = "",
+  initialRepsOrTimed = "",
   initialSelectedCategories = [],
   onSubmit,
   buttonText,
@@ -71,6 +75,7 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
     setError,
   } = useForm<FormValues>({ resolver });
 
+  const [repsOrTimed, setRepsOrTimed] = useState<string>(initialRepsOrTimed);
   const [searchedCategories, setSearchedCategories] = useState<string>("");
   const [selectedCategories, setSelectedCategories] = useState<Category[]>(
     initialSelectedCategories
@@ -145,6 +150,8 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
     category.name.toLowerCase().startsWith(searchedCategories.toLowerCase())
   );
 
+  const muscleGroups = ["CORE", "CHEST", "BACK", "LEGS", "SHOULDERS"];
+
   const isCategorySelected = (category: Category) =>
     selectedCategories.some((cat) => cat.id === category.id);
 
@@ -159,7 +166,7 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
     <Flex direction="column">
       <form
         onSubmit={handleSubmit((data) =>
-          onSubmit(data, selectedCategories, setError)
+          onSubmit(data, selectedCategories, repsOrTimed, setError)
         )}
         style={{
           width: "100%",
@@ -201,12 +208,23 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
           <Text fontSize="lg" fontWeight="bold">
             Type:
           </Text>
-          <RadioGroup>
+          <RadioGroup
+            defaultValue={initialRepsOrTimed === "reps" ? "1" : "2"}
+            value={repsOrTimed === "reps" ? "1" : "2"}
+          >
             <Stack spacing={4} direction="row">
-              <Radio value="2" size="lg">
-                With reps
+              <Radio
+                value="1"
+                size="lg"
+                onChange={() => setRepsOrTimed("reps")}
+              >
+                Reps
               </Radio>
-              <Radio value="3" size="lg">
+              <Radio
+                value="2"
+                size="lg"
+                onChange={() => setRepsOrTimed("timed")}
+              >
                 Timed
               </Radio>
             </Stack>
@@ -254,35 +272,48 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({
           </Flex>
 
           {filteredCategories.length > 0 ? (
-            <Wrap
-              mt={5}
-              mb={5}
-              w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
-              spacing={2}
-              justify="left"
-            >
-              {filteredCategories.map((category) => (
-                <Flex
-                  direction="column"
-                  ml={2}
-                  w="45%"
-                  data-testid={`category-name-${category.name}`}
-                  key={category.name}
-                  onClick={() => handleToast(isCategorySelected(category))}
+            muscleGroups.map((muscleGrp, index) => (
+              <Box key={index}>
+                <Heading fontSize="lg" mt={5}>
+                  {muscleGrp}
+                </Heading>
+                <Wrap
+                  mt={5}
+                  mb={5}
+                  w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+                  spacing={2}
+                  justify="left"
                 >
-                  <Checkbox
-                    isChecked={isCategorySelected(category)}
-                    isDisabled={isCheckboxDisabled(category)}
-                    onChange={() => handleCheck(category)}
-                    data-testid={`checkbox-category-name-${category.name}`}
-                    fontWeight={isCategorySelected(category) ? "bold" : ""}
-                  >
-                    {category.name.charAt(0).toLocaleUpperCase() +
-                      category.name.slice(1)}
-                  </Checkbox>
-                </Flex>
-              ))}
-            </Wrap>
+                  {filteredCategories
+                    .filter((category) => category.muscleGroup === muscleGrp)
+                    .map((category) => (
+                      <Flex
+                        direction="column"
+                        ml={2}
+                        w="45%"
+                        data-testid={`category-name-${category.name}`}
+                        key={category.name}
+                        onClick={() =>
+                          handleToast(isCategorySelected(category))
+                        }
+                      >
+                        <Checkbox
+                          isChecked={isCategorySelected(category)}
+                          isDisabled={isCheckboxDisabled(category)}
+                          onChange={() => handleCheck(category)}
+                          data-testid={`checkbox-category-name-${category.name}`}
+                          fontWeight={
+                            isCategorySelected(category) ? "bold" : ""
+                          }
+                        >
+                          {category.name.charAt(0).toLocaleUpperCase() +
+                            category.name.slice(1)}
+                        </Checkbox>
+                      </Flex>
+                    ))}
+                </Wrap>
+              </Box>
+            ))
           ) : (
             <Text textAlign="center" mt={4} mb={4}>
               No categories.

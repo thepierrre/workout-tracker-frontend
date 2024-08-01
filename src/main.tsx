@@ -41,18 +41,12 @@ const router = createBrowserRouter(
 
       <Route path="routines/*">
         <Route path=":routineId" element={<SingleRoutinePage />} />
-        <Route path="new-routine">
+        <Route path="new-routine/*">
           <Route
-            path="edit-exercise/:exerciseId"
+            path="edit-exercise/:exerciseName"
             element={<EditExerciseForRoutinePage />}
           />
-          <Route path="new-routine/*">
-            <Route
-              path="edit-exercise/:exerciseName"
-              element={<EditExerciseForRoutinePage />}
-            />
-            <Route path="*" element={<NewRoutinePage />} />
-          </Route>
+          <Route path="*" element={<NewRoutinePage />} />
         </Route>
         <Route path="*" element={<RoutinesPage />} />
       </Route>

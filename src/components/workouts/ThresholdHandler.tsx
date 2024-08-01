@@ -6,8 +6,8 @@ import { useDispatch } from "react-redux";
 import { updateUserSettings } from "../../features/settings/userSettingsSlice";
 
 interface Props {
-  userSettings: UserSettings;
-  threshold: number | undefined;
+  userSettings?: UserSettings;
+  threshold?: number | undefined;
 }
 
 const ThresholdHandler: React.FC<Props> = ({ userSettings, threshold }) => {

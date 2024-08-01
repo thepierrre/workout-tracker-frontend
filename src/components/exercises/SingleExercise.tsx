@@ -2,7 +2,7 @@ import { useLocation } from "react-router-dom";
 import CustomCard from "../UI/CustomCard";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../app/store";
-import { CardBody, Text, Flex, useDisclosure } from "@chakra-ui/react";
+import { CardBody, Text, Flex, Badge, useDisclosure } from "@chakra-ui/react";
 import { Exercise } from "../../interfaces/exercise.interface";
 import {
   addExInstance,
@@ -90,6 +90,8 @@ const SingleExercise: React.FC<Props> = ({
     onClose();
   };
 
+  const isExerciseDefault = exercise.isDefault === true;
+
   return (
     <>
       <CustomCard>
@@ -101,6 +103,11 @@ const SingleExercise: React.FC<Props> = ({
               : "#414141"
           }
         >
+          {!isExerciseDefault && (
+            <Badge position="absolute" top={4} right={4}>
+              Custom
+            </Badge>
+          )}
           <Flex>
             <Flex direction="column" gap={1} textColor="white">
               <Text

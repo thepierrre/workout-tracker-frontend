@@ -33,13 +33,18 @@ const NewExercisePage = () => {
   const onSubmit = async (
     data: { name: string },
     selectedCategories: Category[],
+    repsOrTimed: string,
     setError: UseFormSetError<{ name: string }>
   ) => {
     const exerciseToAdd = {
       name: data.name,
       categories: selectedCategories,
+      repsOrTimed,
+      isDefault: false,
       userId: user.id,
     };
+
+    console.log(exerciseToAdd);
 
     try {
       await dispatch(addExercise(exerciseToAdd)).unwrap();
@@ -73,13 +78,14 @@ const NewExercisePage = () => {
           onClick={() => handleGoBack()}
         />
 
-        <Heading w="70%" fontSize="lg" textAlign="center">
+        <Heading w="70%" fontSize="xl" textAlign="center">
           Add a new exercise
         </Heading>
         <Box w="16%" />
       </Flex>
       <ExerciseForm
         initialSelectedCategories={[]}
+        initialRepsOrTimed="reps"
         onSubmit={onSubmit}
         buttonText="Create"
         serverError={serverError}

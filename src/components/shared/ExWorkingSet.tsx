@@ -1,21 +1,21 @@
 import { Card, CardBody, Flex, Text } from "@chakra-ui/react";
-import { UserSettings } from "interfaces/userSettings.interface";
-import { WorkingSet } from "interfaces/workingSet.interface";
+import { UserSettings } from "../../interfaces/userSettings.interface";
+import { WorkingSet } from "../../interfaces/workingSet.interface";
 import {
   convertKgsToLbs,
   handleWeightUnitText,
   roundKgs,
 } from "../../util/weightUnitConverting";
 
-interface ExerciseWorkingSetProps {
+interface ExWorkingSetProps {
   userSettings: UserSettings;
   workingSet: WorkingSet;
   activeWorkingSet?: WorkingSet;
   index: number;
-  handleActiveExInstance: (workingSet: WorkingSet) => void;
+  handleActiveExInstance?: (workingSet: WorkingSet) => void;
 }
 
-const ExerciseWorkingSet: React.FC<ExerciseWorkingSetProps> = ({
+const ExWorkingSet: React.FC<ExWorkingSetProps> = ({
   userSettings,
   workingSet,
   activeWorkingSet,
@@ -31,7 +31,11 @@ const ExerciseWorkingSet: React.FC<ExerciseWorkingSetProps> = ({
       }
       w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
       key={index}
-      onClick={() => workingSet && handleActiveExInstance(workingSet)}
+      onClick={() =>
+        handleActiveExInstance &&
+        workingSet &&
+        handleActiveExInstance(workingSet)
+      }
     >
       <CardBody p={4}>
         <Flex
@@ -62,4 +66,4 @@ const ExerciseWorkingSet: React.FC<ExerciseWorkingSetProps> = ({
   );
 };
 
-export default ExerciseWorkingSet;
+export default ExWorkingSet;

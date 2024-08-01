@@ -46,6 +46,7 @@ const SingleExercisePage = () => {
 
   useEffect(() => {
     dispatch(fetchCategories());
+    console.log(currentExercise);
   }, [dispatch]);
 
   if (!user) {
@@ -59,6 +60,7 @@ const SingleExercisePage = () => {
   const onSubmit = async (
     data: { name: string },
     selectedCategories: Category[],
+    repsOrTimed: string,
     setError: UseFormSetError<{ name: string }>
   ) => {
     const currentIndex = exercises.indexOf(currentExercise);
@@ -67,6 +69,8 @@ const SingleExercisePage = () => {
       id: currentExercise.id,
       name: data.name,
       categories: selectedCategories,
+      repsOrTimed,
+      isDefault: false,
       userId: user.id,
     };
 
@@ -130,13 +134,14 @@ const SingleExercisePage = () => {
           onClick={() => handleGoBack()}
         />
 
-        <Heading w="70%" fontSize="lg" textAlign="center">
+        <Heading w="70%" fontSize="xl" textAlign="center">
           Edit exercise
         </Heading>
         <Box w="16%" />
       </Flex>
       <ExerciseForm
         initialName={currentExercise.name}
+        initialRepsOrTimed={currentExercise.repsOrTimed}
         initialSelectedCategories={currentExercise.categories}
         buttonText="Update"
         onSubmit={onSubmit}

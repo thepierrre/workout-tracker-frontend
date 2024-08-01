@@ -48,10 +48,10 @@ const resolver: Resolver<FormValues> = async (values) => {
 };
 
 interface Props {
-  threshold: number | undefined;
-  activeWorkingSet: WorkingSet | undefined;
-  userSettings: UserSettings;
-  exerciseInstance: ExerciseInstance | undefined;
+  threshold?: number | undefined;
+  activeWorkingSet?: WorkingSet | undefined;
+  userSettings?: UserSettings;
+  exerciseInstance?: ExerciseInstance | undefined;
   setActiveWorkingSet: React.Dispatch<
     React.SetStateAction<WorkingSet | undefined>
   >;

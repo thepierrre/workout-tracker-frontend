@@ -7,6 +7,7 @@ import exercisesReducer from "../features/exercises/exercisesSlice";
 import routinesReducer from "../features/routines/routinesSlice";
 import categoriesReducer from "../features/exercises/categoriesSlice";
 import userSettingsReducer from "../features/settings/userSettingsSlice";
+import localRoutineReducer from "../features/routines/localRoutineSlice";
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
     routines: routinesReducer,
     categories: categoriesReducer,
     userSettings: userSettingsReducer,
+    localRoutine: localRoutineReducer,
   },
 });
 

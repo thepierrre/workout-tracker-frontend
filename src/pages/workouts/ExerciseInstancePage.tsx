@@ -7,7 +7,7 @@ import { Flex, Heading, Text, Box, IconButton } from "@chakra-ui/react";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { WorkingSet } from "../../interfaces/workingSet.interface";
 import { fetchWorkouts } from "../../features/workout/workoutSessionsSlice";
-import ExerciseWorkingSet from "../../components/workouts/ExerciseWorkingSet";
+import ExWorkingSet from "../../components/shared/ExWorkingSet";
 import { UserSettings } from "interfaces/userSettings.interface";
 import { fetchUserSettings } from "../../features/settings/userSettingsSlice";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
@@ -116,7 +116,7 @@ const WorkoutExerciseInstancePage = () => {
           <Flex direction="column" gap={2} mt={3} mb={3} align="center">
             {exerciseInstance?.workingSets?.length > 0 ? (
               exerciseInstance?.workingSets?.map((set, index) => (
-                <ExerciseWorkingSet
+                <ExWorkingSet
                   workingSet={set}
                   index={index}
                   key={set.id}

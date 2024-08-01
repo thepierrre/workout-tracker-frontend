@@ -131,7 +131,7 @@ const SingleRoutinePage = () => {
           onClick={() => handleGoBack()}
         />
 
-        <Heading w="70%" fontSize="lg" textAlign="center">
+        <Heading w="70%" fontSize="xl" textAlign="center">
           Edit routine
         </Heading>
         <Box w="16%" />

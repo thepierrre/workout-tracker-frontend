@@ -7,24 +7,35 @@ import { Exercise } from "../../interfaces/exercise.interface";
 
 export interface ExercisesState {
   exercises: Exercise[];
+  defaultExercises: Exercise[];
   loading: boolean;
   error: string | null;
 }
 
 const initialState: ExercisesState = {
   exercises: [],
+  defaultExercises: [],
   loading: false,
   error: null,
 };
 
 export const fetchExercises = createAsyncThunk<
-  Exercise[], // Return type of the fulfilled action
-  void, // Argument type (not needed here, so void)
-  { rejectValue: string } // Type of the reject value
+  Exercise[],
+  void,
+  { rejectValue: string }
 >("exercises/fetchExercises", async (_, thunkAPI) => {
   try {
-    const response = await axiosInstance.get("user-exercise-types");
-    return response.data;
+    const userExercisesResponse = await axiosInstance.get(
+      "user-exercise-types"
+    );
+    const defaultExercisesResponse = await axiosInstance.get(
+      "default-exercise-types"
+    );
+    const userExercises = userExercisesResponse.data;
+    const defaultExercises = defaultExercisesResponse.data;
+    const allExercises = userExercises.concat(defaultExercises);
+    //console.log(allExercises);
+    return allExercises;
   } catch (error) {
     let errorMessage = "An unknown error occurred";
     if (error instanceof Error) {

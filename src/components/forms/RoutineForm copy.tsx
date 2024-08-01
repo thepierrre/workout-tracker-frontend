@@ -30,7 +30,6 @@ import SpinnerComponent from "../../components/UI/SpinnerComponent";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Exercise } from "../../interfaces/exercise.interface";
 import { Link } from "react-router-dom";
-import { RoutineExercise } from "interfaces/routineExercise.interface";
 
 interface FormValues {
   name: string;
@@ -81,9 +80,6 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
   const [searchedExercises, setSearchedExercises] = useState<string>("");
   const [selectedExercises, setSelectedExercises] = useState<Exercise[]>(
     initialSelectedExercises
-  );
-  const [routineExercises, setRoutineExercises] = useState<RoutineExercise[]>(
-    []
   );
   const { exercises, loading: loadingExercises } = useSelector(
     (state: RootState) => state.exercises

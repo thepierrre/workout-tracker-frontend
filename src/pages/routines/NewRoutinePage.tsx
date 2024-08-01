@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Exercise } from "../../interfaces/exercise.interface";
 import { RootState, AppDispatch } from "../../app/store";
 import { Routine } from "../../interfaces/routine.interface";
 import { addRoutine } from "../../features/routines/routinesSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { Flex, IconButton, Heading, Box } from "@chakra-ui/react";
+import { Flex, IconButton, Heading, Box, Text } from "@chakra-ui/react";
 import RoutineForm from "../../components/forms/RoutineForm";
 import Container from "../../components/UI/Container";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
@@ -58,24 +58,30 @@ const NewRoutinePage = () => {
   return (
     <Container>
       <Flex align="center" w={["95vw", "85vw", "70vw", "50vw", "40vw"]} mb={3}>
-        <IconButton
+        {/* <IconButton
           aria-label="Go back"
           variant="link"
           color="white"
           w="15%"
           icon={<ChevronLeftIcon boxSize={8} />}
           onClick={() => handleGoBack()}
-        />
+        /> */}
+        <Box position="absolute" top="4.35rem" left="1.25rem">
+          <Link to="/routines">
+            <Text fontWeight="bold" color="#FC8181">
+              CANCEL
+            </Text>
+          </Link>
+        </Box>
 
-        <Heading w="70%" fontSize="lg" textAlign="center" color="white">
+        <Heading w="100%" fontSize="xl" textAlign="center" color="white" mb={5}>
           Add a new routine
         </Heading>
-        <Box w="16%" />
       </Flex>
       <RoutineForm
         initialSelectedExercises={[]}
         onSubmit={onSubmit}
-        buttonText="Create"
+        buttonText="Save"
         serverError={serverError}
       />
     </Container>
