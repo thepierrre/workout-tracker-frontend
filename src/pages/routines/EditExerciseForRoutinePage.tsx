@@ -33,7 +33,7 @@ const EditExerciseForRoutinePage = () => {
     navigate("/routines/new-routine");
   };
 
-  console.log(routineExercises);
+  const handleAddSet = () => {};
 
   return (
     <Container>

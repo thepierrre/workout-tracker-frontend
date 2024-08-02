@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, ReactEventHandler } from "react";
 import { useForm, Resolver } from "react-hook-form";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../../app/store";
@@ -6,8 +6,11 @@ import { fetchExercises } from "../../features/exercises/exercisesSlice";
 import { UseFormSetError } from "react-hook-form";
 import { SearchIcon } from "@chakra-ui/icons";
 import WideButton from "../../components/UI/WideButton";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import {
+  handleRoutineName,
+  addExerciseLocally,
+  removeExerciseLocally,
+} from "../../features/routines/localRoutineSlice";
 import EditIcon from "@mui/icons-material/Edit";
 import {
   Flex,
@@ -30,7 +33,7 @@ import SpinnerComponent from "../../components/UI/SpinnerComponent";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Exercise } from "../../interfaces/exercise.interface";
 import { Link } from "react-router-dom";
-import { RoutineExercise } from "interfaces/routineExercise.interface";
+import { categories } from "mockData/handlers/categoriesHandler";
 
 interface FormValues {
   name: string;
@@ -82,11 +85,11 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
   const [selectedExercises, setSelectedExercises] = useState<Exercise[]>(
     initialSelectedExercises
   );
-  const [routineExercises, setRoutineExercises] = useState<RoutineExercise[]>(
-    []
-  );
   const { exercises, loading: loadingExercises } = useSelector(
     (state: RootState) => state.exercises
+  );
+  const { name, routineExercises } = useSelector(
+    (state: RootState) => state.localRoutine
   );
 
   useEffect(() => {
@@ -138,11 +141,13 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
   const handleCheck = (exercise: Exercise) => {
     setSelectedExercises((prevSelectedExercises) => {
       if (prevSelectedExercises.find((ex) => ex.id === exercise.id)) {
+        removeExerciseFromRoutineLocally(exercise);
         return prevSelectedExercises.filter((ex) => ex.id !== exercise.id);
       } else {
         if (selectedExercises.length >= 15) {
           return prevSelectedExercises;
         }
+        addExerciseToRoutineLocally(exercise);
         return [...prevSelectedExercises, exercise];
       }
     });
@@ -193,6 +198,26 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
     setSelectedExercises(reorderedItems);
   };
 
+  const saveRoutineNameLocally = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = event.target.value;
+    dispatch(handleRoutineName(value));
+    console.log(name);
+  };
+
+  const addExerciseToRoutineLocally = (exercise: Exercise) => {
+    const routineExerciseToAdd = {
+      name: exercise.name,
+      workingSets: [],
+    };
+    dispatch(addExerciseLocally(routineExerciseToAdd));
+  };
+
+  const removeExerciseFromRoutineLocally = (exercise: Exercise) => {
+    dispatch(removeExerciseLocally(exercise.name));
+  };
+
   if (loadingExercises) {
     return <SpinnerComponent />;
   }
@@ -223,6 +248,7 @@ const RoutineForm: React.FC<RoutineFormProps> = ({
           _placeholder={{ color: "#B3B3B3" }}
           placeholder="Enter a name"
           defaultValue={initialName}
+          onChange={(event) => saveRoutineNameLocally(event)}
         />
         <FormErrorMessage>
           {errors.name && errors.name.message}
