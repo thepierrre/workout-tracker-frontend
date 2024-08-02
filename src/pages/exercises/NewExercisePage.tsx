@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { fetchCategories } from "../../features/exercises/categoriesSlice";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState, AppDispatch } from "../../app/store";
-import { Category } from "../../interfaces/category.interface";
-import { addExercise } from "../../features/exercises/exercisesSlice";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
-import ExerciseForm from "../../components/forms/ExerciseForm";
-import Container from "../../components/UI/Container";
+import { Box, Flex, Heading, IconButton, Text } from "@chakra-ui/react";
+import { useEffect, useRef, useState } from "react";
 import { UseFormSetError } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 
-import { Flex, Heading, IconButton, Box } from "@chakra-ui/react";
+import { AppDispatch, RootState } from "../../app/store";
+import Container from "../../components/UI/Container";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
+import ExerciseForm, { FormValues } from "../../components/forms/ExerciseForm";
+import { fetchCategories } from "../../features/exercises/categoriesSlice";
+import { addExercise } from "../../features/exercises/exercisesSlice";
+import { Category } from "../../interfaces/category.interface";
 
 const NewExercisePage = () => {
   const navigate = useNavigate();
@@ -26,6 +26,8 @@ const NewExercisePage = () => {
     }
   }, [dispatch, categoriesState.categories.length]);
 
+  const exerciseFormRef = useRef<{ submit: () => void }>(null);
+
   if (!user) {
     return;
   }
@@ -34,7 +36,7 @@ const NewExercisePage = () => {
     data: { name: string },
     selectedCategories: Category[],
     repsOrTimed: string,
-    setError: UseFormSetError<{ name: string }>
+    setError: UseFormSetError<FormValues>,
   ) => {
     const exerciseToAdd = {
       name: data.name,
@@ -58,32 +60,49 @@ const NewExercisePage = () => {
     }
   };
 
-  const handleGoBack = () => {
-    navigate(-1);
-  };
-
   if (categoriesState.loading) {
     return <SpinnerComponent />;
   }
 
   return (
     <Container>
-      <Flex align="center" w={["95vw", "85vw", "70vw", "50vw", "40vw"]} mb={3}>
-        <IconButton
-          aria-label="Go back"
-          variant="link"
-          color="white"
-          w="15%"
-          icon={<ChevronLeftIcon boxSize={8} />}
-          onClick={() => handleGoBack()}
-        />
+      <Flex
+        align="center"
+        justifyContent="space-between"
+        w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+        mb={3}
+      >
+        <Box position="absolute" top="4.7rem" left="2rem">
+          <Link to="/exercises">
+            <Text fontWeight="bold" color="#FC8181">
+              CANCEL
+            </Text>
+          </Link>
+        </Box>
 
-        <Heading w="70%" fontSize="xl" textAlign="center">
-          Add a new exercise
+        <Heading
+          w="100%"
+          fontSize="2xl"
+          textAlign="center"
+          color="white"
+          mb={5}
+        >
+          New exercise
         </Heading>
-        <Box w="16%" />
+
+        <Box
+          position="absolute"
+          top="4.7rem"
+          right="2rem"
+          onClick={() => exerciseFormRef.current?.submit()}
+        >
+          <Text fontWeight="bold" color="#48BB78">
+            CREATE
+          </Text>
+        </Box>
       </Flex>
       <ExerciseForm
+        ref={exerciseFormRef}
         initialSelectedCategories={[]}
         initialRepsOrTimed="reps"
         onSubmit={onSubmit}

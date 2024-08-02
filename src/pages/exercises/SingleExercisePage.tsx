@@ -1,47 +1,48 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import _ from "underscore";
-import { Category } from "../../interfaces/category.interface";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState, AppDispatch } from "../../app/store";
-import { removeExercise } from "../../features/exercises/exercisesSlice";
+import { ChevronLeftIcon } from "@chakra-ui/icons";
 import {
-  Text,
+  Box,
   Flex,
   Heading,
   IconButton,
-  Box,
+  Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { ChevronLeftIcon } from "@chakra-ui/icons";
-import { updateExercise } from "../../features/exercises/exercisesSlice";
-import ExerciseForm from "../../components/forms/ExerciseForm";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import { useEffect, useRef, useState } from "react";
+import { UseFormSetError } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import _ from "underscore";
+
+import { AppDispatch, RootState } from "../../app/store";
 import Container from "../../components/UI/Container";
 import DeletionModal from "../../components/UI/DeletionModal";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import { Exercise } from "../../interfaces/exercise.interface";
-import { fetchCategories } from "../../features/exercises/categoriesSlice";
-import { UseFormSetError } from "react-hook-form";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
+import ExerciseForm, { FormValues } from "../../components/forms/ExerciseForm";
+import { fetchCategories } from "../../features/exercises/categoriesSlice";
+import { removeExercise } from "../../features/exercises/exercisesSlice";
+import { updateExercise } from "../../features/exercises/exercisesSlice";
+import { Category } from "../../interfaces/category.interface";
+import { Exercise } from "../../interfaces/exercise.interface";
 
 const SingleExercisePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const [serverError, setServerError] = useState<string | null>(null);
   const [exerciseToDelete, setExerciseToDelete] = useState<Exercise | null>(
-    null
+    null,
   );
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { user, loading: loadingUser } = useSelector(
-    (state: RootState) => state.authenticatedUser
+    (state: RootState) => state.authenticatedUser,
   );
   const { exercises, loading: loadingExercises } = useSelector(
-    (state: RootState) => state.exercises
+    (state: RootState) => state.exercises,
   );
   const { exerciseId } = useParams();
 
   const currentExercise = exercises.find(
-    (exercise) => exercise.id === exerciseId
+    (exercise) => exercise.id === exerciseId,
   );
 
   useEffect(() => {
@@ -61,7 +62,7 @@ const SingleExercisePage = () => {
     data: { name: string },
     selectedCategories: Category[],
     repsOrTimed: string,
-    setError: UseFormSetError<{ name: string }>
+    setError: UseFormSetError<FormValues>,
   ) => {
     const currentIndex = exercises.indexOf(currentExercise);
 
@@ -114,6 +115,8 @@ const SingleExercisePage = () => {
     }
   };
 
+  const exerciseFormRef = useRef<{ submit: () => void }>(null);
+
   const handleGoBack = () => {
     navigate(-1);
   };
@@ -124,22 +127,43 @@ const SingleExercisePage = () => {
 
   return (
     <Container>
-      <Flex align="center" w="100%" mb={3}>
-        <IconButton
-          aria-label="Go back"
-          variant="link"
-          color="white"
-          w="15%"
-          icon={<ChevronLeftIcon boxSize={8} />}
-          onClick={() => handleGoBack()}
-        />
+      <Flex
+        align="center"
+        justifyContent="space-between"
+        w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+        mb={3}
+      >
+        <Box position="absolute" top="4.7rem" left="2rem">
+          <Link to="/exercises">
+            <Text fontWeight="bold" color="#FC8181">
+              CANCEL
+            </Text>
+          </Link>
+        </Box>
 
-        <Heading w="70%" fontSize="xl" textAlign="center">
+        <Heading
+          w="100%"
+          fontSize="2xl"
+          textAlign="center"
+          color="white"
+          mb={5}
+        >
           Edit exercise
         </Heading>
-        <Box w="16%" />
+
+        <Box
+          position="absolute"
+          top="4.7rem"
+          right="3.5rem"
+          onClick={() => exerciseFormRef.current?.submit()}
+        >
+          <Text fontWeight="bold" color="#48BB78">
+            SAVE
+          </Text>
+        </Box>
       </Flex>
       <ExerciseForm
+        ref={exerciseFormRef}
         initialName={currentExercise.name}
         initialRepsOrTimed={currentExercise.repsOrTimed}
         initialSelectedCategories={currentExercise.categories}

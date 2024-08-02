@@ -1,9 +1,9 @@
-import axiosInstance from "../../util/axiosInstance.ts";
-import axios from "axios";
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
 
 import { Routine } from "../../interfaces/routine.interface";
+import axiosInstance from "../../util/axiosInstance.ts";
 
 export interface RoutinesState {
   routines: Routine[];
@@ -40,6 +40,7 @@ export const addRoutine = createAsyncThunk<
   { rejectValue: string }
 >("routines/addRoutine", async (newRoutine, thunkAPI) => {
   try {
+    console.log(newRoutine);
     const response = await axiosInstance.post("routines", newRoutine);
     return response.data;
   } catch (error) {
@@ -69,7 +70,7 @@ export const updateRoutine = createAsyncThunk<
   try {
     const response = await axiosInstance.put(
       `routines/${updatedRoutine.id}`,
-      updatedRoutine
+      updatedRoutine,
     );
     console.log(response.data);
     return response.data;
@@ -118,57 +119,57 @@ const routinesSlice = createSlice({
         (state, action: PayloadAction<Routine[]>) => {
           state.loading = false;
           state.routines = action.payload;
-        }
+        },
       )
       .addCase(
         fetchRoutines.rejected,
         (state, action: PayloadAction<string | undefined>) => {
           state.loading = false;
           state.error = action.payload || "Failed to fetch routines.";
-        }
+        },
       )
       .addCase(
         addRoutine.fulfilled,
         (state, action: PayloadAction<Routine>) => {
           state.routines.push(action.payload);
-        }
+        },
       )
       .addCase(
         addRoutine.rejected,
         (state, action: PayloadAction<string | undefined>) => {
           state.error = action.payload || "Failed to add the routine.";
-        }
+        },
       )
       .addCase(
         removeRoutine.fulfilled,
         (state, action: PayloadAction<string>) => {
           state.routines = state.routines.filter(
-            (routine) => routine.id !== action.payload
+            (routine) => routine.id !== action.payload,
           );
-        }
+        },
       )
       .addCase(
         removeRoutine.rejected,
         (state, action: PayloadAction<string | undefined>) => {
           state.error = action.payload || "Failed to remove the routine.";
-        }
+        },
       )
       .addCase(
         updateRoutine.fulfilled,
         (state, action: PayloadAction<Routine>) => {
           const index = state.routines.findIndex(
-            (routine) => routine.id === action.payload.id
+            (routine) => routine.id === action.payload.id,
           );
           if (index !== -1) {
             state.routines[index] = action.payload;
           }
-        }
+        },
       )
       .addCase(
         updateRoutine.rejected,
         (state, action: PayloadAction<string | undefined>) => {
           state.error = action.payload || "Failed to update the exercise.";
-        }
+        },
       );
   },
 });

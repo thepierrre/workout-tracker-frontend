@@ -1,5 +1,5 @@
 import { Box, Flex, Heading, Text } from "@chakra-ui/react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { UseFormSetError } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -8,94 +8,97 @@ import { AppDispatch, RootState } from "../../app/store";
 import Container from "../../components/UI/Container";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
 import RoutineForm from "../../components/forms/RoutineForm";
+import { FormValues } from "../../components/forms/RoutineForm";
 import { addRoutine } from "../../features/routines/routinesSlice";
-import { Exercise } from "../../interfaces/exercise.interface";
-import { Routine } from "../../interfaces/routine.interface";
 
 const NewRoutinePage = () => {
-    const navigate = useNavigate();
-    const dispatch = useDispatch<AppDispatch>();
-    const [serverError, setServerError] = useState<string | null>(null);
-    const { user, loading: loadingUser } = useSelector(
-        (state: RootState) => state.authenticatedUser,
-    );
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+  const [serverError, setServerError] = useState<string | null>(null);
+  const { user, loading: loadingUser } = useSelector(
+    (state: RootState) => state.authenticatedUser,
+  );
+  const { routineExercises: localRoutineExercises } = useSelector(
+    (state: RootState) => state.localRoutine,
+  );
 
-    if (!user) {
-        return;
-    }
+  const routineFormRef = useRef<{ submit: () => void }>(null);
 
-    const onSubmit = async (
-        data: { name: string },
-        selectedExercises: Exercise[],
-        setError: UseFormSetError<{ name: string }>,
-    ) => {
-        const routineToAdd: Omit<Routine, "id"> = {
-            name: data.name,
-            exerciseTypes: selectedExercises,
-            userId: user.id,
-        };
+  if (!user) {
+    return null;
+  }
 
-        try {
-            await dispatch(addRoutine(routineToAdd)).unwrap();
-            navigate("/routines", { state: { routine: "created" } });
-        } catch (error) {
-            if (typeof error === "string") {
-                let errorMessage = error;
-                setServerError(error);
-                setError("name", { type: "server", message: errorMessage });
-            }
-        }
+  const onSubmit = async (
+    data: FormValues,
+    setError: UseFormSetError<FormValues>,
+  ) => {
+    const routineToAdd = {
+      name: data.name,
+      routineExercises: localRoutineExercises,
+      userId: user.id,
     };
 
-    const handleGoBack = () => {
-        navigate(-1);
-    };
-
-    if (loadingUser) {
-        return <SpinnerComponent />;
+    try {
+      await dispatch(addRoutine(routineToAdd)).unwrap();
+      navigate("/routines", { state: { routine: "created" } });
+    } catch (error) {
+      if (typeof error === "string") {
+        setServerError(error);
+        setError("name", { type: "server", message: error });
+      }
     }
+  };
 
-    return (
-        <Container>
-            <Flex
-                align="center"
-                w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
-                mb={3}
-            >
-                {/* <IconButton
-          aria-label="Go back"
-          variant="link"
+  if (loadingUser) {
+    return <SpinnerComponent />;
+  }
+
+  return (
+    <Container>
+      <Flex
+        align="center"
+        justifyContent="space-between"
+        w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+        mb={3}
+      >
+        <Box position="absolute" top="4.7rem" left="2rem">
+          <Link to="/routines">
+            <Text fontWeight="bold" color="#FC8181">
+              CANCEL
+            </Text>
+          </Link>
+        </Box>
+
+        <Heading
+          w="100%"
+          fontSize="2xl"
+          textAlign="center"
           color="white"
-          w="15%"
-          icon={<ChevronLeftIcon boxSize={8} />}
-          onClick={() => handleGoBack()}
-        /> */}
-                <Box position="absolute" top="4.35rem" left="1.25rem">
-                    <Link to="/routines">
-                        <Text fontWeight="bold" color="#FC8181">
-                            CANCEL
-                        </Text>
-                    </Link>
-                </Box>
+          mb={5}
+        >
+          New routine
+        </Heading>
 
-                <Heading
-                    w="100%"
-                    fontSize="xl"
-                    textAlign="center"
-                    color="white"
-                    mb={5}
-                >
-                    Add a new routine
-                </Heading>
-            </Flex>
-            <RoutineForm
-                initialSelectedExercises={[]}
-                onSubmit={onSubmit}
-                buttonText="Save"
-                serverError={serverError}
-            />
-        </Container>
-    );
+        <Box
+          position="absolute"
+          top="4.7rem"
+          right="2rem"
+          onClick={() => routineFormRef.current?.submit()}
+        >
+          <Text fontWeight="bold" color="#48BB78">
+            CREATE
+          </Text>
+        </Box>
+      </Flex>
+      <RoutineForm
+        ref={routineFormRef}
+        initialSelectedExercises={[]}
+        onSubmit={onSubmit}
+        buttonText="Save"
+        serverError={serverError}
+      />
+    </Container>
+  );
 };
 
 export default NewRoutinePage;

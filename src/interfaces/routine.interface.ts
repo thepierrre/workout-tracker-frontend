@@ -5,6 +5,6 @@ export interface Routine {
   id: string;
   name: string;
   exerciseTypes?: Exercise[];
-  routineExerciseTypes?: RoutineExercise[];
+  routineExercises?: RoutineExercise[];
   userId: string;
 }

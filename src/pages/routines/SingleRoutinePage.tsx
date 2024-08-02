@@ -1,31 +1,34 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import _ from "underscore";
-import { fetchRoutines } from "../../features/routines/routinesSlice";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState, AppDispatch } from "../../app/store";
+import { ChevronLeftIcon } from "@chakra-ui/icons";
 import {
-  updateRoutine,
-  removeRoutine,
-} from "../../features/routines/routinesSlice";
-import RoutineForm from "../../components/forms/RoutineForm";
-import DeletionModal from "../../components/UI/DeletionModal";
-import { Exercise } from "../../interfaces/exercise.interface";
-import Container from "../../components/UI/Container";
-import {
+  Box,
   Flex,
   Heading,
   IconButton,
-  Box,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { ChevronLeftIcon } from "@chakra-ui/icons";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import { RoutineExercise } from "interfaces/routineExercise.interface";
+import { useEffect, useRef, useState } from "react";
 import { UseFormSetError } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import _ from "underscore";
 
-import { Routine } from "../../interfaces/routine.interface";
+import { AppDispatch, RootState } from "../../app/store";
+import Container from "../../components/UI/Container";
+import DeletionModal from "../../components/UI/DeletionModal";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
+import { FormValues } from "../../components/forms/RoutineForm";
+import RoutineForm from "../../components/forms/RoutineForm";
+import { fetchRoutines } from "../../features/routines/routinesSlice";
+import {
+  removeRoutine,
+  updateRoutine,
+} from "../../features/routines/routinesSlice";
+import { Exercise } from "../../interfaces/exercise.interface";
+import { Routine } from "../../interfaces/routine.interface";
 
 const SingleRoutinePage = () => {
   const { routineId } = useParams();
@@ -35,14 +38,20 @@ const SingleRoutinePage = () => {
   const [routineToDelete, setRoutineToDelete] = useState<Routine | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { routines, loading: loadingRoutines } = useSelector(
-    (state: RootState) => state.routines
+    (state: RootState) => state.routines,
   );
   const currentRoutine: Routine | undefined = routines.find(
-    (routine) => routine.id === routineId
+    (routine) => routine.id === routineId,
+  );
+  const { name: routineName, routineExercises: localRoutineExercises } =
+    useSelector((state: RootState) => state.localRoutine);
+
+  const { exercises, loading: loadingExercises } = useSelector(
+    (state: RootState) => state.exercises,
   );
 
   const { user, loading: loadingUser } = useSelector(
-    (state: RootState) => state.authenticatedUser
+    (state: RootState) => state.authenticatedUser,
   );
 
   useEffect(() => {
@@ -53,21 +62,22 @@ const SingleRoutinePage = () => {
     return <Text>Routine not found.</Text>;
   }
 
+  const routineFormRef = useRef<{ submit: () => void }>(null);
+
   if (!user) {
     return;
   }
 
   const onSubmit = async (
     data: { name: string },
-    selectedExercises: Exercise[],
-    setError: UseFormSetError<{ name: string }>
+    setError: UseFormSetError<FormValues>,
   ) => {
     const currentIndex = routines.indexOf(currentRoutine);
 
     const routineToUpdate = {
       id: currentRoutine.id,
       name: data.name,
-      exerciseTypes: selectedExercises,
+      routineExercises: localRoutineExercises,
       userId: user.id,
     };
 
@@ -75,7 +85,10 @@ const SingleRoutinePage = () => {
       return (
         routineToUpdate.id === currentRoutine.id &&
         routineToUpdate.name === currentRoutine.name &&
-        _.isEqual(routineToUpdate.exerciseTypes, currentRoutine.exerciseTypes)
+        _.isEqual(
+          routineToUpdate.routineExercises,
+          currentRoutine.routineExercises,
+        )
       );
     };
 
@@ -111,6 +124,21 @@ const SingleRoutinePage = () => {
     }
   };
 
+  const exercisesFromRoutineExercises: Exercise[] =
+    currentRoutine?.routineExercises
+      ?.map((re: RoutineExercise) =>
+        exercises.find((ex) => ex.name === re.name),
+      )
+      .filter((ex): ex is Exercise => ex !== undefined)
+      .map((ex: Exercise) => ({
+        ...ex,
+        id: ex.id,
+        name: ex.name,
+        categories: ex.categories,
+        isDefault: ex.isDefault,
+        repsOrTimed: ex.repsOrTimed,
+      })) || [];
+
   const handleGoBack = () => {
     navigate(-1);
   };
@@ -121,24 +149,45 @@ const SingleRoutinePage = () => {
 
   return (
     <Container>
-      <Flex align="center" w="100%" mb={3}>
-        <IconButton
-          aria-label="Go back"
-          variant="link"
-          color="white"
-          w="15%"
-          icon={<ChevronLeftIcon boxSize={8} />}
-          onClick={() => handleGoBack()}
-        />
+      <Flex
+        align="center"
+        justifyContent="space-between"
+        w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+        mb={3}
+      >
+        <Box position="absolute" top="4.7rem" left="2rem">
+          <Link to="/routines">
+            <Text fontWeight="bold" color="#FC8181">
+              CANCEL
+            </Text>
+          </Link>
+        </Box>
 
-        <Heading w="70%" fontSize="xl" textAlign="center">
+        <Heading
+          w="100%"
+          fontSize="2xl"
+          textAlign="center"
+          color="white"
+          mb={5}
+        >
           Edit routine
         </Heading>
-        <Box w="16%" />
+
+        <Box
+          position="absolute"
+          top="4.7rem"
+          right="3rem"
+          onClick={() => routineFormRef.current?.submit()}
+        >
+          <Text fontWeight="bold" color="#48BB78">
+            SAVE
+          </Text>
+        </Box>
       </Flex>
       <RoutineForm
+        ref={routineFormRef}
         initialName={currentRoutine.name}
-        initialSelectedExercises={currentRoutine.exerciseTypes}
+        initialSelectedExercises={exercisesFromRoutineExercises}
         onSubmit={onSubmit}
         buttonText="Update"
         serverError={serverError}
