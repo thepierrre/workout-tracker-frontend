@@ -56,6 +56,7 @@ const SingleRoutinePage = () => {
 
   useEffect(() => {
     dispatch(fetchRoutines());
+    console.log(currentRoutine);
   }, [dispatch]);
 
   if (!currentRoutine) {

@@ -15,119 +15,108 @@ import { UserSettings } from "../../interfaces/userSettings.interface";
 import { WorkingSet } from "../../interfaces/workingSet.interface";
 
 const defaultUserSettings: UserSettings = {
-    changeThreshold: 1,
-    weightUnit: "kgs",
+  changeThreshold: 1,
+  weightUnit: "kgs",
 };
 
 const EditExerciseForRoutinePage = () => {
-    const [threshold, setThreshold] = useState<number | undefined>(undefined);
-    const { exerciseName } = useParams();
-    const navigate = useNavigate();
-    const [activeWorkingSet, setActiveWorkingSet] = useState<
-        WorkingSet | undefined
-    >(undefined);
+  const [threshold, setThreshold] = useState<number | undefined>(undefined);
+  const { exerciseName } = useParams();
+  const navigate = useNavigate();
+  const [activeWorkingSet, setActiveWorkingSet] = useState<
+    WorkingSet | undefined
+  >(undefined);
 
-    const { userSettings, loading: loadingUserSettings } = useSelector(
-        (state: RootState) => state.userSettings,
-    );
-    const { routineExercises } = useSelector(
-        (state: RootState) => state.localRoutine,
-    );
-    const currentExercise = routineExercises.find(
-        (ex) => ex.name === exerciseName,
-    );
+  const { userSettings, loading: loadingUserSettings } = useSelector(
+    (state: RootState) => state.userSettings,
+  );
+  const { routineExercises } = useSelector(
+    (state: RootState) => state.localRoutine,
+  );
+  const currentExercise = routineExercises.find(
+    (ex) => ex.name === exerciseName,
+  );
 
-    const handleActiveWorkingSet = (workingSet: WorkingSet) => {
-        if (activeWorkingSet && activeWorkingSet.id === workingSet.id) {
-            setActiveWorkingSet(undefined);
-        } else {
-            setActiveWorkingSet(workingSet);
-        }
-    };
-
-    const dispatch = useDispatch<AppDispatch>();
-
-    useEffect(() => {
-        dispatch(fetchUserSettings());
-    }, [dispatch]);
-
-    useEffect(() => {
-        if (userSettings) {
-            const fetchedThreshold = userSettings.changeThreshold;
-            setThreshold(fetchedThreshold);
-        }
-    }, [userSettings]);
-
-    const handleGoBack = () => {
-        navigate("/routines/new-routine");
-    };
-
-    if (loadingUserSettings) {
-        return <SpinnerComponent />;
+  const handleActiveWorkingSet = (workingSet: WorkingSet) => {
+    if (activeWorkingSet && activeWorkingSet.id === workingSet.id) {
+      setActiveWorkingSet(undefined);
+    } else {
+      setActiveWorkingSet(workingSet);
     }
+  };
 
-    return (
-        <Container>
-            <IconButton
-                position="absolute"
-                left={0}
-                top={20}
-                aria-label="Go back"
-                variant="link"
-                color="white"
-                w="15%"
-                icon={<ChevronLeftIcon boxSize={8} />}
-                onClick={() => handleGoBack()}
-            />
-            <Flex direction="column" align="center" gap={3}>
-                <Text size="md">Customize exercise template</Text>
-                <Heading size="lg" mb={5}>
-                    {exerciseName?.toUpperCase()}
-                </Heading>
-                <Flex direction="column" gap={5}>
-                    <ThresholdHandler
-                        threshold={threshold}
-                        userSettings={userSettings || defaultUserSettings}
-                    />
-                    <ThresholdForm
-                        threshold={threshold}
-                        exerciseName={exerciseName}
-                        activeWorkingSet={activeWorkingSet}
-                        exBlueprintOrInstance="blueprint"
-                        userSettings={userSettings || defaultUserSettings}
-                        setActiveWorkingSet={setActiveWorkingSet}
-                    />
-                    <Flex
-                        direction="column"
-                        gap={2}
-                        mt={3}
-                        mb={3}
-                        align="center"
-                    >
-                        {currentExercise &&
-                        currentExercise?.workingSets?.length > 0 ? (
-                            currentExercise?.workingSets?.map((set, index) => (
-                                <ExWorkingSet
-                                    workingSet={set}
-                                    index={index}
-                                    key={index}
-                                    activeWorkingSet={activeWorkingSet}
-                                    handleActiveWorkingSet={
-                                        handleActiveWorkingSet
-                                    }
-                                    userSettings={
-                                        userSettings || defaultUserSettings
-                                    }
-                                />
-                            ))
-                        ) : (
-                            <Text>This exercise has no sets.</Text>
-                        )}
-                    </Flex>
-                </Flex>
-            </Flex>
-        </Container>
-    );
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(fetchUserSettings());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (userSettings) {
+      const fetchedThreshold = userSettings.changeThreshold;
+      setThreshold(fetchedThreshold);
+    }
+  }, [userSettings]);
+
+  const handleGoBack = () => {
+    navigate("/routines/new-routine", { state: { loadLocalRoutine: true } });
+  };
+
+  if (loadingUserSettings) {
+    return <SpinnerComponent />;
+  }
+
+  return (
+    <Container>
+      <IconButton
+        position="absolute"
+        left={0}
+        top={20}
+        aria-label="Go back"
+        variant="link"
+        color="white"
+        w="15%"
+        icon={<ChevronLeftIcon boxSize={8} />}
+        onClick={() => handleGoBack()}
+      />
+      <Flex direction="column" align="center" gap={3}>
+        <Text size="md">Customize exercise</Text>
+        <Heading size="lg" mb={5}>
+          {exerciseName?.toUpperCase()}
+        </Heading>
+        <Flex direction="column" gap={5}>
+          <ThresholdHandler
+            threshold={threshold}
+            userSettings={userSettings || defaultUserSettings}
+          />
+          <ThresholdForm
+            threshold={threshold}
+            exerciseName={exerciseName}
+            activeWorkingSet={activeWorkingSet}
+            exBlueprintOrInstance="blueprint"
+            userSettings={userSettings || defaultUserSettings}
+            setActiveWorkingSet={setActiveWorkingSet}
+          />
+          <Flex direction="column" gap={2} mt={3} mb={3} align="center">
+            {currentExercise && currentExercise?.workingSets?.length > 0 ? (
+              currentExercise?.workingSets?.map((set, index) => (
+                <ExWorkingSet
+                  workingSet={set}
+                  index={index}
+                  key={index}
+                  activeWorkingSet={activeWorkingSet}
+                  handleActiveWorkingSet={handleActiveWorkingSet}
+                  userSettings={userSettings || defaultUserSettings}
+                />
+              ))
+            ) : (
+              <Text>This exercise has no sets.</Text>
+            )}
+          </Flex>
+        </Flex>
+      </Flex>
+    </Container>
+  );
 };
 
 export default EditExerciseForRoutinePage;

@@ -17,8 +17,15 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import EditIcon from "@mui/icons-material/Edit";
-import { useEffect } from "react";
-import React, { forwardRef, useImperativeHandle } from "react";
+import { RoutineExercise } from "interfaces/routineExercise.interface";
+import _ from "lodash";
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import {
   FormProvider,
@@ -28,6 +35,7 @@ import {
   useFormContext,
 } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 import { AppDispatch, RootState } from "../../app/store";
@@ -36,6 +44,8 @@ import WideButton from "../../components/UI/WideButton";
 import { fetchExercises } from "../../features/exercises/exercisesSlice";
 import {
   addExerciseLocally,
+  clearLocalRoutine,
+  fetchLocalRoutine,
   handleRoutineName,
   removeExerciseLocally,
 } from "../../features/routines/localRoutineSlice";
@@ -77,40 +87,21 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
     const {
       setError,
       setValue,
+      getValues,
       formState: { errors },
     } = methods;
-
-    const NestedInput = () => {
-      const { register } = useFormContext();
-      return (
-        <Input
-          {...register("name")}
-          w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
-          bg="#404040"
-          borderWidth="2px"
-          borderColor="#CBD5E0"
-          placeholder="Enter a name"
-          _placeholder={{ color: "#B3B3B3" }}
-          _focus={{
-            boxShadow: "none",
-            borderWidth: "2px",
-            borderColor: errors.name ? "#E53E3E" : "#3182CE",
-          }}
-          defaultValue={initialName}
-        />
-      );
-    };
 
     useImperativeHandle(ref, () => ({
       submit: () => methods.handleSubmit((data) => onSubmit(data, setError))(),
     }));
 
     const dispatch = useDispatch<AppDispatch>();
-    const [searchedExercises, setSearchedExercises] =
-      React.useState<string>("");
-    const [selectedExercises, setSelectedExercises] = React.useState<
-      Exercise[]
-    >(initialSelectedExercises);
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [searchedExercises, setSearchedExercises] = useState<string>("");
+    const [selectedExercises, setSelectedExercises] = useState<Exercise[]>(
+      initialSelectedExercises,
+    );
     const { exercises, loading: loadingExercises } = useSelector(
       (state: RootState) => state.exercises,
     );
@@ -119,9 +110,28 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
     );
 
     useEffect(() => {
-      if (routineName) {
+      if (!location.state) {
+        dispatch(clearLocalRoutine());
+        setValue("name", initialName);
+      }
+    }, [location.state]);
+
+    useEffect(() => {
+      if (!location.state && routineName !== "") {
+      }
+    }, [location]);
+
+    useEffect(() => {
+      if (
+        location.state &&
+        location.state.loadLocalRoutine === true &&
+        routineName !== ""
+      ) {
         setValue("name", routineName);
       }
+    }, [location.pathname]);
+
+    useEffect(() => {
       if (routineExercises.length && exercises.length) {
         const exercisesFromRoutineExercises: Exercise[] = routineExercises
           .map((re) => exercises.find((ex) => ex.name === re.name))
@@ -138,20 +148,47 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
       } else {
         setSelectedExercises(initialSelectedExercises);
       }
-    }, [routineExercises, routineName, exercises, setValue]);
+    }, [routineExercises, exercises]);
 
-    React.useEffect(() => {
+    useEffect(() => {
       if (serverError) {
         setError("name", { type: "server", message: serverError });
       }
     }, [serverError, setError]);
 
     const toast = useToast();
-    const toastIdRef = React.useRef<ToastId | undefined>(undefined);
+    const toastIdRef = useRef<ToastId | undefined>(undefined);
 
-    React.useEffect(() => {
+    useEffect(() => {
       dispatch(fetchExercises());
     }, [dispatch]);
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const name = event.target.value;
+      setValue("name", name);
+    };
+
+    const NestedInput = () => {
+      const { register } = useFormContext();
+      return (
+        <Input
+          {...register("name")}
+          w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+          bg="#404040"
+          borderWidth="2px"
+          borderColor="#CBD5E0"
+          placeholder="Enter a name"
+          onChange={(e) => handleChange(e)}
+          _placeholder={{ color: "#B3B3B3" }}
+          _focus={{
+            boxShadow: "none",
+            borderWidth: "2px",
+            borderColor: errors.name ? "#E53E3E" : "#3182CE",
+          }}
+          defaultValue={initialName}
+        />
+      );
+    };
 
     const addToast = () => {
       if (toastIdRef.current) {
@@ -208,12 +245,13 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
       setSearchedExercises(value);
     };
 
-    const filteredExercises = remainingExercises.filter((exercise) =>
+    const filteredExercises = remainingExercises.filter((exercise: Exercise) =>
       exercise.name.toLowerCase().startsWith(searchedExercises.toLowerCase()),
     );
 
     const remainingFilteredExercises = filteredExercises.filter(
-      (exercise) => !selectedExercises.some((ex) => ex.id === exercise.id),
+      (exercise: Exercise) =>
+        !selectedExercises.some((ex) => ex.id === exercise.id),
     );
 
     const isExerciseSelected = (exercise: Exercise) =>
@@ -242,13 +280,6 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
       setSelectedExercises(reorderedItems);
     };
 
-    const saveRoutineNameLocally = (
-      event: React.ChangeEvent<HTMLInputElement>,
-    ) => {
-      const value = event.target.value;
-      dispatch(handleRoutineName(value));
-    };
-
     const addExerciseToRoutineLocally = (exercise: Exercise) => {
       const routineExerciseToAdd = {
         name: exercise.name,
@@ -259,6 +290,19 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
 
     const removeExerciseFromRoutineLocally = (exercise: Exercise) => {
       dispatch(removeExerciseLocally(exercise.name));
+    };
+
+    const goToEditExercise = (exerciseName: string) => {
+      dispatch(handleRoutineName(getValues("name")));
+      navigate(`/routines/new-routine/edit-exercise/${exerciseName}`);
+    };
+
+    const showExerciseSets = (exercise: Exercise): string => {
+      const routineExercise = routineExercises.find(
+        (re) => re.name === exercise.name,
+      );
+      const workingSetsLength = routineExercise?.workingSets.length;
+      return workingSetsLength === 1 ? "1 SET" : `${workingSetsLength} SETS`;
     };
 
     if (loadingExercises) {
@@ -340,29 +384,32 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
                                     </Checkbox>
                                     <Flex ml={6}>
                                       <Text textColor="#E2E8F0" fontSize="sm">
-                                        SETS
+                                        {showExerciseSets(exercise)}
                                       </Text>
                                     </Flex>
                                   </Flex>
 
                                   <Flex justify="end" align="center" w="50%">
-                                    <Link
+                                    {/* <Link
                                       to={`/routines/new-routine/edit-exercise/${exercise.name}`}
-                                    >
-                                      <IconButton
-                                        variant="ghost"
-                                        color="#E2E8F0"
-                                        sx={{
-                                          _focus: {
-                                            boxShadow: "none",
-                                            bg: "transparent",
-                                          },
-                                          _hover: { bg: "transparent" },
-                                        }}
-                                        aria-label="toggle exercise details"
-                                        icon={<EditIcon />}
-                                      />
-                                    </Link>
+                                    > */}
+                                    <IconButton
+                                      onClick={() =>
+                                        goToEditExercise(exercise.name)
+                                      }
+                                      variant="ghost"
+                                      color="#E2E8F0"
+                                      sx={{
+                                        _focus: {
+                                          boxShadow: "none",
+                                          bg: "transparent",
+                                        },
+                                        _hover: { bg: "transparent" },
+                                      }}
+                                      aria-label="toggle exercise details"
+                                      icon={<EditIcon />}
+                                    />
+                                    {/* </Link> */}
                                   </Flex>
                                 </Flex>
                               </Card>
@@ -379,9 +426,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
 
             {!selectedExercises.length && (
               <Box mt={2} mb={2}>
-                <Text textAlign="center">
-                  Add some exercises to your routine!
-                </Text>
+                <Text textAlign="center">No exercises selected yet.</Text>
               </Box>
             )}
 

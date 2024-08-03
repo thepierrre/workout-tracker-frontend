@@ -28,30 +28,37 @@ import { Exercise } from "../../interfaces/exercise.interface";
 const SingleExercisePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { exerciseId } = useParams();
+
   const [serverError, setServerError] = useState<string | null>(null);
   const [exerciseToDelete, setExerciseToDelete] = useState<Exercise | null>(
     null,
   );
-  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const { user, loading: loadingUser } = useSelector(
     (state: RootState) => state.authenticatedUser,
   );
   const { exercises, loading: loadingExercises } = useSelector(
     (state: RootState) => state.exercises,
   );
-  const { exerciseId } = useParams();
+
+  const exerciseFormRef = useRef<{ submit: () => void }>(null);
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
 
   const currentExercise = exercises.find(
     (exercise) => exercise.id === exerciseId,
   );
 
-  useEffect(() => {
-    dispatch(fetchCategories());
-    console.log(currentExercise);
-  }, [dispatch]);
+  if (loadingUser || loadingExercises) {
+    return <SpinnerComponent />;
+  }
 
   if (!user) {
-    return;
+    return null;
   }
 
   if (!currentExercise) {
@@ -113,12 +120,6 @@ const SingleExercisePage = () => {
       onClose();
       navigate("/exercises", { state: { exercise: "removed" } });
     }
-  };
-
-  const exerciseFormRef = useRef<{ submit: () => void }>(null);
-
-  const handleGoBack = () => {
-    navigate(-1);
   };
 
   if (loadingUser || loadingExercises) {

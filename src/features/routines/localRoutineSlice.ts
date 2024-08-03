@@ -36,19 +36,20 @@ export const localRoutineSlice = createSlice({
       console.log(current(state));
       return state;
     },
+    clearLocalRoutine: (state) => {
+      state.name = "";
+      state.routineExercises = [];
+    },
     handleRoutineName: (state, action: PayloadAction<string>) => {
       state.name = action.payload;
-      console.log(current(state));
     },
     addExerciseLocally: (state, action: PayloadAction<RoutineExercise>) => {
       state.routineExercises.push(action.payload);
-      console.log(current(state));
     },
     removeExerciseLocally: (state, action: PayloadAction<string>) => {
       state.routineExercises = state.routineExercises.filter(
         (ex) => ex.name !== action.payload,
       );
-      console.log(current(state));
     },
     addSetToExerciseLocally: (
       state,
@@ -64,7 +65,6 @@ export const localRoutineSlice = createSlice({
           id: generateRandomString(),
         });
       }
-      console.log(current(state));
     },
     updateSetInExerciseLocally: (
       state,
@@ -82,7 +82,6 @@ export const localRoutineSlice = createSlice({
           exercise.workingSets[index] = workingSet;
         }
       }
-      console.log(current(state));
     },
     removeSetFromExerciseLocally: (
       state,
@@ -102,6 +101,7 @@ export const localRoutineSlice = createSlice({
 });
 
 export const {
+  clearLocalRoutine,
   fetchLocalRoutine,
   handleRoutineName,
   addExerciseLocally,

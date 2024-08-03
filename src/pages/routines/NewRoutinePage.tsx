@@ -1,4 +1,5 @@
 import { Box, Flex, Heading, Text } from "@chakra-ui/react";
+import { RoutineExercise } from "interfaces/routineExercise.interface";
 import { useRef, useState } from "react";
 import { UseFormSetError } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,18 +26,24 @@ const NewRoutinePage = () => {
   const routineFormRef = useRef<{ submit: () => void }>(null);
 
   if (!user) {
-    return null;
+    return;
   }
 
   const onSubmit = async (
     data: FormValues,
     setError: UseFormSetError<FormValues>,
   ) => {
+    const exercises: RoutineExercise[] = localRoutineExercises.map((ex) => ({
+      ...ex,
+      workingSets: ex.workingSets.map((set) => ({ ...set, id: undefined })),
+    }));
     const routineToAdd = {
       name: data.name,
-      routineExercises: localRoutineExercises,
+      routineExercises: exercises,
       userId: user.id,
     };
+
+    console.log("routineToAdd:", routineToAdd);
 
     try {
       await dispatch(addRoutine(routineToAdd)).unwrap();

@@ -233,9 +233,9 @@ const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
             </FormErrorMessage>
           </FormControl>
 
-          <Flex w="100%" direction="row" justify="start" gap={5} mt={5}>
+          <Flex w="100%" direction="column" align="center" gap={1} mt={5}>
             <Text fontSize="lg" fontWeight="bold">
-              Type:
+              Exercise type
             </Text>
             <RadioGroup
               defaultValue={initialRepsOrTimed === "reps" ? "1" : "2"}
@@ -272,9 +272,12 @@ const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
               align="flex-start"
               w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
             >
-              <FormLabel textColor="white" fontSize="sm">
-                Filter categories
-              </FormLabel>
+              <Flex justify="center" w="100%" mb={3}>
+                <Heading fontSize="lg" textAlign="center">
+                  Select categories
+                </Heading>
+              </Flex>
+
               <InputGroup
                 flexDirection="column"
                 alignItems="flex-start"
