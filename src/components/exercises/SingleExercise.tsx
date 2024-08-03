@@ -113,6 +113,7 @@ const SingleExercise: React.FC<Props> = ({
             <Flex direction="column" gap={1} textColor="white">
               <Text
                 fontWeight="bold"
+                fontSize="lg"
                 data-testid={`exercise-name-${exercise.id}`}
                 color={
                   currentWorkoutExercisesNames?.includes(exercise.name)
@@ -123,7 +124,7 @@ const SingleExercise: React.FC<Props> = ({
                 {exercise.name}
               </Text>
               <Text
-                fontSize="xs"
+                fontSize="sm"
                 color={
                   currentWorkoutExercisesNames?.includes(exercise.name)
                     ? "#414141"
@@ -137,6 +138,18 @@ const SingleExercise: React.FC<Props> = ({
                       .join(" | ")
                       .toUpperCase()
                   : `0 categories`.toUpperCase()}
+              </Text>
+              <Text
+                mt={3}
+                fontSize="sm"
+                fontWeight="bold"
+                color={
+                  currentWorkoutExercisesNames?.includes(exercise.name)
+                    ? "#414141"
+                    : "lightblue"
+                }
+              >
+                {exercise.equipment}
               </Text>
             </Flex>
             {location.state && location.state.addExercises == "true" && (

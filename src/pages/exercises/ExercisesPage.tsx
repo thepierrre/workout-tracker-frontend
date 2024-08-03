@@ -1,24 +1,24 @@
-import { useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState, AppDispatch } from "../../app/store";
-import { fetchExercises } from "../../features/exercises/exercisesSlice";
-import WideButton from "../../components/UI/WideButton";
-import Container from "../../components/UI/Container";
 import { SearchIcon } from "@chakra-ui/icons";
-
 import {
-  Flex,
-  Text,
-  useToast,
-  ToastId,
   Box,
-  InputGroup,
+  Flex,
   Input,
+  InputGroup,
   InputLeftElement,
+  Text,
+  ToastId,
+  useToast,
 } from "@chakra-ui/react";
-import SingleExercise from "../../components/exercises/SingleExercise";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useLocation } from "react-router-dom";
+
+import { AppDispatch, RootState } from "../../app/store";
+import Container from "../../components/UI/Container";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
+import WideButton from "../../components/UI/WideButton";
+import SingleExercise from "../../components/exercises/SingleExercise";
+import { fetchExercises } from "../../features/exercises/exercisesSlice";
 import { fetchWorkouts } from "../../features/workout/workoutSessionsSlice";
 import { Exercise } from "../../interfaces/exercise.interface";
 
@@ -31,10 +31,10 @@ const ExercisesPage = () => {
   const [currentWorkoutExercisesNames, setCurrentWorkoutExercisesNames] =
     useState<string[]>([]);
   const { exercises, loading: loadingExercises } = useSelector(
-    (state: RootState) => state.exercises
+    (state: RootState) => state.exercises,
   );
   const { workouts, loading: loadingWorkouts } = useSelector(
-    (state: RootState) => state.workoutSessions
+    (state: RootState) => state.workoutSessions,
   );
 
   const workoutId = location.state?.workoutId || null;
@@ -42,12 +42,12 @@ const ExercisesPage = () => {
   useEffect(() => {
     if (location.state && location.state.workoutId) {
       const currentWorkout = workouts.find(
-        (wrk) => wrk.id === location.state.workoutId
+        (wrk) => wrk.id === location.state.workoutId,
       );
 
       if (currentWorkout) {
         const exerciseNames = currentWorkout.exerciseInstances.map(
-          (ex) => ex.exerciseTypeName
+          (ex) => ex.exerciseTypeName,
         );
         setCurrentWorkoutExercisesNames(exerciseNames);
       }
@@ -115,11 +115,11 @@ const ExercisesPage = () => {
   };
 
   const filteredExercises = exercises.filter((exercise: Exercise) =>
-    exercise?.name?.toLowerCase().startsWith(searchedExercises.toLowerCase())
+    exercise?.name?.toLowerCase().startsWith(searchedExercises.toLowerCase()),
   );
 
   const handleExerciseFiltering = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const value = event.target.value;
     setSearchedExercises(value);
@@ -183,7 +183,7 @@ const ExercisesPage = () => {
                 workoutId={workoutId}
                 currentWorkoutExercisesNames={currentWorkoutExercisesNames}
               />
-            )
+            ),
           )
         ) : (
           <Text textAlign="center" mt={5}>

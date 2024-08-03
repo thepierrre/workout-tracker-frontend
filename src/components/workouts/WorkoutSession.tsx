@@ -1,26 +1,28 @@
-import { useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { RootState, AppDispatch } from "../../app/store";
-import { Workout } from "../../interfaces/workout.interface";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import WorkoutExerciseInstance from "./WorkoutExerciseInstance";
-import DeletionModal from "../../components/UI/DeletionModal";
 import {
-  Flex,
-  Text,
-  Heading,
-  useDisclosure,
-  useToast,
-  ToastId,
   Box,
   CardBody,
+  Flex,
+  Heading,
+  Text,
+  ToastId,
+  useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
-import CustomCard from "../../components/UI/CustomCard";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { ExerciseInstance } from "interfaces/exerciseInstance.interface";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+
+import { AppDispatch, RootState } from "../../app/store";
+import CustomCard from "../../components/UI/CustomCard";
+import DeletionModal from "../../components/UI/DeletionModal";
 import { fetchUserSettings } from "../../features/settings/userSettingsSlice";
 import { UserSettings } from "../../interfaces/userSettings.interface";
+import { Workout } from "../../interfaces/workout.interface";
+import WorkoutExerciseInstance from "./WorkoutExerciseInstance";
 
 const defaultUserSettings: UserSettings = {
   changeThreshold: 1,
@@ -103,7 +105,7 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
 
   const handleExInstanceDeleted = (exInstanceId: string) => {
     setLocalExerciseInstances((prevInstances) =>
-      prevInstances.filter((instance) => instance.id !== exInstanceId)
+      prevInstances.filter((instance) => instance.id !== exInstanceId),
     );
     addToast("Exercise deleted from workout");
   };
@@ -126,15 +128,17 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
         {wrk.routineName}
       </Heading>
 
-      <Flex gap={1} justify="center" color="lightblue">
-        <AddCircleOutlineIcon />
-        <Text
-          textAlign="center"
-          fontWeight="bold"
-          onClick={() => handleAddExercisesButton()}
-        >
-          Manage exercises
-        </Text>
+      <Flex color="lightblue" fontWeight="bold" gap={5} justify="center">
+        <Flex gap={1}>
+          <AddCircleOutlineIcon />
+          <Text textAlign="center" onClick={() => handleAddExercisesButton()}>
+            Edit exercises
+          </Text>
+        </Flex>
+        <Flex gap={1}>
+          <CheckCircleOutlineIcon />
+          <Text>Mark as done</Text>
+        </Flex>
       </Flex>
 
       <Flex direction="column" mt={2}>
