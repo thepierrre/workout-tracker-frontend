@@ -338,7 +338,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
             isInvalid={!!errors.name}
             width={["95vw", "85vw", "70vw", "50vw", "40vw"]}
           >
-            <FormLabel fontSize="sm">Routine name</FormLabel>
+            <FormLabel fontSize="sm">Name</FormLabel>
             <NestedInput />
             <FormErrorMessage>
               {errors.name && errors.name.message}

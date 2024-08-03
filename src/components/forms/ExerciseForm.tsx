@@ -242,14 +242,14 @@ const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
             alignItems="flex-start"
             width={["95vw", "85vw", "70vw", "50vw", "40vw"]}
           >
-            <FormLabel fontSize="sm">Exercise name</FormLabel>
+            <FormLabel fontSize="sm">Name</FormLabel>
             <NestedInput />
             <FormErrorMessage>
               {errors.name && errors.name.message}
             </FormErrorMessage>
           </FormControl>
 
-          <Flex w="100%" direction="column" align="center" gap={2} mt={8}>
+          {/* <Flex w="100%" direction="column" align="center" gap={2} mt={8}>
             <Text fontSize="lg" fontWeight="bold">
               Exercise type
             </Text>
@@ -274,7 +274,26 @@ const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
                 </Radio>
               </Stack>
             </RadioGroup>
-          </Flex>
+          </Flex> */}
+
+          <FormControl
+            mt={5}
+            display="flex"
+            flexDirection="column"
+            alignItems="flex-start"
+            width={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+          >
+            <FormLabel fontSize="sm">Equipment</FormLabel>
+            <Select bg="#404040">
+              <option value="BODYWEIGHT">Bodyweight</option>
+              <option value="BARBELL">Barbell</option>
+              <option value="DUMBBELLS">Dumbbells</option>
+              <option value="WEIGHT_PLATES">Weight plates</option>
+              <option value="KETTLEBELLS">Kettlebells</option>
+              <option value="MACHINE">Machine</option>
+              <option value="BAR">Bar</option>
+            </Select>
+          </FormControl>
 
           <Flex
             direction="column"
@@ -289,9 +308,7 @@ const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
               w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
             >
               <Flex justify="center" w="100%" mb={3}>
-                <Heading fontSize="lg" textAlign="center">
-                  Select categories
-                </Heading>
+                <Heading fontSize="lg">Categories</Heading>
               </Flex>
 
               <InputGroup
