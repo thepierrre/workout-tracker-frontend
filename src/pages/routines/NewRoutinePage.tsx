@@ -98,6 +98,7 @@ const NewRoutinePage = () => {
         </Box>
       </Flex>
       <RoutineForm
+        newRoutine={true}
         ref={routineFormRef}
         initialSelectedExercises={[]}
         onSubmit={onSubmit}

@@ -2,7 +2,7 @@ import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { Flex, Heading, IconButton, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { AppDispatch, RootState } from "../../app/store";
 import Container from "../../components/UI/Container";
@@ -22,6 +22,7 @@ const defaultUserSettings: UserSettings = {
 const EditExerciseForRoutinePage = () => {
   const [threshold, setThreshold] = useState<number | undefined>(undefined);
   const { exerciseName } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
   const [activeWorkingSet, setActiveWorkingSet] = useState<
     WorkingSet | undefined
@@ -59,7 +60,15 @@ const EditExerciseForRoutinePage = () => {
   }, [userSettings]);
 
   const handleGoBack = () => {
-    navigate("/routines/new-routine", { state: { loadLocalRoutine: true } });
+    location.state &&
+      location.state.newRoutine === true &&
+      navigate("/routines/new-routine", { state: { loadLocalRoutine: true } });
+    location.state &&
+      location.state.newRoutine === false &&
+      location.state.routineId &&
+      navigate(`/routines/${location.state.routineId}`, {
+        state: { loadLocalRoutine: true },
+      });
   };
 
   if (loadingUserSettings) {

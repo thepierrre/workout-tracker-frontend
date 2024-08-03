@@ -33,6 +33,7 @@ import {
 } from "react-hook-form";
 import { UseFormSetError } from "react-hook-form";
 import { useSelector } from "react-redux";
+import { filter } from "underscore";
 
 import { RootState } from "../../app/store";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
@@ -107,7 +108,7 @@ const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
           {...register("name")}
           w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
           bg="#404040"
-          borderWidth="2px"
+          borderWidth="1px"
           borderColor="#CBD5E0"
           placeholder="Enter a name"
           _placeholder={{ color: "#B3B3B3" }}
@@ -202,6 +203,20 @@ const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
     const isCheckboxDisabled = (category: Category) =>
       !isCategorySelected(category) && selectedCategories.length >= 5;
 
+    const hasCategoriesForMuscleGroups = (
+      filteredCategories: Category[],
+      muscleGroup: string,
+    ): boolean => {
+      const categories = filteredCategories.filter(
+        (cat: Category) => cat.muscleGroup === muscleGroup,
+      );
+      if (categories.length) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+
     if (loadingCategories) {
       return <SpinnerComponent />;
     }
@@ -233,7 +248,7 @@ const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
             </FormErrorMessage>
           </FormControl>
 
-          <Flex w="100%" direction="column" align="center" gap={1} mt={5}>
+          <Flex w="100%" direction="column" align="center" gap={2} mt={8}>
             <Text fontSize="lg" fontWeight="bold">
               Exercise type
             </Text>
@@ -265,7 +280,7 @@ const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
             align="center"
             justify="center"
             w="100%"
-            mt={5}
+            mt={8}
           >
             <Flex
               direction="column"
@@ -294,7 +309,7 @@ const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
                     borderColor: "#3182CE",
                   }}
                   _placeholder={{ color: "#B3B3B3" }}
-                  placeholder="Search"
+                  placeholder="Search by name"
                   onChange={(event) => handleCategoryFiltering(event)}
                 />
                 <InputLeftElement>
@@ -306,44 +321,53 @@ const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
             {filteredCategories.length > 0 ? (
               muscleGroups.map((muscleGrp, index) => (
                 <Box key={index}>
-                  <Heading fontSize="lg" mt={5}>
-                    {muscleGrp}
-                  </Heading>
-                  <Wrap
-                    mt={5}
-                    mb={5}
-                    w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
-                    spacing={2}
-                    justify="left"
-                  >
-                    {filteredCategories
-                      .filter((category) => category.muscleGroup === muscleGrp)
-                      .map((category) => (
-                        <Flex
-                          direction="column"
-                          ml={2}
-                          w="45%"
-                          data-testid={`category-name-${category.name}`}
-                          key={category.name}
-                          onClick={() =>
-                            handleToast(isCategorySelected(category))
-                          }
-                        >
-                          <Checkbox
-                            isChecked={isCategorySelected(category)}
-                            isDisabled={isCheckboxDisabled(category)}
-                            onChange={() => handleCheck(category)}
-                            data-testid={`checkbox-category-name-${category.name}`}
-                            fontWeight={
-                              isCategorySelected(category) ? "bold" : ""
-                            }
-                          >
-                            {category.name.charAt(0).toLocaleUpperCase() +
-                              category.name.slice(1)}
-                          </Checkbox>
-                        </Flex>
-                      ))}
-                  </Wrap>
+                  {hasCategoriesForMuscleGroups(
+                    filteredCategories,
+                    muscleGrp,
+                  ) && (
+                    <>
+                      <Heading fontSize="lg" mt={5} ml={2}>
+                        {muscleGrp}
+                      </Heading>
+                      <Wrap
+                        mt={5}
+                        mb={5}
+                        w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+                        spacing={2}
+                        justify="left"
+                      >
+                        {filteredCategories
+                          .filter(
+                            (category) => category.muscleGroup === muscleGrp,
+                          )
+                          .map((category) => (
+                            <Flex
+                              direction="column"
+                              ml={2}
+                              w="45%"
+                              data-testid={`category-name-${category.name}`}
+                              key={category.name}
+                              onClick={() =>
+                                handleToast(isCategorySelected(category))
+                              }
+                            >
+                              <Checkbox
+                                isChecked={isCategorySelected(category)}
+                                isDisabled={isCheckboxDisabled(category)}
+                                onChange={() => handleCheck(category)}
+                                data-testid={`checkbox-category-name-${category.name}`}
+                                fontWeight={
+                                  isCategorySelected(category) ? "bold" : ""
+                                }
+                              >
+                                {category.name.charAt(0).toLocaleUpperCase() +
+                                  category.name.slice(1)}
+                              </Checkbox>
+                            </Flex>
+                          ))}
+                      </Wrap>
+                    </>
+                  )}
                 </Box>
               ))
             ) : (

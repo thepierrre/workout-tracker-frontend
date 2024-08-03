@@ -40,9 +40,7 @@ const SingleRoutinePage = () => {
   const { routines, loading: loadingRoutines } = useSelector(
     (state: RootState) => state.routines,
   );
-  const currentRoutine: Routine | undefined = routines.find(
-    (routine) => routine.id === routineId,
-  );
+
   const { name: routineName, routineExercises: localRoutineExercises } =
     useSelector((state: RootState) => state.localRoutine);
 
@@ -54,16 +52,19 @@ const SingleRoutinePage = () => {
     (state: RootState) => state.authenticatedUser,
   );
 
+  const routineFormRef = useRef<{ submit: () => void }>(null);
+
   useEffect(() => {
     dispatch(fetchRoutines());
-    console.log(currentRoutine);
   }, [dispatch]);
+
+  const currentRoutine: Routine | undefined = routines.find(
+    (routine) => routine.id === routineId,
+  );
 
   if (!currentRoutine) {
     return <Text>Routine not found.</Text>;
   }
-
-  const routineFormRef = useRef<{ submit: () => void }>(null);
 
   if (!user) {
     return;
@@ -75,12 +76,23 @@ const SingleRoutinePage = () => {
   ) => {
     const currentIndex = routines.indexOf(currentRoutine);
 
+    const exercises: RoutineExercise[] = localRoutineExercises.map((ex) => ({
+      ...ex,
+      workingSets: ex.workingSets.map((set) => ({
+        ...set,
+        id: undefined,
+        creationTimedate: undefined,
+      })),
+    }));
+
     const routineToUpdate = {
       id: currentRoutine.id,
       name: data.name,
-      routineExercises: localRoutineExercises,
+      routineExercises: exercises,
       userId: user.id,
     };
+
+    console.log(routineToUpdate);
 
     const compareOldAndNewRoutine = () => {
       return (
@@ -186,8 +198,11 @@ const SingleRoutinePage = () => {
         </Box>
       </Flex>
       <RoutineForm
+        newRoutine={false}
+        routineId={currentRoutine.id}
         ref={routineFormRef}
         initialName={currentRoutine.name}
+        initialRoutineExercises={currentRoutine.routineExercises}
         initialSelectedExercises={exercisesFromRoutineExercises}
         onSubmit={onSubmit}
         buttonText="Update"

@@ -71,7 +71,10 @@ const resolver: Resolver<FormValues> = async (values) => {
 };
 
 interface RoutineFormProps {
+  routineId?: string;
+  newRoutine: boolean;
   initialName?: string;
+  initialRoutineExercises?: RoutineExercise[];
   initialSelectedExercises?: Exercise[];
   buttonText: string;
   onSubmit: (data: FormValues, setError: UseFormSetError<FormValues>) => void;
@@ -80,7 +83,15 @@ interface RoutineFormProps {
 
 const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
   (
-    { initialName = "", initialSelectedExercises = [], onSubmit, serverError },
+    {
+      newRoutine,
+      routineId,
+      initialName = "",
+      initialSelectedExercises = [],
+      initialRoutineExercises = [],
+      onSubmit,
+      serverError,
+    },
     ref,
   ) => {
     const methods = useForm<FormValues>({ resolver });
@@ -114,12 +125,18 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
         dispatch(clearLocalRoutine());
         setValue("name", initialName);
       }
-    }, [location.state]);
 
-    useEffect(() => {
-      if (!location.state && routineName !== "") {
+      if (initialRoutineExercises.length > 0) {
+        initialRoutineExercises.forEach((routineExercise) => {
+          const exercise = exercises.find(
+            (ex) => ex.name === routineExercise.name,
+          );
+          if (exercise) {
+            dispatch(addExerciseLocally(routineExercise));
+          }
+        });
       }
-    }, [location]);
+    }, [location.state, exercises]);
 
     useEffect(() => {
       if (
@@ -148,7 +165,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
       } else {
         setSelectedExercises(initialSelectedExercises);
       }
-    }, [routineExercises, exercises]);
+    }, [routineExercises, exercises, initialSelectedExercises]);
 
     useEffect(() => {
       if (serverError) {
@@ -175,7 +192,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
           {...register("name")}
           w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
           bg="#404040"
-          borderWidth="2px"
+          borderWidth="1px"
           borderColor="#CBD5E0"
           placeholder="Enter a name"
           onChange={(e) => handleChange(e)}
@@ -232,6 +249,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
           return [...prevSelectedExercises, exercise];
         }
       });
+      console.log(routineExercises);
     };
 
     const remainingExercises = exercises.filter(
@@ -294,7 +312,9 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
 
     const goToEditExercise = (exerciseName: string) => {
       dispatch(handleRoutineName(getValues("name")));
-      navigate(`/routines/new-routine/edit-exercise/${exerciseName}`);
+      navigate(`/routines/new-routine/edit-exercise/${exerciseName}`, {
+        state: { newRoutine, routineId },
+      });
     };
 
     const showExerciseSets = (exercise: Exercise): string => {
@@ -360,7 +380,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
                                 borderRadius={5}
                               >
                                 <Flex gap={2} p={3} direction="row">
-                                  <Flex direction="column" gap={2} w="50%">
+                                  <Flex direction="column" gap={2} w="80%">
                                     <Checkbox
                                       color="white"
                                       isChecked={isExerciseSelected(exercise)}
@@ -389,10 +409,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
                                     </Flex>
                                   </Flex>
 
-                                  <Flex justify="end" align="center" w="50%">
-                                    {/* <Link
-                                      to={`/routines/new-routine/edit-exercise/${exercise.name}`}
-                                    > */}
+                                  <Flex justify="end" align="center" w="20%">
                                     <IconButton
                                       onClick={() =>
                                         goToEditExercise(exercise.name)
@@ -409,7 +426,6 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
                                       aria-label="toggle exercise details"
                                       icon={<EditIcon />}
                                     />
-                                    {/* </Link> */}
                                   </Flex>
                                 </Flex>
                               </Card>
@@ -443,7 +459,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
                   w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
                   bg="#404040"
                   color="white"
-                  borderWidth="2px"
+                  borderWidth="1px"
                   borderColor="#CBD5E0"
                   _focus={{
                     boxShadow: "none",
@@ -451,7 +467,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
                     borderColor: "#3182CE",
                   }}
                   _placeholder={{ color: "#B3B3B3" }}
-                  placeholder="Filter"
+                  placeholder="Search by name"
                   onChange={(event) => handleExerciseFiltering(event)}
                 />
                 <InputLeftElement>
@@ -478,11 +494,20 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
                       isDisabled={isCheckboxDisabled(exercise)}
                       onChange={() => handleCheck(exercise)}
                       data-testid="not selected checkbox"
-                      fontWeight={isExerciseSelected(exercise) ? "bold" : ""}
+                      fontWeight="bold"
+                      fontSize="md"
                     >
                       {exercise.name.charAt(0).toLocaleUpperCase() +
                         exercise.name.slice(1)}
                     </Checkbox>
+                    <Text fontWeight="bold" fontSize="xs" mt={2} ml={6}>
+                      {exercise.categories.length > 0
+                        ? exercise.categories
+                            .map((category) => category?.name)
+                            .join(" | ")
+                            .toUpperCase()
+                        : `0 categories`.toUpperCase()}
+                    </Text>
                   </Card>
                 </Flex>
               ))}

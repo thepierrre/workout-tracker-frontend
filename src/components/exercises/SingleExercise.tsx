@@ -1,14 +1,15 @@
-import { useLocation } from "react-router-dom";
-import CustomCard from "../UI/CustomCard";
+import { Badge, CardBody, Flex, Text, useDisclosure } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+
 import { AppDispatch, RootState } from "../../app/store";
-import { CardBody, Text, Flex, Badge, useDisclosure } from "@chakra-ui/react";
-import { Exercise } from "../../interfaces/exercise.interface";
+import DeletionModal from "../../components/UI/DeletionModal";
 import {
   addExInstance,
   removeExInstance,
 } from "../../features/workout/workoutSessionsSlice";
-import DeletionModal from "../../components/UI/DeletionModal";
+import { Exercise } from "../../interfaces/exercise.interface";
+import CustomCard from "../UI/CustomCard";
 
 interface Props {
   workoutId: string | null;
@@ -37,7 +38,7 @@ const SingleExercise: React.FC<Props> = ({
 
   const handleAddOrDeleteExerciseInstance = (
     e: React.MouseEvent,
-    exerciseName: string
+    exerciseName: string,
   ) => {
     e.stopPropagation();
     e.preventDefault();
@@ -75,12 +76,12 @@ const SingleExercise: React.FC<Props> = ({
 
     if (currentWorkout) {
       exerciseInstance = currentWorkout.exerciseInstances.find(
-        (ex) => ex.exerciseTypeName === exerciseName
+        (ex) => ex.exerciseTypeName === exerciseName,
       );
     }
 
     setCurrentWorkoutExercisesNames((prevExercises) =>
-      prevExercises.filter((name) => name !== exerciseName)
+      prevExercises.filter((name) => name !== exerciseName),
     );
     if (exerciseInstance && exerciseInstance.id) {
       let exInstanceId = exerciseInstance.id;
@@ -122,7 +123,6 @@ const SingleExercise: React.FC<Props> = ({
                 {exercise.name}
               </Text>
               <Text
-                fontWeight="bold"
                 fontSize="xs"
                 color={
                   currentWorkoutExercisesNames?.includes(exercise.name)
