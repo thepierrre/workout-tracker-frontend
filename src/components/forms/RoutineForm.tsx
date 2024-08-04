@@ -63,7 +63,7 @@ const resolver: Resolver<FormValues> = async (values) => {
 interface RoutineFormProps {
   routineId?: string;
   newRoutine: boolean;
-  initialName?: string;
+  initialName: string;
   initialRoutineExercises?: RoutineExercise[];
   initialSelectedExercises?: Exercise[];
   buttonText: string;
@@ -76,7 +76,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
     {
       newRoutine,
       routineId,
-      initialName = "",
+      initialName,
       initialSelectedExercises = [],
       initialRoutineExercises = [],
       onSubmit,
@@ -84,7 +84,12 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
     },
     ref,
   ) => {
-    const methods = useForm<FormValues>({ resolver });
+    const methods = useForm<FormValues>({
+      resolver,
+      defaultValues: {
+        name: initialName,
+      },
+    });
     const {
       setError,
       setValue,

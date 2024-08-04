@@ -160,70 +160,70 @@ const SingleRoutinePage = () => {
   }
 
   return (
-    <Container>
-      <Flex
-        align="center"
-        justifyContent="space-between"
-        w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
-        mb={3}
-      >
-        <Box position="absolute" top="4.7rem" left="2rem">
-          <Link to="/routines">
-            <Text fontWeight="bold" color="#FC8181">
-              CANCEL
+    <>
+      <Container>
+        <Flex
+          align="center"
+          justifyContent="space-between"
+          w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+        >
+          <Box position="absolute" top="4.7rem" left="2rem">
+            <Link to="/routines">
+              <Text fontWeight="bold" color="#FC8181">
+                CANCEL
+              </Text>
+            </Link>
+          </Box>
+
+          <Heading
+            w="100%"
+            fontSize="2xl"
+            textAlign="center"
+            color="white"
+            mb={5}
+          >
+            Edit routine
+          </Heading>
+
+          <Box
+            position="absolute"
+            top="4.7rem"
+            right="3rem"
+            onClick={() => routineFormRef.current?.submit()}
+          >
+            <Text fontWeight="bold" color="#48BB78">
+              SAVE
             </Text>
-          </Link>
-        </Box>
-
-        <Heading
-          w="100%"
-          fontSize="2xl"
-          textAlign="center"
-          color="white"
+          </Box>
+        </Flex>
+        <Flex
+          gap={1}
           mb={5}
+          justify="center"
+          onClick={() => handleOpenModal(currentRoutine)}
         >
-          Edit routine
-        </Heading>
-
-        <Box
-          position="absolute"
-          top="4.7rem"
-          right="3rem"
-          onClick={() => routineFormRef.current?.submit()}
-        >
-          <Text fontWeight="bold" color="#48BB78">
-            SAVE
-          </Text>
-        </Box>
-      </Flex>
-      <RoutineForm
-        newRoutine={false}
-        routineId={currentRoutine.id}
-        ref={routineFormRef}
-        initialName={currentRoutine.name}
-        initialRoutineExercises={currentRoutine.routineExercises}
-        initialSelectedExercises={exercisesFromRoutineExercises}
-        onSubmit={onSubmit}
-        buttonText="Update"
-        serverError={serverError}
-      ></RoutineForm>
-      <Flex
-        gap={1}
-        justify="center"
-        color="lightblue"
-        onClick={() => handleOpenModal(currentRoutine)}
-        mt={3}
-      >
-        <RemoveCircleOutlineIcon />
-        <Text fontWeight="bold">Delete routine</Text>
-        <DeletionModal
-          isOpen={isOpen}
-          onClose={onClose}
-          onDelete={handleRemoveRoutine}
-          elementType="routine"
-        />
-      </Flex>
-    </Container>
+          <RemoveCircleOutlineIcon />
+          <Text fontWeight="bold">DELETE</Text>
+        </Flex>
+        <RoutineForm
+          newRoutine={false}
+          routineId={currentRoutine.id}
+          ref={routineFormRef}
+          initialName={currentRoutine.name}
+          initialRoutineExercises={currentRoutine.routineExercises}
+          initialSelectedExercises={exercisesFromRoutineExercises}
+          onSubmit={onSubmit}
+          buttonText="Update"
+          serverError={serverError}
+        ></RoutineForm>
+      </Container>
+      <DeletionModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onDelete={handleRemoveRoutine}
+        elementType="routine"
+      />
+    </>
   );
 };
 

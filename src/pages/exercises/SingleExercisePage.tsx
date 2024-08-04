@@ -18,7 +18,9 @@ import { AppDispatch, RootState } from "../../app/store";
 import Container from "../../components/UI/Container";
 import DeletionModal from "../../components/UI/DeletionModal";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
-import ExerciseForm, { FormValues } from "../../components/forms/ExerciseForm";
+import ExerciseForm, {
+  FormValues,
+} from "../../components/forms/exerciseForm/ExerciseForm";
 import { fetchCategories } from "../../features/exercises/categoriesSlice";
 import { removeExercise } from "../../features/exercises/exercisesSlice";
 import { updateExercise } from "../../features/exercises/exercisesSlice";
@@ -126,62 +128,69 @@ const SingleExercisePage = () => {
   }
 
   return (
-    <Container>
-      <Flex
-        align="center"
-        direction="column"
-        w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
-        mb={3}
-      >
-        <Flex gap={20}>
-          <Link to="/exercises">
-            <Text fontWeight="bold" color="#FC8181">
-              CANCEL
-            </Text>
-          </Link>
+    <>
+      <Container>
+        <Flex
+          align="center"
+          direction="column"
+          w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+        >
+          <Box position="absolute" top="4.7rem" left="2rem">
+            <Link to="/exercises">
+              <Text fontWeight="bold" color="#FC8181">
+                CANCEL
+              </Text>
+            </Link>
+          </Box>
 
-          <Box onClick={() => exerciseFormRef.current?.submit()}>
+          <Heading
+            w="100%"
+            fontSize="2xl"
+            textAlign="center"
+            color="white"
+            mb={5}
+          >
+            Edit exercise
+          </Heading>
+
+          <Box
+            position="absolute"
+            top="4.7rem"
+            right="3rem"
+            onClick={() => exerciseFormRef.current?.submit()}
+          >
             <Text fontWeight="bold" color="#48BB78">
               SAVE
             </Text>
           </Box>
         </Flex>
-        <Heading
-          w="100%"
-          fontSize="2xl"
-          textAlign="center"
-          color="white"
+        <Flex
+          gap={1}
           mb={5}
+          justify="center"
+          onClick={() => handleOpenModal(currentExercise)}
         >
-          Edit exercise
-        </Heading>
-      </Flex>
-      <ExerciseForm
-        ref={exerciseFormRef}
-        initialName={currentExercise.name}
-        initialEquipment={currentExercise.equipment}
-        initialSelectedCategories={currentExercise.categories}
-        buttonText="Update"
-        onSubmit={onSubmit}
-        serverError={serverError}
-      ></ExerciseForm>
-      <Flex
-        gap={1}
-        justify="center"
-        color="lightblue"
-        onClick={() => handleOpenModal(currentExercise)}
-        mt={3}
-      >
-        <RemoveCircleOutlineIcon />
-        <Text fontWeight="bold">Delete exercise</Text>
-        <DeletionModal
-          isOpen={isOpen}
-          onClose={onClose}
-          onDelete={handleRemoveExercise}
-          elementType="exercise"
-        />
-      </Flex>
-    </Container>
+          <RemoveCircleOutlineIcon />
+          <Text fontWeight="bold">DELETE</Text>
+        </Flex>
+
+        <ExerciseForm
+          ref={exerciseFormRef}
+          initialName={currentExercise.name}
+          initialEquipment={currentExercise.equipment}
+          initialSelectedCategories={currentExercise.categories}
+          buttonText="Update"
+          onSubmit={onSubmit}
+          serverError={serverError}
+        ></ExerciseForm>
+      </Container>
+      <DeletionModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onDelete={handleRemoveExercise}
+        elementType="exercise"
+      />
+    </>
   );
 };
 

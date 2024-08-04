@@ -1,5 +1,4 @@
-import { ChevronLeftIcon } from "@chakra-ui/icons";
-import { Box, Flex, Heading, IconButton, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Text } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { UseFormSetError } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,7 +7,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { AppDispatch, RootState } from "../../app/store";
 import Container from "../../components/UI/Container";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
-import ExerciseForm, { FormValues } from "../../components/forms/ExerciseForm";
+import ExerciseForm, {
+  FormValues,
+} from "../../components/forms/exerciseForm/ExerciseForm";
 import { fetchCategories } from "../../features/exercises/categoriesSlice";
 import { addExercise } from "../../features/exercises/exercisesSlice";
 import { Category } from "../../interfaces/category.interface";

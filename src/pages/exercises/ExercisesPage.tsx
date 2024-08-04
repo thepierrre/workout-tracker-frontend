@@ -1,14 +1,12 @@
 import { SearchIcon } from "@chakra-ui/icons";
 import {
-  Box,
   Flex,
   Input,
   InputGroup,
   InputLeftElement,
   Text,
-  ToastId,
 } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 
@@ -25,8 +23,7 @@ import { Exercise } from "../../interfaces/exercise.interface";
 const ExercisesPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const location = useLocation();
-  const { addToast, toastIdRef, closeToast } = useCustomToast();
-  //const toastIdRef = useRef<ToastId | undefined>(undefined);
+  const { addToast, closeToast } = useCustomToast();
   const [searchedExercises, setSearchedExercises] = useState<string>("");
   const [currentWorkoutExercisesNames, setCurrentWorkoutExercisesNames] =
     useState<string[]>([]);

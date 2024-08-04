@@ -1,8 +1,5 @@
 import { SearchIcon } from "@chakra-ui/icons";
 import {
-  Box,
-  Card,
-  Checkbox,
   Flex,
   FormControl,
   FormErrorMessage,
@@ -12,18 +9,16 @@ import {
   InputGroup,
   InputLeftElement,
   Select,
-  Text,
-  Wrap,
 } from "@chakra-ui/react";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { FormProvider, Resolver, useForm } from "react-hook-form";
 import { UseFormSetError } from "react-hook-form";
 import { useSelector } from "react-redux";
 
-import { RootState } from "../../app/store";
-import SpinnerComponent from "../../components/UI/SpinnerComponent";
-import useCustomToast from "../../hooks/useCustomToast";
-import { Category } from "../../interfaces/category.interface";
+import { RootState } from "../../../app/store";
+import { Category } from "../../../interfaces/category.interface";
+import SpinnerComponent from "../../UI/SpinnerComponent";
+import Categories from "./Categories";
 
 export interface FormValues {
   name: string;
@@ -84,7 +79,6 @@ const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
       register,
     } = methods;
 
-    const { addToast, closeToast } = useCustomToast();
     const [searchedCategories, setSearchedCategories] = useState<string>("");
     const [selectedCategories, setSelectedCategories] = useState<Category[]>(
       initialSelectedCategories,
@@ -101,12 +95,6 @@ const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
     }));
 
     useEffect(() => {
-      return () => {
-        closeToast();
-      };
-    }, [location.pathname]);
-
-    useEffect(() => {
       setSelectedCategories(initialSelectedCategories);
     }, [initialSelectedCategories]);
 
@@ -115,28 +103,6 @@ const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
         setError("name", { type: "server", message: serverError });
       }
     }, [serverError, setError]);
-
-    const handleToast = (isCategorySelected: boolean) => {
-      if (!isCategorySelected && selectedCategories.length >= 5) {
-        addToast({
-          message: "You can add up to 5 muscles per exercise!",
-          bg: "#F56565",
-        });
-      }
-    };
-
-    const handleCheck = (category: Category) => {
-      setSelectedCategories((prevSelectedCategories) => {
-        if (prevSelectedCategories.find((cat) => cat.id === category.id)) {
-          return prevSelectedCategories.filter((cat) => cat.id !== category.id);
-        } else {
-          if (selectedCategories.length >= 5) {
-            return prevSelectedCategories;
-          }
-          return [...prevSelectedCategories, category];
-        }
-      });
-    };
 
     const handleCategoryFiltering = (
       event: React.ChangeEvent<HTMLInputElement>,
@@ -148,28 +114,6 @@ const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
     const filteredCategories = categories.filter((category) =>
       category.name.toLowerCase().startsWith(searchedCategories.toLowerCase()),
     );
-
-    const muscleGroups = ["CORE", "CHEST", "BACK", "LEGS", "SHOULDERS", "ARMS"];
-
-    const isCategorySelected = (category: Category) =>
-      selectedCategories.some((cat) => cat.id === category.id);
-
-    const isCheckboxDisabled = (category: Category) =>
-      !isCategorySelected(category) && selectedCategories.length >= 5;
-
-    const hasCategoriesForMuscleGroups = (
-      filteredCategories: Category[],
-      muscleGroup: string,
-    ): boolean => {
-      const categories = filteredCategories.filter(
-        (cat: Category) => cat.muscleGroup === muscleGroup,
-      );
-      if (categories.length) {
-        return true;
-      } else {
-        return false;
-      }
-    };
 
     if (loadingCategories) {
       return <SpinnerComponent />;
@@ -268,82 +212,11 @@ const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
               </InputGroup>
             </Flex>
 
-            {filteredCategories.length > 0 ? (
-              muscleGroups.map((muscleGrp, index) => (
-                <Box key={index}>
-                  {hasCategoriesForMuscleGroups(
-                    filteredCategories,
-                    muscleGrp,
-                  ) && (
-                    <>
-                      <Heading
-                        fontSize="lg"
-                        mt={8}
-                        ml={2}
-                        color="lightblue"
-                        textAlign="center"
-                      >
-                        {muscleGrp}
-                      </Heading>
-                      <Wrap
-                        mt={5}
-                        w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
-                        spacing={2}
-                        justify="left"
-                      >
-                        {filteredCategories
-                          .filter(
-                            (category) => category.muscleGroup === muscleGrp,
-                          )
-                          .map((category, _, arr) => {
-                            const width = arr.length === 1 ? "100%" : "49%";
-                            return (
-                              <Card
-                                direction="column"
-                                p={[2, 1, 2, 1]}
-                                bg={
-                                  isCategorySelected(category)
-                                    ? "lightblue"
-                                    : "#414141"
-                                }
-                                w={width}
-                                textColor={
-                                  isCategorySelected(category)
-                                    ? "#404040"
-                                    : "white"
-                                }
-                                data-testid={`category-name-${category.name}`}
-                                key={category.name}
-                                onClick={() =>
-                                  handleToast(isCategorySelected(category))
-                                }
-                              >
-                                <Checkbox
-                                  isChecked={isCategorySelected(category)}
-                                  isDisabled={isCheckboxDisabled(category)}
-                                  onChange={() => handleCheck(category)}
-                                  colorScheme="green"
-                                  data-testid={`checkbox-category-name-${category.name}`}
-                                  fontWeight={
-                                    isCategorySelected(category) ? "bold" : ""
-                                  }
-                                >
-                                  {category.name.charAt(0).toLocaleUpperCase() +
-                                    category.name.slice(1)}
-                                </Checkbox>
-                              </Card>
-                            );
-                          })}
-                      </Wrap>
-                    </>
-                  )}
-                </Box>
-              ))
-            ) : (
-              <Text textAlign="center" mt={4} mb={4}>
-                No categories found.
-              </Text>
-            )}
+            <Categories
+              filteredCategories={filteredCategories}
+              selectedCategories={selectedCategories}
+              setSelectedCategories={setSelectedCategories}
+            />
           </Flex>
         </form>
       </FormProvider>
