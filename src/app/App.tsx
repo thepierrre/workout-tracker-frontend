@@ -1,10 +1,11 @@
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "./store";
-import { Tabs, TabList, Tab, Flex, Text, Spinner } from "@chakra-ui/react";
-import { initializeUser } from "../features/auth/authenticatedUserSlice";
+import { Flex, Spinner, Tab, TabList, Tabs, Text } from "@chakra-ui/react";
 import { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+
+import { initializeUser } from "../features/auth/authenticatedUserSlice";
+import { RootState } from "./store";
 import { AppDispatch } from "./store";
-import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 
 const App = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -12,7 +13,7 @@ const App = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("");
   const { user, loading } = useSelector(
-    (state: RootState) => state.authenticatedUser
+    (state: RootState) => state.authenticatedUser,
   );
 
   useEffect(() => {

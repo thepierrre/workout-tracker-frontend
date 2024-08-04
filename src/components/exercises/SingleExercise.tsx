@@ -105,7 +105,7 @@ const SingleExercise: React.FC<Props> = ({
           }
         >
           {!isExerciseDefault && (
-            <Badge position="absolute" top={4} right={4}>
+            <Badge position="absolute" top={4} right={4} bg="#E9D8FD">
               Custom
             </Badge>
           )}
@@ -140,7 +140,6 @@ const SingleExercise: React.FC<Props> = ({
                   : `0 categories`.toUpperCase()}
               </Text>
               <Text
-                mt={3}
                 fontSize="sm"
                 fontWeight="bold"
                 color={

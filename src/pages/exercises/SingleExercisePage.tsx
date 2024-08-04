@@ -66,9 +66,8 @@ const SingleExercisePage = () => {
   }
 
   const onSubmit = async (
-    data: { name: string },
+    data: FormValues,
     selectedCategories: Category[],
-    repsOrTimed: string,
     setError: UseFormSetError<FormValues>,
   ) => {
     const currentIndex = exercises.indexOf(currentExercise);
@@ -76,8 +75,8 @@ const SingleExercisePage = () => {
     const exerciseToUpdate = {
       id: currentExercise.id,
       name: data.name,
+      equipment: data.equipment,
       categories: selectedCategories,
-      repsOrTimed,
       isDefault: false,
       userId: user.id,
     };
@@ -130,18 +129,23 @@ const SingleExercisePage = () => {
     <Container>
       <Flex
         align="center"
-        justifyContent="space-between"
+        direction="column"
         w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
         mb={3}
       >
-        <Box position="absolute" top="4.7rem" left="2rem">
+        <Flex gap={20}>
           <Link to="/exercises">
             <Text fontWeight="bold" color="#FC8181">
               CANCEL
             </Text>
           </Link>
-        </Box>
 
+          <Box onClick={() => exerciseFormRef.current?.submit()}>
+            <Text fontWeight="bold" color="#48BB78">
+              SAVE
+            </Text>
+          </Box>
+        </Flex>
         <Heading
           w="100%"
           fontSize="2xl"
@@ -151,22 +155,11 @@ const SingleExercisePage = () => {
         >
           Edit exercise
         </Heading>
-
-        <Box
-          position="absolute"
-          top="4.7rem"
-          right="3.5rem"
-          onClick={() => exerciseFormRef.current?.submit()}
-        >
-          <Text fontWeight="bold" color="#48BB78">
-            SAVE
-          </Text>
-        </Box>
       </Flex>
       <ExerciseForm
         ref={exerciseFormRef}
         initialName={currentExercise.name}
-        initialRepsOrTimed={currentExercise.repsOrTimed}
+        initialEquipment={currentExercise.equipment}
         initialSelectedCategories={currentExercise.categories}
         buttonText="Update"
         onSubmit={onSubmit}

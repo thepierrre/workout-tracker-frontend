@@ -7,5 +7,4 @@ export interface Exercise {
   equipment: string;
   isDefault: boolean;
   userId?: string;
-  repsOrTimed: string;
 }

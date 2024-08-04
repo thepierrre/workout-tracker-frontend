@@ -13,19 +13,11 @@ import {
   InputGroup,
   InputLeftElement,
   Text,
-  ToastId,
-  useToast,
 } from "@chakra-ui/react";
 import EditIcon from "@mui/icons-material/Edit";
 import { RoutineExercise } from "interfaces/routineExercise.interface";
 import _ from "lodash";
-import {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from "react";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import {
   FormProvider,
@@ -36,19 +28,17 @@ import {
 } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
 
 import { AppDispatch, RootState } from "../../app/store";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
-import WideButton from "../../components/UI/WideButton";
 import { fetchExercises } from "../../features/exercises/exercisesSlice";
 import {
   addExerciseLocally,
   clearLocalRoutine,
-  fetchLocalRoutine,
   handleRoutineName,
   removeExerciseLocally,
 } from "../../features/routines/localRoutineSlice";
+import useCustomToast from "../../hooks/useCustomToast";
 import { Exercise } from "../../interfaces/exercise.interface";
 
 export interface FormValues {
@@ -109,6 +99,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
     const location = useLocation();
+    const { addToast, closeToast } = useCustomToast();
     const [searchedExercises, setSearchedExercises] = useState<string>("");
     const [selectedExercises, setSelectedExercises] = useState<Exercise[]>(
       initialSelectedExercises,
@@ -119,6 +110,12 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
     const { name: routineName, routineExercises } = useSelector(
       (state: RootState) => state.localRoutine,
     );
+
+    useEffect(() => {
+      return () => {
+        closeToast();
+      };
+    }, [location.pathname]);
 
     useEffect(() => {
       if (!location.state) {
@@ -159,7 +156,6 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
             name: ex.name,
             categories: ex.categories,
             isDefault: ex.isDefault,
-            repsOrTimed: ex.repsOrTimed,
           }));
         setSelectedExercises(exercisesFromRoutineExercises);
       } else {
@@ -172,9 +168,6 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
         setError("name", { type: "server", message: serverError });
       }
     }, [serverError, setError]);
-
-    const toast = useToast();
-    const toastIdRef = useRef<ToastId | undefined>(undefined);
 
     useEffect(() => {
       dispatch(fetchExercises());
@@ -207,32 +200,12 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
       );
     };
 
-    const addToast = () => {
-      if (toastIdRef.current) {
-        toast.close(toastIdRef.current);
-      }
-      toastIdRef.current = toast({
-        position: "bottom",
-        duration: 2500,
-        render: () => (
-          <Box
-            color="white"
-            bg="lightblue"
-            background="#F56565"
-            borderRadius={10}
-            p={3}
-            fontSize="lg"
-            mb={10}
-          >
-            <Text>You cannot add more than 15 exercises!</Text>
-          </Box>
-        ),
-      });
-    };
-
     const handleToast = (isExerciseSelected: boolean) => {
       if (!isExerciseSelected && selectedExercises.length >= 15) {
-        addToast();
+        addToast({
+          message: "You can add up to 15 exercises per routine!",
+          bg: "#F56565",
+        });
       }
     };
 
@@ -338,16 +311,16 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
             isInvalid={!!errors.name}
             width={["95vw", "85vw", "70vw", "50vw", "40vw"]}
           >
-            <FormLabel fontSize="sm">Name</FormLabel>
+            <FormLabel fontSize="sm">Routine name</FormLabel>
             <NestedInput />
             <FormErrorMessage>
               {errors.name && errors.name.message}
             </FormErrorMessage>
           </FormControl>
 
-          <Flex direction="column" w="100%" mt={5}>
+          <Flex direction="column" w="100%" mt={8}>
             <Heading fontSize="lg" textAlign="center" mb={1}>
-              Selected exercises
+              {`Selected exercises (${selectedExercises.length})`}
             </Heading>
             <DragDropContext onDragEnd={onDragEnd}>
               <Droppable droppableId="droppable">
@@ -442,11 +415,11 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
 
             {!selectedExercises.length && (
               <Box mt={2} mb={2}>
-                <Text textAlign="center">No exercises selected yet.</Text>
+                <Text textAlign="center">No exercises selected.</Text>
               </Box>
             )}
 
-            <Flex direction="column" w="100%" mt={3}>
+            <Flex direction="column" w="100%" mt={8}>
               <Heading fontSize="lg" textAlign="center" mb={3}>
                 Add exercises
               </Heading>

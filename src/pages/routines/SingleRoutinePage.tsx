@@ -149,7 +149,6 @@ const SingleRoutinePage = () => {
         name: ex.name,
         categories: ex.categories,
         isDefault: ex.isDefault,
-        repsOrTimed: ex.repsOrTimed,
       })) || [];
 
   const handleGoBack = () => {

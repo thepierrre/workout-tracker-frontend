@@ -33,18 +33,19 @@ const NewExercisePage = () => {
   }
 
   const onSubmit = async (
-    data: { name: string },
+    data: FormValues,
     selectedCategories: Category[],
-    repsOrTimed: string,
     setError: UseFormSetError<FormValues>,
   ) => {
     const exerciseToAdd = {
       name: data.name,
+      equipment: data.equipment,
       categories: selectedCategories,
-      repsOrTimed,
       isDefault: false,
       userId: user.id,
     };
+
+    console.log(exerciseToAdd);
 
     try {
       await dispatch(addExercise(exerciseToAdd)).unwrap();
@@ -101,8 +102,9 @@ const NewExercisePage = () => {
       </Flex>
       <ExerciseForm
         ref={exerciseFormRef}
+        initialName=""
+        initialEquipment="BODYWEIGHT"
         initialSelectedCategories={[]}
-        initialRepsOrTimed="reps"
         onSubmit={onSubmit}
         buttonText="Create"
         serverError={serverError}

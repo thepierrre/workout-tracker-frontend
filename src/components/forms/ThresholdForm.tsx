@@ -1,3 +1,4 @@
+import { CloseIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -16,6 +17,7 @@ import { useDispatch } from "react-redux";
 
 import { AppDispatch } from "../../app/store";
 import NarrowButton from "../../components/UI/NarrowButton";
+import Stopwatch from "../../components/workouts/Stopwatch";
 import {
   addSetToExerciseLocally,
   removeSetFromExerciseLocally,
@@ -26,6 +28,7 @@ import {
   deleteSet,
   updateSet,
 } from "../../features/workout/workoutSessionsSlice";
+import useCustomToast from "../../hooks/useCustomToast";
 import { ExerciseInstance } from "../../interfaces/exerciseInstance.interface";
 import { UserSettings } from "../../interfaces/userSettings.interface";
 import { WorkingSet } from "../../interfaces/workingSet.interface";
@@ -93,31 +96,47 @@ const ThresholdForm: React.FC<Props> = ({
     getValues,
   } = useForm<FormValues>({ resolver });
 
+  const { addToast, toastIdRef, closeToast } = useCustomToast();
   const [reps, setReps] = useState<string>("10");
   const [weight, setWeight] = useState<string>("30");
 
   const dispatch = useDispatch<AppDispatch>();
 
-  const toast = useToast();
-  const toastIdRef = useRef<ToastId | undefined>(undefined);
-
-  const addToast = () => {
-    if (toastIdRef.current) {
-      toast.close(toastIdRef.current);
-    }
-    toastIdRef.current = toast({
-      position: "bottom",
+  const handleAddToast = () => {
+    addToast({
       duration: null,
+      bg: "white",
       render: () => (
-        <Box color="white" bg="lightblue" borderRadius={10} p={3} fontSize="lg">
-          <Text>Stopwatch</Text>
+        <Box
+          w={["100vw", "85vw", "70vw", "50vw", "40vw"]}
+          h={36}
+          bg="white"
+          position="absolute"
+          bottom={0}
+          left={0}
+          borderTopRadius={10}
+        >
+          <IconButton
+            size="sm"
+            position="absolute"
+            top={2}
+            right={2}
+            variant="ghost"
+            aria-label="Close stopwatch"
+            icon={<CloseIcon onClick={closeToast} />}
+          />
+          <Stopwatch />
         </Box>
       ),
     });
   };
 
   const handleToast = () => {
-    addToast();
+    if (!toastIdRef.current) {
+      handleAddToast();
+    } else {
+      closeToast();
+    }
   };
 
   const handleRepsAndWeight = (
@@ -516,6 +535,13 @@ const ThresholdForm: React.FC<Props> = ({
             onClick={() => handleToast()}
             aria-label="stopwatch"
             textColor="white"
+            _focus={{ bg: "#404040" }}
+            css={{
+              ":active": {
+                background: "lightblue",
+                color: "#404040",
+              },
+            }}
             icon={<AccessTimeIcon />}
             bg="#404040"
           />

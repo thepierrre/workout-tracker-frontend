@@ -7,7 +7,6 @@ import {
   InputLeftElement,
   Text,
   ToastId,
-  useToast,
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,13 +19,14 @@ import WideButton from "../../components/UI/WideButton";
 import SingleExercise from "../../components/exercises/SingleExercise";
 import { fetchExercises } from "../../features/exercises/exercisesSlice";
 import { fetchWorkouts } from "../../features/workout/workoutSessionsSlice";
+import useCustomToast from "../../hooks/useCustomToast";
 import { Exercise } from "../../interfaces/exercise.interface";
 
 const ExercisesPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const location = useLocation();
-  const toast = useToast();
-  const toastIdRef = useRef<ToastId | undefined>(undefined);
+  const { addToast, toastIdRef, closeToast } = useCustomToast();
+  //const toastIdRef = useRef<ToastId | undefined>(undefined);
   const [searchedExercises, setSearchedExercises] = useState<string>("");
   const [currentWorkoutExercisesNames, setCurrentWorkoutExercisesNames] =
     useState<string[]>([]);
@@ -61,39 +61,13 @@ const ExercisesPage = () => {
 
   useEffect(() => {
     handleToast();
+
+    return () => {
+      closeToast();
+    };
   }, [location.state]);
 
-  useEffect(() => {
-    return () => {
-      if (toastIdRef.current) {
-        toast.close(toastIdRef.current);
-      }
-    };
-  }, [location, toast]);
-
-  const addToast = () => {
-    if (toastIdRef.current) {
-      toast.close(toastIdRef.current);
-    }
-    toastIdRef.current = toast({
-      position: "bottom",
-      duration: 2500,
-      render: () => (
-        <Box
-          color="white"
-          bg="#2F855A"
-          borderRadius={10}
-          p={3}
-          fontSize="lg"
-          mb={10}
-        >
-          <Text textAlign="center">{handleToastText()}</Text>
-        </Box>
-      ),
-    });
-  };
-
-  const handleToastText = () => {
+  const handleToastText = (): string => {
     if (location.state) {
       if (location.state.exercise === "removed") {
         return "Exercise deleted";
@@ -103,6 +77,7 @@ const ExercisesPage = () => {
         return "Exercise updated";
       }
     }
+    return "";
   };
 
   const handleToast = () => {
@@ -110,7 +85,7 @@ const ExercisesPage = () => {
       location.state &&
       ["removed", "created", "updated"].includes(location.state.exercise)
     ) {
-      addToast();
+      addToast({ message: handleToastText(), bg: "#2F855A" });
     }
   };
 
