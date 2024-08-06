@@ -8,7 +8,6 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import { RoutineExercise } from "interfaces/routineExercise.interface";
 import { useEffect, useRef, useState } from "react";
 import { UseFormSetError } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -29,6 +28,7 @@ import {
 } from "../../features/routines/routinesSlice";
 import { Exercise } from "../../interfaces/exercise.interface";
 import { Routine } from "../../interfaces/routine.interface";
+import { WorkingSet } from "../../interfaces/workingSet.interface";
 
 const SingleRoutinePage = () => {
   const { routineId } = useParams();
@@ -41,8 +41,9 @@ const SingleRoutinePage = () => {
     (state: RootState) => state.routines,
   );
 
-  const { name: routineName, routineExercises: localRoutineExercises } =
-    useSelector((state: RootState) => state.localRoutine);
+  const { routineExercises: localRoutineExercises } = useSelector(
+    (state: RootState) => state.localRoutine,
+  );
 
   const { exercises, loading: loadingExercises } = useSelector(
     (state: RootState) => state.exercises,
@@ -76,9 +77,9 @@ const SingleRoutinePage = () => {
   ) => {
     const currentIndex = routines.indexOf(currentRoutine);
 
-    const exercises: RoutineExercise[] = localRoutineExercises.map((ex) => ({
+    const exercises: Exercise[] = localRoutineExercises.map((ex) => ({
       ...ex,
-      workingSets: ex.workingSets.map((set) => ({
+      workingSets: ex.workingSets.map((set: WorkingSet) => ({
         ...set,
         id: undefined,
         creationTimedate: undefined,
@@ -139,9 +140,7 @@ const SingleRoutinePage = () => {
 
   const exercisesFromRoutineExercises: Exercise[] =
     currentRoutine?.routineExercises
-      ?.map((re: RoutineExercise) =>
-        exercises.find((ex) => ex.name === re.name),
-      )
+      ?.map((re: Exercise) => exercises.find((ex) => ex.name === re.name))
       .filter((ex): ex is Exercise => ex !== undefined)
       .map((ex: Exercise) => ({
         ...ex,
@@ -150,10 +149,6 @@ const SingleRoutinePage = () => {
         categories: ex.categories,
         isDefault: ex.isDefault,
       })) || [];
-
-  const handleGoBack = () => {
-    navigate(-1);
-  };
 
   if (loadingRoutines || loadingUser) {
     return <SpinnerComponent />;
@@ -210,8 +205,7 @@ const SingleRoutinePage = () => {
           routineId={currentRoutine.id}
           ref={routineFormRef}
           initialName={currentRoutine.name}
-          initialRoutineExercises={currentRoutine.routineExercises}
-          initialSelectedExercises={exercisesFromRoutineExercises}
+          initialSelectedExercises={currentRoutine.routineExercises}
           onSubmit={onSubmit}
           buttonText="Update"
           serverError={serverError}

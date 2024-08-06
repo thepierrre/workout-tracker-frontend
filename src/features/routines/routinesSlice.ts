@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
+import { Exercise } from "../../interfaces/exercise.interface.ts";
 import { Routine } from "../../interfaces/routine.interface";
 import axiosInstance from "../../util/axiosInstance.ts";
 

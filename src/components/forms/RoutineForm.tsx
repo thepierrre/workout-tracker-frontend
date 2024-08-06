@@ -15,7 +15,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 import EditIcon from "@mui/icons-material/Edit";
-import { RoutineExercise } from "interfaces/routineExercise.interface";
 import _ from "lodash";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
@@ -64,7 +63,6 @@ interface RoutineFormProps {
   routineId?: string;
   newRoutine: boolean;
   initialName: string;
-  initialRoutineExercises?: RoutineExercise[];
   initialSelectedExercises?: Exercise[];
   buttonText: string;
   onSubmit: (data: FormValues, setError: UseFormSetError<FormValues>) => void;
@@ -78,7 +76,6 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
       routineId,
       initialName,
       initialSelectedExercises = [],
-      initialRoutineExercises = [],
       onSubmit,
       serverError,
     },
@@ -106,15 +103,22 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
     const location = useLocation();
     const { addToast, closeToast } = useCustomToast();
     const [searchedExercises, setSearchedExercises] = useState<string>("");
+    const [remainingExercises, setRemainingExercises] = useState<Exercise[]>(
+      [],
+    );
+    const [filteredExercises, setFilteredExercises] = useState<Exercise[]>([]);
     const [selectedExercises, setSelectedExercises] = useState<Exercise[]>(
       initialSelectedExercises,
     );
     const { exercises, loading: loadingExercises } = useSelector(
       (state: RootState) => state.exercises,
     );
-    const { name: routineName, routineExercises } = useSelector(
-      (state: RootState) => state.localRoutine,
-    );
+    const { name: localRoutineName, routineExercises: localRoutineExercises } =
+      useSelector((state: RootState) => state.localRoutine);
+
+    useEffect(() => {
+      dispatch(fetchExercises());
+    }, [dispatch]);
 
     useEffect(() => {
       return () => {
@@ -124,59 +128,37 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
 
     useEffect(() => {
       if (!location.state) {
-        dispatch(clearLocalRoutine());
-        setValue("name", initialName);
-      }
-
-      if (initialRoutineExercises.length > 0) {
-        initialRoutineExercises.forEach((routineExercise) => {
-          const exercise = exercises.find(
-            (ex) => ex.name === routineExercise.name,
-          );
-          if (exercise) {
-            dispatch(addExerciseLocally(routineExercise));
-          }
+        initialSelectedExercises.forEach((ex) => {
+          dispatch(addExerciseLocally(ex));
         });
+        setValue("name", initialName);
+        setSelectedExercises(initialSelectedExercises);
       }
-    }, [location.state, exercises]);
+    }, [location.state, initialName]);
 
     useEffect(() => {
-      if (
-        location.state &&
-        location.state.loadLocalRoutine === true &&
-        routineName !== ""
-      ) {
-        setValue("name", routineName);
+      if (location.state && location.state.loadLocalRoutine === true) {
+        setValue("name", localRoutineName);
+        setSelectedExercises(localRoutineExercises);
       }
     }, [location.pathname]);
 
     useEffect(() => {
-      if (routineExercises.length && exercises.length) {
-        const exercisesFromRoutineExercises: Exercise[] = routineExercises
-          .map((re) => exercises.find((ex) => ex.name === re.name))
-          .filter((ex): ex is Exercise => ex !== undefined)
-          .map((ex) => ({
-            ...ex,
-            id: ex.id,
-            name: ex.name,
-            categories: ex.categories,
-            isDefault: ex.isDefault,
-          }));
-        setSelectedExercises(exercisesFromRoutineExercises);
-      } else {
-        setSelectedExercises(initialSelectedExercises);
-      }
-    }, [routineExercises, exercises, initialSelectedExercises]);
+      setRemainingExercises(
+        exercises.filter(
+          (ex) =>
+            !selectedExercises.some(
+              (selectedEx) => selectedEx.name === ex.name,
+            ),
+        ),
+      );
+    }, [exercises, selectedExercises]);
 
     useEffect(() => {
       if (serverError) {
         setError("name", { type: "server", message: serverError });
       }
     }, [serverError, setError]);
-
-    useEffect(() => {
-      dispatch(fetchExercises());
-    }, [dispatch]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const name = event.target.value;
@@ -224,15 +206,15 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
             return prevSelectedExercises;
           }
           addExerciseToRoutineLocally(exercise);
+          console.log(localRoutineExercises);
           return [...prevSelectedExercises, exercise];
         }
       });
-      console.log(routineExercises);
     };
 
-    const remainingExercises = exercises.filter(
-      (ex) => !selectedExercises.some((selectedEx) => selectedEx.id === ex.id),
-    );
+    // const remainingExercises = exercises.filter(
+    //   (ex) => !selectedExercises.some((selectedEx) => selectedEx.id === ex.id),
+    // );
 
     const handleExerciseFiltering = (
       event: React.ChangeEvent<HTMLInputElement>,
@@ -241,14 +223,14 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
       setSearchedExercises(value);
     };
 
-    const filteredExercises = remainingExercises.filter((exercise: Exercise) =>
-      exercise.name.toLowerCase().startsWith(searchedExercises.toLowerCase()),
-    );
+    // const filteredExercises = remainingExercises.filter((exercise: Exercise) =>
+    //   exercise.name.toLowerCase().startsWith(searchedExercises.toLowerCase()),
+    // );
 
-    const remainingFilteredExercises = filteredExercises.filter(
-      (exercise: Exercise) =>
-        !selectedExercises.some((ex) => ex.id === exercise.id),
-    );
+    // const remainingFilteredExercises = filteredExercises.filter(
+    //   (exercise: Exercise) =>
+    //     !selectedExercises.some((ex) => ex.id === exercise.id),
+    // );
 
     const isExerciseSelected = (exercise: Exercise) =>
       selectedExercises.some((ex) => ex.id === exercise.id);
@@ -296,7 +278,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
     };
 
     const showExerciseSets = (exercise: Exercise): string => {
-      const routineExercise = routineExercises.find(
+      const routineExercise = localRoutineExercises.find(
         (re) => re.name === exercise.name,
       );
       const workingSetsLength = routineExercise?.workingSets.length;
@@ -324,7 +306,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
           </FormControl>
 
           <Flex direction="column" w="100%" mt={8}>
-            <Heading fontSize="lg" textAlign="center" mb={1}>
+            <Heading fontSize="lg" textAlign="center" mb={3}>
               {`Selected exercises (${selectedExercises.length})`}
             </Heading>
             <DragDropContext onDragEnd={onDragEnd}>
@@ -454,7 +436,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
               </InputGroup>
             </Flex>
             <Flex direction="column" gap={2} mt={5} mb={2}>
-              {remainingFilteredExercises.map((exercise) => (
+              {remainingExercises.map((exercise) => (
                 <Flex
                   key={exercise.id}
                   onClick={() => handleToast(isExerciseSelected(exercise))}
@@ -491,7 +473,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
               ))}
             </Flex>
 
-            {!remainingFilteredExercises.length && (
+            {!remainingExercises.length && (
               <Flex direction="column">
                 <Text textAlign="center" mt={0} mb={2}>
                   No exercises.

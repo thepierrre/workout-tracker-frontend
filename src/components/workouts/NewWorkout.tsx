@@ -1,27 +1,27 @@
-import { useEffect, useState } from "react";
-import { useRef, Fragment } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { Routine } from "../../interfaces/routine.interface";
-import { Link } from "react-router-dom";
-import WideButton from "../UI/WideButton";
-import { Workout } from "../../interfaces/workout.interface";
-import { addWorkout } from "../../features/workout/workoutSessionsSlice";
-import { fetchRoutines } from "../../features/routines/routinesSlice";
-import { RootState, AppDispatch } from "../../app/store";
-import { format } from "date-fns";
-
 import {
-  Flex,
-  useDisclosure,
+  Box,
   Drawer,
-  DrawerOverlay,
+  DrawerBody,
   DrawerContent,
   DrawerHeader,
-  DrawerBody,
-  Text,
-  Box,
+  DrawerOverlay,
+  Flex,
   Spinner,
+  Text,
+  useDisclosure,
 } from "@chakra-ui/react";
+import { format } from "date-fns";
+import { useEffect, useState } from "react";
+import { Fragment, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+
+import { AppDispatch, RootState } from "../../app/store";
+import { fetchRoutines } from "../../features/routines/routinesSlice";
+import { addWorkout } from "../../features/workout/workoutSessionsSlice";
+import { Routine } from "../../interfaces/routine.interface";
+import { Workout } from "../../interfaces/workout.interface";
+import WideButton from "../UI/WideButton";
 
 const NewWorkout = () => {
   const [workoutAddingInProgress, setWorkoutAddingInProgress] =
@@ -77,6 +77,7 @@ const NewWorkout = () => {
       >
         <DrawerOverlay />
         <DrawerContent
+          borderTopRadius={10}
           height="50vh"
           bg="#404040"
           w={["100vw", "100vw", "70vw", "65vw", "65vw"]}
@@ -110,11 +111,11 @@ const NewWorkout = () => {
                       <Flex direction="column" gap={2}>
                         <Text fontWeight="bold">{routine?.name}</Text>
                         <Text fontWeight="bold" fontSize="xs" color="#E0E0E0">
-                          {routine?.exerciseTypes?.length} EXERCISES
+                          {routine?.routineExercises?.length} EXERCISES
                         </Text>
                       </Flex>
                       <Text fontSize="sm" color="#E0E0E0">
-                        {routine?.exerciseTypes?.map((exercise, index) => (
+                        {routine?.routineExercises?.map((exercise, index) => (
                           <Fragment key={index}>
                             {index > 0 && " | "} {exercise?.name}
                           </Fragment>

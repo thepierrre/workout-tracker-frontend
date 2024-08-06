@@ -128,17 +128,11 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
         {wrk.routineName}
       </Heading>
 
-      <Flex color="lightblue" fontWeight="bold" gap={5} justify="center">
-        <Flex gap={1}>
-          <AddCircleOutlineIcon />
-          <Text textAlign="center" onClick={() => handleAddExercisesButton()}>
-            Edit exercises
-          </Text>
-        </Flex>
-        <Flex gap={1}>
-          <CheckCircleOutlineIcon />
-          <Text>Mark as done</Text>
-        </Flex>
+      <Flex color="lightblue" fontWeight="bold" gap={1} justify="center">
+        <AddCircleOutlineIcon />
+        <Text textAlign="center" onClick={() => handleAddExercisesButton()}>
+          Edit exercises
+        </Text>
       </Flex>
 
       <Flex direction="column" mt={2}>

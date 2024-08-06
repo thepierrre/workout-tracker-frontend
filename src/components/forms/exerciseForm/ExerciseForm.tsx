@@ -183,8 +183,8 @@ const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
               align="flex-start"
               w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
             >
-              <Flex justify="center" w="100%" mb={3}>
-                <Heading fontSize="lg">{`Muscles worked (${selectedCategories.length}/5)`}</Heading>
+              <Flex justify="center" w="100%" mb={5}>
+                <Heading fontSize="lg">{`Selected muscles (${selectedCategories.length}/5)`}</Heading>
               </Flex>
 
               <InputGroup

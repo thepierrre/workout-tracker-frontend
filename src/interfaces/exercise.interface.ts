@@ -1,4 +1,5 @@
 import { Category } from "./category.interface";
+import { WorkingSet } from "./workingSet.interface";
 
 export interface Exercise {
   id: string;
@@ -7,4 +8,5 @@ export interface Exercise {
   equipment: string;
   isDefault: boolean;
   userId?: string;
+  workingSets?: WorkingSet[];
 }
