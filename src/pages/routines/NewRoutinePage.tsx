@@ -1,5 +1,4 @@
 import { Box, Flex, Heading, Text } from "@chakra-ui/react";
-import { RoutineExercise } from "interfaces/routineExercise.interface";
 import { useRef, useState } from "react";
 import { UseFormSetError } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,6 +10,8 @@ import SpinnerComponent from "../../components/UI/SpinnerComponent";
 import RoutineForm from "../../components/forms/RoutineForm";
 import { FormValues } from "../../components/forms/RoutineForm";
 import { addRoutine } from "../../features/routines/routinesSlice";
+import { Exercise } from "../../interfaces/exercise.interface";
+import { WorkingSet } from "../../interfaces/workingSet.interface";
 
 const NewRoutinePage = () => {
   const navigate = useNavigate();
@@ -33,9 +34,12 @@ const NewRoutinePage = () => {
     data: FormValues,
     setError: UseFormSetError<FormValues>,
   ) => {
-    const exercises: RoutineExercise[] = localRoutineExercises.map((ex) => ({
+    const exercises: Exercise[] = localRoutineExercises.map((ex) => ({
       ...ex,
-      workingSets: ex.workingSets.map((set) => ({ ...set, id: undefined })),
+      workingSets: ex.workingSets.map((set: WorkingSet) => ({
+        ...set,
+        id: undefined,
+      })),
     }));
     const routineToAdd = {
       name: data.name,
@@ -98,6 +102,7 @@ const NewRoutinePage = () => {
         </Box>
       </Flex>
       <RoutineForm
+        initialName=""
         newRoutine={true}
         ref={routineFormRef}
         initialSelectedExercises={[]}

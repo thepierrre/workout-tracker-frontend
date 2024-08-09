@@ -1,11 +1,27 @@
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../app/store";
-import { Flex, Text, Box, IconButton } from "@chakra-ui/react";
-import { setDay } from "../../features/workout/dayInCalendarSlice";
-import { format } from "date-fns";
-
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import {
+  Box,
+  Flex,
+  IconButton,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import { format } from "date-fns";
+import { useState } from "react";
+import Calendar from "react-calendar";
+import { useDispatch, useSelector } from "react-redux";
+
+import { RootState } from "../../app/store";
+import { setDay } from "../../features/workout/dayInCalendarSlice";
+import "./Calendar.css";
 
 const today = new Date();
 
@@ -33,6 +49,7 @@ const daysOfNextWeek = Array.from({ length: 7 }, (_, index) => {
 });
 
 const Datepicker = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [displayedWeek, setDisplayedWeek] = useState<Date[]>(daysOfThisWeek);
   const chosenDay = useSelector((state: RootState) => state.chosenDay.day);
   const dispatch = useDispatch();
@@ -60,57 +77,79 @@ const Datepicker = () => {
   };
 
   return (
-    <Flex align="center" m={2}>
-      <IconButton
-        color="white"
-        icon={<ChevronLeftIcon boxSize={8} />}
-        isDisabled={displayedWeek === daysOfLastWeek ? true : false}
-        aria-label="Go to previous week"
-        variant="link"
-        onClick={() => handleDisplayedWeek("previous")}
-      />
-      <Flex gap={4}>
-        {displayedWeek.map((day, index) => (
-          <Flex
-            key={index}
-            direction="column"
-            align="center"
-            gap={1}
-            onClick={() => handleActiveDay(index)}
-            w={7}
-          >
-            <Text
-              fontSize="xs"
-              fontWeight={chosenDay === format(day, "dd/MM/yyyy") ? "bold" : ""}
-            >
-              {format(new Date(day), "EEE").toUpperCase()}
-            </Text>
-            <Box
-              paddingInline={1}
-              borderRadius={7}
-              w={8}
-              bg={chosenDay === format(day, "dd/MM/yyyy") ? "lightblue" : ""}
+    <>
+      <Flex align="center" m={2}>
+        <IconButton
+          color="white"
+          icon={<ChevronLeftIcon boxSize={8} />}
+          isDisabled={displayedWeek === daysOfLastWeek ? true : false}
+          aria-label="Go to previous week"
+          variant="link"
+          onClick={() => handleDisplayedWeek("previous")}
+        />
+        <Flex gap={4}>
+          {displayedWeek.map((day, index) => (
+            <Flex
+              key={index}
+              direction="column"
+              align="center"
+              gap={1}
+              onClick={() => handleActiveDay(index)}
+              w={7}
             >
               <Text
-                fontSize="xl"
-                color={chosenDay === format(day, "dd/MM/yyyy") ? "#353935" : ""}
-                textAlign="center"
+                fontSize="xs"
+                fontWeight={
+                  chosenDay === format(day, "dd/MM/yyyy") ? "bold" : ""
+                }
               >
-                {day.getDate()}
+                {format(new Date(day), "EEE").toUpperCase()}
               </Text>
-            </Box>
-          </Flex>
-        ))}
+              <Box
+                paddingInline={1}
+                borderRadius={7}
+                w={8}
+                bg={chosenDay === format(day, "dd/MM/yyyy") ? "lightblue" : ""}
+              >
+                <Text
+                  fontSize="xl"
+                  color={
+                    chosenDay === format(day, "dd/MM/yyyy") ? "#353935" : ""
+                  }
+                  textAlign="center"
+                >
+                  {day.getDate()}
+                </Text>
+              </Box>
+            </Flex>
+          ))}
+        </Flex>
+        <IconButton
+          color="white"
+          icon={<ChevronRightIcon boxSize={8} />}
+          isDisabled={displayedWeek === daysOfNextWeek ? true : false}
+          aria-label="Go to previous week"
+          variant="link"
+          onClick={() => handleDisplayedWeek("following")}
+        />
+        <IconButton
+          aria-label="Calendar"
+          variant="link"
+          color="white"
+          icon={<CalendarMonthIcon />}
+          onClick={onOpen}
+        />
       </Flex>
-      <IconButton
-        color="white"
-        icon={<ChevronRightIcon boxSize={8} />}
-        isDisabled={displayedWeek === daysOfNextWeek ? true : false}
-        aria-label="Go to previous week"
-        variant="link"
-        onClick={() => handleDisplayedWeek("following")}
-      />
-    </Flex>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent top={24}>
+          <ModalBody>
+            <Calendar onClickDay={(value) => console.log(value)} />
+          </ModalBody>
+          <ModalCloseButton />
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
 
