@@ -1,31 +1,32 @@
+import { ChakraProvider } from "@chakra-ui/react";
+import { configureStore } from "@reduxjs/toolkit";
+import "@testing-library/jest-dom";
 import {
+  act,
+  fireEvent,
   render,
   screen,
   waitFor,
-  fireEvent,
-  act,
 } from "@testing-library/react";
-import ExercisesPage from "../ExercisesPage";
 import { Provider } from "react-redux";
-import { ChakraProvider } from "@chakra-ui/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import "@testing-library/jest-dom";
-import { configureStore } from "@reduxjs/toolkit";
-import workoutSessionsReducer from "../../../features/workout/workoutSessionsSlice";
-import chosenDayReducer from "../../../features/workout/dayInCalendarSlice";
-import activeExerciseInstanceReducer from "../../../features/workout/activeExerciseInstanceSlice";
-import authenticatedUserReducer from "../../../features/auth/authenticatedUserSlice";
-import exercisesReducer from "../../../features/exercises/exercisesSlice";
-import routinesReducer from "../../../features/routines/routinesSlice";
-import categoriesReducer from "../../../features/exercises/categoriesSlice";
-import { workoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
-import { exerciseTypesForUser as mutableExerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
-import { categories as initialCategories } from "../../../mockData/handlers/categoriesHandler";
-import { initializedUser } from "../../../mockData/authHandlers/userHandler";
+
+import { Category } from "../../../interfaces/category.interface";
+import { Exercise } from "../../../interfaces/exercise.interface";
 import { User } from "../../../interfaces/user.interface";
 import { Workout } from "../../../interfaces/workout.interface";
-import { Exercise } from "../../../interfaces/exercise.interface";
-import { Category } from "../../../interfaces/category.interface";
+import { initializedUser } from "../../../mockData/authHandlers/userHandler";
+import { categories as initialCategories } from "../../../mockData/handlers/categoriesHandler";
+import { exerciseTypesForUser as mutableExerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
+import { workoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
+import authenticatedUserReducer from "../../../store/auth/authenticatedUserSlice";
+import categoriesReducer from "../../../store/exercises/categoriesSlice";
+import exercisesReducer from "../../../store/exercises/exercisesSlice";
+import routinesReducer from "../../../store/routines/routinesSlice";
+import activeExerciseInstanceReducer from "../../../store/workout/activeExerciseInstanceSlice";
+import chosenDayReducer from "../../../store/workout/dayInCalendarSlice";
+import workoutSessionsReducer from "../../../store/workout/workoutSessionsSlice";
+import ExercisesPage from "../ExercisesPage";
 import SingleExercisePage from "../SingleExercisePage";
 
 const deepClone = (obj: any) => JSON.parse(JSON.stringify(obj));
@@ -104,7 +105,7 @@ const createStore = (initialState: InitialState) => {
 const renderWithProviders = (
   ui: React.ReactElement,
   id: string,
-  store: any
+  store: any,
 ) => {
   return render(
     <ChakraProvider>
@@ -116,7 +117,7 @@ const renderWithProviders = (
           </Routes>
         </MemoryRouter>
       </Provider>
-    </ChakraProvider>
+    </ChakraProvider>,
   );
 };
 
@@ -135,7 +136,7 @@ describe("SingleExercisePage", () => {
     renderWithProviders(
       <SingleExercisePage />,
       "a6647d9c-a926-499e-9a5f-e9f16690bfdg",
-      store
+      store,
     );
 
     await waitFor(() => {
@@ -151,10 +152,10 @@ describe("SingleExercisePage", () => {
 
       const allCheckboxes = screen.getAllByRole("checkbox");
       const uncheckedCheckboxes = allCheckboxes.filter(
-        (checkbox) => checkbox != checkedCheckbox
+        (checkbox) => checkbox != checkedCheckbox,
       );
       uncheckedCheckboxes.forEach((checkbox) =>
-        expect(checkbox).not.toBeChecked()
+        expect(checkbox).not.toBeChecked(),
       );
     });
   });
@@ -163,7 +164,7 @@ describe("SingleExercisePage", () => {
     renderWithProviders(
       <SingleExercisePage />,
       "a6647d9c-a926-499e-9a5f-e9f16690bfdg",
-      store
+      store,
     );
 
     await waitFor(() => {
@@ -178,7 +179,7 @@ describe("SingleExercisePage", () => {
     fireEvent.click(screen.getByText("Update"));
     await waitFor(() => {
       expect(
-        screen.getByText("Exercise name cannot be empty.")
+        screen.getByText("Exercise name cannot be empty."),
       ).toBeInTheDocument();
     });
   });
@@ -187,13 +188,13 @@ describe("SingleExercisePage", () => {
     renderWithProviders(
       <SingleExercisePage />,
       "a6647d9c-a926-499e-9a5f-e9f16690bfdk",
-      store
+      store,
     );
 
     await waitFor(() => {
       expect(screen.getByText("Edit exercise")).toBeInTheDocument();
       expect(
-        screen.getByDisplayValue("dumbbell lateral raises")
+        screen.getByDisplayValue("dumbbell lateral raises"),
       ).toBeInTheDocument();
     });
 
@@ -205,7 +206,7 @@ describe("SingleExercisePage", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText("An exercise with this name already exists!")
+        screen.getByText("An exercise with this name already exists!"),
       ).toBeInTheDocument();
     });
   });
@@ -214,7 +215,7 @@ describe("SingleExercisePage", () => {
     renderWithProviders(
       <SingleExercisePage />,
       "a6647d9c-a926-499e-9a5f-e9f16690bfdi",
-      store
+      store,
     );
 
     await waitFor(() => {

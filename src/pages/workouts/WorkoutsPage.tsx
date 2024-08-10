@@ -8,11 +8,11 @@ import Container from "../../components/UI/Container";
 import Datepicker from "../../components/workouts/Datepicker";
 import NewWorkout from "../../components/workouts/NewWorkout";
 import WorkoutSession from "../../components/workouts/WorkoutSession";
+import { Workout } from "../../interfaces/workout.interface";
 import {
   fetchWorkouts,
   removeWorkout,
-} from "../../features/workout/workoutSessionsSlice";
-import { Workout } from "../../interfaces/workout.interface";
+} from "../../store/workout/workoutSessionsSlice";
 
 export const WorkoutsPage = () => {
   const dispatch = useDispatch<AppDispatch>();

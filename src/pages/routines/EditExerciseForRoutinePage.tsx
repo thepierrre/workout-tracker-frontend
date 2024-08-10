@@ -1,5 +1,6 @@
 import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { Flex, Heading, IconButton, Text } from "@chakra-ui/react";
+import { Exercise } from "interfaces/exercise.interface";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -10,9 +11,9 @@ import SpinnerComponent from "../../components/UI/SpinnerComponent";
 import ThresholdForm from "../../components/forms/ThresholdForm";
 import ExWorkingSet from "../../components/shared/ExWorkingSet";
 import ThresholdHandler from "../../components/workouts/ThresholdHandler";
-import { fetchUserSettings } from "../../features/settings/userSettingsSlice";
 import { UserSettings } from "../../interfaces/userSettings.interface";
 import { WorkingSet } from "../../interfaces/workingSet.interface";
+import { fetchUserSettings } from "../../store/settings/userSettingsSlice";
 
 const defaultUserSettings: UserSettings = {
   changeThreshold: 1,
@@ -107,7 +108,7 @@ const EditExerciseForRoutinePage = () => {
             setActiveWorkingSet={setActiveWorkingSet}
           />
           <Flex direction="column" gap={2} mt={3} mb={3} align="center">
-            {currentExercise && currentExercise?.workingSets?.length > 0 ? (
+            {currentExercise?.workingSets?.length ? (
               currentExercise?.workingSets?.map((set, index) => (
                 <ExWorkingSet
                   workingSet={set}

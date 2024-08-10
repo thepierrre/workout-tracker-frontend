@@ -1,8 +1,9 @@
-import axios from "axios";
-import axiosInstance from "../../util/axiosInstance.ts";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
+
 import { User } from "../../interfaces/user.interface";
+import axiosInstance from "../../util/axiosInstance.ts";
 
 export interface authenticatedUserState {
   user: User | undefined;
@@ -57,14 +58,14 @@ const authenticatedUserSlice = createSlice({
         (state, action: PayloadAction<User | undefined>) => {
           state.loading = false;
           state.user = action.payload || undefined;
-        }
+        },
       )
       .addCase(
         initializeUser.rejected,
         (state, action: PayloadAction<string | undefined>) => {
           state.loading = false;
           state.error = action.payload || "Failed to initialize user";
-        }
+        },
       );
   },
 });

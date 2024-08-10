@@ -1,33 +1,34 @@
-import { format } from "date-fns";
+import { ChakraProvider } from "@chakra-ui/react";
+import { configureStore } from "@reduxjs/toolkit";
+import "@testing-library/jest-dom";
 import {
+  act,
+  fireEvent,
   render,
   screen,
   waitFor,
-  fireEvent,
-  act,
 } from "@testing-library/react";
+import { format } from "date-fns";
 import { Provider } from "react-redux";
-import { ChakraProvider } from "@chakra-ui/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import "@testing-library/jest-dom";
-import { configureStore } from "@reduxjs/toolkit";
-import workoutSessionsReducer from "../../../features/workout/workoutSessionsSlice";
-import chosenDayReducer from "../../../features/workout/dayInCalendarSlice";
-import activeExerciseInstanceReducer from "../../../features/workout/activeExerciseInstanceSlice";
-import authenticatedUserReducer from "../../../features/auth/authenticatedUserSlice";
-import exercisesReducer from "../../../features/exercises/exercisesSlice";
-import routinesReducer from "../../../features/routines/routinesSlice";
-import categoriesReducer from "../../../features/exercises/categoriesSlice";
-import { workoutsForUser as mutableWorkoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
-import { exerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
-import { categories } from "../../../mockData/handlers/categoriesHandler";
-import { initializedUser } from "../../../mockData/authHandlers/userHandler";
-import ExercisesPage from "../../exercises/ExercisesPage";
-import WorkoutsPage from "../WorkoutsPage";
+
+import { Category } from "../../../interfaces/category.interface";
+import { Exercise } from "../../../interfaces/exercise.interface";
 import { User } from "../../../interfaces/user.interface";
 import { Workout } from "../../../interfaces/workout.interface";
-import { Exercise } from "../../../interfaces/exercise.interface";
-import { Category } from "../../../interfaces/category.interface";
+import { initializedUser } from "../../../mockData/authHandlers/userHandler";
+import { categories } from "../../../mockData/handlers/categoriesHandler";
+import { exerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
+import { workoutsForUser as mutableWorkoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
+import authenticatedUserReducer from "../../../store/auth/authenticatedUserSlice";
+import categoriesReducer from "../../../store/exercises/categoriesSlice";
+import exercisesReducer from "../../../store/exercises/exercisesSlice";
+import routinesReducer from "../../../store/routines/routinesSlice";
+import activeExerciseInstanceReducer from "../../../store/workout/activeExerciseInstanceSlice";
+import chosenDayReducer from "../../../store/workout/dayInCalendarSlice";
+import workoutSessionsReducer from "../../../store/workout/workoutSessionsSlice";
+import ExercisesPage from "../../exercises/ExercisesPage";
+import WorkoutsPage from "../WorkoutsPage";
 
 const deepClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 
@@ -113,7 +114,7 @@ const renderWithProviders = (ui: React.ReactElement, store: any) => {
           </Routes>
         </MemoryRouter>
       </Provider>
-    </ChakraProvider>
+    </ChakraProvider>,
   );
 };
 
@@ -133,7 +134,7 @@ describe("WorkoutsPage", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText(format(new Date(), "EEE").toUpperCase())
+        screen.getByText(format(new Date(), "EEE").toUpperCase()),
       ).toBeInTheDocument();
     });
 
@@ -173,7 +174,7 @@ describe("WorkoutsPage", () => {
     });
 
     await waitFor(() =>
-      expect(screen.queryAllByText("Select a routine")).toHaveLength(0)
+      expect(screen.queryAllByText("Select a routine")).toHaveLength(0),
     );
 
     await waitFor(() => {
@@ -193,7 +194,7 @@ describe("WorkoutsPage", () => {
     fireEvent.click(screen.getByText("Delete workout"));
     await waitFor(() => {
       expect(
-        screen.getByText("Do you really want to delete this workout?")
+        screen.getByText("Do you really want to delete this workout?"),
       ).toBeInTheDocument();
     });
     await act(async () => {

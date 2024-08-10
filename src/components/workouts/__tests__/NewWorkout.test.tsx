@@ -1,23 +1,24 @@
-import { render, screen, fireEvent } from "@testing-library/react";
 import { ChakraProvider } from "@chakra-ui/react";
-import { BrowserRouter } from "react-router-dom";
-import NewWorkout from "../NewWorkout";
-import "@testing-library/jest-dom";
 import { configureStore } from "@reduxjs/toolkit";
+import "@testing-library/jest-dom";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { Provider } from "react-redux";
-import workoutSessionsReducer from "../../../features/workout/workoutSessionsSlice";
-import chosenDayReducer from "../../../features/workout/dayInCalendarSlice";
-import activeExerciseInstanceReducer from "../../../features/workout/activeExerciseInstanceSlice";
-import authenticatedUserReducer from "../../../features/auth/authenticatedUserSlice";
-import exercisesReducer from "../../../features/exercises/exercisesSlice";
-import routinesReducer from "../../../features/routines/routinesSlice";
-import categoriesReducer from "../../../features/exercises/categoriesSlice";
-import userSettingsReducer from "../../../features/settings/userSettingsSlice";
+import { BrowserRouter } from "react-router-dom";
+
 import { initializedUser } from "../../../mockData/authHandlers/userHandler";
-import { workoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
-import { routinesForUser } from "../../../mockData/handlers/routinesForUserHandler";
 import { exerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
+import { routinesForUser } from "../../../mockData/handlers/routinesForUserHandler";
 import { userSettings } from "../../../mockData/handlers/userSettingsHandler";
+import { workoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
+import authenticatedUserReducer from "../../../store/auth/authenticatedUserSlice";
+import categoriesReducer from "../../../store/exercises/categoriesSlice";
+import exercisesReducer from "../../../store/exercises/exercisesSlice";
+import routinesReducer from "../../../store/routines/routinesSlice";
+import userSettingsReducer from "../../../store/settings/userSettingsSlice";
+import activeExerciseInstanceReducer from "../../../store/workout/activeExerciseInstanceSlice";
+import chosenDayReducer from "../../../store/workout/dayInCalendarSlice";
+import workoutSessionsReducer from "../../../store/workout/workoutSessionsSlice";
+import NewWorkout from "../NewWorkout";
 
 const store = configureStore({
   reducer: {
@@ -65,7 +66,7 @@ const renderWithProviders = (ui: React.ReactElement) => {
       <Provider store={store}>
         <BrowserRouter>{ui}</BrowserRouter>
       </Provider>
-    </ChakraProvider>
+    </ChakraProvider>,
   );
 };
 
@@ -79,12 +80,12 @@ describe("SingleRoutine", () => {
     expect(screen.getByText("Full Body Workout B")).toBeInTheDocument();
     expect(screen.getAllByText("4 EXERCISES")).toHaveLength(2);
     expect(
-      screen.getByText("bench press | barbell rows | squats | dumbbell pushes")
+      screen.getByText("bench press | barbell rows | squats | dumbbell pushes"),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        "incline bench press | pull-downs | deadlifts | dumbbell lateral raises"
-      )
+        "incline bench press | pull-downs | deadlifts | dumbbell lateral raises",
+      ),
     ).toBeInTheDocument();
   });
 });

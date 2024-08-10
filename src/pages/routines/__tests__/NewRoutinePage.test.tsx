@@ -1,27 +1,28 @@
-import { render, screen, waitFor, fireEvent } from "@testing-library/react";
-import { Provider } from "react-redux";
 import { ChakraProvider } from "@chakra-ui/react";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
-import "@testing-library/jest-dom";
 import { configureStore } from "@reduxjs/toolkit";
-import workoutSessionsReducer from "../../../features/workout/workoutSessionsSlice";
-import chosenDayReducer from "../../../features/workout/dayInCalendarSlice";
-import activeExerciseInstanceReducer from "../../../features/workout/activeExerciseInstanceSlice";
-import authenticatedUserReducer from "../../../features/auth/authenticatedUserSlice";
-import exercisesReducer from "../../../features/exercises/exercisesSlice";
-import routinesReducer from "../../../features/routines/routinesSlice";
-import categoriesReducer from "../../../features/exercises/categoriesSlice";
-import { workoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
-import { exerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
-import { categories } from "../../../mockData/handlers/categoriesHandler";
-import { initializedUser } from "../../../mockData/authHandlers/userHandler";
-import { routinesForUser as mutableRoutinesForUser } from "../../../mockData/handlers/routinesForUserHandler";
+import "@testing-library/jest-dom";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { Provider } from "react-redux";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
+
+import { Category } from "../../../interfaces/category.interface";
+import { Exercise } from "../../../interfaces/exercise.interface";
 import { User } from "../../../interfaces/user.interface";
 import { Workout } from "../../../interfaces/workout.interface";
-import { Exercise } from "../../../interfaces/exercise.interface";
-import { Category } from "../../../interfaces/category.interface";
-import RoutinesPage from "../RoutinesPage";
+import { initializedUser } from "../../../mockData/authHandlers/userHandler";
+import { categories } from "../../../mockData/handlers/categoriesHandler";
+import { exerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
+import { routinesForUser as mutableRoutinesForUser } from "../../../mockData/handlers/routinesForUserHandler";
+import { workoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
+import authenticatedUserReducer from "../../../store/auth/authenticatedUserSlice";
+import categoriesReducer from "../../../store/exercises/categoriesSlice";
+import exercisesReducer from "../../../store/exercises/exercisesSlice";
+import routinesReducer from "../../../store/routines/routinesSlice";
+import activeExerciseInstanceReducer from "../../../store/workout/activeExerciseInstanceSlice";
+import chosenDayReducer from "../../../store/workout/dayInCalendarSlice";
+import workoutSessionsReducer from "../../../store/workout/workoutSessionsSlice";
 import NewRoutinePage from "../NewRoutinePage";
+import RoutinesPage from "../RoutinesPage";
 
 const deepClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 
@@ -107,7 +108,7 @@ const renderWithProviders = (ui: React.ReactElement, store: any) => {
           </Routes>
         </MemoryRouter>
       </Provider>
-    </ChakraProvider>
+    </ChakraProvider>,
   );
 };
 
@@ -161,10 +162,10 @@ describe("NewRoutinePage", () => {
 
     fireEvent.click(screen.getByText("Create"));
     await waitFor(() =>
-      expect(screen.getByText("New routine")).toBeInTheDocument()
+      expect(screen.getByText("New routine")).toBeInTheDocument(),
     );
     await waitFor(() =>
-      expect(screen.getByText("brand-new routine")).toBeInTheDocument()
+      expect(screen.getByText("brand-new routine")).toBeInTheDocument(),
     );
   });
 
@@ -177,8 +178,8 @@ describe("NewRoutinePage", () => {
 
     waitFor(() =>
       expect(
-        screen.getByText("Routine name cannot be empty.")
-      ).toBeInTheDocument()
+        screen.getByText("Routine name cannot be empty."),
+      ).toBeInTheDocument(),
     );
   });
 
@@ -197,8 +198,8 @@ describe("NewRoutinePage", () => {
 
     waitFor(() =>
       expect(
-        screen.getByText("A routine with this name already exists!")
-      ).toBeInTheDocument()
+        screen.getByText("A routine with this name already exists!"),
+      ).toBeInTheDocument(),
     );
   });
 });

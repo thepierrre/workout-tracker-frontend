@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 
-import { initializeUser } from "../features/auth/authenticatedUserSlice";
+import { initializeUser } from "../store/auth/authenticatedUserSlice";
 import { RootState } from "./store";
 import { AppDispatch } from "./store";
 

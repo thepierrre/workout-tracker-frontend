@@ -1,7 +1,8 @@
-import axiosInstance from "../../util/axiosInstance.ts";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+
 import { Category } from "../../interfaces/category.interface";
+import axiosInstance from "../../util/axiosInstance.ts";
 
 export interface CategoriesState {
   categories: Category[];
@@ -47,14 +48,14 @@ const categoriesSlice = createSlice({
         (state, action: PayloadAction<Category[]>) => {
           state.loading = false;
           state.categories = action.payload;
-        }
+        },
       )
       .addCase(
         fetchCategories.rejected,
         (state, action: PayloadAction<string | undefined>) => {
           state.loading = false;
           state.error = action.payload || "Failed to fetch categories";
-        }
+        },
       );
   },
 });

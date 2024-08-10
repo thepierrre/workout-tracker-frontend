@@ -1,9 +1,9 @@
-import axios from "axios";
-import axiosInstance from "../../util/axiosInstance.ts";
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
 
 import { Exercise } from "../../interfaces/exercise.interface";
+import axiosInstance from "../../util/axiosInstance.ts";
 
 export interface ExercisesState {
   exercises: Exercise[];
@@ -26,10 +26,10 @@ export const fetchExercises = createAsyncThunk<
 >("exercises/fetchExercises", async (_, thunkAPI) => {
   try {
     const userExercisesResponse = await axiosInstance.get(
-      "user-exercise-types"
+      "user-exercise-types",
     );
     const defaultExercisesResponse = await axiosInstance.get(
-      "default-exercise-types"
+      "default-exercise-types",
     );
     const userExercises = userExercisesResponse.data;
     const defaultExercises = defaultExercisesResponse.data;
@@ -80,7 +80,7 @@ export const updateExercise = createAsyncThunk<
   try {
     const response = await axiosInstance.put(
       `exercise-types/${updatedExercise.id}`,
-      updatedExercise
+      updatedExercise,
     );
     return response.data;
   } catch (error) {
@@ -134,57 +134,57 @@ const exercisesSlice = createSlice({
         (state, action: PayloadAction<Exercise[]>) => {
           state.loading = false;
           state.exercises = action.payload;
-        }
+        },
       )
       .addCase(
         fetchExercises.rejected,
         (state, action: PayloadAction<string | undefined>) => {
           state.loading = false;
           state.error = action.payload || "Failed to fetch exercises.";
-        }
+        },
       )
       .addCase(
         addExercise.fulfilled,
         (state, action: PayloadAction<Exercise>) => {
           state.exercises.push(action.payload);
-        }
+        },
       )
       .addCase(
         addExercise.rejected,
         (state, action: PayloadAction<string | undefined>) => {
           state.error = action.payload || "Failed to add the exercise.";
-        }
+        },
       )
       .addCase(
         removeExercise.fulfilled,
         (state, action: PayloadAction<string>) => {
           state.exercises = state.exercises.filter(
-            (exercise) => exercise.id !== action.payload
+            (exercise) => exercise.id !== action.payload,
           );
-        }
+        },
       )
       .addCase(
         removeExercise.rejected,
         (state, action: PayloadAction<string | undefined>) => {
           state.error = action.payload || "Failed to remove the exercise.";
-        }
+        },
       )
       .addCase(
         updateExercise.fulfilled,
         (state, action: PayloadAction<Exercise>) => {
           const index = state.exercises.findIndex(
-            (ex) => ex.id === action.payload.id
+            (ex) => ex.id === action.payload.id,
           );
           if (index !== -1) {
             state.exercises[index] = action.payload;
           }
-        }
+        },
       )
       .addCase(
         updateExercise.rejected,
         (state, action: PayloadAction<string | undefined>) => {
           state.error = action.payload || "Failed to update the exercise.";
-        }
+        },
       );
   },
 });

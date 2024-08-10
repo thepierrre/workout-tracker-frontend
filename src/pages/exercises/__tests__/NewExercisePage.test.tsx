@@ -1,33 +1,34 @@
+import { ChakraProvider } from "@chakra-ui/react";
+import { configureStore } from "@reduxjs/toolkit";
+import "@testing-library/jest-dom";
 import {
+  act,
+  fireEvent,
   render,
   screen,
   waitFor,
-  fireEvent,
-  act,
 } from "@testing-library/react";
-import ExercisesPage from "../ExercisesPage";
 import { Provider } from "react-redux";
-import { ChakraProvider } from "@chakra-ui/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import "@testing-library/jest-dom";
-import { configureStore } from "@reduxjs/toolkit";
-import workoutSessionsReducer from "../../../features/workout/workoutSessionsSlice";
-import chosenDayReducer from "../../../features/workout/dayInCalendarSlice";
-import activeExerciseInstanceReducer from "../../../features/workout/activeExerciseInstanceSlice";
-import authenticatedUserReducer from "../../../features/auth/authenticatedUserSlice";
-import exercisesReducer from "../../../features/exercises/exercisesSlice";
-import routinesReducer from "../../../features/routines/routinesSlice";
-import categoriesReducer from "../../../features/exercises/categoriesSlice";
-import { workoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
-import { exerciseTypesForUser as mutableExerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
-import { categories as initialCategories } from "../../../mockData/handlers/categoriesHandler";
-import { categories } from "../../../mockData/handlers/categoriesHandler";
-import { initializedUser } from "../../../mockData/authHandlers/userHandler";
-import NewExercisePage from "../NewExercisePage";
+
+import { Category } from "../../../interfaces/category.interface";
+import { Exercise } from "../../../interfaces/exercise.interface";
 import { User } from "../../../interfaces/user.interface";
 import { Workout } from "../../../interfaces/workout.interface";
-import { Exercise } from "../../../interfaces/exercise.interface";
-import { Category } from "../../../interfaces/category.interface";
+import { initializedUser } from "../../../mockData/authHandlers/userHandler";
+import { categories as initialCategories } from "../../../mockData/handlers/categoriesHandler";
+import { categories } from "../../../mockData/handlers/categoriesHandler";
+import { exerciseTypesForUser as mutableExerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
+import { workoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
+import authenticatedUserReducer from "../../../store/auth/authenticatedUserSlice";
+import categoriesReducer from "../../../store/exercises/categoriesSlice";
+import exercisesReducer from "../../../store/exercises/exercisesSlice";
+import routinesReducer from "../../../store/routines/routinesSlice";
+import activeExerciseInstanceReducer from "../../../store/workout/activeExerciseInstanceSlice";
+import chosenDayReducer from "../../../store/workout/dayInCalendarSlice";
+import workoutSessionsReducer from "../../../store/workout/workoutSessionsSlice";
+import ExercisesPage from "../ExercisesPage";
+import NewExercisePage from "../NewExercisePage";
 
 const deepClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 
@@ -113,7 +114,7 @@ const renderWithProviders = (ui: React.ReactElement, store: any) => {
           </Routes>
         </MemoryRouter>
       </Provider>
-    </ChakraProvider>
+    </ChakraProvider>,
   );
 };
 
@@ -142,7 +143,7 @@ describe("NewExercisePage", () => {
 
     waitFor(() => {
       expect(screen.getAllByTestId(/^category-name-/)).toHaveLength(
-        categories.length
+        categories.length,
       );
     });
   });
@@ -180,13 +181,13 @@ describe("NewExercisePage", () => {
     renderWithProviders(<NewExercisePage />, store);
 
     await waitFor(() =>
-      expect(screen.getByText("Add a new exercise")).toBeInTheDocument()
+      expect(screen.getByText("Add a new exercise")).toBeInTheDocument(),
     );
 
     fireEvent.click(screen.getByText("Create"));
     await waitFor(() => {
       expect(
-        screen.getByText("Exercise name cannot be empty.")
+        screen.getByText("Exercise name cannot be empty."),
       ).toBeInTheDocument();
     });
   });
@@ -195,7 +196,7 @@ describe("NewExercisePage", () => {
     renderWithProviders(<NewExercisePage />, store);
 
     await waitFor(() =>
-      expect(screen.getByText("Add a new exercise")).toBeInTheDocument()
+      expect(screen.getByText("Add a new exercise")).toBeInTheDocument(),
     );
 
     fireEvent.change(screen.getByPlaceholderText("Enter a name"), {
@@ -206,7 +207,7 @@ describe("NewExercisePage", () => {
     fireEvent.click(screen.getByText("Create"));
     await waitFor(() => {
       expect(
-        screen.getByText("An exercise with this name already exists!")
+        screen.getByText("An exercise with this name already exists!"),
       ).toBeInTheDocument();
     });
   });
@@ -215,7 +216,7 @@ describe("NewExercisePage", () => {
     renderWithProviders(<NewExercisePage />, store);
 
     await waitFor(() =>
-      expect(screen.getByText("Add a new exercise")).toBeInTheDocument()
+      expect(screen.getByText("Add a new exercise")).toBeInTheDocument(),
     );
 
     fireEvent.change(screen.getByPlaceholderText("Enter a name"), {

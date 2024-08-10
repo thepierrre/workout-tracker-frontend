@@ -15,10 +15,10 @@ import Container from "../../components/UI/Container";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
 import WideButton from "../../components/UI/WideButton";
 import SingleExercise from "../../components/exercises/SingleExercise";
-import { fetchExercises } from "../../features/exercises/exercisesSlice";
-import { fetchWorkouts } from "../../features/workout/workoutSessionsSlice";
 import useCustomToast from "../../hooks/useCustomToast";
 import { Exercise } from "../../interfaces/exercise.interface";
+import { fetchExercises } from "../../store/exercises/exercisesSlice";
+import { fetchWorkouts } from "../../store/workout/workoutSessionsSlice";
 
 const ExercisesPage = () => {
   const dispatch = useDispatch<AppDispatch>();

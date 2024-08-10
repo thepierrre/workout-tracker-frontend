@@ -18,7 +18,7 @@ import Container from "../../components/UI/Container";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
 import WideButton from "../../components/UI/WideButton";
 import SingleRoutine from "../../components/routines/SingleRoutine";
-import { fetchRoutines } from "../../features/routines/routinesSlice";
+import { fetchRoutines } from "../../store/routines/routinesSlice";
 
 const RoutinesPage = () => {
   const dispatch = useDispatch<AppDispatch>();

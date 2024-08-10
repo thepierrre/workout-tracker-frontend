@@ -1,10 +1,10 @@
-import axios from "axios";
-import axiosInstance from "../../util/axiosInstance.ts";
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
+import { Exercise } from "interfaces/exercise.interface";
 
 import { Workout } from "../../interfaces/workout.interface";
-import { Exercise } from "interfaces/exercise.interface";
+import axiosInstance from "../../util/axiosInstance.ts";
 
 export interface WorkoutSessionsState {
   workouts: Workout[];
@@ -60,7 +60,7 @@ export const deleteSet = createAsyncThunk<
   async ({ exerciseInstanceId, workingSetId }, thunkAPI) => {
     try {
       const response = await axiosInstance.delete(
-        `exercise-instances/${exerciseInstanceId}/sets/${workingSetId}`
+        `exercise-instances/${exerciseInstanceId}/sets/${workingSetId}`,
       );
       return response.data;
     } catch (error) {
@@ -72,7 +72,7 @@ export const deleteSet = createAsyncThunk<
       }
       return thunkAPI.rejectWithValue(errorMessage);
     }
-  }
+  },
 );
 
 export const addSet = createAsyncThunk<
@@ -85,7 +85,7 @@ export const addSet = createAsyncThunk<
     try {
       const response = await axiosInstance.post(
         `exercise-instances/${exerciseInstanceId}/sets`,
-        newSet
+        newSet,
       );
       return response.data;
     } catch (error) {
@@ -97,7 +97,7 @@ export const addSet = createAsyncThunk<
       }
       return thunkAPI.rejectWithValue(errorMessage);
     }
-  }
+  },
 );
 
 export const updateSet = createAsyncThunk<
@@ -110,7 +110,7 @@ export const updateSet = createAsyncThunk<
     try {
       const response = await axiosInstance.patch(
         `exercise-instances/${exerciseInstanceId}/sets/${workingSetId}`,
-        setToUpdate
+        setToUpdate,
       );
       return response.data;
     } catch (error) {
@@ -122,7 +122,7 @@ export const updateSet = createAsyncThunk<
       }
       return thunkAPI.rejectWithValue(errorMessage);
     }
-  }
+  },
 );
 
 export const fetchWorkouts = createAsyncThunk<
@@ -207,7 +207,7 @@ export const addExInstance = createAsyncThunk<
   try {
     const response = await axiosInstance.post(
       `workouts/${workoutId}/exercise-instances`,
-      exerciseType
+      exerciseType,
     );
     return { workoutId, exerciseInstance: response.data };
   } catch (error) {
@@ -234,40 +234,40 @@ const workoutSessionsSlice = createSlice({
         (state, action: PayloadAction<Workout[]>) => {
           state.loading = false;
           state.workouts = action.payload;
-        }
+        },
       )
       .addCase(
         fetchWorkouts.rejected,
         (state, action: PayloadAction<string | undefined>) => {
           state.loading = false;
           state.error = action.payload || "Failed to fetch exercises.";
-        }
+        },
       )
       .addCase(
         addWorkout.fulfilled,
         (state, action: PayloadAction<Workout>) => {
           state.workouts.push(action.payload);
-        }
+        },
       )
       .addCase(
         addWorkout.rejected,
         (state, action: PayloadAction<string | undefined>) => {
           state.error = action.payload || "Failed to add the workout.";
-        }
+        },
       )
       .addCase(
         removeWorkout.fulfilled,
         (state, action: PayloadAction<string>) => {
           state.workouts = state.workouts.filter(
-            (workout) => workout.id !== action.payload
+            (workout) => workout.id !== action.payload,
           );
-        }
+        },
       )
       .addCase(
         removeWorkout.rejected,
         (state, action: PayloadAction<string | undefined>) => {
           state.error = action.payload || "Failed to remove the workout.";
-        }
+        },
       )
       .addCase(
         addExInstance.fulfilled,
@@ -276,21 +276,21 @@ const workoutSessionsSlice = createSlice({
           action: PayloadAction<{
             workoutId: string;
             exerciseInstance: ExerciseInstance;
-          }>
+          }>,
         ) => {
           const { workoutId, exerciseInstance } = action.payload;
           const workout = state.workouts.find((w) => w.id === workoutId);
           if (workout) {
             workout.exerciseInstances.push(exerciseInstance);
           }
-        }
+        },
       )
       .addCase(
         addExInstance.rejected,
         (state, action: PayloadAction<string | undefined>) => {
           state.error =
             action.payload || "Failed to add the exercise to the workout.";
-        }
+        },
       )
       .addCase(
         removeExInstance.fulfilled,
@@ -298,22 +298,22 @@ const workoutSessionsSlice = createSlice({
           const deletedExInstanceId = action.payload;
           const workout = state.workouts.find((workout) =>
             workout.exerciseInstances.some(
-              (instance) => instance.id === deletedExInstanceId
-            )
+              (instance) => instance.id === deletedExInstanceId,
+            ),
           );
 
           if (workout) {
             workout.exerciseInstances.filter(
-              (exInstance) => exInstance.id !== deletedExInstanceId
+              (exInstance) => exInstance.id !== deletedExInstanceId,
             );
           }
-        }
+        },
       )
       .addCase(
         addSet.rejected,
         (state, action: PayloadAction<string | undefined>) => {
           state.error = action.payload || "Failed to add the set.";
-        }
+        },
       )
       .addCase(
         addSet.fulfilled,
@@ -321,24 +321,24 @@ const workoutSessionsSlice = createSlice({
           const updatedExerciseInstance = action.payload;
           const workout = state.workouts.find((workout) =>
             workout.exerciseInstances.some(
-              (instance) => instance.id === updatedExerciseInstance.id
-            )
+              (instance) => instance.id === updatedExerciseInstance.id,
+            ),
           );
 
           if (workout) {
             const exerciseInstanceIndex = workout.exerciseInstances.findIndex(
-              (instance) => instance.id === updatedExerciseInstance.id
+              (instance) => instance.id === updatedExerciseInstance.id,
             );
             workout.exerciseInstances[exerciseInstanceIndex] =
               updatedExerciseInstance;
           }
-        }
+        },
       )
       .addCase(
         updateSet.rejected,
         (state, action: PayloadAction<string | undefined>) => {
           state.error = action.payload || "Failed to update the set.";
-        }
+        },
       )
       .addCase(
         updateSet.fulfilled,
@@ -346,24 +346,24 @@ const workoutSessionsSlice = createSlice({
           const updatedExerciseInstance = action.payload;
           const workout = state.workouts.find((workout) =>
             workout.exerciseInstances.some(
-              (instance) => instance.id === updatedExerciseInstance.id
-            )
+              (instance) => instance.id === updatedExerciseInstance.id,
+            ),
           );
 
           if (workout) {
             const exerciseInstanceIndex = workout.exerciseInstances.findIndex(
-              (instance) => instance.id === updatedExerciseInstance.id
+              (instance) => instance.id === updatedExerciseInstance.id,
             );
             workout.exerciseInstances[exerciseInstanceIndex] =
               updatedExerciseInstance;
           }
-        }
+        },
       )
       .addCase(
         deleteSet.rejected,
         (state, action: PayloadAction<string | undefined>) => {
           state.error = action.payload || "Failed to delete the set.";
-        }
+        },
       )
       .addCase(
         deleteSet.fulfilled,
@@ -371,18 +371,18 @@ const workoutSessionsSlice = createSlice({
           const updatedExerciseInstance = action.payload;
           const workout = state.workouts.find((workout) =>
             workout.exerciseInstances.some(
-              (instance) => instance.id === updatedExerciseInstance.id
-            )
+              (instance) => instance.id === updatedExerciseInstance.id,
+            ),
           );
 
           if (workout) {
             const exerciseInstanceIndex = workout.exerciseInstances.findIndex(
-              (instance) => instance.id === updatedExerciseInstance.id
+              (instance) => instance.id === updatedExerciseInstance.id,
             );
             workout.exerciseInstances[exerciseInstanceIndex] =
               updatedExerciseInstance;
           }
-        }
+        },
       );
   },
 });

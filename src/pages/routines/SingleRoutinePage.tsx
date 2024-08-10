@@ -21,14 +21,14 @@ import DeletionModal from "../../components/UI/DeletionModal";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
 import { FormValues } from "../../components/forms/RoutineForm";
 import RoutineForm from "../../components/forms/RoutineForm";
-import { fetchRoutines } from "../../features/routines/routinesSlice";
-import {
-  removeRoutine,
-  updateRoutine,
-} from "../../features/routines/routinesSlice";
 import { Exercise } from "../../interfaces/exercise.interface";
 import { Routine } from "../../interfaces/routine.interface";
 import { WorkingSet } from "../../interfaces/workingSet.interface";
+import { fetchRoutines } from "../../store/routines/routinesSlice";
+import {
+  removeRoutine,
+  updateRoutine,
+} from "../../store/routines/routinesSlice";
 
 const SingleRoutinePage = () => {
   const { routineId } = useParams();
@@ -79,7 +79,7 @@ const SingleRoutinePage = () => {
 
     const exercises: Exercise[] = localRoutineExercises.map((ex) => ({
       ...ex,
-      workingSets: ex.workingSets.map((set: WorkingSet) => ({
+      workingSets: ex.workingSets?.map((set: WorkingSet) => ({
         ...set,
         id: undefined,
         creationTimedate: undefined,

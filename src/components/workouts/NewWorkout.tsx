@@ -17,10 +17,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import { AppDispatch, RootState } from "../../app/store";
-import { fetchRoutines } from "../../features/routines/routinesSlice";
-import { addWorkout } from "../../features/workout/workoutSessionsSlice";
 import { Routine } from "../../interfaces/routine.interface";
 import { Workout } from "../../interfaces/workout.interface";
+import { fetchRoutines } from "../../store/routines/routinesSlice";
+import { addWorkout } from "../../store/workout/workoutSessionsSlice";
 import WideButton from "../UI/WideButton";
 
 const NewWorkout = () => {

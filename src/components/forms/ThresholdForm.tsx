@@ -18,20 +18,20 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../app/store";
 import NarrowButton from "../../components/UI/NarrowButton";
 import Stopwatch from "../../components/workouts/Stopwatch";
-import {
-  addSetToExerciseLocally,
-  removeSetFromExerciseLocally,
-  updateSetInExerciseLocally,
-} from "../../features/routines/localRoutineSlice";
-import {
-  addSet,
-  deleteSet,
-  updateSet,
-} from "../../features/workout/workoutSessionsSlice";
 import useCustomToast from "../../hooks/useCustomToast";
 import { ExerciseInstance } from "../../interfaces/exerciseInstance.interface";
 import { UserSettings } from "../../interfaces/userSettings.interface";
 import { WorkingSet } from "../../interfaces/workingSet.interface";
+import {
+  addSetToExerciseLocally,
+  removeSetFromExerciseLocally,
+  updateSetInExerciseLocally,
+} from "../../store/routines/localRoutineSlice";
+import {
+  addSet,
+  deleteSet,
+  updateSet,
+} from "../../store/workout/workoutSessionsSlice";
 import { convertLbsToKgs } from "../../util/weightUnitConverting";
 
 interface FormValues {

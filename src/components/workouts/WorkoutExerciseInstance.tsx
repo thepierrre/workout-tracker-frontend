@@ -1,25 +1,25 @@
-import { useState } from "react";
-import { ExerciseInstance } from "../../interfaces/exerciseInstance.interface";
-import { removeExInstance } from "../../features/workout/workoutSessionsSlice";
-import { useDispatch } from "react-redux";
-
-import CustomCard from "../UI/CustomCard";
-import DeletionModal from "../../components/UI/DeletionModal";
 import {
   CardBody,
-  Text,
   Flex,
-  useDisclosure,
   IconButton,
+  Text,
+  useDisclosure,
 } from "@chakra-ui/react";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+
+import { AppDispatch } from "../../app/store";
+import DeletionModal from "../../components/UI/DeletionModal";
+import { ExerciseInstance } from "../../interfaces/exerciseInstance.interface";
+import { UserSettings } from "../../interfaces/userSettings.interface";
+import { removeExInstance } from "../../store/workout/workoutSessionsSlice";
 import {
   convertKgsToLbs,
   handleWeightUnitText,
   roundKgs,
 } from "../../util/weightUnitConverting";
-import { AppDispatch } from "../../app/store";
-import { UserSettings } from "../../interfaces/userSettings.interface";
+import CustomCard from "../UI/CustomCard";
 
 const defaultUserSettings: UserSettings = {
   changeThreshold: 1,
@@ -45,7 +45,7 @@ const WorkoutExerciseInstance: React.FC<Props> = ({
 
   const handleOpenModal = (
     e: React.MouseEvent,
-    exInstance: ExerciseInstance
+    exInstance: ExerciseInstance,
   ) => {
     e.preventDefault();
     e.stopPropagation();
@@ -92,7 +92,7 @@ const WorkoutExerciseInstance: React.FC<Props> = ({
                     <Text>
                       {handleWeightUnitText(
                         userSettings?.weightUnit ||
-                          defaultUserSettings.weightUnit
+                          defaultUserSettings.weightUnit,
                       )}
                     </Text>
                   </Flex>

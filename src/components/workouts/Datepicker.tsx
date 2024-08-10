@@ -18,7 +18,7 @@ import Calendar from "react-calendar";
 import { useDispatch, useSelector } from "react-redux";
 
 import { RootState } from "../../app/store";
-import { setDay } from "../../features/workout/dayInCalendarSlice";
+import { setDay } from "../../store/workout/dayInCalendarSlice";
 import "./Calendar.css";
 
 const today = new Date();

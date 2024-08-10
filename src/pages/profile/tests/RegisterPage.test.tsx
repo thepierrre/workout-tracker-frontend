@@ -1,24 +1,25 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { ChakraProvider } from "@chakra-ui/react";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
-import RegisterPage from "../RegisterPage";
-import LoginPage from "../LoginPage";
-import "@testing-library/jest-dom";
-import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
-import workoutSessionsReducer from "../../../features/workout/workoutSessionsSlice";
-import chosenDayReducer from "../../../features/workout/dayInCalendarSlice";
-import activeExerciseInstanceReducer from "../../../features/workout/activeExerciseInstanceSlice";
-import authenticatedUserReducer from "../../../features/auth/authenticatedUserSlice";
-import exercisesReducer from "../../../features/exercises/exercisesSlice";
-import routinesReducer from "../../../features/routines/routinesSlice";
-import categoriesReducer from "../../../features/exercises/categoriesSlice";
-import userSettingsReducer from "../../../features/settings/userSettingsSlice";
+import "@testing-library/jest-dom";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { Provider } from "react-redux";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
+
 import { initializedUser } from "../../../mockData/authHandlers/userHandler";
-import { workoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
-import { routinesForUser } from "../../../mockData/handlers/routinesForUserHandler";
 import { exerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
+import { routinesForUser } from "../../../mockData/handlers/routinesForUserHandler";
 import { userSettings } from "../../../mockData/handlers/userSettingsHandler";
+import { workoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
+import authenticatedUserReducer from "../../../store/auth/authenticatedUserSlice";
+import categoriesReducer from "../../../store/exercises/categoriesSlice";
+import exercisesReducer from "../../../store/exercises/exercisesSlice";
+import routinesReducer from "../../../store/routines/routinesSlice";
+import userSettingsReducer from "../../../store/settings/userSettingsSlice";
+import activeExerciseInstanceReducer from "../../../store/workout/activeExerciseInstanceSlice";
+import chosenDayReducer from "../../../store/workout/dayInCalendarSlice";
+import workoutSessionsReducer from "../../../store/workout/workoutSessionsSlice";
+import LoginPage from "../LoginPage";
+import RegisterPage from "../RegisterPage";
 
 const store = configureStore({
   reducer: {
@@ -71,7 +72,7 @@ const renderWithProviders = (ui: React.ReactElement) => {
           </Routes>
         </MemoryRouter>
       </Provider>
-    </ChakraProvider>
+    </ChakraProvider>,
   );
 };
 
@@ -82,7 +83,7 @@ describe("RegisterPage", () => {
     expect(screen.getByText("Hello there!")).toBeInTheDocument();
     expect(screen.getByText("Time for the gym?")).toBeInTheDocument();
     expect(
-      screen.getByText("Log in or create an account and start your workout!")
+      screen.getByText("Log in or create an account and start your workout!"),
     ).toBeInTheDocument();
     expect(screen.getByText("Create an account")).toBeInTheDocument();
     expect(screen.getByText("Already a member?")).toBeInTheDocument();
@@ -141,7 +142,7 @@ describe("RegisterPage", () => {
     await waitFor(() => {
       expect(screen.getByText("Enter a valid email.")).toBeInTheDocument();
       expect(
-        screen.getByText("Enter a password with at least 8 characters.")
+        screen.getByText("Enter a password with at least 8 characters."),
       ).toBeInTheDocument();
     });
   });

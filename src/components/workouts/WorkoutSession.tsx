@@ -19,9 +19,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { AppDispatch, RootState } from "../../app/store";
 import CustomCard from "../../components/UI/CustomCard";
 import DeletionModal from "../../components/UI/DeletionModal";
-import { fetchUserSettings } from "../../features/settings/userSettingsSlice";
 import { UserSettings } from "../../interfaces/userSettings.interface";
 import { Workout } from "../../interfaces/workout.interface";
+import { fetchUserSettings } from "../../store/settings/userSettingsSlice";
 import WorkoutExerciseInstance from "./WorkoutExerciseInstance";
 
 const defaultUserSettings: UserSettings = {

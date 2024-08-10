@@ -1,27 +1,28 @@
-import { render, screen, waitFor, fireEvent } from "@testing-library/react";
-import ExercisesPage from "../ExercisesPage";
-import { Provider } from "react-redux";
 import { ChakraProvider } from "@chakra-ui/react";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
-import "@testing-library/jest-dom";
 import { configureStore } from "@reduxjs/toolkit";
-import workoutSessionsReducer from "../../../features/workout/workoutSessionsSlice";
-import chosenDayReducer from "../../../features/workout/dayInCalendarSlice";
-import activeExerciseInstanceReducer from "../../../features/workout/activeExerciseInstanceSlice";
-import authenticatedUserReducer from "../../../features/auth/authenticatedUserSlice";
-import exercisesReducer from "../../../features/exercises/exercisesSlice";
-import routinesReducer from "../../../features/routines/routinesSlice";
-import categoriesReducer from "../../../features/exercises/categoriesSlice";
-import { workoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
-import { exerciseTypesForUser as mutableExerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
-import { categories as initialCategories } from "../../../mockData/handlers/categoriesHandler";
-import { categories } from "../../../mockData/handlers/categoriesHandler";
-import { initializedUser } from "../../../mockData/authHandlers/userHandler";
-import NewExercisePage from "../NewExercisePage";
+import "@testing-library/jest-dom";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { Provider } from "react-redux";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
+
+import { Category } from "../../../interfaces/category.interface";
+import { Exercise } from "../../../interfaces/exercise.interface";
 import { User } from "../../../interfaces/user.interface";
 import { Workout } from "../../../interfaces/workout.interface";
-import { Exercise } from "../../../interfaces/exercise.interface";
-import { Category } from "../../../interfaces/category.interface";
+import { initializedUser } from "../../../mockData/authHandlers/userHandler";
+import { categories as initialCategories } from "../../../mockData/handlers/categoriesHandler";
+import { categories } from "../../../mockData/handlers/categoriesHandler";
+import { exerciseTypesForUser as mutableExerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
+import { workoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
+import authenticatedUserReducer from "../../../store/auth/authenticatedUserSlice";
+import categoriesReducer from "../../../store/exercises/categoriesSlice";
+import exercisesReducer from "../../../store/exercises/exercisesSlice";
+import routinesReducer from "../../../store/routines/routinesSlice";
+import activeExerciseInstanceReducer from "../../../store/workout/activeExerciseInstanceSlice";
+import chosenDayReducer from "../../../store/workout/dayInCalendarSlice";
+import workoutSessionsReducer from "../../../store/workout/workoutSessionsSlice";
+import ExercisesPage from "../ExercisesPage";
+import NewExercisePage from "../NewExercisePage";
 
 const deepClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 
@@ -110,7 +111,7 @@ const renderWithProviders = (ui: React.ReactElement, store: any) => {
           </Routes>
         </MemoryRouter>
       </Provider>
-    </ChakraProvider>
+    </ChakraProvider>,
   );
 };
 
@@ -131,23 +132,23 @@ describe("ExercisesPage", () => {
     await waitFor(() => {
       expect(screen.getByText("New exercise")).toBeInTheDocument();
       expect(
-        screen.getByPlaceholderText("Search for exercises")
+        screen.getByPlaceholderText("Search for exercises"),
       ).toBeInTheDocument();
     });
 
     expect(screen.getAllByTestId(/^exercise-name-/)).toHaveLength(
-      mutableExerciseTypesForUser.length
+      mutableExerciseTypesForUser.length,
     );
 
     mutableExerciseTypesForUser.forEach((exercise: Exercise) => {
       const exerciseElement = screen.getByTestId(
-        `exercise-name-${exercise.id}`
+        `exercise-name-${exercise.id}`,
       );
       expect(exerciseElement).toBeInTheDocument();
       expect(exerciseElement).toHaveTextContent(exercise.name);
 
       const categoriesElement = screen.getByTestId(
-        `exercise-categories-${exercise.id}`
+        `exercise-categories-${exercise.id}`,
       );
       const expectedCategories = exercise.categories
         .map((category: Category) => category?.name)
@@ -179,7 +180,7 @@ describe("ExercisesPage", () => {
 
     await waitFor(() => {
       expect(screen.getAllByTestId(/^category-name-/)).toHaveLength(
-        categories.length
+        categories.length,
       );
     });
   });

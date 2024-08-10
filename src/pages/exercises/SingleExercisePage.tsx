@@ -1,12 +1,4 @@
-import { ChevronLeftIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Flex,
-  Heading,
-  IconButton,
-  Text,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { Box, Flex, Heading, Text, useDisclosure } from "@chakra-ui/react";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { useEffect, useRef, useState } from "react";
 import { UseFormSetError } from "react-hook-form";
@@ -21,11 +13,11 @@ import SpinnerComponent from "../../components/UI/SpinnerComponent";
 import ExerciseForm, {
   FormValues,
 } from "../../components/forms/exerciseForm/ExerciseForm";
-import { fetchCategories } from "../../features/exercises/categoriesSlice";
-import { removeExercise } from "../../features/exercises/exercisesSlice";
-import { updateExercise } from "../../features/exercises/exercisesSlice";
 import { Category } from "../../interfaces/category.interface";
 import { Exercise } from "../../interfaces/exercise.interface";
+import { fetchCategories } from "../../store/exercises/categoriesSlice";
+import { removeExercise } from "../../store/exercises/exercisesSlice";
+import { updateExercise } from "../../store/exercises/exercisesSlice";
 
 const SingleExercisePage = () => {
   const navigate = useNavigate();
@@ -115,7 +107,7 @@ const SingleExercisePage = () => {
   };
 
   const handleRemoveExercise = async () => {
-    if (exerciseToDelete) {
+    if (exerciseToDelete && exerciseToDelete.id) {
       await dispatch(removeExercise(exerciseToDelete.id));
       setExerciseToDelete(null);
       onClose();

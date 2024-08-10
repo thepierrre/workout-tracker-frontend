@@ -10,9 +10,9 @@ import SpinnerComponent from "../../components/UI/SpinnerComponent";
 import ExerciseForm, {
   FormValues,
 } from "../../components/forms/exerciseForm/ExerciseForm";
-import { fetchCategories } from "../../features/exercises/categoriesSlice";
-import { addExercise } from "../../features/exercises/exercisesSlice";
 import { Category } from "../../interfaces/category.interface";
+import { fetchCategories } from "../../store/exercises/categoriesSlice";
+import { addExercise } from "../../store/exercises/exercisesSlice";
 
 const NewExercisePage = () => {
   const navigate = useNavigate();

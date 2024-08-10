@@ -1,26 +1,27 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import RoutinesPage from "../RoutinesPage";
-import { Provider } from "react-redux";
 import { ChakraProvider } from "@chakra-ui/react";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
-import "@testing-library/jest-dom";
 import { configureStore } from "@reduxjs/toolkit";
-import workoutSessionsReducer from "../../../features/workout/workoutSessionsSlice";
-import chosenDayReducer from "../../../features/workout/dayInCalendarSlice";
-import activeExerciseInstanceReducer from "../../../features/workout/activeExerciseInstanceSlice";
-import authenticatedUserReducer from "../../../features/auth/authenticatedUserSlice";
-import userSettingsReducer from "../../../features/settings/userSettingsSlice";
-import exercisesReducer from "../../../features/exercises/exercisesSlice";
-import routinesReducer from "../../../features/routines/routinesSlice";
-import categoriesReducer from "../../../features/exercises/categoriesSlice";
-import NewRoutinePage from "../NewRoutinePage";
-import { initializedUser } from "../../../mockData/authHandlers/userHandler";
-import { workoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
-import { routinesForUser } from "../../../mockData/handlers/routinesForUserHandler";
-import { exerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
-import { categories } from "../../../mockData/handlers/categoriesHandler";
+import "@testing-library/jest-dom";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { Provider } from "react-redux";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
+
 import { Routine } from "../../../interfaces/routine.interface";
+import { initializedUser } from "../../../mockData/authHandlers/userHandler";
+import { categories } from "../../../mockData/handlers/categoriesHandler";
+import { exerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
+import { routinesForUser } from "../../../mockData/handlers/routinesForUserHandler";
 import { userSettings } from "../../../mockData/handlers/userSettingsHandler";
+import { workoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
+import authenticatedUserReducer from "../../../store/auth/authenticatedUserSlice";
+import categoriesReducer from "../../../store/exercises/categoriesSlice";
+import exercisesReducer from "../../../store/exercises/exercisesSlice";
+import routinesReducer from "../../../store/routines/routinesSlice";
+import userSettingsReducer from "../../../store/settings/userSettingsSlice";
+import activeExerciseInstanceReducer from "../../../store/workout/activeExerciseInstanceSlice";
+import chosenDayReducer from "../../../store/workout/dayInCalendarSlice";
+import workoutSessionsReducer from "../../../store/workout/workoutSessionsSlice";
+import NewRoutinePage from "../NewRoutinePage";
+import RoutinesPage from "../RoutinesPage";
 
 const store = configureStore({
   reducer: {
@@ -78,7 +79,7 @@ const renderWithProviders = (ui: React.ReactElement) => {
           </Routes>
         </MemoryRouter>
       </Provider>
-    </ChakraProvider>
+    </ChakraProvider>,
   );
 };
 
@@ -95,7 +96,7 @@ describe("RoutinesPage", () => {
         expect(routineElement).toHaveTextContent(routine.name);
 
         const exercisesElement = screen.getByTestId(
-          `routine-exercises-${routine.id}`
+          `routine-exercises-${routine.id}`,
         );
         const expectedExercises = routine.exerciseTypes
           .map((exercise) => exercise?.name.trim())

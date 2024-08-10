@@ -1,12 +1,12 @@
 import { PayloadAction, createSlice, current } from "@reduxjs/toolkit";
 
-import { RoutineExercise } from "../../interfaces/routineExercise.interface";
+import { Exercise } from "../../interfaces/exercise.interface";
 import { WorkingSet } from "../../interfaces/workingSet.interface";
 import { generateRandomString } from "../../util/randomValueGenerator";
 
 export interface LocalRoutineState {
   name: string;
-  routineExercises: RoutineExercise[];
+  routineExercises: Exercise[];
   loading: boolean;
   error: string | null;
 }
@@ -43,7 +43,13 @@ export const localRoutineSlice = createSlice({
     handleRoutineName: (state, action: PayloadAction<string>) => {
       state.name = action.payload;
     },
-    addExerciseLocally: (state, action: PayloadAction<RoutineExercise>) => {
+    updateExercisesInRoutine: (state, action: PayloadAction<Exercise[]>) => {
+      state.routineExercises = action.payload;
+    },
+    addExerciseLocally: (
+      state,
+      action: PayloadAction<Omit<Exercise, "id">>,
+    ) => {
       state.routineExercises.push(action.payload);
     },
     removeExerciseLocally: (state, action: PayloadAction<string>) => {
@@ -60,7 +66,7 @@ export const localRoutineSlice = createSlice({
         (ex) => ex.name === exerciseName,
       );
       if (exercise) {
-        exercise.workingSets.push({
+        exercise.workingSets?.push({
           ...workingSet,
           id: generateRandomString(),
         });
@@ -74,7 +80,7 @@ export const localRoutineSlice = createSlice({
       const exercise = state.routineExercises.find(
         (ex) => ex.name === exerciseName,
       );
-      if (exercise) {
+      if (exercise && exercise.workingSets) {
         const index = exercise.workingSets.findIndex(
           (s) => s.id === workingSet.id,
         );
@@ -92,7 +98,7 @@ export const localRoutineSlice = createSlice({
         (ex) => ex.name === exerciseName,
       );
       if (exercise) {
-        exercise.workingSets = exercise.workingSets.filter(
+        exercise.workingSets = exercise.workingSets?.filter(
           (set) => set.id !== id,
         );
       }
@@ -104,6 +110,7 @@ export const {
   clearLocalRoutine,
   fetchLocalRoutine,
   handleRoutineName,
+  updateExercisesInRoutine,
   addExerciseLocally,
   removeExerciseLocally,
   addSetToExerciseLocally,

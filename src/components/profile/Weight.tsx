@@ -1,8 +1,9 @@
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../app/store";
 import { Button, Flex, Heading } from "@chakra-ui/react";
 import { UserSettings } from "interfaces/userSettings.interface";
-import { updateUserSettings } from "../../features/settings/userSettingsSlice";
+import { useDispatch } from "react-redux";
+
+import { AppDispatch } from "../../app/store";
+import { updateUserSettings } from "../../store/settings/userSettingsSlice";
 
 interface Props {
   userSettings: UserSettings;

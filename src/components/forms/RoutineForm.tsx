@@ -16,8 +16,19 @@ import {
 } from "@chakra-ui/react";
 import EditIcon from "@mui/icons-material/Edit";
 import _ from "lodash";
-import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import {
+  Fragment,
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react";
+import {
+  DragDropContext,
+  Draggable,
+  DropResult,
+  Droppable,
+} from "react-beautiful-dnd";
 import {
   FormProvider,
   Resolver,
@@ -26,18 +37,20 @@ import {
 } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
 import { AppDispatch, RootState } from "../../app/store";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
-import { fetchExercises } from "../../features/exercises/exercisesSlice";
+import useCustomToast from "../../hooks/useCustomToast";
+import { Exercise } from "../../interfaces/exercise.interface";
+import { fetchExercises } from "../../store/exercises/exercisesSlice";
 import {
   addExerciseLocally,
   clearLocalRoutine,
   handleRoutineName,
   removeExerciseLocally,
-} from "../../features/routines/localRoutineSlice";
-import useCustomToast from "../../hooks/useCustomToast";
-import { Exercise } from "../../interfaces/exercise.interface";
+  updateExercisesInRoutine,
+} from "../../store/routines/localRoutineSlice";
 
 export interface FormValues {
   name: string;
@@ -102,6 +115,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
     const navigate = useNavigate();
     const location = useLocation();
     const { addToast, closeToast } = useCustomToast();
+    const [exerciseSearchValue, setExerciseSearchValue] = useState<string>("");
     const [remainingExercises, setRemainingExercises] = useState<Exercise[]>(
       [],
     );
@@ -183,6 +197,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
           if (selectedExercises.length >= 15) {
             return prevSelectedExercises;
           }
+          exercise = { ...exercise, workingSets: [] };
           addExerciseToRoutineLocally(exercise);
           console.log(localRoutineExercises);
           return [...prevSelectedExercises, exercise];
@@ -190,13 +205,22 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
       });
     };
 
+    const doesExerciseNameStartWith = (
+      name: string,
+      searchValue: string,
+    ): boolean => {
+      const searchWords = searchValue.toLowerCase().trim().split(" ");
+      const exerciseName = name.toLowerCase();
+      return searchWords.every((word) => exerciseName.includes(word));
+    };
+
     const handleExerciseFiltering = (
       event: React.ChangeEvent<HTMLInputElement>,
     ) => {
       const value = event.target.value;
-      const filteredExercises = remainingExercises.filter(
-        (exercise: Exercise) =>
-          exercise.name.toLowerCase().startsWith(value.toLowerCase()),
+      setExerciseSearchValue(value);
+      const filteredExercises = remainingExercises.filter((ex: Exercise) =>
+        doesExerciseNameStartWith(ex.name, value),
       );
       if (value) {
         setRemainingExercises(filteredExercises);
@@ -212,6 +236,79 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
       }
     };
 
+    function highlightMatchedText(exerciseName: string): JSX.Element {
+      const searchValue = exerciseSearchValue.toLowerCase().trim();
+
+      if (!searchValue) {
+        // If the search term is empty, return the exercise name with the first letter capitalized
+        return (
+          <>{exerciseName.charAt(0).toUpperCase() + exerciseName.slice(1)}</>
+        );
+      }
+
+      const words = exerciseName.split(" ");
+      const lowerCaseExerciseName = exerciseName.toLowerCase();
+      const lowerCaseWords = lowerCaseExerciseName.split(" ");
+      const highlightedWords: JSX.Element[] = [];
+
+      let remainingSearchValue = searchValue;
+
+      for (let i = 0; i < words.length; i++) {
+        const word = words[i];
+        const lowerCaseWord = lowerCaseWords[i];
+
+        if (
+          remainingSearchValue.length > 0 &&
+          lowerCaseWord.startsWith(remainingSearchValue)
+        ) {
+          // If the remaining search value matches the start of this word
+          highlightedWords.push(
+            <Fragment key={i}>
+              <span style={{ color: "#90cdf4" }}>
+                {i === 0
+                  ? word.charAt(0).toUpperCase() +
+                    word.slice(1, remainingSearchValue.length)
+                  : word.slice(0, remainingSearchValue.length)}
+              </span>
+              {word.slice(remainingSearchValue.length)}{" "}
+            </Fragment>,
+          );
+          remainingSearchValue = ""; // Clear remaining search value after full match
+        } else if (
+          remainingSearchValue.length > 0 &&
+          lowerCaseWord.startsWith(remainingSearchValue.slice(0, word.length))
+        ) {
+          // If the search term spans multiple words, match the start of the word
+          const matchingPart = remainingSearchValue.slice(0, word.length);
+          highlightedWords.push(
+            <Fragment key={i}>
+              <span style={{ color: "#90cdf4" }}>
+                {i === 0
+                  ? word.charAt(0).toUpperCase() +
+                    word.slice(1, matchingPart.length)
+                  : word.slice(0, matchingPart.length)}
+              </span>
+              {word.slice(matchingPart.length)}{" "}
+            </Fragment>,
+          );
+          remainingSearchValue = remainingSearchValue
+            .slice(matchingPart.length)
+            .trim();
+        } else {
+          // No match, return the word as is
+          highlightedWords.push(
+            <Fragment key={i}>
+              {i === 0 ? word.charAt(0).toUpperCase() + word.slice(1) : word}{" "}
+            </Fragment>,
+          );
+        }
+      }
+
+      console.log(highlightedWords);
+
+      return <>{highlightedWords}</>;
+    }
+
     const isExerciseSelected = (exercise: Exercise) =>
       selectedExercises.some((ex) => ex.id === exercise.id);
 
@@ -225,7 +322,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
       return newArr;
     };
 
-    const onDragEnd = (result: any) => {
+    const onDragEnd = (result: DropResult) => {
       const { source, destination } = result;
       if (!destination) {
         return;
@@ -236,11 +333,16 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
         destination.index,
       );
       setSelectedExercises(reorderedItems);
+      dispatch(updateExercisesInRoutine(reorderedItems));
     };
 
     const addExerciseToRoutineLocally = (exercise: Exercise) => {
-      const routineExerciseToAdd = {
+      const routineExerciseToAdd: Omit<Exercise, "id"> = {
         name: exercise.name,
+        temporaryId: uuidv4(),
+        categories: [],
+        equipment: "BODYWEIGHT",
+        isDefault: false,
         workingSets: [],
       };
       dispatch(addExerciseLocally(routineExerciseToAdd));
@@ -261,7 +363,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
       const routineExercise = localRoutineExercises.find(
         (re) => re.name === exercise.name,
       );
-      const workingSetsLength = routineExercise?.workingSets.length;
+      const workingSetsLength = routineExercise?.workingSets?.length;
       return workingSetsLength === 1 ? "1 SET" : `${workingSetsLength} SETS`;
     };
 
@@ -316,12 +418,14 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
                     ref={provided.innerRef}
                     style={{ listStyleType: "none", padding: 0 }}
                   >
-                    {selectedExercises.map((exercise, index) => (
-                      <Flex key={exercise.id}>
-                        <Draggable draggableId={exercise.id} index={index}>
+                    {selectedExercises.map((exercise, index) => {
+                      const id =
+                        exercise.id || exercise.temporaryId || uuidv4();
+                      return (
+                        <Draggable draggableId={id} index={index} key={id}>
                           {(provided, snapshot) => (
                             <li
-                              key={exercise.id}
+                              key={id}
                               ref={provided.innerRef}
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
@@ -369,9 +473,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
                                       }
                                       onClick={(e) => e.stopPropagation()}
                                     >
-                                      {exercise.name
-                                        .charAt(0)
-                                        .toLocaleUpperCase() +
+                                      {exercise.name.charAt(0).toUpperCase() +
                                         exercise.name.slice(1)}
                                     </Checkbox>
                                     <Flex ml={6}>
@@ -408,8 +510,8 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
                             </li>
                           )}
                         </Draggable>
-                      </Flex>
-                    ))}
+                      );
+                    })}
                     {provided.placeholder}
                   </ul>
                 )}
@@ -474,8 +576,9 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
                       fontWeight="bold"
                       fontSize="md"
                     >
-                      {exercise.name.charAt(0).toLocaleUpperCase() +
-                        exercise.name.slice(1)}
+                      {highlightMatchedText(exercise.name)}
+                      {/* {exercise.name.charAt(0).toUpperCase() +
+                        exercise.name.slice(1)} */}
                     </Checkbox>
                     <Text fontWeight="bold" fontSize="xs" mt={2} ml={6}>
                       {exercise.categories.length > 0

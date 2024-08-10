@@ -9,9 +9,9 @@ import Container from "../../components/UI/Container";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
 import RoutineForm from "../../components/forms/RoutineForm";
 import { FormValues } from "../../components/forms/RoutineForm";
-import { addRoutine } from "../../features/routines/routinesSlice";
 import { Exercise } from "../../interfaces/exercise.interface";
 import { WorkingSet } from "../../interfaces/workingSet.interface";
+import { addRoutine } from "../../store/routines/routinesSlice";
 
 const NewRoutinePage = () => {
   const navigate = useNavigate();
@@ -36,7 +36,7 @@ const NewRoutinePage = () => {
   ) => {
     const exercises: Exercise[] = localRoutineExercises.map((ex) => ({
       ...ex,
-      workingSets: ex.workingSets.map((set: WorkingSet) => ({
+      workingSets: ex.workingSets?.map((set: WorkingSet) => ({
         ...set,
         id: undefined,
       })),

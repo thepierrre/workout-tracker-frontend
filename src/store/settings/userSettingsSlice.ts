@@ -1,8 +1,9 @@
-import axiosInstance from "../../util/axiosInstance";
-import axios from "axios";
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
 import { UserSettings } from "interfaces/userSettings.interface";
+
+import axiosInstance from "../../util/axiosInstance";
 
 export interface UserSettingsState {
   userSettings: UserSettings | undefined;
@@ -41,7 +42,7 @@ export const updateUserSettings = createAsyncThunk<
   try {
     const response = await axiosInstance.patch(
       "users/user-settings",
-      userSettings
+      userSettings,
     );
     return response.data;
   } catch (error) {
@@ -72,21 +73,21 @@ const userSettingsSlice = createSlice({
         (state, action: PayloadAction<UserSettings>) => {
           state.loading = false;
           state.userSettings = action.payload;
-        }
+        },
       )
       .addCase(
         fetchUserSettings.rejected,
         (state, action: PayloadAction<string | undefined>) => {
           state.loading = false;
           state.error = action.payload || "Failed to fetch user settings.";
-        }
+        },
       )
       .addCase(
         updateUserSettings.fulfilled,
         (state, action: PayloadAction<UserSettings>) => {
           state.loading = false;
           state.userSettings = action.payload;
-        }
+        },
       )
       .addCase(
         updateUserSettings.rejected,
@@ -95,7 +96,7 @@ const userSettingsSlice = createSlice({
           state.error =
             action.payload ||
             "Failed to update the change threshold for reps and weight.";
-        }
+        },
       );
   },
 });

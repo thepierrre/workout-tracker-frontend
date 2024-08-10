@@ -39,7 +39,8 @@
     "serve": "^14.2.3",
     "typescript-cookie": "^1.0.6",
     "underscore": "^1.13.6",
-    "undici": "^6.19.2"
+    "undici": "^6.19.2",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.24.7",
@@ -59,6 +60,7 @@
     "@types/react-dom": "^18.3.0",
     "@types/redux-mock-store": "^1.0.6",
     "@types/underscore": "^1.11.15",
+    "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "@vitejs/plugin-react": "^4.2.1",

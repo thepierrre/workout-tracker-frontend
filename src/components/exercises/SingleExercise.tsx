@@ -4,11 +4,11 @@ import { useLocation } from "react-router-dom";
 
 import { AppDispatch, RootState } from "../../app/store";
 import DeletionModal from "../../components/UI/DeletionModal";
+import { Exercise } from "../../interfaces/exercise.interface";
 import {
   addExInstance,
   removeExInstance,
-} from "../../features/workout/workoutSessionsSlice";
-import { Exercise } from "../../interfaces/exercise.interface";
+} from "../../store/workout/workoutSessionsSlice";
 import CustomCard from "../UI/CustomCard";
 
 interface Props {
