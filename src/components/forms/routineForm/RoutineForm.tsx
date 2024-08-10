@@ -40,18 +40,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
-import { AppDispatch, RootState } from "../../app/store";
-import SpinnerComponent from "../../components/UI/SpinnerComponent";
-import useCustomToast from "../../hooks/useCustomToast";
-import { Exercise } from "../../interfaces/exercise.interface";
-import { fetchExercises } from "../../store/exercises/exercisesSlice";
+import { AppDispatch, RootState } from "../../../app/store";
+import useCustomToast from "../../../hooks/useCustomToast";
+import { Exercise } from "../../../interfaces/exercise.interface";
+import { fetchExercises } from "../../../store/exercises/exercisesSlice";
 import {
   addExerciseLocally,
   clearLocalRoutine,
   handleRoutineName,
   removeExerciseLocally,
   updateExercisesInRoutine,
-} from "../../store/routines/localRoutineSlice";
+} from "../../../store/routines/localRoutineSlice";
+import SpinnerComponent from "../../UI/SpinnerComponent";
+import DraggableExerciseList from "./DraggableExerciseList";
 
 export interface FormValues {
   name: string;
@@ -322,26 +323,26 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
     const isCheckboxDisabled = (exercise: Exercise) =>
       !isExerciseSelected(exercise) && selectedExercises.length >= 15;
 
-    const arrayMove = (arr: any[], fromIndex: number, toIndex: number) => {
-      const newArr = [...arr];
-      const element = newArr.splice(fromIndex, 1)[0];
-      newArr.splice(toIndex, 0, element);
-      return newArr;
-    };
+    // const arrayMove = (arr: any[], fromIndex: number, toIndex: number) => {
+    //   const newArr = [...arr];
+    //   const element = newArr.splice(fromIndex, 1)[0];
+    //   newArr.splice(toIndex, 0, element);
+    //   return newArr;
+    // };
 
-    const onDragEnd = (result: DropResult) => {
-      const { source, destination } = result;
-      if (!destination) {
-        return;
-      }
-      const reorderedItems = arrayMove(
-        selectedExercises,
-        source.index,
-        destination.index,
-      );
-      setSelectedExercises(reorderedItems);
-      dispatch(updateExercisesInRoutine(reorderedItems));
-    };
+    // const onDragEnd = (result: DropResult) => {
+    //   const { source, destination } = result;
+    //   if (!destination) {
+    //     return;
+    //   }
+    //   const reorderedItems = arrayMove(
+    //     selectedExercises,
+    //     source.index,
+    //     destination.index,
+    //   );
+    //   setSelectedExercises(reorderedItems);
+    //   dispatch(updateExercisesInRoutine(reorderedItems));
+    // };
 
     const addExerciseToRoutineLocally = (exercise: Exercise) => {
       const routineExerciseToAdd: Omit<Exercise, "id"> = {
@@ -357,21 +358,6 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
 
     const removeExerciseFromRoutineLocally = (exercise: Exercise) => {
       dispatch(removeExerciseLocally(exercise.name));
-    };
-
-    const goToEditExercise = (exerciseName: string) => {
-      dispatch(handleRoutineName(getValues("name")));
-      navigate(`/routines/new-routine/edit-exercise/${exerciseName}`, {
-        state: { newRoutine, routineId },
-      });
-    };
-
-    const showExerciseSets = (exercise: Exercise): string => {
-      const routineExercise = localRoutineExercises.find(
-        (re) => re.name === exercise.name,
-      );
-      const workingSetsLength = routineExercise?.workingSets?.length;
-      return workingSetsLength === 1 ? "1 SET" : `${workingSetsLength} SETS`;
     };
 
     if (loadingExercises) {
@@ -417,119 +403,17 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
               {`Selected exercises (${selectedExercises.length})`}
             </Heading>
 
-            <DragDropContext onDragEnd={onDragEnd}>
-              <Droppable droppableId="droppable">
-                {(provided) => (
-                  <ul
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    style={{ listStyleType: "none", padding: 0 }}
-                  >
-                    {selectedExercises.map((exercise, index) => {
-                      const id =
-                        exercise.id || exercise.temporaryId || uuidv4();
-                      return (
-                        <Draggable draggableId={id} index={index} key={id}>
-                          {(provided, snapshot) => (
-                            <li
-                              key={id}
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              style={{
-                                ...provided.draggableProps.style,
-                                borderRadius: "5px",
-                                marginTop: "8px",
-                                color: snapshot.isDragging
-                                  ? "#414141"
-                                  : "white",
-                                backgroundColor: snapshot.isDragging
-                                  ? "lightblue"
-                                  : "#404040",
-                                transform: provided?.draggableProps?.style
-                                  ?.transform
-                                  ? `translate(0px, ${provided.draggableProps.style.transform
-                                      .split(",")[1]
-                                      .trim()
-                                      .replace(")", "")})`
-                                  : "none",
-                              }}
-                            >
-                              <Card
-                                w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
-                                borderRadius={5}
-                                bg="transparent"
-                                color={
-                                  snapshot.isDragging ? "#414141" : "white"
-                                }
-                              >
-                                <Flex gap={2} p={3} direction="row">
-                                  <Flex direction="column" gap={2} w="80%">
-                                    <Checkbox
-                                      isChecked={isExerciseSelected(exercise)}
-                                      isDisabled={isCheckboxDisabled(exercise)}
-                                      onChange={(e) => {
-                                        e.stopPropagation();
-                                        handleCheck(exercise);
-                                      }}
-                                      data-testid="not selected checkbox"
-                                      fontWeight={
-                                        isExerciseSelected(exercise)
-                                          ? "bold"
-                                          : ""
-                                      }
-                                      onClick={(e) => e.stopPropagation()}
-                                    >
-                                      {exercise.name.charAt(0).toUpperCase() +
-                                        exercise.name.slice(1)}
-                                    </Checkbox>
-                                    <Flex ml={6}>
-                                      <Text fontSize="sm">
-                                        {showExerciseSets(exercise)}
-                                      </Text>
-                                    </Flex>
-                                  </Flex>
-
-                                  <Flex justify="end" align="center" w="20%">
-                                    <IconButton
-                                      onClick={() =>
-                                        goToEditExercise(exercise.name)
-                                      }
-                                      color={
-                                        snapshot.isDragging
-                                          ? "#414141"
-                                          : "white"
-                                      }
-                                      variant="ghost"
-                                      sx={{
-                                        _focus: {
-                                          boxShadow: "none",
-                                          bg: "transparent",
-                                        },
-                                        _hover: { bg: "transparent" },
-                                      }}
-                                      aria-label="toggle exercise details"
-                                      icon={<EditIcon />}
-                                    />
-                                  </Flex>
-                                </Flex>
-                              </Card>
-                            </li>
-                          )}
-                        </Draggable>
-                      );
-                    })}
-                    {provided.placeholder}
-                  </ul>
-                )}
-              </Droppable>
-            </DragDropContext>
-
-            {!selectedExercises.length && (
-              <Box mt={2} mb={2}>
-                <Text textAlign="center">No exercises selected.</Text>
-              </Box>
-            )}
+            <DraggableExerciseList
+              selectedExercises={selectedExercises}
+              setSelectedExercises={setSelectedExercises}
+              isExerciseSelected={isExerciseSelected}
+              isCheckboxDisabled={isCheckboxDisabled}
+              localRoutineExercises={localRoutineExercises}
+              routineName={getValues("name")}
+              newRoutine={newRoutine}
+              routineId={routineId}
+              handleCheck={handleCheck}
+            />
 
             <Flex direction="column" w="100%" mt={8}>
               <Heading fontSize="lg" textAlign="center" mb={3}>
