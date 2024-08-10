@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { AppDispatch, RootState } from "../../app/store";
 import Container from "../../components/UI/Container";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
+import MainHeading from "../../components/UI/text/MainHeading.tsx";
 import Statistics from "../../components/profile/Statistics";
 import Weight from "../../components/profile/Weight";
 import WorkoutHistory from "../../components/profile/WorkoutHistory";
@@ -202,9 +203,10 @@ const ProfilePage = () => {
   return (
     <Container>
       <>
-        <Heading fontSize="2xl" mb={5}>
-          Hello, {user?.username || "noname"}
-        </Heading>
+        <MainHeading
+          text={`Hello${user?.username ? `, ${user.username}` : ""}`}
+        />
+
         <WorkoutHistory
           workouts={workouts}
           filteredWorkouts={filteredWorkouts}

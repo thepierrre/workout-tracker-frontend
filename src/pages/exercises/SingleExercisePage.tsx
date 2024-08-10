@@ -10,6 +10,7 @@ import { AppDispatch, RootState } from "../../app/store";
 import Container from "../../components/UI/Container";
 import DeletionModal from "../../components/UI/DeletionModal";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
+import MainHeading from "../../components/UI/text/MainHeading";
 import ExerciseForm, {
   FormValues,
 } from "../../components/forms/exerciseForm/ExerciseForm";
@@ -135,15 +136,7 @@ const SingleExercisePage = () => {
             </Link>
           </Box>
 
-          <Heading
-            w="100%"
-            fontSize="2xl"
-            textAlign="center"
-            color="white"
-            mb={5}
-          >
-            Edit exercise
-          </Heading>
+          <MainHeading text="Edit exercise" />
 
           <Box
             position="absolute"

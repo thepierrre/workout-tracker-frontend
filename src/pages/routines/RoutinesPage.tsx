@@ -16,7 +16,7 @@ import { Link, useLocation } from "react-router-dom";
 import { AppDispatch, RootState } from "../../app/store";
 import Container from "../../components/UI/Container";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
-import WideButton from "../../components/UI/WideButton";
+import WideButton from "../../components/UI/buttons/WideButton";
 import SingleRoutine from "../../components/routines/SingleRoutine";
 import { fetchRoutines } from "../../store/routines/routinesSlice";
 

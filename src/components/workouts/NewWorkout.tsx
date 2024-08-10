@@ -21,7 +21,7 @@ import { Routine } from "../../interfaces/routine.interface";
 import { Workout } from "../../interfaces/workout.interface";
 import { fetchRoutines } from "../../store/routines/routinesSlice";
 import { addWorkout } from "../../store/workout/workoutSessionsSlice";
-import WideButton from "../UI/WideButton";
+import WideButton from "../UI/buttons/WideButton";
 
 const NewWorkout = () => {
   const [workoutAddingInProgress, setWorkoutAddingInProgress] =

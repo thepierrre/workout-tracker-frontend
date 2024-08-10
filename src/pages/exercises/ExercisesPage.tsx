@@ -13,7 +13,7 @@ import { Link, useLocation } from "react-router-dom";
 import { AppDispatch, RootState } from "../../app/store";
 import Container from "../../components/UI/Container";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
-import WideButton from "../../components/UI/WideButton";
+import WideButton from "../../components/UI/buttons/WideButton";
 import SingleExercise from "../../components/exercises/SingleExercise";
 import useCustomToast from "../../hooks/useCustomToast";
 import { Exercise } from "../../interfaces/exercise.interface";

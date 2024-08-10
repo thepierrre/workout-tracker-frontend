@@ -41,18 +41,18 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
 import { AppDispatch, RootState } from "../../../app/store";
+import SecondaryHeading from "../../../components/UI/text/SecondaryHeading";
 import useCustomToast from "../../../hooks/useCustomToast";
 import { Exercise } from "../../../interfaces/exercise.interface";
 import { fetchExercises } from "../../../store/exercises/exercisesSlice";
 import {
   addExerciseLocally,
   clearLocalRoutine,
-  handleRoutineName,
   removeExerciseLocally,
-  updateExercisesInRoutine,
 } from "../../../store/routines/localRoutineSlice";
 import SpinnerComponent from "../../UI/SpinnerComponent";
-import DraggableExerciseList from "./DraggableExerciseList";
+import RemainingExercisesList from "./RemainingExercisesList";
+import RoutineExercisesList from "./RoutineExercisesList";
 
 export interface FormValues {
   name: string;
@@ -185,14 +185,14 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
       setValue("name", name);
     };
 
-    const handleToast = (isExerciseSelected: boolean) => {
-      if (!isExerciseSelected && selectedExercises.length >= 15) {
-        addToast({
-          message: "You can add up to 15 exercises per routine!",
-          bg: "#F56565",
-        });
-      }
-    };
+    // const handleToast = (isExerciseSelected: boolean) => {
+    //   if (!isExerciseSelected && selectedExercises.length >= 15) {
+    //     addToast({
+    //       message: "You can add up to 15 exercises per routine!",
+    //       bg: "#F56565",
+    //     });
+    //   }
+    // };
 
     const handleCheck = (exercise: Exercise) => {
       setSelectedExercises((prevSelectedExercises) => {
@@ -323,27 +323,6 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
     const isCheckboxDisabled = (exercise: Exercise) =>
       !isExerciseSelected(exercise) && selectedExercises.length >= 15;
 
-    // const arrayMove = (arr: any[], fromIndex: number, toIndex: number) => {
-    //   const newArr = [...arr];
-    //   const element = newArr.splice(fromIndex, 1)[0];
-    //   newArr.splice(toIndex, 0, element);
-    //   return newArr;
-    // };
-
-    // const onDragEnd = (result: DropResult) => {
-    //   const { source, destination } = result;
-    //   if (!destination) {
-    //     return;
-    //   }
-    //   const reorderedItems = arrayMove(
-    //     selectedExercises,
-    //     source.index,
-    //     destination.index,
-    //   );
-    //   setSelectedExercises(reorderedItems);
-    //   dispatch(updateExercisesInRoutine(reorderedItems));
-    // };
-
     const addExerciseToRoutineLocally = (exercise: Exercise) => {
       const routineExerciseToAdd: Omit<Exercise, "id"> = {
         name: exercise.name,
@@ -398,27 +377,24 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
             </FormErrorMessage>
           </FormControl>
 
-          <Flex direction="column" w="100%" mt={8}>
-            <Heading fontSize="lg" textAlign="center" mb={3}>
-              {`Selected exercises (${selectedExercises.length})`}
-            </Heading>
-
-            <DraggableExerciseList
+          <Flex direction="column" w="100%">
+            <SecondaryHeading
+              text={`Selected exercises (${selectedExercises.length})`}
+            />
+            <RoutineExercisesList
               selectedExercises={selectedExercises}
-              setSelectedExercises={setSelectedExercises}
-              isExerciseSelected={isExerciseSelected}
-              isCheckboxDisabled={isCheckboxDisabled}
               localRoutineExercises={localRoutineExercises}
               routineName={getValues("name")}
               newRoutine={newRoutine}
               routineId={routineId}
               handleCheck={handleCheck}
+              setSelectedExercises={setSelectedExercises}
+              isExerciseSelected={isExerciseSelected}
+              isCheckboxDisabled={isCheckboxDisabled}
             />
 
-            <Flex direction="column" w="100%" mt={8}>
-              <Heading fontSize="lg" textAlign="center" mb={3}>
-                Add exercises
-              </Heading>
+            <Flex direction="column" w="100%">
+              <SecondaryHeading text="Add exercises" />
               <InputGroup
                 flexDirection="column"
                 alignItems="flex-start"
@@ -445,50 +421,15 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
                 </InputLeftElement>
               </InputGroup>
             </Flex>
-            <Flex direction="column" gap={2} mt={5} mb={2}>
-              {remainingExercises.map((exercise) => (
-                <Flex
-                  key={exercise.id}
-                  onClick={() => handleToast(isExerciseSelected(exercise))}
-                  m={0}
-                >
-                  <Card
-                    bg="#404040"
-                    w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
-                    borderRadius={5}
-                    p={[6, 2, 6, 2]}
-                    color="white"
-                  >
-                    <Checkbox
-                      isChecked={isExerciseSelected(exercise)}
-                      isDisabled={isCheckboxDisabled(exercise)}
-                      onChange={() => handleCheck(exercise)}
-                      data-testid="not selected checkbox"
-                      fontWeight="bold"
-                      fontSize="md"
-                    >
-                      {highlightMatchedText(exercise.name)}
-                    </Checkbox>
-                    <Text fontWeight="bold" fontSize="xs" mt={2} ml={6}>
-                      {exercise.categories.length > 0
-                        ? exercise.categories
-                            .map((category) => category?.name)
-                            .join(" | ")
-                            .toUpperCase()
-                        : `0 categories`.toUpperCase()}
-                    </Text>
-                  </Card>
-                </Flex>
-              ))}
-            </Flex>
 
-            {!remainingExercises.length && (
-              <Flex direction="column">
-                <Text textAlign="center" mt={0} mb={2}>
-                  No exercises.
-                </Text>
-              </Flex>
-            )}
+            <RemainingExercisesList
+              selectedExercises={selectedExercises}
+              remainingExercises={remainingExercises}
+              handleCheck={handleCheck}
+              isExerciseSelected={isExerciseSelected}
+              isCheckboxDisabled={isCheckboxDisabled}
+              highlightMatchedText={highlightMatchedText}
+            />
           </Flex>
         </form>
       </FormProvider>

@@ -19,6 +19,7 @@ import { AppDispatch, RootState } from "../../app/store";
 import Container from "../../components/UI/Container";
 import DeletionModal from "../../components/UI/DeletionModal";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
+import MainHeading from "../../components/UI/text/MainHeading";
 import { FormValues } from "../../components/forms/routineForm/RoutineForm";
 import RoutineForm from "../../components/forms/routineForm/RoutineForm";
 import { Exercise } from "../../interfaces/exercise.interface";
@@ -43,10 +44,6 @@ const SingleRoutinePage = () => {
 
   const { routineExercises: localRoutineExercises } = useSelector(
     (state: RootState) => state.localRoutine,
-  );
-
-  const { exercises, loading: loadingExercises } = useSelector(
-    (state: RootState) => state.exercises,
   );
 
   const { user, loading: loadingUser } = useSelector(
@@ -138,18 +135,6 @@ const SingleRoutinePage = () => {
     }
   };
 
-  const exercisesFromRoutineExercises: Exercise[] =
-    currentRoutine?.routineExercises
-      ?.map((re: Exercise) => exercises.find((ex) => ex.name === re.name))
-      .filter((ex): ex is Exercise => ex !== undefined)
-      .map((ex: Exercise) => ({
-        ...ex,
-        id: ex.id,
-        name: ex.name,
-        categories: ex.categories,
-        isDefault: ex.isDefault,
-      })) || [];
-
   if (loadingRoutines || loadingUser) {
     return <SpinnerComponent />;
   }
@@ -170,15 +155,7 @@ const SingleRoutinePage = () => {
             </Link>
           </Box>
 
-          <Heading
-            w="100%"
-            fontSize="2xl"
-            textAlign="center"
-            color="white"
-            mb={5}
-          >
-            Edit routine
-          </Heading>
+          <MainHeading text="Edit routine" />
 
           <Box
             position="absolute"

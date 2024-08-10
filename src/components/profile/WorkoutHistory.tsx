@@ -1,8 +1,10 @@
-import { Link } from "react-router-dom";
-import { Heading, Flex, Select, Card, Text } from "@chakra-ui/react";
-import { Workout } from "../../interfaces/workout.interface";
-import React from "react";
+import { Card, Flex, Heading, Select, Text } from "@chakra-ui/react";
 import { format, getDate, getYear } from "date-fns";
+import React from "react";
+import { Link } from "react-router-dom";
+
+import SecondaryHeading from "../../components/UI/text/SecondaryHeading";
+import { Workout } from "../../interfaces/workout.interface";
 
 interface Props {
   workouts: Workout[];
@@ -26,9 +28,7 @@ const WorkoutHistory: React.FC<Props> = ({
 }) => {
   return (
     <>
-      <Heading fontSize="lg" mb={4}>
-        Workout history
-      </Heading>
+      <SecondaryHeading text="Workout history" />
       <Flex gap={2} w={["95vw", "85vw", "70vw", "50vw", "40vw"]} mb={3}>
         <Select
           placeholder="Day"
@@ -81,7 +81,7 @@ const WorkoutHistory: React.FC<Props> = ({
                 <Text fontSize="sm">
                   {`${getDate(workout.creationDate)} ${format(
                     workout.creationDate,
-                    "LLLL"
+                    "LLLL",
                   ).toUpperCase()}, ${getYear(workout.creationDate)}`}
                 </Text>
                 <Text fontWeight="bold">{workout.routineName}</Text>

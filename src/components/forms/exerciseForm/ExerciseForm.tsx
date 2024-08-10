@@ -16,6 +16,7 @@ import { UseFormSetError } from "react-hook-form";
 import { useSelector } from "react-redux";
 
 import { RootState } from "../../../app/store";
+import SecondaryHeading from "../../../components/UI/text/SecondaryHeading";
 import { Category } from "../../../interfaces/category.interface";
 import SpinnerComponent from "../../UI/SpinnerComponent";
 import Categories from "./Categories";
@@ -182,21 +183,14 @@ const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
             </Select>
           </FormControl>
 
-          <Flex
-            direction="column"
-            align="center"
-            justify="center"
-            w="100%"
-            mt={8}
-          >
+          <Flex direction="column" align="center" justify="center" w="100%">
             <Flex
               direction="column"
-              align="flex-start"
               w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
             >
-              <Flex justify="center" w="100%" mb={5}>
-                <Heading fontSize="lg">{`Selected muscles (${selectedCategories.length}/5)`}</Heading>
-              </Flex>
+              <SecondaryHeading
+                text={`Selected muscles (${selectedCategories.length}/5)`}
+              />
 
               <InputGroup
                 flexDirection="column"

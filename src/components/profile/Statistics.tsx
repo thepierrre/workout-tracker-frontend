@@ -1,9 +1,11 @@
-import { Flex, Heading, Card, Text } from "@chakra-ui/react";
-import { Workout } from "../../interfaces/workout.interface";
-import { Routine } from "../../interfaces/routine.interface";
-import { Exercise } from "../../interfaces/exercise.interface";
-import { Link } from "react-router-dom";
+import { Card, Flex, Heading, Text } from "@chakra-ui/react";
 import React from "react";
+import { Link } from "react-router-dom";
+
+import SecondaryHeading from "../../components/UI/text/SecondaryHeading";
+import { Exercise } from "../../interfaces/exercise.interface";
+import { Routine } from "../../interfaces/routine.interface";
+import { Workout } from "../../interfaces/workout.interface";
 
 interface Props {
   workouts: Workout[];
@@ -14,9 +16,7 @@ interface Props {
 const Statistics: React.FC<Props> = ({ workouts, routines, exercises }) => {
   return (
     <Flex direction="column" align="center" gap={2} mb={3}>
-      <Heading fontSize="lg" mb={1}>
-        Statistics
-      </Heading>
+      <SecondaryHeading text="Statistics" />
       <Link to="/workouts">
         <Card
           bg="#404040"

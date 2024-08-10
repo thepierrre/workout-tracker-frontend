@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { AppDispatch, RootState } from "../../app/store";
 import Container from "../../components/UI/Container";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
+import MainHeading from "../../components/UI/text/MainHeading";
 import ExerciseForm, {
   FormValues,
 } from "../../components/forms/exerciseForm/ExerciseForm";
@@ -80,15 +81,7 @@ const NewExercisePage = () => {
           </Link>
         </Box>
 
-        <Heading
-          w="100%"
-          fontSize="2xl"
-          textAlign="center"
-          color="white"
-          mb={5}
-        >
-          New exercise
-        </Heading>
+        <MainHeading text="New exercise" />
 
         <Box
           position="absolute"

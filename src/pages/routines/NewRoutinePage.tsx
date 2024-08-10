@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { AppDispatch, RootState } from "../../app/store";
 import Container from "../../components/UI/Container";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
+import MainHeading from "../../components/UI/text/MainHeading";
 import RoutineForm from "../../components/forms/routineForm/RoutineForm";
 import { FormValues } from "../../components/forms/routineForm/RoutineForm";
 import { Exercise } from "../../interfaces/exercise.interface";
@@ -80,15 +81,7 @@ const NewRoutinePage = () => {
           </Link>
         </Box>
 
-        <Heading
-          w="100%"
-          fontSize="2xl"
-          textAlign="center"
-          color="white"
-          mb={5}
-        >
-          New routine
-        </Heading>
+        <MainHeading text="New routine" />
 
         <Box
           position="absolute"

@@ -16,7 +16,6 @@ import { Resolver, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 
 import { AppDispatch } from "../../app/store";
-import NarrowButton from "../../components/UI/NarrowButton";
 import Stopwatch from "../../components/workouts/Stopwatch";
 import useCustomToast from "../../hooks/useCustomToast";
 import { ExerciseInstance } from "../../interfaces/exerciseInstance.interface";
@@ -33,6 +32,7 @@ import {
   updateSet,
 } from "../../store/workout/workoutSessionsSlice";
 import { convertLbsToKgs } from "../../util/weightUnitConverting";
+import NarrowButton from "../UI/buttons/NarrowButton";
 
 interface FormValues {
   repsValue: string | null;

@@ -15,7 +15,7 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
 import Container from "../../components/UI/Container";
-import WideButton from "../../components/UI/WideButton";
+import WideButton from "../../components/UI/buttons/WideButton.tsx";
 import Welcome from "../../components/profile/Welcome";
 import { setUser } from "../../store/auth/authenticatedUserSlice";
 import axiosInstance from "../../util/axiosInstance.ts";

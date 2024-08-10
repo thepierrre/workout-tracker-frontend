@@ -2,9 +2,9 @@ import { Flex, Text } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 
 import { AppDispatch } from "../../app/store";
-import SmallButton from "../../components/UI/SmallButton";
 import { UserSettings } from "../../interfaces/userSettings.interface";
 import { updateUserSettings } from "../../store/settings/userSettingsSlice";
+import SmallButton from "../UI/buttons/SmallButton";
 
 interface Props {
   userSettings?: UserSettings;

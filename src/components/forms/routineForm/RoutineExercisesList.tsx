@@ -19,31 +19,31 @@ import {
 
 interface Props {
   selectedExercises: Exercise[];
-  setSelectedExercises: React.Dispatch<React.SetStateAction<Exercise[]>>;
-  isExerciseSelected: (exercise: Exercise) => boolean;
-  isCheckboxDisabled: (exercise: Exercise) => boolean;
   localRoutineExercises: Exercise[];
   routineName: string;
   newRoutine: boolean;
   routineId: string | undefined;
   handleCheck: (exercise: Exercise) => void;
+  setSelectedExercises: React.Dispatch<React.SetStateAction<Exercise[]>>;
+  isExerciseSelected: (exercise: Exercise) => boolean;
+  isCheckboxDisabled: (exercise: Exercise) => boolean;
 }
 
-const DraggableExerciseList: React.FC<Props> = ({
+const RoutineExercisesList: React.FC<Props> = ({
   selectedExercises,
-  setSelectedExercises,
-  isExerciseSelected,
-  isCheckboxDisabled,
   localRoutineExercises,
   routineName,
   newRoutine,
   routineId,
   handleCheck,
+  setSelectedExercises,
+  isExerciseSelected,
+  isCheckboxDisabled,
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const arrayMove = (arr: any[], fromIndex: number, toIndex: number) => {
+  const moveArray = (arr: any[], fromIndex: number, toIndex: number) => {
     const newArr = [...arr];
     const element = newArr.splice(fromIndex, 1)[0];
     newArr.splice(toIndex, 0, element);
@@ -55,7 +55,7 @@ const DraggableExerciseList: React.FC<Props> = ({
     if (!destination) {
       return;
     }
-    const reorderedItems = arrayMove(
+    const reorderedItems = moveArray(
       selectedExercises,
       source.index,
       destination.index,
@@ -86,7 +86,7 @@ const DraggableExerciseList: React.FC<Props> = ({
           <ul
             {...provided.droppableProps}
             ref={provided.innerRef}
-            style={{ listStyleType: "none", padding: 0 }}
+            style={{ listStyleType: "none" }}
           >
             {selectedExercises.map((exercise, index) => {
               const id = exercise.id || exercise.temporaryId || uuidv4();
@@ -174,10 +174,10 @@ const DraggableExerciseList: React.FC<Props> = ({
       </Droppable>
     </DragDropContext>
   ) : (
-    <Box mt={2} mb={2}>
+    <Box>
       <Text textAlign="center">No exercises selected.</Text>
     </Box>
   );
 };
 
-export default DraggableExerciseList;
+export default RoutineExercisesList;

@@ -1,22 +1,23 @@
-import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
-import WideButton from "../../components/UI/WideButton";
-import Container from "../../components/UI/Container";
 import {
-  Heading,
   Flex,
-  Text,
   FormControl,
-  Input,
   FormErrorMessage,
-  useToast,
-  ToastId,
+  Heading,
+  Input,
   Spinner,
+  Text,
+  ToastId,
+  useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useForm, SubmitHandler, Resolver } from "react-hook-form";
-import axiosInstance from "../../util/axiosInstance.ts";
+import { useRef, useState } from "react";
+import { Resolver, SubmitHandler, useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
+
+import Container from "../../components/UI/Container";
+import WideButton from "../../components/UI/buttons/WideButton.tsx";
 import Welcome from "../../components/profile/Welcome";
+import axiosInstance from "../../util/axiosInstance.ts";
 
 type FormValues = {
   username: string;

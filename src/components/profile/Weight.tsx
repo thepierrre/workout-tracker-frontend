@@ -1,8 +1,9 @@
-import { Button, Flex, Heading } from "@chakra-ui/react";
+import { Button, Flex } from "@chakra-ui/react";
 import { UserSettings } from "interfaces/userSettings.interface";
 import { useDispatch } from "react-redux";
 
 import { AppDispatch } from "../../app/store";
+import SecondaryHeading from "../../components/UI/text/SecondaryHeading";
 import { updateUserSettings } from "../../store/settings/userSettingsSlice";
 
 interface Props {
@@ -25,9 +26,7 @@ const Weight: React.FC<Props> = ({ userSettings }) => {
 
   return (
     <Flex direction="column" gap={2} align="center" mb={3}>
-      <Heading fontSize="lg" mb={1}>
-        Weight units
-      </Heading>
+      <SecondaryHeading text="Weight units" />
       <Flex gap={3}>
         <Button
           bg={userSettings.weightUnit === "kgs" ? "lightblue" : "#404040"}
