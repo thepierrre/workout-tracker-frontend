@@ -21,6 +21,7 @@ import {
   forwardRef,
   useEffect,
   useImperativeHandle,
+  useRef,
   useState,
 } from "react";
 import {
@@ -115,6 +116,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
     const navigate = useNavigate();
     const location = useLocation();
     const { addToast, closeToast } = useCustomToast();
+    const initialRemainingExercises = useRef<Exercise[]>([]);
     const [exerciseSearchValue, setExerciseSearchValue] = useState<string>("");
     const [remainingExercises, setRemainingExercises] = useState<Exercise[]>(
       [],
@@ -154,7 +156,6 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
         setValue("name", localRoutineName);
         setSelectedExercises(localRoutineExercises);
       }
-      console.log(localRoutineExercises);
     }, [location.pathname]);
 
     useEffect(() => {
@@ -165,6 +166,10 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
               (selectedEx) => selectedEx.name === ex.name,
             ),
         ),
+      );
+      initialRemainingExercises.current = exercises.filter(
+        (ex) =>
+          !selectedExercises.some((selectedEx) => selectedEx.name === ex.name),
       );
     }, [exercises, selectedExercises]);
 
@@ -199,19 +204,31 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
           }
           exercise = { ...exercise, workingSets: [] };
           addExerciseToRoutineLocally(exercise);
-          console.log(localRoutineExercises);
           return [...prevSelectedExercises, exercise];
         }
       });
     };
 
-    const doesExerciseNameStartWith = (
+    const doesSequenceExistInExerciseName = (
       name: string,
       searchValue: string,
     ): boolean => {
       const searchWords = searchValue.toLowerCase().trim().split(" ");
-      const exerciseName = name.toLowerCase();
-      return searchWords.every((word) => exerciseName.includes(word));
+      const exerciseWords = name.toLowerCase().trim().split(" ");
+
+      let searchIndex = 0;
+
+      for (const exerciseWord of exerciseWords) {
+        if (exerciseWord.startsWith(searchWords[searchIndex])) {
+          searchIndex++;
+        }
+
+        if (searchIndex === searchWords.length) {
+          return true;
+        }
+      }
+
+      return false;
     };
 
     const handleExerciseFiltering = (
@@ -219,28 +236,19 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
     ) => {
       const value = event.target.value;
       setExerciseSearchValue(value);
-      const filteredExercises = remainingExercises.filter((ex: Exercise) =>
-        doesExerciseNameStartWith(ex.name, value),
+
+      const filteredExercises = initialRemainingExercises.current.filter(
+        (ex: Exercise) => doesSequenceExistInExerciseName(ex.name, value),
       );
-      if (value) {
-        setRemainingExercises(filteredExercises);
-      } else {
-        setRemainingExercises(
-          exercises.filter(
-            (ex) =>
-              !selectedExercises.some(
-                (selectedEx) => selectedEx.name === ex.name,
-              ),
-          ),
-        );
-      }
+
+      setRemainingExercises(filteredExercises);
     };
 
     function highlightMatchedText(exerciseName: string): JSX.Element {
       const searchValue = exerciseSearchValue.toLowerCase().trim();
 
       if (!searchValue) {
-        // If the search term is empty, return the exercise name with the first letter capitalized
+        // If the search term is empty, return the exercise name with the first letter capitalized.
         return (
           <>{exerciseName.charAt(0).toUpperCase() + exerciseName.slice(1)}</>
         );
@@ -261,7 +269,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
           remainingSearchValue.length > 0 &&
           lowerCaseWord.startsWith(remainingSearchValue)
         ) {
-          // If the remaining search value matches the start of this word
+          // If the remaining search value matches the start of this word.
           highlightedWords.push(
             <Fragment key={i}>
               <span style={{ color: "#90cdf4" }}>
@@ -273,12 +281,13 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
               {word.slice(remainingSearchValue.length)}{" "}
             </Fragment>,
           );
-          remainingSearchValue = ""; // Clear remaining search value after full match
+          // Clear remaining search value after full match.
+          remainingSearchValue = "";
         } else if (
           remainingSearchValue.length > 0 &&
           lowerCaseWord.startsWith(remainingSearchValue.slice(0, word.length))
         ) {
-          // If the search term spans multiple words, match the start of the word
+          // If the search term spans multiple words, match the start of the word.
           const matchingPart = remainingSearchValue.slice(0, word.length);
           highlightedWords.push(
             <Fragment key={i}>
@@ -295,7 +304,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
             .slice(matchingPart.length)
             .trim();
         } else {
-          // No match, return the word as is
+          // If there's no match, return the word as it is (capitalized).
           highlightedWords.push(
             <Fragment key={i}>
               {i === 0 ? word.charAt(0).toUpperCase() + word.slice(1) : word}{" "}
@@ -303,8 +312,6 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
           );
         }
       }
-
-      console.log(highlightedWords);
 
       return <>{highlightedWords}</>;
     }
@@ -547,7 +554,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
                   }}
                   _placeholder={{ color: "#B3B3B3" }}
                   placeholder="Search by name"
-                  onChange={(event) => handleExerciseFiltering(event)}
+                  onChange={handleExerciseFiltering}
                 />
                 <InputLeftElement>
                   <SearchIcon />
@@ -577,8 +584,6 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
                       fontSize="md"
                     >
                       {highlightMatchedText(exercise.name)}
-                      {/* {exercise.name.charAt(0).toUpperCase() +
-                        exercise.name.slice(1)} */}
                     </Checkbox>
                     <Text fontWeight="bold" fontSize="xs" mt={2} ml={6}>
                       {exercise.categories.length > 0
