@@ -7,8 +7,6 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
-  ModalHeader,
   ModalOverlay,
   Text,
   useDisclosure,
@@ -144,7 +142,10 @@ const Datepicker = () => {
         <ModalOverlay />
         <ModalContent top={24}>
           <ModalBody>
-            <Calendar onClickDay={(value) => console.log(value)} />
+            <Calendar
+              onClickDay={(value) => console.log(value)}
+              minDetail="year"
+            />
           </ModalBody>
           <ModalCloseButton />
         </ModalContent>

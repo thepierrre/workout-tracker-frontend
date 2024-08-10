@@ -112,6 +112,7 @@ const ExercisesPage = () => {
       <Flex w={["95vw", "85vw", "70vw", "50vw", "40vw"]}>
         <InputGroup mt={3}>
           <Input
+            id="search-exercises"
             w="95vw"
             bg="#404040"
             color="white"

@@ -115,6 +115,7 @@ const RoutinesPage = () => {
       <Flex>
         <InputGroup mt={3}>
           <Input
+            id="search-routines"
             w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
             bg="#404040"
             color="white"
@@ -126,7 +127,7 @@ const RoutinesPage = () => {
             _placeholder={{
               color: "#B3B3B3",
             }}
-            placeholder="Search routines"
+            placeholder="Search for routines"
             onChange={(event) => handleRoutineFiltering(event)}
           />
           <InputLeftElement>

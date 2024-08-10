@@ -23,7 +23,6 @@ import {
   Resolver,
   UseFormSetError,
   useForm,
-  useFormContext,
 } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -91,6 +90,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
       setError,
       setValue,
       getValues,
+      register,
       formState: { errors },
     } = methods;
 
@@ -102,11 +102,9 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
     const navigate = useNavigate();
     const location = useLocation();
     const { addToast, closeToast } = useCustomToast();
-    const [searchedExercises, setSearchedExercises] = useState<string>("");
     const [remainingExercises, setRemainingExercises] = useState<Exercise[]>(
       [],
     );
-    const [filteredExercises, setFilteredExercises] = useState<Exercise[]>([]);
     const [selectedExercises, setSelectedExercises] = useState<Exercise[]>(
       initialSelectedExercises,
     );
@@ -128,19 +126,21 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
 
     useEffect(() => {
       if (!location.state) {
+        dispatch(clearLocalRoutine());
         initialSelectedExercises.forEach((ex) => {
           dispatch(addExerciseLocally(ex));
         });
         setValue("name", initialName);
         setSelectedExercises(initialSelectedExercises);
       }
-    }, [location.state, initialName]);
+    }, [location.state]);
 
     useEffect(() => {
       if (location.state && location.state.loadLocalRoutine === true) {
         setValue("name", localRoutineName);
         setSelectedExercises(localRoutineExercises);
       }
+      console.log(localRoutineExercises);
     }, [location.pathname]);
 
     useEffect(() => {
@@ -163,28 +163,6 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const name = event.target.value;
       setValue("name", name);
-    };
-
-    const NestedInput = () => {
-      const { register } = useFormContext();
-      return (
-        <Input
-          {...register("name")}
-          w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
-          bg="#404040"
-          borderWidth="1px"
-          borderColor="#CBD5E0"
-          placeholder="Enter a name"
-          onChange={(e) => handleChange(e)}
-          _placeholder={{ color: "#B3B3B3" }}
-          _focus={{
-            boxShadow: "none",
-            borderWidth: "2px",
-            borderColor: errors.name ? "#E53E3E" : "#3182CE",
-          }}
-          defaultValue={initialName}
-        />
-      );
     };
 
     const handleToast = (isExerciseSelected: boolean) => {
@@ -212,25 +190,27 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
       });
     };
 
-    // const remainingExercises = exercises.filter(
-    //   (ex) => !selectedExercises.some((selectedEx) => selectedEx.id === ex.id),
-    // );
-
     const handleExerciseFiltering = (
       event: React.ChangeEvent<HTMLInputElement>,
     ) => {
       const value = event.target.value;
-      setSearchedExercises(value);
+      const filteredExercises = remainingExercises.filter(
+        (exercise: Exercise) =>
+          exercise.name.toLowerCase().startsWith(value.toLowerCase()),
+      );
+      if (value) {
+        setRemainingExercises(filteredExercises);
+      } else {
+        setRemainingExercises(
+          exercises.filter(
+            (ex) =>
+              !selectedExercises.some(
+                (selectedEx) => selectedEx.name === ex.name,
+              ),
+          ),
+        );
+      }
     };
-
-    // const filteredExercises = remainingExercises.filter((exercise: Exercise) =>
-    //   exercise.name.toLowerCase().startsWith(searchedExercises.toLowerCase()),
-    // );
-
-    // const remainingFilteredExercises = filteredExercises.filter(
-    //   (exercise: Exercise) =>
-    //     !selectedExercises.some((ex) => ex.id === exercise.id),
-    // );
 
     const isExerciseSelected = (exercise: Exercise) =>
       selectedExercises.some((ex) => ex.id === exercise.id);
@@ -298,8 +278,26 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
             isInvalid={!!errors.name}
             width={["95vw", "85vw", "70vw", "50vw", "40vw"]}
           >
-            <FormLabel fontSize="sm">Routine name</FormLabel>
-            <NestedInput />
+            <FormLabel htmlFor="routine-name" fontSize="sm">
+              Routine name
+            </FormLabel>
+            <Input
+              id="routine-name"
+              {...register("name")}
+              w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+              bg="#404040"
+              borderWidth="1px"
+              borderColor="#CBD5E0"
+              placeholder="Enter a name"
+              onChange={(e) => handleChange(e)}
+              _placeholder={{ color: "#B3B3B3" }}
+              _focus={{
+                boxShadow: "none",
+                borderWidth: "2px",
+                borderColor: errors.name ? "#E53E3E" : "#3182CE",
+              }}
+              defaultValue={initialName}
+            />
             <FormErrorMessage>
               {errors.name && errors.name.message}
             </FormErrorMessage>
@@ -309,6 +307,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
             <Heading fontSize="lg" textAlign="center" mb={3}>
               {`Selected exercises (${selectedExercises.length})`}
             </Heading>
+
             <DragDropContext onDragEnd={onDragEnd}>
               <Droppable droppableId="droppable">
                 {(provided) => (
@@ -322,6 +321,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
                         <Draggable draggableId={exercise.id} index={index}>
                           {(provided, snapshot) => (
                             <li
+                              key={exercise.id}
                               ref={provided.innerRef}
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
@@ -329,20 +329,32 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
                                 ...provided.draggableProps.style,
                                 borderRadius: "5px",
                                 marginTop: "8px",
+                                color: snapshot.isDragging
+                                  ? "#414141"
+                                  : "white",
                                 backgroundColor: snapshot.isDragging
-                                  ? "transparent"
+                                  ? "lightblue"
                                   : "#404040",
+                                transform: provided?.draggableProps?.style
+                                  ?.transform
+                                  ? `translate(0px, ${provided.draggableProps.style.transform
+                                      .split(",")[1]
+                                      .trim()
+                                      .replace(")", "")})`
+                                  : "none",
                               }}
                             >
                               <Card
-                                bg="#404040"
                                 w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
                                 borderRadius={5}
+                                bg="transparent"
+                                color={
+                                  snapshot.isDragging ? "#414141" : "white"
+                                }
                               >
                                 <Flex gap={2} p={3} direction="row">
                                   <Flex direction="column" gap={2} w="80%">
                                     <Checkbox
-                                      color="white"
                                       isChecked={isExerciseSelected(exercise)}
                                       isDisabled={isCheckboxDisabled(exercise)}
                                       onChange={(e) => {
@@ -363,7 +375,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
                                         exercise.name.slice(1)}
                                     </Checkbox>
                                     <Flex ml={6}>
-                                      <Text textColor="#E2E8F0" fontSize="sm">
+                                      <Text fontSize="sm">
                                         {showExerciseSets(exercise)}
                                       </Text>
                                     </Flex>
@@ -374,8 +386,12 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
                                       onClick={() =>
                                         goToEditExercise(exercise.name)
                                       }
+                                      color={
+                                        snapshot.isDragging
+                                          ? "#414141"
+                                          : "white"
+                                      }
                                       variant="ghost"
-                                      color="#E2E8F0"
                                       sx={{
                                         _focus: {
                                           boxShadow: "none",
@@ -416,6 +432,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
                 width={["95vw", "85vw", "70vw", "50vw", "40vw"]}
               >
                 <Input
+                  id="search-exercises"
                   w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
                   bg="#404040"
                   color="white"

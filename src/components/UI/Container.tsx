@@ -13,7 +13,6 @@ const Container: React.FC<ContainerProps> = (props) => {
       color="white"
       direction="column"
       padding={2}
-      mt={5}
       {...props}
     >
       {props.children}

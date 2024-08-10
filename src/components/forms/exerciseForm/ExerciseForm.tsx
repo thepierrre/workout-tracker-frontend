@@ -55,6 +55,16 @@ interface ExerciseFormProps {
   serverError: string | null;
 }
 
+const equipmentOptions = [
+  { value: "BODYWEIGHT", label: "Bodyweight" },
+  { value: "BARBELL", label: "Barbell" },
+  { value: "DUMBBELLS", label: "Dumbbells" },
+  { value: "WEIGHT_PLATES", label: "Weight plates" },
+  { value: "KETTLEBELLS", label: "Kettlebells" },
+  { value: "MACHINE", label: "Machine" },
+  { value: "BAR", label: "Bar" },
+];
+
 const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
   (
     {
@@ -139,8 +149,11 @@ const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
             alignItems="flex-start"
             width={["95vw", "85vw", "70vw", "50vw", "40vw"]}
           >
-            <FormLabel fontSize="sm">Exercise name</FormLabel>
+            <FormLabel fontSize="sm" htmlFor="exercise-name">
+              Exercise name
+            </FormLabel>
             <Input
+              id="exercise-name"
               {...register("name")}
               w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
               bg="#404040"
@@ -157,17 +170,15 @@ const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
             <FormErrorMessage>
               {errors.name && errors.name.message}
             </FormErrorMessage>
-            <FormLabel fontSize="sm" mt={4}>
+            <FormLabel fontSize="sm" mt={4} htmlFor="exercise-type">
               Equipment
             </FormLabel>
-            <Select {...register("equipment")} bg="#404040">
-              <option value="BODYWEIGHT">Bodyweight</option>
-              <option value="BARBELL">Barbell</option>
-              <option value="DUMBBELLS">Dumbbells</option>
-              <option value="WEIGHT_PLATES">Weight plates</option>
-              <option value="KETTLEBELLS">Kettlebells</option>
-              <option value="MACHINE">Machine</option>
-              <option value="BAR">Bar</option>
+            <Select id="exercise-type" {...register("equipment")} bg="#404040">
+              {equipmentOptions.map((option, index) => (
+                <option key={index} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
             </Select>
           </FormControl>
 
@@ -193,6 +204,7 @@ const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
                 width={["95vw", "85vw", "70vw", "50vw", "40vw"]}
               >
                 <Input
+                  id="search-muscle-groups"
                   w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
                   bg="#404040"
                   borderWidth="1px"
