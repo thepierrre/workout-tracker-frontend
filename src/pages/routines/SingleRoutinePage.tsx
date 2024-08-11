@@ -17,6 +17,7 @@ import RoutineForm from "../../components/forms/routineForm/RoutineForm";
 import { Exercise } from "../../interfaces/exercise.interface";
 import { Routine } from "../../interfaces/routine.interface";
 import { WorkingSet } from "../../interfaces/workingSet.interface";
+import PageNotFound from "../../pages/PageNotFound";
 import { fetchRoutines } from "../../store/routines/routinesSlice";
 import {
   removeRoutine,
@@ -53,7 +54,7 @@ const SingleRoutinePage = () => {
   );
 
   if (!currentRoutine) {
-    return <Text>Routine not found.</Text>;
+    return <PageNotFound />;
   }
 
   if (!user) {

@@ -9,11 +9,13 @@ const PageNotFound = () => {
     <Container>
       <MainHeading text="This page took a rest day!" />
       <Image w="200px" src={notfound} />
-      <Text fontSize="xl" mb={4}>
-        Even pages need a break.
+      <Text fontSize="xl" mb={4} textAlign="center">
+        Looks like this page doesn't exist.
       </Text>
       <Text fontSize="xl" textAlign="center">
-        Let's get you back to a page <br /> that's ready to work!
+        Let's get you back to a page
+        <br />
+        that's ready to work!
       </Text>
     </Container>
   );

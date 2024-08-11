@@ -13,6 +13,7 @@ import ThresholdForm from "../../components/forms/ThresholdForm";
 import ExWorkingSet from "../../components/shared/ExWorkingSet";
 import ThresholdHandler from "../../components/workouts/ThresholdHandler";
 import { WorkingSet } from "../../interfaces/workingSet.interface";
+import PageNotFound from "../../pages/PageNotFound";
 import { fetchUserSettings } from "../../store/settings/userSettingsSlice";
 import { fetchWorkouts } from "../../store/workout/workoutSessionsSlice";
 
@@ -36,8 +37,8 @@ const WorkoutExerciseInstancePage = () => {
     (state: RootState) => state.userSettings,
   );
 
-  const wrk = workouts.find((workout) => workout.id === workoutId);
-  const exerciseInstance = wrk?.exerciseInstances.find(
+  const workout = workouts.find((workout) => workout.id === workoutId);
+  const exerciseInstance = workout?.exerciseInstances.find(
     (exercise) => exercise.id === exerciseInstanceId,
   );
 
@@ -69,8 +70,8 @@ const WorkoutExerciseInstancePage = () => {
     navigate(-1);
   };
 
-  if (!exerciseInstanceId) {
-    return null;
+  if (!exerciseInstance || !workout) {
+    return <PageNotFound />;
   }
 
   if (loadingUserSettings) {
@@ -79,7 +80,7 @@ const WorkoutExerciseInstancePage = () => {
 
   return (
     <Container>
-      {exerciseInstance && (
+      {exerciseInstance && exerciseInstanceId && (
         <Flex direction="column" gap={5}>
           <Flex align="center" w="100%">
             <IconButton

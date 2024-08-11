@@ -1,4 +1,4 @@
-import { Text, useDisclosure } from "@chakra-ui/react";
+import { useDisclosure } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { UseFormSetError } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,6 +17,7 @@ import ExerciseForm, {
 } from "../../components/forms/exerciseForm/ExerciseForm";
 import { Category } from "../../interfaces/category.interface";
 import { Exercise } from "../../interfaces/exercise.interface";
+import PageNotFound from "../../pages/PageNotFound";
 import { fetchCategories } from "../../store/exercises/categoriesSlice";
 import { removeExercise } from "../../store/exercises/exercisesSlice";
 import { updateExercise } from "../../store/exercises/exercisesSlice";
@@ -58,7 +59,7 @@ const SingleExercisePage = () => {
   }
 
   if (!currentExercise) {
-    return <Text>Exercise not found.</Text>;
+    return <PageNotFound />;
   }
 
   const onSubmit = async (
@@ -102,11 +103,6 @@ const SingleExercisePage = () => {
       }
     }
   };
-
-  // const handleOpenModal = (exercise: Exercise) => {
-  //   setExerciseToDelete(exercise);
-  //   onOpen();
-  // };
 
   const handleRemoveExercise = async () => {
     if (exerciseToDelete && exerciseToDelete.id) {
