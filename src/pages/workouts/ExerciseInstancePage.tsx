@@ -31,37 +31,30 @@ const WorkoutExerciseInstancePage = () => {
 
   const { workoutId, exerciseInstanceId } = useParams();
 
-  const workoutSessions = useSelector(
-    (state: RootState) => state.workoutSessions,
-  );
+  const { workouts } = useSelector((state: RootState) => state.workoutSessions);
   const { userSettings, loading: loadingUserSettings } = useSelector(
     (state: RootState) => state.userSettings,
   );
 
-  const wrk = workoutSessions.workouts.find((w) => w.id === workoutId);
+  const wrk = workouts.find((workout) => workout.id === workoutId);
   const exerciseInstance = wrk?.exerciseInstances.find(
-    (e) => e.id === exerciseInstanceId,
+    (exercise) => exercise.id === exerciseInstanceId,
   );
 
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    dispatch(fetchWorkouts);
-  }, [wrk]);
-
-  useEffect(() => {
+    dispatch(fetchWorkouts());
     dispatch(fetchUserSettings());
   }, [dispatch]);
 
   useEffect(() => {
-    if (userSettings) {
-      const fetchedThreshold = userSettings.changeThreshold;
-      setThreshold(fetchedThreshold);
-    }
-  }, [userSettings]);
+    const fetchedThreshold = userSettings?.changeThreshold;
+    setThreshold(fetchedThreshold);
+  }, []);
 
   useEffect(() => {
-    if (exerciseInstance?.workingSets?.length === 0) {
+    if (!exerciseInstance?.workingSets?.length) {
       setActiveWorkingSet(undefined);
     }
   }, [exerciseInstance]);
@@ -86,7 +79,7 @@ const WorkoutExerciseInstancePage = () => {
 
   return (
     <Container>
-      {exerciseInstance?.exerciseTypeName !== undefined && (
+      {exerciseInstance && (
         <Flex direction="column" gap={5}>
           <Flex align="center" w="100%">
             <IconButton

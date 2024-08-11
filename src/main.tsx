@@ -10,6 +10,7 @@ import {
 
 import App from "./app/App.tsx";
 import { store } from "./app/store.ts";
+import PageNotFound from "./pages/PageNotFound.tsx";
 import ExercisesPage from "./pages/exercises/ExercisesPage.tsx";
 import NewExercisePage from "./pages/exercises/NewExercisePage.tsx";
 import SingleExercisePage from "./pages/exercises/SingleExercisePage.tsx";
@@ -58,6 +59,7 @@ const router = createBrowserRouter(
       <Route path="profile/*">
         <Route path="*" element={<ProfilePage />} />
       </Route>
+      <Route path="*" element={<PageNotFound />} />
     </Route>,
   ),
 );

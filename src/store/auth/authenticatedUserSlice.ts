@@ -6,19 +6,19 @@ import { User } from "../../interfaces/user.interface";
 import axiosInstance from "../../util/axiosInstance.ts";
 
 export interface authenticatedUserState {
-  user: User | undefined;
+  user: User | null;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: authenticatedUserState = {
-  user: undefined,
+  user: null,
   loading: false,
   error: null,
 };
 
 export const initializeUser = createAsyncThunk<
-  User | undefined,
+  User | null,
   void,
   { rejectValue: string }
 >("user/initializeUser", async (_, thunkAPI) => {
@@ -40,11 +40,11 @@ const authenticatedUserSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUser(state, action: PayloadAction<User | undefined>) {
+    setUser(state, action: PayloadAction<User | null>) {
       state.user = action.payload;
     },
     clearUser(state) {
-      state.user = undefined;
+      state.user = null;
     },
   },
   extraReducers: (builder) => {
@@ -55,9 +55,9 @@ const authenticatedUserSlice = createSlice({
       })
       .addCase(
         initializeUser.fulfilled,
-        (state, action: PayloadAction<User | undefined>) => {
+        (state, action: PayloadAction<User | null>) => {
           state.loading = false;
-          state.user = action.payload || undefined;
+          state.user = action.payload || null;
         },
       )
       .addCase(

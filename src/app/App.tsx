@@ -4,8 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import { initializeUser } from "../store/auth/authenticatedUserSlice";
-import { RootState } from "./store";
-import { AppDispatch } from "./store";
+import { AppDispatch, RootState } from "./store";
 
 const App = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -16,23 +15,31 @@ const App = () => {
     (state: RootState) => state.authenticatedUser,
   );
 
-  useEffect(() => {
-    setActiveTab(location.pathname);
-  }, [location]);
+  const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
-    dispatch(initializeUser());
+    dispatch(initializeUser()).then(() => {
+      setInitialized(true);
+    });
   }, [dispatch]);
 
   useEffect(() => {
-    if (user) {
-      navigate("/workouts");
-    } else {
-      if (location.pathname !== "/sign-up") {
-        navigate("/");
+    if (initialized) {
+      if (user === null) {
+        if (location.pathname !== "/" && location.pathname !== "/sign-up") {
+          navigate("/");
+        }
+      } else {
+        if (location.pathname === "/" || location.pathname === "/sign-up") {
+          navigate("/workouts");
+        }
       }
     }
-  }, [user, navigate]);
+  }, [initialized, user, navigate, location.pathname]);
+
+  useEffect(() => {
+    setActiveTab(location.pathname);
+  }, [location.pathname]);
 
   const tabs = [
     {

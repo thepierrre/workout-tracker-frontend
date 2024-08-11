@@ -14,10 +14,14 @@ import { Resolver, SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
+import { AppDispatch } from "../../app/store.ts";
 import Container from "../../components/UI/Container";
 import WideButton from "../../components/UI/buttons/WideButton.tsx";
 import Welcome from "../../components/profile/Welcome";
-import { setUser } from "../../store/auth/authenticatedUserSlice";
+import {
+  initializeUser,
+  setUser,
+} from "../../store/auth/authenticatedUserSlice";
 import axiosInstance from "../../util/axiosInstance.ts";
 
 type FormValues = {
@@ -53,7 +57,7 @@ const resolver: Resolver<FormValues> = async (values) => {
 
 const RegisterPage = () => {
   const [loginInProgress, setLoginInProgress] = useState<boolean>(false);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const {
     register,
@@ -66,21 +70,7 @@ const RegisterPage = () => {
     try {
       setLoginInProgress(true);
       await axiosInstance.post("/auth/login", data);
-
-      const userResponse = await axiosInstance.get("users/me");
-
-      const authenticatedUser: User = {
-        id: userResponse.data.id,
-        username: userResponse.data.username,
-        password: "",
-        email: userResponse.data.email,
-        routines: userResponse.data.routines || [],
-        workoutSessions: userResponse.data.workoutSessions || [],
-        exercises: userResponse.data.exercises || [],
-      };
-
-      dispatch(setUser(authenticatedUser));
-      setLoginInProgress(false);
+      await dispatch(initializeUser());
     } catch (error) {
       setLoginInProgress(false);
       if (axios.isAxiosError(error)) {
@@ -96,6 +86,8 @@ const RegisterPage = () => {
           });
         }
       }
+    } finally {
+      setLoginInProgress(false);
     }
   };
 

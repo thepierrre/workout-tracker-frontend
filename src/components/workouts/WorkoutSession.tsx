@@ -146,7 +146,7 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
                 >
                   <WorkoutExerciseInstance
                     userSettings={userSettings || defaultUserSettings}
-                    key={index}
+                    key={exerciseInstance.id}
                     exerciseInstance={exerciseInstance}
                     onExInstanceDeleted={handleExInstanceDeleted}
                   />
