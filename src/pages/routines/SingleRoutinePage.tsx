@@ -30,6 +30,8 @@ const SingleRoutinePage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [serverError, setServerError] = useState<string | null>(null);
   const [routineToDelete, setRoutineToDelete] = useState<Routine | null>(null);
+  const [submittingInProgress, setSubmittingInProgress] =
+    useState<boolean>(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { routines, loading: loadingRoutines } = useSelector(
     (state: RootState) => state.routines,
@@ -103,6 +105,7 @@ const SingleRoutinePage = () => {
     };
 
     try {
+      setSubmittingInProgress(true);
       if (currentIndex !== -1) {
         await dispatch(updateRoutine(routineToUpdate)).unwrap();
       }
@@ -117,6 +120,8 @@ const SingleRoutinePage = () => {
         setServerError(error);
         setError("name", { type: "server", message: errorMessage });
       }
+    } finally {
+      setSubmittingInProgress(false);
     }
   };
 
@@ -144,7 +149,7 @@ const SingleRoutinePage = () => {
         />
 
         <MainHeading text="Edit routine" />
-
+        {submittingInProgress && <SpinnerComponent mt={0} mb={4} />}
         <SubmitOrCancelButton
           text="SAVE"
           top="4.7rem"

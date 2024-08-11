@@ -27,8 +27,9 @@ const SingleExercisePage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { exerciseId } = useParams();
-
   const [serverError, setServerError] = useState<string | null>(null);
+  const [submittingInProgress, setSubmittingInProgress] =
+    useState<boolean>(false);
   const [exerciseToDelete, setExerciseToDelete] = useState<Exercise | null>(
     null,
   );
@@ -87,6 +88,7 @@ const SingleExercisePage = () => {
     };
 
     try {
+      setSubmittingInProgress(true);
       if (currentIndex !== -1) {
         await dispatch(updateExercise(exerciseToUpdate)).unwrap();
       }
@@ -101,6 +103,8 @@ const SingleExercisePage = () => {
         setServerError(error);
         setError("name", { type: "server", message: errorMessage });
       }
+    } finally {
+      setSubmittingInProgress(false);
     }
   };
 
@@ -128,7 +132,7 @@ const SingleExercisePage = () => {
         />
 
         <MainHeading text="Edit exercise" />
-
+        {submittingInProgress && <SpinnerComponent mt={0} mb={4} />}
         <SubmitOrCancelButton
           text="SAVE"
           top="4.7rem"

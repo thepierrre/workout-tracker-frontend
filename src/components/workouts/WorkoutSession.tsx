@@ -17,6 +17,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { AppDispatch, RootState } from "../../app/store";
 import CustomCard from "../../components/UI/CustomCard";
 import DeletionModal from "../../components/UI/DeletionModal";
+import SpinnerComponent from "../../components/UI/SpinnerComponent";
 import DeleteButton from "../../components/UI/buttons/DeleteButton";
 import { UserSettings } from "../../interfaces/userSettings.interface";
 import { Workout } from "../../interfaces/workout.interface";
@@ -30,11 +31,13 @@ const defaultUserSettings: UserSettings = {
 
 interface WorkoutProps {
   workout: Workout;
+  workoutDeletionInProgress: boolean;
   onRemoveWorkout: (id: string) => void;
 }
 
 const WorkoutSession: React.FC<WorkoutProps> = ({
   workout: wrk,
+  workoutDeletionInProgress,
   onRemoveWorkout,
 }) => {
   const navigate = useNavigate();
@@ -132,7 +135,7 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
 
         <Flex direction="column" m={[2, 0, 2, 0]}>
           {localExerciseInstances.length > 0 ? (
-            localExerciseInstances.map((exerciseInstance, index) => (
+            localExerciseInstances.map((exerciseInstance) => (
               <Flex
                 key={exerciseInstance.id}
                 direction="row"
@@ -165,6 +168,7 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
             </Flex>
           )}
         </Flex>
+        {workoutDeletionInProgress && <SpinnerComponent mt={0} mb={2} />}
         <DeleteButton
           text="Delete workout"
           currentWorkout={wrk}

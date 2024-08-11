@@ -20,6 +20,8 @@ export const WorkoutsPage = () => {
   const toastIdRef = useRef<ToastId | undefined>(undefined);
   const { workouts } = useSelector((state: RootState) => state.workoutSessions);
   const [localWorkouts, setLocalWorkouts] = useState(workouts);
+  const [workoutDeletionInProgressId, setWorkingDeletionInProgressId] =
+    useState<string | null>(null);
   const chosenDay = useSelector((state: RootState) => state.chosenDay.day);
 
   useEffect(() => {
@@ -70,6 +72,7 @@ export const WorkoutsPage = () => {
 
   const handleRemoveWorkout = async (id: string) => {
     try {
+      setWorkingDeletionInProgressId(id);
       await dispatch(removeWorkout(id)).unwrap();
       setLocalWorkouts((prevWorkouts) =>
         prevWorkouts.filter((workout) => workout.id !== id),
@@ -77,6 +80,8 @@ export const WorkoutsPage = () => {
       addToast();
     } catch (error) {
       console.error("Failed to delete workout:", error);
+    } finally {
+      setWorkingDeletionInProgressId(null);
     }
   };
 
@@ -90,6 +95,9 @@ export const WorkoutsPage = () => {
             key={workout.id}
             workout={workout}
             onRemoveWorkout={handleRemoveWorkout}
+            workoutDeletionInProgress={
+              workoutDeletionInProgressId === workout.id
+            }
           />
         ))
       ) : (

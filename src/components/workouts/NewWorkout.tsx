@@ -6,7 +6,6 @@ import {
   DrawerHeader,
   DrawerOverlay,
   Flex,
-  Spinner,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -17,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import { AppDispatch, RootState } from "../../app/store";
+import SpinnerComponent from "../../components/UI/SpinnerComponent";
 import { Routine } from "../../interfaces/routine.interface";
 import { Workout } from "../../interfaces/workout.interface";
 import { fetchRoutines } from "../../store/routines/routinesSlice";
@@ -66,7 +66,7 @@ const NewWorkout = () => {
       </WideButton>
       {workoutAddingInProgress && (
         <Flex justify="center">
-          <Spinner />
+          <SpinnerComponent mt={0} mb={0} />
         </Flex>
       )}
       <Drawer

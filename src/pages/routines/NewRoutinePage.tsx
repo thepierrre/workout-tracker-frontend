@@ -18,6 +18,8 @@ const NewRoutinePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const [serverError, setServerError] = useState<string | null>(null);
+  const [submittingInProgress, setSubmittingInProgress] =
+    useState<boolean>(false);
   const { user, loading: loadingUser } = useSelector(
     (state: RootState) => state.authenticatedUser,
   );
@@ -55,6 +57,7 @@ const NewRoutinePage = () => {
     };
 
     try {
+      setSubmittingInProgress(true);
       await dispatch(addRoutine(routineToAdd)).unwrap();
       navigate("/routines", { state: { routine: "created" } });
     } catch (error) {
@@ -62,6 +65,8 @@ const NewRoutinePage = () => {
         setServerError(error);
         setError("name", { type: "server", message: error });
       }
+    } finally {
+      setSubmittingInProgress(false);
     }
   };
 
@@ -79,7 +84,7 @@ const NewRoutinePage = () => {
       />
 
       <MainHeading text="New routine" />
-
+      {submittingInProgress && <SpinnerComponent mt={0} mb={4} />}
       <SubmitOrCancelButton
         text="CREATE"
         top="4.7rem"

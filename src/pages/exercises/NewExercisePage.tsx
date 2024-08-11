@@ -20,6 +20,8 @@ const NewExercisePage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [serverError, setServerError] = useState<string | null>(null);
   const user = useSelector((state: RootState) => state.authenticatedUser.user);
+  const [submittingInProgress, setSubmittingInProgress] =
+    useState<boolean>(false);
   const categoriesState = useSelector((state: RootState) => state.categories);
 
   useEffect(() => {
@@ -50,6 +52,7 @@ const NewExercisePage = () => {
     console.log(exerciseToAdd);
 
     try {
+      setSubmittingInProgress(true);
       await dispatch(addExercise(exerciseToAdd)).unwrap();
       navigate("/exercises", { state: { exercise: "created" } });
     } catch (error) {
@@ -58,6 +61,8 @@ const NewExercisePage = () => {
         setServerError(error);
         setError("name", { type: "server", message: errorMessage });
       }
+    } finally {
+      setSubmittingInProgress(false);
     }
   };
 
@@ -75,7 +80,7 @@ const NewExercisePage = () => {
       />
 
       <MainHeading text="New exercise" />
-
+      {submittingInProgress && <SpinnerComponent mt={0} mb={4} />}
       <SubmitOrCancelButton
         text="CREATE"
         top="4.7rem"
