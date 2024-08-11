@@ -44,15 +44,6 @@ const SingleExercise: React.FC<Props> = ({
     e.preventDefault();
 
     if (workoutId !== null) {
-      // const currentWorkout = workouts.find((wrk) => wrk.id === workoutId);
-
-      // if (currentWorkout) {
-
-      //   letexerciseInstance = currentWorkout.exerciseInstances.find(
-      //     (ex) => ex.exerciseTypeName === exerciseName
-      //   );
-      // }
-
       if (!currentWorkoutExercisesNames.includes(exerciseName)) {
         setCurrentWorkoutExercisesNames((prevExercises) => [
           ...prevExercises,

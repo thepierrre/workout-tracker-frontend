@@ -1,4 +1,4 @@
-import { Card, Flex, Heading, Select, Text } from "@chakra-ui/react";
+import { Card, Flex, Select, Text } from "@chakra-ui/react";
 import { format, getDate, getYear } from "date-fns";
 import React from "react";
 import { Link } from "react-router-dom";

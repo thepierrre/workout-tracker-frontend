@@ -1,6 +1,5 @@
 import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { Flex, Heading, IconButton, Text } from "@chakra-ui/react";
-import { Exercise } from "interfaces/exercise.interface";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";

@@ -1,9 +1,8 @@
-import { Box, Flex, Heading, Text, useDisclosure } from "@chakra-ui/react";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import { Text, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { UseFormSetError } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import _ from "underscore";
 
 import { AppDispatch, RootState } from "../../app/store";

@@ -22,6 +22,7 @@ interface ExerciseInstance {
   id: string;
   exerciseTypeName: string;
   workingSets: workingSet[];
+  notes: string;
 }
 
 interface workingSet {
@@ -198,6 +199,26 @@ export const removeExInstance = createAsyncThunk<
   }
 });
 
+export const updateNotesForExInstance = createAsyncThunk<
+  ExerciseInstance,
+  Omit<ExerciseInstance, "exerciseTypeName" | "workingSets">,
+  { rejectValue: string }
+>("workouts/updateNotesForExInstance", async (exInstance, thunkAPI) => {
+  try {
+    const response = await axiosInstance.patch(
+      `exercise-instances/${exInstance.id}`,
+      exInstance,
+    );
+    return response.data;
+  } catch (error) {
+    let errorMessage = "An unknown error occurred";
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    return thunkAPI.rejectWithValue(errorMessage);
+  }
+});
+
 export const addExInstance = createAsyncThunk<
   { workoutId: string; exerciseInstance: ExerciseInstance },
   AddExerciseInstanceArgs,
@@ -290,6 +311,33 @@ const workoutSessionsSlice = createSlice({
         (state, action: PayloadAction<string | undefined>) => {
           state.error =
             action.payload || "Failed to add the exercise to the workout.";
+        },
+      )
+      .addCase(
+        updateNotesForExInstance.fulfilled,
+        (state, action: PayloadAction<ExerciseInstance>) => {
+          const { id, notes } = action.payload;
+
+          const workout = state.workouts.find((workout) =>
+            workout.exerciseInstances.find((instance) => instance.id === id),
+          );
+
+          if (workout) {
+            const exInstance = workout.exerciseInstances.find(
+              (ex) => ex.id === id,
+            );
+
+            if (exInstance) {
+              exInstance.notes = notes;
+            }
+          }
+        },
+      )
+      .addCase(
+        updateNotesForExInstance.rejected,
+        (state, action: PayloadAction<string | undefined>) => {
+          state.error =
+            action.payload || "Failed to update the notes for the exercise.";
         },
       )
       .addCase(

@@ -1,20 +1,13 @@
 import { SearchIcon } from "@chakra-ui/icons";
 import {
-  Box,
-  Card,
-  Checkbox,
   Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Heading,
-  IconButton,
   Input,
   InputGroup,
   InputLeftElement,
-  Text,
 } from "@chakra-ui/react";
-import EditIcon from "@mui/icons-material/Edit";
 import _ from "lodash";
 import {
   Fragment,
@@ -24,12 +17,6 @@ import {
   useRef,
   useState,
 } from "react";
-import {
-  DragDropContext,
-  Draggable,
-  DropResult,
-  Droppable,
-} from "react-beautiful-dnd";
 import {
   FormProvider,
   Resolver,
@@ -114,9 +101,8 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
     }));
 
     const dispatch = useDispatch<AppDispatch>();
-    const navigate = useNavigate();
     const location = useLocation();
-    const { addToast, closeToast } = useCustomToast();
+    const { closeToast } = useCustomToast();
     const initialRemainingExercises = useRef<Exercise[]>([]);
     const [exerciseSearchValue, setExerciseSearchValue] = useState<string>("");
     const [remainingExercises, setRemainingExercises] = useState<Exercise[]>(
@@ -184,15 +170,6 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
       const name = event.target.value;
       setValue("name", name);
     };
-
-    // const handleToast = (isExerciseSelected: boolean) => {
-    //   if (!isExerciseSelected && selectedExercises.length >= 15) {
-    //     addToast({
-    //       message: "You can add up to 15 exercises per routine!",
-    //       bg: "#F56565",
-    //     });
-    //   }
-    // };
 
     const handleCheck = (exercise: Exercise) => {
       setSelectedExercises((prevSelectedExercises) => {
@@ -379,7 +356,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
 
           <Flex direction="column" w="100%">
             <SecondaryHeading
-              text={`Selected exercises (${selectedExercises.length})`}
+              text={`Selected exercises (${selectedExercises.length}/15)`}
             />
             <RoutineExercisesList
               selectedExercises={selectedExercises}

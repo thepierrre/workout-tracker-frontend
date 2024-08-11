@@ -1,8 +1,7 @@
-import { Box, Flex, Heading, Text } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { UseFormSetError } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { AppDispatch, RootState } from "../../app/store";
 import Container from "../../components/UI/Container";
@@ -36,20 +35,24 @@ const NewRoutinePage = () => {
     data: FormValues,
     setError: UseFormSetError<FormValues>,
   ) => {
-    const exercises: Exercise[] = localRoutineExercises.map((ex) => ({
-      ...ex,
-      workingSets: ex.workingSets?.map((set: WorkingSet) => ({
-        ...set,
-        id: undefined,
-      })),
-    }));
+    const exercises: Exercise[] = localRoutineExercises.map((ex) => {
+      const { temporaryId, ...rest } = ex; // Exclude temporary ID
+
+      return {
+        ...rest,
+        workingSets: ex.workingSets?.map((set: WorkingSet) => {
+          const { id, ...restSet } = set;
+          return {
+            ...restSet,
+          };
+        }),
+      };
+    });
     const routineToAdd = {
       name: data.name,
       routineExercises: exercises,
       userId: user.id,
     };
-
-    console.log("routineToAdd:", routineToAdd);
 
     try {
       await dispatch(addRoutine(routineToAdd)).unwrap();

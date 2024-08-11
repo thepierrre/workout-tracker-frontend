@@ -4,7 +4,6 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Heading,
   Input,
   InputGroup,
   InputLeftElement,
@@ -145,9 +144,6 @@ const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
         >
           <FormControl
             isInvalid={!!errors.name}
-            display="flex"
-            flexDirection="column"
-            alignItems="flex-start"
             width={["95vw", "85vw", "70vw", "50vw", "40vw"]}
           >
             <FormLabel fontSize="sm" htmlFor="exercise-name">
@@ -171,6 +167,8 @@ const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
             <FormErrorMessage>
               {errors.name && errors.name.message}
             </FormErrorMessage>
+          </FormControl>
+          <FormControl>
             <FormLabel fontSize="sm" mt={4} htmlFor="exercise-type">
               Equipment
             </FormLabel>

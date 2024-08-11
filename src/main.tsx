@@ -1,29 +1,27 @@
-import ReactDOM from "react-dom/client";
-import App from "./app/App.tsx";
 import { ChakraProvider } from "@chakra-ui/react";
+import ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
 import {
-  BrowserRouter,
-  createBrowserRouter,
-  createRoutesFromElements,
   Route,
   RouterProvider,
-  Routes,
+  createBrowserRouter,
+  createRoutesFromElements,
 } from "react-router-dom";
-import WorkoutsPage from "./pages/workouts/WorkoutsPage.tsx";
-import RoutinesPage from "./pages/routines/RoutinesPage.tsx";
-import ExercisesPage from "./pages/exercises/ExercisesPage.tsx";
-import ProfilePage from "./pages/profile/ProfilePage.tsx";
-import LoginPage from "./pages/profile/LoginPage.tsx";
-import SingleExercisePage from "./pages/exercises/SingleExercisePage.tsx";
-import ExerciseInstancePage from "./pages/workouts/ExerciseInstancePage.tsx";
-import SingleRoutinePage from "./pages/routines/SingleRoutinePage.tsx";
-import NewExercise from "./pages/exercises/NewExercisePage.tsx";
-import NewRoutinePage from "./pages/routines/NewRoutinePage.tsx";
-import RegisterPage from "./pages/profile/RegisterPage.tsx";
+
+import App from "./app/App.tsx";
 import { store } from "./app/store.ts";
-import { Provider } from "react-redux";
-import EditExerciseForRoutinePage from "./pages/routines/EditExerciseForRoutinePage.tsx";
+import ExercisesPage from "./pages/exercises/ExercisesPage.tsx";
 import NewExercisePage from "./pages/exercises/NewExercisePage.tsx";
+import SingleExercisePage from "./pages/exercises/SingleExercisePage.tsx";
+import LoginPage from "./pages/profile/LoginPage.tsx";
+import ProfilePage from "./pages/profile/ProfilePage.tsx";
+import RegisterPage from "./pages/profile/RegisterPage.tsx";
+import EditExerciseForRoutinePage from "./pages/routines/EditExerciseForRoutinePage.tsx";
+import NewRoutinePage from "./pages/routines/NewRoutinePage.tsx";
+import RoutinesPage from "./pages/routines/RoutinesPage.tsx";
+import SingleRoutinePage from "./pages/routines/SingleRoutinePage.tsx";
+import ExerciseInstancePage from "./pages/workouts/ExerciseInstancePage.tsx";
+import WorkoutsPage from "./pages/workouts/WorkoutsPage.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -53,15 +51,15 @@ const router = createBrowserRouter(
 
       <Route path="exercises/*">
         <Route path=":exerciseId" element={<SingleExercisePage />} />
-        <Route path="new-exercise" element={<NewExercise />} />
+        <Route path="new-exercise" element={<NewExercisePage />} />
         <Route path="*" element={<ExercisesPage />} />
       </Route>
 
       <Route path="profile/*">
         <Route path="*" element={<ProfilePage />} />
       </Route>
-    </Route>
-  )
+    </Route>,
+  ),
 );
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -71,5 +69,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <RouterProvider router={router} />
       {/* </React.StrictMode> */}
     </ChakraProvider>
-  </Provider>
+  </Provider>,
 );

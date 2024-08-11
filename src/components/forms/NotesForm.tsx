@@ -1,61 +1,69 @@
-import {
-  Flex,
-  FormControl,
-  Textarea,
-  Text,
-  FormErrorMessage,
-} from "@chakra-ui/react";
-import { useState } from "react";
-import { useForm, Resolver } from "react-hook-form";
+import { Flex, FormControl, FormLabel, Text, Textarea } from "@chakra-ui/react";
+import debounce from "lodash.debounce";
+import { useCallback, useEffect, useState } from "react";
+import { Resolver, useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
 
-interface FormValues {
-  content: string;
+import { AppDispatch, RootState } from "../../app/store";
+import { ExerciseInstance } from "../../interfaces/exerciseInstance.interface";
+import { updateNotesForExInstance } from "../../store/workout/workoutSessionsSlice";
+
+interface Props {
+  exInstanceId: string;
+  initialNotes: string;
 }
 
-const resolver: Resolver<FormValues> = async (values) => {
-  const trimmedName = values.content.trim();
-  return {
-    values: trimmedName ? { name: trimmedName } : {},
-    errors: !trimmedName
-      ? {
-          content: {
-            type: "required",
-            message: "Exercise name cannot be empty.",
-          },
-        }
-      : {},
-  };
-};
+interface FormValues {
+  notes: string;
+}
 
-const NotesForm = () => {
+const NotesForm: React.FC<Props> = ({ exInstanceId, initialNotes }) => {
   const [usedCharacters, setUsedCharacters] = useState<number>(0);
+  const dispatch = useDispatch<AppDispatch>();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setValue,
-    setError,
-  } = useForm<FormValues>({ resolver });
+  useEffect(() => {
+    setValue("notes", initialNotes);
+  }, []);
+
+  const { register, setValue } = useForm<FormValues>();
+
+  const debouncedUpdateNotes = useCallback(
+    debounce((value: string) => {
+      const trimmedValue = value.trim();
+      dispatch(
+        updateNotesForExInstance({
+          id: exInstanceId,
+          notes: trimmedValue,
+        }),
+      );
+    }, 500),
+    [dispatch, exInstanceId],
+  );
 
   const handleNotesInputChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
     const value = event.target.value;
     const length = value.length;
     setUsedCharacters(length);
-    setValue("content", value);
+    setValue("notes", value);
+
+    debouncedUpdateNotes(value);
   };
 
   return (
     <Flex>
       <form>
         <FormControl>
+          <FormLabel fontSize="sm" htmlFor="notes">
+            Exercise notes
+          </FormLabel>
           <Textarea
-            {...register("content")}
+            {...register("notes")}
+            id="notes"
             _placeholder={{ color: "#B3B3B3" }}
             w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
-            placeholder="Add notes for this exercise"
+            placeholder="How was this exercise?"
             p={2}
             size="md"
             bg="#404040"

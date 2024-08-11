@@ -1,9 +1,6 @@
 import { CardBody, Flex, Text } from "@chakra-ui/react";
-import { RoutineExercise } from "interfaces/routineExercise.interface";
 import React from "react";
-import { useSelector } from "react-redux";
 
-import { RootState } from "../../app/store";
 import { Exercise } from "../../interfaces/exercise.interface";
 import { Routine } from "../../interfaces/routine.interface";
 import CustomCard from "../UI/CustomCard";
@@ -34,7 +31,7 @@ const SingleRoutine: React.FC<Props> = ({ routine }) => {
             data-testid={`routine-exercises-${routine.id}`}
           >
             {routine.routineExercises
-              ?.map((exercise: RoutineExercise) => exercise?.name.trim())
+              ?.map((exercise: Exercise) => exercise?.name.trim())
               .join(" | ")}
           </Text>
         </Flex>

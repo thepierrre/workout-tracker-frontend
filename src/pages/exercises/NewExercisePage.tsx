@@ -1,8 +1,7 @@
-import { Box, Flex, Heading, Text } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { UseFormSetError } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { AppDispatch, RootState } from "../../app/store";
 import Container from "../../components/UI/Container";

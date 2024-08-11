@@ -76,6 +76,10 @@ const WorkoutExerciseInstancePage = () => {
     navigate(-1);
   };
 
+  if (!exerciseInstanceId) {
+    return null;
+  }
+
   if (loadingUserSettings) {
     return <SpinnerComponent />;
   }
@@ -131,7 +135,10 @@ const WorkoutExerciseInstancePage = () => {
               <Text>This exercise has no sets.</Text>
             )}
           </Flex>
-          <NotesForm />
+          <NotesForm
+            exInstanceId={exerciseInstanceId}
+            initialNotes={exerciseInstance.notes || ""}
+          />
         </Flex>
       )}
     </Container>

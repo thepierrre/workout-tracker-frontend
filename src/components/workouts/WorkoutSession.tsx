@@ -9,8 +9,6 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { ExerciseInstance } from "interfaces/exerciseInstance.interface";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,6 +17,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { AppDispatch, RootState } from "../../app/store";
 import CustomCard from "../../components/UI/CustomCard";
 import DeletionModal from "../../components/UI/DeletionModal";
+import DeleteButton from "../../components/UI/buttons/DeleteButton";
 import { UserSettings } from "../../interfaces/userSettings.interface";
 import { Workout } from "../../interfaces/workout.interface";
 import { fetchUserSettings } from "../../store/settings/userSettingsSlice";
@@ -68,11 +67,6 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
     };
   }, [toast]);
 
-  const handleOpenModal = (workout: Workout) => {
-    setWorkoutToDelete(workout);
-    onOpen();
-  };
-
   const handleRemoveWorkout = () => {
     if (workoutToDelete) {
       onRemoveWorkout(workoutToDelete.id);
@@ -117,78 +111,75 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
   };
 
   return (
-    <Flex
-      direction="column"
-      m={2}
-      sx={{
-        WebkitTapHighlightColor: "transparent",
-      }}
-    >
-      <Heading fontWeight="bold" fontSize="lg" textAlign="center" m={3}>
-        {wrk.routineName}
-      </Heading>
-
-      <Flex color="lightblue" fontWeight="bold" gap={1} justify="center">
-        <AddCircleOutlineIcon />
-        <Text textAlign="center" onClick={() => handleAddExercisesButton()}>
-          Edit exercises
-        </Text>
-      </Flex>
-
-      <Flex direction="column" mt={2}>
-        {localExerciseInstances.length > 0 ? (
-          localExerciseInstances.map((exerciseInstance, index) => (
-            <Flex
-              key={exerciseInstance.id}
-              direction="row"
-              justify="center"
-              p={1}
-              color="lightblue"
-            >
-              <Link
-                key={exerciseInstance.id}
-                to={`/workouts/${wrk.id}/exercise-instances/${exerciseInstance.id}`}
-              >
-                <WorkoutExerciseInstance
-                  userSettings={userSettings || defaultUserSettings}
-                  key={index}
-                  exerciseInstance={exerciseInstance}
-                  onExInstanceDeleted={handleExInstanceDeleted}
-                />
-              </Link>
-            </Flex>
-          ))
-        ) : (
-          <Flex mt={2} mb={2}>
-            <CustomCard>
-              <CardBody p={4}>
-                <Text color="white" textAlign="center">
-                  This workout has no exercises yet.
-                </Text>
-              </CardBody>
-            </CustomCard>
-          </Flex>
-        )}
-      </Flex>
+    <>
       <Flex
-        gap={1}
-        mt={1}
-        justify="center"
-        color="lightblue"
-        onClick={() => handleOpenModal(wrk)}
+        direction="column"
+        m={2}
+        sx={{
+          WebkitTapHighlightColor: "transparent",
+        }}
       >
-        <RemoveCircleOutlineIcon />
-        <Text fontWeight="bold" data-testid="delete-workout-button">
-          Delete workout
-        </Text>
-        <DeletionModal
-          isOpen={isOpen}
-          onClose={onClose}
-          onDelete={handleRemoveWorkout}
-          elementType="workout"
+        <Heading fontWeight="bold" fontSize="lg" textAlign="center" m={3}>
+          {wrk.routineName}
+        </Heading>
+
+        <Flex color="lightblue" fontWeight="bold" gap={1} justify="center">
+          <AddCircleOutlineIcon />
+          <Text textAlign="center" onClick={() => handleAddExercisesButton()}>
+            Edit exercises
+          </Text>
+        </Flex>
+
+        <Flex direction="column" m={[2, 0, 2, 0]}>
+          {localExerciseInstances.length > 0 ? (
+            localExerciseInstances.map((exerciseInstance, index) => (
+              <Flex
+                key={exerciseInstance.id}
+                direction="row"
+                justify="center"
+                p={1}
+                color="lightblue"
+              >
+                <Link
+                  key={exerciseInstance.id}
+                  to={`/workouts/${wrk.id}/exercise-instances/${exerciseInstance.id}`}
+                >
+                  <WorkoutExerciseInstance
+                    userSettings={userSettings || defaultUserSettings}
+                    key={index}
+                    exerciseInstance={exerciseInstance}
+                    onExInstanceDeleted={handleExInstanceDeleted}
+                  />
+                </Link>
+              </Flex>
+            ))
+          ) : (
+            <Flex mt={2} mb={2}>
+              <CustomCard>
+                <CardBody p={4}>
+                  <Text color="white" textAlign="center">
+                    This workout has no exercises yet.
+                  </Text>
+                </CardBody>
+              </CustomCard>
+            </Flex>
+          )}
+        </Flex>
+        <DeleteButton
+          text="Delete workout"
+          currentWorkout={wrk}
+          setWorkoutToDelete={setWorkoutToDelete}
+          onOpen={onOpen}
+          color="lightblue"
         />
       </Flex>
-    </Flex>
+      <DeletionModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onDelete={handleRemoveWorkout}
+        elementType="workout"
+      />
+    </>
   );
 };
 

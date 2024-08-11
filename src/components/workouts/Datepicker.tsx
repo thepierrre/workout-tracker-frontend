@@ -50,6 +50,7 @@ const Datepicker = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [displayedWeek, setDisplayedWeek] = useState<Date[]>(daysOfThisWeek);
   const chosenDay = useSelector((state: RootState) => state.chosenDay.day);
+  const { workouts } = useSelector((state: RootState) => state.workoutSessions);
   const dispatch = useDispatch();
 
   const handleActiveDay = (index: number) => {
@@ -72,6 +73,14 @@ const Datepicker = () => {
         setDisplayedWeek(daysOfThisWeek);
       }
     }
+  };
+
+  const doesDayHaveWorkouts = (day: Date): boolean => {
+    const formattedDay = format(day, "yyyy-MM-dd");
+    const workoutsForDay = workouts.some(
+      (wrk) => wrk.creationDate === formattedDay,
+    );
+    return workoutsForDay ? true : false;
   };
 
   return (
@@ -103,22 +112,29 @@ const Datepicker = () => {
               >
                 {format(new Date(day), "EEE").toUpperCase()}
               </Text>
-              <Box
-                paddingInline={1}
-                borderRadius={7}
-                w={8}
-                bg={chosenDay === format(day, "dd/MM/yyyy") ? "lightblue" : ""}
-              >
-                <Text
-                  fontSize="xl"
-                  color={
-                    chosenDay === format(day, "dd/MM/yyyy") ? "#353935" : ""
+              <Flex direction="column" w={8} h={12} align="center" gap={1}>
+                <Box
+                  w="100%"
+                  borderRadius={7}
+                  bg={
+                    chosenDay === format(day, "dd/MM/yyyy") ? "lightblue" : ""
                   }
-                  textAlign="center"
                 >
-                  {day.getDate()}
-                </Text>
-              </Box>
+                  <Text
+                    fontSize="xl"
+                    color={
+                      chosenDay === format(day, "dd/MM/yyyy") ? "#353935" : ""
+                    }
+                    textAlign="center"
+                  >
+                    {day.getDate()}
+                  </Text>
+                </Box>
+
+                {doesDayHaveWorkouts(day) && (
+                  <Box bg="lightblue" w={2} h={2} borderRadius={4}></Box>
+                )}
+              </Flex>
             </Flex>
           ))}
         </Flex>
@@ -130,15 +146,15 @@ const Datepicker = () => {
           variant="link"
           onClick={() => handleDisplayedWeek("following")}
         />
-        <IconButton
+        {/* <IconButton
           aria-label="Calendar"
           variant="link"
           color="white"
           icon={<CalendarMonthIcon />}
           onClick={onOpen}
-        />
+        /> */}
       </Flex>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      {/* <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent top={24}>
           <ModalBody>
@@ -149,7 +165,7 @@ const Datepicker = () => {
           </ModalBody>
           <ModalCloseButton />
         </ModalContent>
-      </Modal>
+      </Modal> */}
     </>
   );
 };
