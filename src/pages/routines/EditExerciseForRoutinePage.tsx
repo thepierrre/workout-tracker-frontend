@@ -12,6 +12,7 @@ import ExWorkingSet from "../../components/shared/ExWorkingSet";
 import ThresholdHandler from "../../components/workouts/ThresholdHandler";
 import { UserSettings } from "../../interfaces/userSettings.interface";
 import { WorkingSet } from "../../interfaces/workingSet.interface";
+import PageNotFound from "../../pages/PageNotFound";
 import { fetchUserSettings } from "../../store/settings/userSettingsSlice";
 
 const defaultUserSettings: UserSettings = {
@@ -70,6 +71,10 @@ const EditExerciseForRoutinePage = () => {
         state: { loadLocalRoutine: true },
       });
   };
+
+  if (!currentExercise) {
+    return <PageNotFound />;
+  }
 
   if (loadingUserSettings) {
     return <SpinnerComponent />;
