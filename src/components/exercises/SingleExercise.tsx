@@ -90,6 +90,8 @@ const SingleExercise: React.FC<Props> = ({
         <CardBody
           borderRadius={5}
           bg={
+            location.state &&
+            location.state.addExercises === "true" &&
             currentWorkoutExercisesNames?.includes(exercise.name)
               ? "lightblue"
               : "#414141"
@@ -101,12 +103,14 @@ const SingleExercise: React.FC<Props> = ({
             </Badge>
           )}
           <Flex>
-            <Flex direction="column" gap={1} textColor="white">
+            <Flex direction="column" gap={1} textColor="white" w="80%">
               <Text
                 fontWeight="bold"
                 fontSize="lg"
                 data-testid={`exercise-name-${exercise.id}`}
                 color={
+                  location.state &&
+                  location.state.addExercises === "true" &&
                   currentWorkoutExercisesNames?.includes(exercise.name)
                     ? "#414141"
                     : "white"
@@ -117,6 +121,8 @@ const SingleExercise: React.FC<Props> = ({
               <Text
                 fontSize="sm"
                 color={
+                  location.state &&
+                  location.state.addExercises === "true" &&
                   currentWorkoutExercisesNames?.includes(exercise.name)
                     ? "#414141"
                     : "white"
@@ -134,6 +140,8 @@ const SingleExercise: React.FC<Props> = ({
                 fontSize="sm"
                 fontWeight="bold"
                 color={
+                  location.state &&
+                  location.state.addExercises === "true" &&
                   currentWorkoutExercisesNames?.includes(exercise.name)
                     ? "#414141"
                     : "lightblue"
@@ -142,9 +150,9 @@ const SingleExercise: React.FC<Props> = ({
                 {exercise.equipment}
               </Text>
             </Flex>
-            {location.state && location.state.addExercises == "true" && (
+            {location.state && location.state.addExercises === "true" && (
               <Flex
-                w="100%"
+                w="20%"
                 align="center"
                 justify="end"
                 mr={2}

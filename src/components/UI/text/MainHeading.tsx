@@ -11,7 +11,8 @@ const MainHeading: React.FC<Props> = ({ text }) => {
       fontSize="2xl"
       textAlign="center"
       color="white"
-      m={[5, 0, 5, 0]}
+      mt={5}
+      mb={5}
     >
       {text}
     </Heading>

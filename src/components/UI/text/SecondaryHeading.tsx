@@ -6,7 +6,7 @@ interface Props {
 
 const SecondaryHeading: React.FC<Props> = ({ text }) => {
   return (
-    <Heading fontSize="lg" textAlign="center" m={[5, 0, 0, 0]}>
+    <Heading fontSize="lg" textAlign="center" mt={5} mb={3}>
       {text}
     </Heading>
   );

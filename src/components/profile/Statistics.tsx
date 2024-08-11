@@ -1,68 +1,156 @@
 import { Card, Flex, Text } from "@chakra-ui/react";
 import React from "react";
-import { Link } from "react-router-dom";
 
 import SecondaryHeading from "../../components/UI/text/SecondaryHeading";
-import { Exercise } from "../../interfaces/exercise.interface";
-import { Routine } from "../../interfaces/routine.interface";
 import { Workout } from "../../interfaces/workout.interface";
+import { convertKgsToLbs, roundKgs } from "../../util/weightUnitConverting";
 
 interface Props {
   workouts: Workout[];
-  routines: Routine[];
-  exercises: Exercise[];
+  weightUnit: string;
 }
 
-const Statistics: React.FC<Props> = ({ workouts, routines, exercises }) => {
+const Statistics: React.FC<Props> = ({ workouts, weightUnit }) => {
+  const totalWeightRaised = (): number => {
+    let weightsFromAllSets: number[] = [];
+    workouts.map((wrk) =>
+      wrk.exerciseInstances.map((ex) =>
+        ex.workingSets.map((wrkSet) => weightsFromAllSets.push(wrkSet.weight)),
+      ),
+    );
+    const sum = weightsFromAllSets.reduce((partialSum, a) => partialSum + a, 0);
+    return sum;
+  };
+
+  const maxSingleWeightRaised = (): number => {
+    let maxValue = 0;
+
+    workouts.map((wrk) =>
+      wrk.exerciseInstances.map((ex) =>
+        ex.workingSets.map((wrkSet) => {
+          if (wrkSet.weight > maxValue) {
+            maxValue = wrkSet.weight;
+          }
+        }),
+      ),
+    );
+
+    return maxValue;
+  };
+
+  const totalRepsDone = (): number => {
+    let repsFromAllSets: number[] = [];
+    workouts.map((wrk) =>
+      wrk.exerciseInstances.map((ex) =>
+        ex.workingSets.map((wrkSet) => repsFromAllSets.push(wrkSet.reps)),
+      ),
+    );
+    const sum = repsFromAllSets.reduce((partialSum, a) => partialSum + a, 0);
+    return sum;
+  };
+
+  const maxRepsInSingleSet = (): number => {
+    let maxValue = 0;
+
+    workouts.map((wrk) =>
+      wrk.exerciseInstances.map((ex) =>
+        ex.workingSets.map((wrkSet) => {
+          if (wrkSet.reps > maxValue) {
+            maxValue = wrkSet.reps;
+          }
+        }),
+      ),
+    );
+
+    return maxValue;
+  };
+
   return (
     <Flex direction="column" align="center" gap={2} mb={3}>
-      <SecondaryHeading text="Statistics" />
-      <Link to="/workouts">
-        <Card
-          bg="#404040"
-          color="white"
-          padding={4}
-          w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
-          gap={2}
-        >
-          <Flex gap={2}>
-            <Text fontWeight="bold">Workouts:</Text>
-            <Text>{workouts.length}</Text>
-          </Flex>
-        </Card>
-      </Link>
+      <SecondaryHeading text="Keep up the good work!" />
 
-      <Link to="/routines">
-        <Card
-          bg="#404040"
-          color="white"
-          padding={4}
-          w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
-          gap={2}
-        >
-          <Flex gap={2}>
-            <Text fontWeight="bold">Routines:</Text>
-            <Text>{routines.length}</Text>
-          </Flex>
-        </Card>
-      </Link>
+      <Card
+        bg="#404040"
+        color="white"
+        padding={4}
+        w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+        gap={2}
+      >
+        <Flex gap={2}>
+          <Text fontWeight="bold">Number of workouts:</Text>
+          <Text>{workouts.length}</Text>
+        </Flex>
+      </Card>
 
-      <Link to="/exercises">
-        <Card
-          bg="#404040"
-          color="white"
-          padding={4}
-          w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
-          gap={2}
-        >
-          <Flex gap={2}>
-            <Text fontWeight="bold">Exercises:</Text>
-            <Text>{exercises.length}</Text>
-          </Flex>
-        </Card>
-      </Link>
+      <Card
+        bg="#404040"
+        color="white"
+        padding={4}
+        w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+        gap={2}
+      >
+        <Flex gap={2}>
+          <Text fontWeight="bold">Total weight:</Text>
+          <Text>
+            {weightUnit === "kgs"
+              ? `${roundKgs(totalWeightRaised())} kgs`
+              : `${convertKgsToLbs(totalWeightRaised())} lbs`}
+          </Text>
+        </Flex>
+      </Card>
+
+      <Card
+        bg="#404040"
+        color="white"
+        padding={4}
+        w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+        gap={2}
+      >
+        <Flex gap={2}>
+          <Text fontWeight="bold">Highest single weight:</Text>
+          <Text>
+            {weightUnit === "kgs"
+              ? `${roundKgs(maxSingleWeightRaised())} kgs`
+              : `${convertKgsToLbs(maxSingleWeightRaised())} lbs`}
+          </Text>
+        </Flex>
+      </Card>
+
+      <Card
+        bg="#404040"
+        color="white"
+        padding={4}
+        w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+        gap={2}
+      >
+        <Flex gap={2}>
+          <Text fontWeight="bold">Total reps:</Text>
+          <Text>{totalRepsDone()}</Text>
+        </Flex>
+      </Card>
+
+      <Card
+        bg="#404040"
+        color="white"
+        padding={4}
+        w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+        gap={2}
+      >
+        <Flex gap={2}>
+          <Text fontWeight="bold">Maximum reps in a set:</Text>
+          <Text>{maxRepsInSingleSet()}</Text>
+        </Flex>
+      </Card>
     </Flex>
   );
 };
 
 export default Statistics;
+
+{
+  /* <Text fontWeight="bold">
+{userSettings?.weightUnit === "kgs"
+  ? roundKgs(workingSet.weight)
+  : convertKgsToLbs(workingSet.weight)}
+</Text> */
+}
