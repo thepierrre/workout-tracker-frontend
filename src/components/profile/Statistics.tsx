@@ -77,8 +77,10 @@ const Statistics: React.FC<Props> = ({ workouts, weightUnit }) => {
         gap={2}
       >
         <Flex gap={2}>
-          <Text fontWeight="bold">Number of workouts:</Text>
-          <Text>{workouts.length}</Text>
+          <Text fontWeight="bold" w="60%" color="lightblue">
+            Number of workouts:
+          </Text>
+          <Text fontWeight="bold">{workouts.length}</Text>
         </Flex>
       </Card>
 
@@ -90,8 +92,10 @@ const Statistics: React.FC<Props> = ({ workouts, weightUnit }) => {
         gap={2}
       >
         <Flex gap={2}>
-          <Text fontWeight="bold">Total weight:</Text>
-          <Text>
+          <Text fontWeight="bold" w="60%" color="lightblue">
+            Total weight:
+          </Text>
+          <Text fontWeight="bold">
             {weightUnit === "kgs"
               ? `${roundKgs(totalWeightRaised())} kgs`
               : `${convertKgsToLbs(totalWeightRaised())} lbs`}
@@ -107,8 +111,10 @@ const Statistics: React.FC<Props> = ({ workouts, weightUnit }) => {
         gap={2}
       >
         <Flex gap={2}>
-          <Text fontWeight="bold">Highest single weight:</Text>
-          <Text>
+          <Text fontWeight="bold" w="60%" color="lightblue">
+            Highest single weight:
+          </Text>
+          <Text fontWeight="bold">
             {weightUnit === "kgs"
               ? `${roundKgs(maxSingleWeightRaised())} kgs`
               : `${convertKgsToLbs(maxSingleWeightRaised())} lbs`}
@@ -124,8 +130,10 @@ const Statistics: React.FC<Props> = ({ workouts, weightUnit }) => {
         gap={2}
       >
         <Flex gap={2}>
-          <Text fontWeight="bold">Total reps:</Text>
-          <Text>{totalRepsDone()}</Text>
+          <Text fontWeight="bold" w="60%" color="lightblue">
+            Total reps:
+          </Text>
+          <Text fontWeight="bold">{totalRepsDone()}</Text>
         </Flex>
       </Card>
 
@@ -137,8 +145,10 @@ const Statistics: React.FC<Props> = ({ workouts, weightUnit }) => {
         gap={2}
       >
         <Flex gap={2}>
-          <Text fontWeight="bold">Maximum reps in a set:</Text>
-          <Text>{maxRepsInSingleSet()}</Text>
+          <Text fontWeight="bold" w="60%" color="lightblue">
+            Maximum reps in a set:
+          </Text>
+          <Text fontWeight="bold">{maxRepsInSingleSet()}</Text>
         </Flex>
       </Card>
     </Flex>
