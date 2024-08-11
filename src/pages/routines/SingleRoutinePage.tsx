@@ -19,6 +19,8 @@ import { AppDispatch, RootState } from "../../app/store";
 import Container from "../../components/UI/Container";
 import DeletionModal from "../../components/UI/DeletionModal";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
+import DeleteButton from "../../components/UI/buttons/DeleteButton";
+import SubmitOrCancelButton from "../../components/UI/buttons/SubmitOrCancelButton";
 import MainHeading from "../../components/UI/text/MainHeading";
 import { FormValues } from "../../components/forms/routineForm/RoutineForm";
 import RoutineForm from "../../components/forms/routineForm/RoutineForm";
@@ -121,11 +123,6 @@ const SingleRoutinePage = () => {
     }
   };
 
-  const handleOpenModal = (routine: Routine) => {
-    setRoutineToDelete(routine);
-    onOpen();
-  };
-
   const handleRemoveRoutine = async () => {
     if (routineToDelete) {
       await dispatch(removeRoutine(routineToDelete.id));
@@ -142,41 +139,28 @@ const SingleRoutinePage = () => {
   return (
     <>
       <Container>
-        <Flex
-          align="center"
-          justifyContent="space-between"
-          w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
-        >
-          <Box position="absolute" top="4.7rem" left="2rem">
-            <Link to="/routines">
-              <Text fontWeight="bold" color="#FC8181">
-                CANCEL
-              </Text>
-            </Link>
-          </Box>
+        <SubmitOrCancelButton
+          text="CANCEL"
+          top="4.7rem"
+          left="2rem"
+          link="/routines"
+        />
 
-          <MainHeading text="Edit routine" />
+        <MainHeading text="Edit routine" />
 
-          <Box
-            position="absolute"
-            top="4.7rem"
-            right="3rem"
-            onClick={() => routineFormRef.current?.submit()}
-          >
-            <Text fontWeight="bold" color="#48BB78">
-              SAVE
-            </Text>
-          </Box>
-        </Flex>
-        <Flex
-          gap={1}
-          mb={5}
-          justify="center"
-          onClick={() => handleOpenModal(currentRoutine)}
-        >
-          <RemoveCircleOutlineIcon />
-          <Text fontWeight="bold">DELETE</Text>
-        </Flex>
+        <SubmitOrCancelButton
+          text="SAVE"
+          top="4.7rem"
+          right="3rem"
+          onClick={() => routineFormRef.current?.submit()}
+        />
+
+        <DeleteButton
+          onOpen={onOpen}
+          currentRoutine={currentRoutine}
+          setRoutineToDelete={setRoutineToDelete}
+        />
+
         <RoutineForm
           newRoutine={false}
           routineId={currentRoutine.id}

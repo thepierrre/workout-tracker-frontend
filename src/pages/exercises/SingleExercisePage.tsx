@@ -10,6 +10,8 @@ import { AppDispatch, RootState } from "../../app/store";
 import Container from "../../components/UI/Container";
 import DeletionModal from "../../components/UI/DeletionModal";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
+import DeleteButton from "../../components/UI/buttons/DeleteButton";
+import SubmitOrCancelButton from "../../components/UI/buttons/SubmitOrCancelButton";
 import MainHeading from "../../components/UI/text/MainHeading";
 import ExerciseForm, {
   FormValues,
@@ -102,10 +104,10 @@ const SingleExercisePage = () => {
     }
   };
 
-  const handleOpenModal = (exercise: Exercise) => {
-    setExerciseToDelete(exercise);
-    onOpen();
-  };
+  // const handleOpenModal = (exercise: Exercise) => {
+  //   setExerciseToDelete(exercise);
+  //   onOpen();
+  // };
 
   const handleRemoveExercise = async () => {
     if (exerciseToDelete && exerciseToDelete.id) {
@@ -123,41 +125,27 @@ const SingleExercisePage = () => {
   return (
     <>
       <Container>
-        <Flex
-          align="center"
-          direction="column"
-          w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
-        >
-          <Box position="absolute" top="4.7rem" left="2rem">
-            <Link to="/exercises">
-              <Text fontWeight="bold" color="#FC8181">
-                CANCEL
-              </Text>
-            </Link>
-          </Box>
+        <SubmitOrCancelButton
+          text="CANCEL"
+          top="4.7rem"
+          left="2rem"
+          link="/exercises"
+        />
 
-          <MainHeading text="Edit exercise" />
+        <MainHeading text="Edit exercise" />
 
-          <Box
-            position="absolute"
-            top="4.7rem"
-            right="3rem"
-            onClick={() => exerciseFormRef.current?.submit()}
-          >
-            <Text fontWeight="bold" color="#48BB78">
-              SAVE
-            </Text>
-          </Box>
-        </Flex>
-        <Flex
-          gap={1}
-          mb={5}
-          justify="center"
-          onClick={() => handleOpenModal(currentExercise)}
-        >
-          <RemoveCircleOutlineIcon />
-          <Text fontWeight="bold">DELETE</Text>
-        </Flex>
+        <SubmitOrCancelButton
+          text="SAVE"
+          top="4.7rem"
+          right="3rem"
+          onClick={() => exerciseFormRef.current?.submit()}
+        />
+
+        <DeleteButton
+          onOpen={onOpen}
+          currentExercise={currentExercise}
+          setExerciseToDelete={setExerciseToDelete}
+        />
 
         <ExerciseForm
           ref={exerciseFormRef}

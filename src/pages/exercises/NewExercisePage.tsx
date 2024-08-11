@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { AppDispatch, RootState } from "../../app/store";
 import Container from "../../components/UI/Container";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
+import SubmitOrCancelButton from "../../components/UI/buttons/SubmitOrCancelButton";
 import MainHeading from "../../components/UI/text/MainHeading";
 import ExerciseForm, {
   FormValues,
@@ -67,33 +68,22 @@ const NewExercisePage = () => {
 
   return (
     <Container>
-      <Flex
-        align="center"
-        justifyContent="space-between"
-        w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
-        mb={3}
-      >
-        <Box position="absolute" top="4.7rem" left="2rem">
-          <Link to="/exercises">
-            <Text fontWeight="bold" color="#FC8181">
-              CANCEL
-            </Text>
-          </Link>
-        </Box>
+      <SubmitOrCancelButton
+        text="CANCEL"
+        top="4.7rem"
+        left="2rem"
+        link="/exercises"
+      />
 
-        <MainHeading text="New exercise" />
+      <MainHeading text="New exercise" />
 
-        <Box
-          position="absolute"
-          top="4.7rem"
-          right="2rem"
-          onClick={() => exerciseFormRef.current?.submit()}
-        >
-          <Text fontWeight="bold" color="#48BB78">
-            CREATE
-          </Text>
-        </Box>
-      </Flex>
+      <SubmitOrCancelButton
+        text="CREATE"
+        top="4.7rem"
+        right="2rem"
+        onClick={() => exerciseFormRef.current?.submit()}
+      />
+
       <ExerciseForm
         ref={exerciseFormRef}
         initialName=""
