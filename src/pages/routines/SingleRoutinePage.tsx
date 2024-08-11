@@ -66,14 +66,20 @@ const SingleRoutinePage = () => {
   ) => {
     const currentIndex = routines.indexOf(currentRoutine);
 
-    const exercises: Exercise[] = localRoutineExercises.map((ex) => ({
-      ...ex,
-      workingSets: ex.workingSets?.map((set: WorkingSet) => ({
-        ...set,
-        id: undefined,
-        creationTimedate: undefined,
-      })),
-    }));
+    const exercises: Exercise[] = localRoutineExercises.map((ex) => {
+      const { temporaryId, ...restEx } = ex;
+
+      return {
+        ...restEx,
+        workingSets: ex.workingSets?.map((set: WorkingSet) => {
+          const { id, creationTimedate, ...restSet } = set;
+
+          return {
+            ...restSet,
+          };
+        }),
+      };
+    });
 
     const routineToUpdate = {
       id: currentRoutine.id,

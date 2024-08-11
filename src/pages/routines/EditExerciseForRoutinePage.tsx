@@ -90,7 +90,7 @@ const EditExerciseForRoutinePage = () => {
       />
       <Flex direction="column" align="center" gap={3}>
         <Text size="md">Customize exercise</Text>
-        <Heading size="lg" mb={5}>
+        <Heading size="md" mb={5} w="80%" textAlign="center">
           {exerciseName?.toUpperCase()}
         </Heading>
         <Flex direction="column" gap={5}>

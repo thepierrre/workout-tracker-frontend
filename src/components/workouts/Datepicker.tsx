@@ -1,20 +1,7 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Flex,
-  IconButton,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalOverlay,
-  Text,
-  useDisclosure,
-} from "@chakra-ui/react";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import { Box, Flex, IconButton, Text } from "@chakra-ui/react";
 import { format } from "date-fns";
 import { useState } from "react";
-import Calendar from "react-calendar";
 import { useDispatch, useSelector } from "react-redux";
 
 import { RootState } from "../../app/store";
@@ -47,7 +34,7 @@ const daysOfNextWeek = Array.from({ length: 7 }, (_, index) => {
 });
 
 const Datepicker = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  // const { isOpen, onOpen, onClose } = useDisclosure();
   const [displayedWeek, setDisplayedWeek] = useState<Date[]>(daysOfThisWeek);
   const chosenDay = useSelector((state: RootState) => state.chosenDay.day);
   const { workouts } = useSelector((state: RootState) => state.workoutSessions);

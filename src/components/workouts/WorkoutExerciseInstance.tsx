@@ -99,7 +99,7 @@ const WorkoutExerciseInstance: React.FC<Props> = ({
                 </Flex>
               ))
             ) : (
-              <Text textAlign="center">No sets.</Text>
+              <Text textAlign="center">Add your first set!</Text>
             )}
           </Flex>
           <Flex justify="end">
