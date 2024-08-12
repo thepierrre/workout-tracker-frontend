@@ -17,6 +17,7 @@ import { workoutsForUser } from "../../../mockData/handlers/workoutsForUserHandl
 import authenticatedUserReducer from "../../../store/auth/authenticatedUserSlice";
 import categoriesReducer from "../../../store/exercises/categoriesSlice";
 import exercisesReducer from "../../../store/exercises/exercisesSlice";
+import localRoutineReducer from "../../../store/routines/localRoutineSlice";
 import routinesReducer from "../../../store/routines/routinesSlice";
 import activeExerciseInstanceReducer from "../../../store/workout/activeExerciseInstanceSlice";
 import chosenDayReducer from "../../../store/workout/dayInCalendarSlice";
@@ -80,6 +81,12 @@ const createInitialState = () => ({
     loading: false,
     error: null,
   },
+  localRoutine: {
+    name: "",
+    routineExercises: [],
+    loading: false,
+    error: null,
+  },
 });
 
 const createStore = (initialState: InitialState) => {
@@ -92,6 +99,7 @@ const createStore = (initialState: InitialState) => {
       exercises: exercisesReducer,
       routines: routinesReducer,
       categories: categoriesReducer,
+      localRoutine: localRoutineReducer,
     },
     preloadedState: initialState,
   });
@@ -139,9 +147,9 @@ describe("SingleRoutinePage", () => {
       expect(
         screen.getByDisplayValue("Full Body Workout A"),
       ).toBeInTheDocument();
-      expect(screen.getByPlaceholderText("Filter")).toBeInTheDocument();
-      expect(screen.getByText("Update")).toBeInTheDocument();
-      expect(screen.getByText("Delete routine")).toBeInTheDocument();
+      expect(screen.getByPlaceholderText("Search by name")).toBeInTheDocument();
+      expect(screen.getByText("SAVE")).toBeInTheDocument();
+      expect(screen.getByText("DELETE")).toBeInTheDocument();
     });
 
     const benchPressCheckbox = screen.getByLabelText("Bench press");
@@ -178,16 +186,16 @@ describe("SingleRoutinePage", () => {
       expect(
         screen.getByDisplayValue("Full Body Workout A"),
       ).toBeInTheDocument();
-      expect(screen.getByPlaceholderText("Filter")).toBeInTheDocument();
-      expect(screen.getByText("Update")).toBeInTheDocument();
-      expect(screen.getByText("Delete routine")).toBeInTheDocument();
+      expect(screen.getByPlaceholderText("Search by name")).toBeInTheDocument();
+      expect(screen.getByText("SAVE")).toBeInTheDocument();
+      expect(screen.getByText("DELETE")).toBeInTheDocument();
     });
 
     fireEvent.change(screen.getByDisplayValue("Full Body Workout A"), {
       target: { value: "" },
     });
 
-    fireEvent.click(screen.getByText("Update"));
+    fireEvent.click(screen.getByText("SAVE"));
     await waitFor(() => {
       expect(
         screen.getByText("Routine name cannot be empty."),

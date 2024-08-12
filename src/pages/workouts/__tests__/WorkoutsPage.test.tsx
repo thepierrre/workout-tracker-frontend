@@ -19,6 +19,7 @@ import { Workout } from "../../../interfaces/workout.interface";
 import { initializedUser } from "../../../mockData/authHandlers/userHandler";
 import { categories } from "../../../mockData/handlers/categoriesHandler";
 import { exerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
+import { routinesForUser } from "../../../mockData/handlers/routinesForUserHandler";
 import { workoutsForUser as mutableWorkoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
 import authenticatedUserReducer from "../../../store/auth/authenticatedUserSlice";
 import categoriesReducer from "../../../store/exercises/categoriesSlice";
@@ -86,6 +87,11 @@ const createInitialState = () => ({
     loading: false,
     error: null,
   },
+  routines: {
+    routines: routinesForUser,
+    loading: false,
+    error: null,
+  },
 });
 
 const createStore = (initialState: InitialState) => {
@@ -140,10 +146,10 @@ describe("WorkoutsPage", () => {
 
     expect(screen.getByText("New workout")).toBeInTheDocument();
     expect(screen.getByText("Full Body Workout A")).toBeInTheDocument();
-    expect(screen.getByText("bench press")).toBeInTheDocument();
-    expect(screen.getByText("barbell rows")).toBeInTheDocument();
-    expect(screen.getByText("squats")).toBeInTheDocument();
-    expect(screen.getByText("dumbbell pushes")).toBeInTheDocument();
+    expect(screen.getByText("Bench press")).toBeInTheDocument();
+    expect(screen.getByText("Barbell rows")).toBeInTheDocument();
+    expect(screen.getByText("Squats")).toBeInTheDocument();
+    expect(screen.getByText("Dumbbell pushes")).toBeInTheDocument();
     expect(screen.getAllByText("Delete workout")).toHaveLength(1);
   });
 
@@ -168,6 +174,10 @@ describe("WorkoutsPage", () => {
     });
 
     fireEvent.click(screen.getByText("New workout"));
+
+    await waitFor(() => {
+      expect(screen.getByText("Full Body Workout B")).toBeInTheDocument();
+    });
 
     await act(async () => {
       fireEvent.click(screen.getByText("Full Body Workout B"));

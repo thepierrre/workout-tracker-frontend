@@ -133,12 +133,11 @@ describe("NewExercisePage", () => {
     renderWithProviders(<NewExercisePage />, store);
 
     waitFor(() => {
-      expect(screen.getByText("Add a new exercise")).toBeInTheDocument();
+      expect(screen.getByText("New exercise")).toBeInTheDocument();
       expect(screen.getByText("Exercise name")).toBeInTheDocument();
       expect(screen.getByPlaceholderText("Enter a name")).toBeInTheDocument();
-      expect(screen.getByText("Filter categories")).toBeInTheDocument();
-      expect(screen.getByText("Create")).toBeInTheDocument();
-      expect(screen.getByPlaceholderText("Search")).toBeInTheDocument();
+      expect(screen.getByText("CREATE")).toBeInTheDocument();
+      expect(screen.getByPlaceholderText("Search by name")).toBeInTheDocument();
     });
 
     waitFor(() => {
@@ -152,10 +151,11 @@ describe("NewExercisePage", () => {
     renderWithProviders(<NewExercisePage />, store);
 
     await waitFor(() => {
-      expect(screen.getByText("Add a new exercise")).toBeInTheDocument();
+      expect(screen.getByText("New exercise")).toBeInTheDocument();
+      expect(screen.getByText("Selected muscles (0/5)")).toBeInTheDocument();
     });
 
-    fireEvent.change(screen.getByPlaceholderText("Search"), {
+    fireEvent.change(screen.getByPlaceholderText("Search by name"), {
       target: { value: "c" },
     });
     expect(screen.getByDisplayValue("c")).toBeInTheDocument();
@@ -168,7 +168,7 @@ describe("NewExercisePage", () => {
       expect(screen.queryByText("Quadriceps")).toBeNull();
       expect(screen.queryByText("Lower back")).toBeNull();
       expect(screen.queryByText("Upper back")).toBeNull();
-      expect(screen.queryByText("barbell rows")).toBeNull();
+      expect(screen.queryByText("Barbell rows")).toBeNull();
       expect(screen.queryByText("Triceps")).toBeNull();
       expect(screen.queryByText("Biceps")).toBeNull();
       expect(screen.queryByText("Abs")).toBeNull();
@@ -180,11 +180,13 @@ describe("NewExercisePage", () => {
   test("displays an error when an exercise with no name is submitted", async () => {
     renderWithProviders(<NewExercisePage />, store);
 
-    await waitFor(() =>
-      expect(screen.getByText("Add a new exercise")).toBeInTheDocument(),
-    );
+    await waitFor(() => {
+      expect(screen.getByText("New exercise")).toBeInTheDocument();
+      expect(screen.getByText("CANCEL")).toBeInTheDocument();
+      expect(screen.getByText("CREATE")).toBeInTheDocument();
+    });
 
-    fireEvent.click(screen.getByText("Create"));
+    fireEvent.click(screen.getByText("CREATE"));
     await waitFor(() => {
       expect(
         screen.getByText("Exercise name cannot be empty."),
@@ -196,15 +198,15 @@ describe("NewExercisePage", () => {
     renderWithProviders(<NewExercisePage />, store);
 
     await waitFor(() =>
-      expect(screen.getByText("Add a new exercise")).toBeInTheDocument(),
+      expect(screen.getByText("New exercise")).toBeInTheDocument(),
     );
 
     fireEvent.change(screen.getByPlaceholderText("Enter a name"), {
-      target: { value: "bench press" },
+      target: { value: "Bench press" },
     });
-    expect(screen.getByDisplayValue("bench press")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("Bench press")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByText("Create"));
+    fireEvent.click(screen.getByText("CREATE"));
     await waitFor(() => {
       expect(
         screen.getByText("An exercise with this name already exists!"),
@@ -212,11 +214,11 @@ describe("NewExercisePage", () => {
     });
   });
 
-  test("renders the exercise page with a new exercise when a correct exercise is submitted", async () => {
+  test("renders the exercises page with a new exercise when a correct exercise is submitted", async () => {
     renderWithProviders(<NewExercisePage />, store);
 
     await waitFor(() =>
-      expect(screen.getByText("Add a new exercise")).toBeInTheDocument(),
+      expect(screen.getByText("New exercise")).toBeInTheDocument(),
     );
 
     fireEvent.change(screen.getByPlaceholderText("Enter a name"), {
@@ -224,7 +226,7 @@ describe("NewExercisePage", () => {
     });
     expect(screen.getByDisplayValue("brand-new exercise")).toBeInTheDocument();
 
-    fireEvent.change(screen.getByPlaceholderText("Search"), {
+    fireEvent.change(screen.getByPlaceholderText("Search by name"), {
       target: { value: "test" },
     });
     expect(screen.getByText("Test category")).toBeInTheDocument();
@@ -235,7 +237,7 @@ describe("NewExercisePage", () => {
     });
 
     await act(async () => {
-      fireEvent.click(screen.getByText("Create"));
+      fireEvent.click(screen.getByText("CREATE"));
     });
 
     await waitFor(() => {

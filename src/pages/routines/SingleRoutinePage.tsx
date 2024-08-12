@@ -38,7 +38,7 @@ const SingleRoutinePage = () => {
   );
 
   const { routineExercises: localRoutineExercises } = useSelector(
-    (state: RootState) => state.localRoutine,
+    (state: RootState) => state.localRoutine || [],
   );
 
   const { user, loading: loadingUser } = useSelector(

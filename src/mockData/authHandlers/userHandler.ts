@@ -1,5 +1,6 @@
-import { http, HttpResponse } from "msw";
 import { format } from "date-fns";
+import { HttpResponse, http } from "msw";
+
 import { User } from "../../interfaces/user.interface";
 import { baseURL } from "../../mockData/node";
 
@@ -19,108 +20,138 @@ export const fetchedUser = {
   email: "testuser@example.com",
   routines: [
     {
+      userId: "12345",
       id: "916ee32a-728f-4eea-a3g6-d0e097b22b21",
       name: "Full Body Workout A",
-      exerciseTypes: [
+      routineExercises: [
         {
           id: "a6647d9c-a926-499e-9a5f-e9f16690bfde",
-          name: "bench press",
+          name: "Bench press",
+          equipment: "BARBELL",
+          isDefault: true,
           categories: [
             {
               id: "300e8400-c29b-41d4-a716-446655440005",
-              name: "chest",
+              name: "Chest",
+              muscleGroup: "CHEST",
             },
             {
               id: "450e8400-c29b-41d4-a716-446655440008",
-              name: "triceps",
+              name: "Triceps",
+              muscleGroup: "ARMS",
             },
           ],
         },
         {
           id: "a6647d9c-a926-499e-9a5f-e9f16690bfdg",
-          name: "barbell rows",
+          name: "Barbell rows",
+          equipment: "BARBELL",
+          isDefault: true,
           categories: [
             {
               id: "400e8400-c29b-41d4-a716-446655440007",
-              name: "upper back",
+              name: "Upper back",
+              muscleGroup: "BACK",
             },
           ],
         },
         {
           id: "a6647d9c-a926-499e-9a5f-e9f16690bfda",
-          name: "squats",
+          name: "Squats",
+          equipment: "BARBELL",
+          isDefault: true,
           categories: [
             {
               id: "100e8400-e29b-41d4-a716-446655440001",
-              name: "glutes",
+              name: "Glutes",
+              muscleGroup: "LEGS",
             },
             {
               id: "200e8400-c29b-41d4-a716-446655440003",
-              name: "quadriceps",
+              name: "Quads",
+              muscleGroup: "LEGS",
             },
           ],
         },
         {
           id: "a6647d9c-a926-499e-9a5f-e9f16690bfdj",
-          name: "dumbbell pushes",
+          name: "Dumbbell pushes",
+          equipment: "DUMBBELLS",
+          isDefault: true,
           categories: [
             {
               id: "600e8400-c29b-41d4-a716-446655440010",
-              name: "front deltoids",
+              name: "Anterior delts",
+              muscleGroup: "SHOULDERS",
             },
           ],
         },
       ],
     },
     {
+      userId: "12345",
       id: "916ee32a-728f-4ood-a3g6-d0e097b22c54",
       name: "Full Body Workout B",
-      exerciseTypes: [
+      routineExercises: [
         {
           id: "20047d9c-a926-499e-9a5f-e9f16690bfde",
-          name: "incline bench press",
+          name: "Incline bench press",
+          equipment: "BARBELL",
+          isDefault: true,
           categories: [
             {
               id: "300e8400-c29b-41d4-a716-446655440005",
-              name: "chest",
+              name: "Upper chest",
+              muscleGroup: "CHEST",
             },
             {
               id: "450e8400-c29b-41d4-a716-446655440008",
-              name: "triceps",
+              name: "Triceps",
+              muscleGroup: "ARMS",
             },
           ],
         },
         {
           id: "a6647d9c-a926-499e-9a5f-e9f16690bfdi",
-          name: "pull-downs",
+          name: "Pull-downs",
+          equipment: "BAR",
+          isDefault: true,
           categories: [
             {
               id: "400e8400-c29b-41d4-a716-446655440007",
-              name: "upper back",
+              name: "Upper back",
+              muscleGroup: "BACK",
             },
           ],
         },
         {
           id: "a6647d9c-a926-499e-9a5f-e9f16690bfdb",
-          name: "deadlifts",
+          name: "Deadlifts",
+          equipment: "BARBELL",
+          isDefault: true,
           categories: [
             {
               id: "100e8400-e29b-41d4-a716-446655440001",
-              name: "glutes",
+              name: "Glutes",
+              muscleGroup: "LEGS",
             },
             {
               id: "350e8400-c29b-41d4-a716-446655440006",
-              name: "lower back",
+              name: "Lower back",
+              muscleGroup: "BACK",
             },
           ],
         },
         {
           id: "a6647d9c-a926-499e-9a5f-e9f16690bfdk",
-          name: "dumbbell lateral raises",
+          name: "Dumbbell lateral raises",
+          equipment: "DUMBBELLS",
+          isDefault: true,
           categories: [
             {
               id: "650e8400-c29b-41d4-a716-446655440010",
-              name: "middle deltoids",
+              name: "Middle delts",
+              muscleGroup: "SHOULDERS",
             },
           ],
         },
@@ -134,7 +165,7 @@ export const fetchedUser = {
       exerciseInstances: [
         {
           id: "3521346b-168d-4d05-8294-8db264bf54cc",
-          exerciseTypeName: "bench press",
+          exerciseTypeName: "Bench press",
           workingSets: [
             {
               id: "0c518544-89a2-4155-8968-1c78ec48bb2e",
@@ -163,8 +194,8 @@ export const fetchedUser = {
           ],
         },
         {
-          id: "5fe33ee8-eeef2-49b5-b247-b4a7aeda4b5b",
-          exerciseTypeName: "barbell rows",
+          id: "5fe33ee8-fcf2-49b5-b247-ff4a7aeda4b5b",
+          exerciseTypeName: "Barbell rows",
           workingSets: [
             {
               id: "e0ab7b4f-3eef-4ecb-ac84-6b7a871f693d",
@@ -187,8 +218,8 @@ export const fetchedUser = {
           ],
         },
         {
-          id: "5fe33ee8-fcf2-49b5-b247-b4a7da4b5b",
-          exerciseTypeName: "squats",
+          id: "5fe33ee8-fcf2-49b5-b247-b4fdfdD7aeda4b5b",
+          exerciseTypeName: "Squats",
           workingSets: [
             {
               id: "e0ab7b4f-3eef-4ecb-ac84-6b7a871f693d",
@@ -211,8 +242,8 @@ export const fetchedUser = {
           ],
         },
         {
-          id: "5fe33ee8-ggggcf2-49b5-b247-b4a7aeda4b5b",
-          exerciseTypeName: "dumbbell pushes",
+          id: "5fe33aaae8-fcf2-49b5-b247-b4a7aeda4b5b",
+          exerciseTypeName: "Dumbbell pushes",
           workingSets: [
             {
               id: "e0ab7b4f-3eef-4ecb-ac84-6b7a871f693d",
@@ -241,117 +272,182 @@ export const fetchedUser = {
   exerciseTypes: [
     {
       id: "a6647d9c-a926-499e-9a5f-e9f16690bfda",
-      name: "squats",
+      name: "Squats",
+      equipment: "BARBELL",
+      isDefault: true,
       categories: [
         {
           id: "100e8400-e29b-41d4-a716-446655440001",
-          name: "glutes",
+          name: "Glutes",
+          muscleGroup: "LEGS",
         },
         {
           id: "200e8400-c29b-41d4-a716-446655440003",
-          name: "quadriceps",
+          name: "Quads",
+          muscleGroup: "LEGS",
         },
       ],
     },
     {
       id: "a6647d9c-a926-499e-9a5f-e9f16690bfdb",
-      name: "deadlifts",
+      name: "Deadlifts",
+      equipment: "BARBELL",
+      isDefault: true,
       categories: [
         {
           id: "100e8400-e29b-41d4-a716-446655440001",
-          name: "glutes",
+          name: "Glutes",
+          muscleGroup: "LEGS",
         },
         {
           id: "350e8400-c29b-41d4-a716-446655440006",
-          name: "lower back",
+          name: "Lower back",
+          muscleGroup: "BACK",
         },
       ],
     },
     {
       id: "a6647d9c-a926-499e-9a5f-e9f16690bfdc",
-      name: "standing calf raises",
+      name: "Standing calf raises",
+      equipment: "MACHINE",
+      isDefault: true,
       categories: [
         {
           id: "250e8400-c29b-41d4-a716-446655440004",
-          name: "calves",
+          name: "Calves",
+          muscleGroup: "LEGS",
         },
       ],
     },
     {
       id: "a6647d9c-a926-499e-9a5f-e9f16690bfde",
-      name: "bench press",
+      name: "Bench press",
+      equipment: "BARBELL",
+      isDefault: true,
       categories: [
         {
           id: "300e8400-c29b-41d4-a716-446655440005",
-          name: "chest",
+          name: "Chest",
+          muscleGroup: "CHEST",
         },
         {
           id: "450e8400-c29b-41d4-a716-446655440008",
-          name: "triceps",
+          name: "Triceps",
+          muscleGroup: "ARMS",
         },
       ],
     },
     {
       id: "20047d9c-a926-499e-9a5f-e9f16690bfde",
-      name: "incline bench press",
+      name: "Incline bench press",
+      equipment: "BARBELL",
+      isDefault: true,
       categories: [
         {
           id: "300e8400-c29b-41d4-a716-446655440005",
-          name: "chest",
+          name: "Upper chest",
+          muscleGroup: "CHEST",
         },
         {
           id: "450e8400-c29b-41d4-a716-446655440008",
-          name: "triceps",
+          name: "Triceps",
+          muscleGroup: "ARMS",
         },
       ],
     },
     {
       id: "a6647d9c-a926-499e-9a5f-e9f16690bfdg",
-      name: "barbell rows",
+      name: "Barbell rows",
+      equipment: "BARBELL",
+      isDefault: true,
       categories: [
         {
           id: "400e8400-c29b-41d4-a716-446655440007",
-          name: "upper back",
+          name: "Upper back",
+          muscleGroup: "BACK",
         },
       ],
     },
     {
       id: "a6647d9c-a926-499e-9a5f-e9f16690bfdi",
-      name: "pull-downs",
+      name: "Pull-downs",
+      equipment: "BAR",
+      isDefault: true,
       categories: [
         {
           id: "400e8400-c29b-41d4-a716-446655440007",
-          name: "upper back",
+          name: "Upper back",
+          muscleGroup: "BACK",
         },
       ],
     },
     {
       id: "a6647d9c-a926-499e-9a5f-e9f16690bfdj",
-      name: "dumbbell pushes",
+      name: "Dumbbell pushes",
+      equipment: "DUMBBELLS",
+      isDefault: true,
       categories: [
         {
           id: "600e8400-c29b-41d4-a716-446655440010",
-          name: "front deltoids",
+          name: "Anterior delts",
+          muscleGroup: "SHOULDERS",
         },
       ],
     },
     {
       id: "a6647d9c-a926-499e-9a5f-e9f16690bfdk",
-      name: "dumbbell lateral raises",
+      name: "Dumbbell lateral raises",
+      equipment: "DUMBBELLS",
+      isDefault: true,
       categories: [
         {
           id: "650e8400-c29b-41d4-a716-446655440010",
-          name: "middle deltoids",
+          name: "Middle delts",
+          muscleGroup: "SHOULDERS",
         },
       ],
     },
     {
       id: "a6647d9c-a926-499e-9a5f-e9f16690bfdl",
-      name: "biceps barbell curls",
+      name: "Biceps barbell curls",
+      equipment: "BAR",
+      isDefault: true,
       categories: [
         {
           id: "500e8400-c29b-41d4-a716-446655440009",
-          name: "biceps",
+          name: "Biceps",
+          muscleGroup: "ARMS",
+        },
+      ],
+    },
+    {
+      id: "a6647d9c-a926-499e-9a5f-e9f16690bfdll",
+      name: "Sit-ups",
+      equipment: "BODYWEIGHT",
+      isDefault: false,
+      categories: [
+        {
+          id: "500e8400-c29b-41d4-a716-446655440301",
+          name: "Abs",
+          muscleGroup: "CORE",
+        },
+      ],
+    },
+    {
+      id: "a6647d9c-a926-499e-9a5f-e9f16690bfdlll",
+      name: "Pull-ups",
+      equipment: "BAR",
+      isDefault: false,
+      categories: [
+        {
+          id: "400e8400-c29b-41d4-a716-446655440007",
+          name: "Upper back",
+          muscleGroup: "BACK",
+        },
+        {
+          id: "450e8400-c29b-41d4-a716-446655440008",
+          name: "Triceps",
+          muscleGroup: "ARMS",
         },
       ],
     },
@@ -359,7 +455,7 @@ export const fetchedUser = {
 };
 
 export const userHandler = [
-  http.get(`${baseURL}me`, () => {
+  http.get("http://localhost:8080/api/users/me", () => {
     return HttpResponse.json(initializedUser);
   }),
 ];

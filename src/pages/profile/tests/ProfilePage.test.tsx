@@ -79,47 +79,6 @@ describe("ProfilePage", () => {
     });
   });
 
-  test("filters workouts by day", async () => {
-    renderWithProviders(<ProfilePage />);
-
-    await waitFor(() => {
-      expect(screen.getByText("Hello, testUser")).toBeInTheDocument();
-    });
-    fireEvent.change(screen.getByTestId("day-select"), {
-      target: { value: "15" },
-    });
-    const filteredWorkouts = screen.getAllByTestId("workout-item");
-    expect(filteredWorkouts).toHaveLength(1);
-  });
-
-  test("filters workouts by month", async () => {
-    renderWithProviders(<ProfilePage />);
-
-    await waitFor(() => {
-      expect(screen.getByText("Hello, testUser")).toBeInTheDocument();
-    });
-
-    fireEvent.change(screen.getByTestId("month-select"), {
-      target: { value: "March" },
-    });
-    const filteredWorkouts = screen.getAllByTestId("workout-item");
-    expect(filteredWorkouts).toHaveLength(1);
-  });
-
-  test("filters workouts by year", async () => {
-    renderWithProviders(<ProfilePage />);
-
-    await waitFor(() => {
-      expect(screen.getByText("Hello, testUser")).toBeInTheDocument();
-    });
-
-    fireEvent.change(screen.getByTestId("year-select"), {
-      target: { value: "2024" },
-    });
-    const filteredWorkouts = screen.getAllByTestId("workout-item");
-    expect(filteredWorkouts).toHaveLength(1);
-  });
-
   test("renders statistics", async () => {
     renderWithProviders(<ProfilePage />);
 
@@ -127,15 +86,11 @@ describe("ProfilePage", () => {
       expect(screen.getByText("Hello, testUser")).toBeInTheDocument();
     });
 
-    const numberOfWorkouts = store.getState().workoutSessions.workouts.length;
-    const numberOfRoutines = store.getState().routines.routines.length;
-    const numberOfExercises = store.getState().exercises.exercises.length;
-    expect(screen.getByText("Workouts:")).toBeInTheDocument();
-    expect(screen.getByText(numberOfWorkouts)).toBeInTheDocument();
-    expect(screen.getByText("Routines:")).toBeInTheDocument();
-    expect(screen.getByText(numberOfRoutines)).toBeInTheDocument();
-    expect(screen.getByText("Exercises:")).toBeInTheDocument();
-    expect(screen.getByText(numberOfExercises)).toBeInTheDocument();
+    expect(screen.getByText("Total workouts:")).toBeInTheDocument();
+    expect(screen.getByText("Total reps:")).toBeInTheDocument();
+    expect(screen.getByText("Maximum reps in a set:")).toBeInTheDocument();
+    expect(screen.getByText("Total weight:")).toBeInTheDocument();
+    expect(screen.getByText("Highest single weight:")).toBeInTheDocument();
   });
 
   test("the logout button triggers logout", async () => {

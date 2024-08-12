@@ -115,7 +115,7 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
       (state: RootState) => state.exercises,
     );
     const { name: localRoutineName, routineExercises: localRoutineExercises } =
-      useSelector((state: RootState) => state.localRoutine);
+      useSelector((state: RootState) => state.localRoutine) || "";
 
     useEffect(() => {
       dispatch(fetchExercises());

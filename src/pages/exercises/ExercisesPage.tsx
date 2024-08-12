@@ -122,7 +122,7 @@ const ExercisesPage = () => {
               borderColor: "#3182CE",
             }}
             _placeholder={{ color: "#B3B3B3" }}
-            placeholder="Search for exercises"
+            placeholder="Search by name"
             onChange={(event) => handleExerciseFiltering(event)}
           />
           <InputLeftElement>

@@ -107,7 +107,7 @@ const SingleExercise: React.FC<Props> = ({
               <Text
                 fontWeight="bold"
                 fontSize="lg"
-                data-testid={`exercise-name-${exercise.id}`}
+                data-testid={`exercise-name-${exercise.name}`}
                 color={
                   location.state &&
                   location.state.addExercises === "true" &&

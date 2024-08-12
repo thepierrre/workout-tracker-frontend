@@ -20,12 +20,12 @@ const initialRoutinesForUser: Routine[] = [
           {
             id: "300e8400-c29b-41d4-a716-446655440005",
             name: "Chest",
-            muscleGroup: "Chest",
+            muscleGroup: "CHEST",
           },
           {
             id: "450e8400-c29b-41d4-a716-446655440008",
             name: "Triceps",
-            muscleGroup: "Arms",
+            muscleGroup: "ARMS",
           },
         ],
       },
@@ -38,7 +38,7 @@ const initialRoutinesForUser: Routine[] = [
           {
             id: "400e8400-c29b-41d4-a716-446655440007",
             name: "Upper back",
-            muscleGroup: "Back",
+            muscleGroup: "BACK",
           },
         ],
       },
@@ -51,12 +51,12 @@ const initialRoutinesForUser: Routine[] = [
           {
             id: "100e8400-e29b-41d4-a716-446655440001",
             name: "Glutes",
-            muscleGroup: "Legs",
+            muscleGroup: "LEGS",
           },
           {
             id: "200e8400-c29b-41d4-a716-446655440003",
             name: "Quads",
-            muscleGroup: "Legs",
+            muscleGroup: "LEGS",
           },
         ],
       },
@@ -69,7 +69,7 @@ const initialRoutinesForUser: Routine[] = [
           {
             id: "600e8400-c29b-41d4-a716-446655440010",
             name: "Anterior delts",
-            muscleGroup: "Shoulders",
+            muscleGroup: "SHOULDERS",
           },
         ],
       },
@@ -89,12 +89,12 @@ const initialRoutinesForUser: Routine[] = [
           {
             id: "300e8400-c29b-41d4-a716-446655440005",
             name: "Upper chest",
-            muscleGroup: "Chest",
+            muscleGroup: "CHEST",
           },
           {
             id: "450e8400-c29b-41d4-a716-446655440008",
             name: "Triceps",
-            muscleGroup: "Arms",
+            muscleGroup: "ARMS",
           },
         ],
       },
@@ -107,7 +107,7 @@ const initialRoutinesForUser: Routine[] = [
           {
             id: "400e8400-c29b-41d4-a716-446655440007",
             name: "Upper back",
-            muscleGroup: "Back",
+            muscleGroup: "BACK",
           },
         ],
       },
@@ -120,12 +120,12 @@ const initialRoutinesForUser: Routine[] = [
           {
             id: "100e8400-e29b-41d4-a716-446655440001",
             name: "Glutes",
-            muscleGroup: "Legs",
+            muscleGroup: "LEGS",
           },
           {
             id: "350e8400-c29b-41d4-a716-446655440006",
             name: "Lower back",
-            muscleGroup: "Back",
+            muscleGroup: "BACK",
           },
         ],
       },
@@ -138,7 +138,7 @@ const initialRoutinesForUser: Routine[] = [
           {
             id: "650e8400-c29b-41d4-a716-446655440010",
             name: "Middle delts",
-            muscleGroup: "Shoulders",
+            muscleGroup: "SHOULDERS",
           },
         ],
       },
@@ -149,11 +149,11 @@ const initialRoutinesForUser: Routine[] = [
 export let routinesForUser = deepClone(initialRoutinesForUser);
 
 export const routinesForUserHandler = [
-  http.get(`${baseURL}user-routines`, () => {
+  http.get("http://localhost:8080/api/user-routines", () => {
     return HttpResponse.json(routinesForUser);
   }),
 
-  http.post(`${baseURL}routines`, async ({ request }) => {
+  http.post("http://localhost:8080/api/routines", async ({ request }) => {
     const newRoutine = (await request.json()) as Routine;
 
     newRoutine.id = "05f000xyzxyz017-08ee-41f1-b80e-5112c98c43";

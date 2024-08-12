@@ -88,11 +88,11 @@ describe("SingleRoutine", () => {
     expect(screen.getByText("Full Body Workout B")).toBeInTheDocument();
     expect(screen.getAllByText("4 EXERCISES")).toHaveLength(2);
     expect(
-      screen.getByText("bench press | barbell rows | squats | dumbbell pushes"),
+      screen.getByText("Bench press | Barbell rows | Squats | Dumbbell pushes"),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        "incline bench press | pull-downs | deadlifts | dumbbell lateral raises",
+        "Incline bench press | Pull-downs | Deadlifts | Dumbbell lateral raises",
       ),
     ).toBeInTheDocument();
   });

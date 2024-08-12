@@ -141,11 +141,10 @@ describe("SingleExercisePage", () => {
 
     await waitFor(() => {
       expect(screen.getByText("Edit exercise")).toBeInTheDocument();
-      expect(screen.getByDisplayValue("barbell rows")).toBeInTheDocument();
-      expect(screen.getByText("Filter categories")).toBeInTheDocument();
-      expect(screen.getByPlaceholderText("Search")).toBeInTheDocument();
-      expect(screen.getByText("Update")).toBeInTheDocument();
-      expect(screen.getByText("Delete exercise")).toBeInTheDocument();
+      expect(screen.getByDisplayValue("Barbell rows")).toBeInTheDocument();
+      expect(screen.getByPlaceholderText("Search by name")).toBeInTheDocument();
+      expect(screen.getByText("SAVE")).toBeInTheDocument();
+      expect(screen.getByText("DELETE")).toBeInTheDocument();
 
       const checkedCheckbox = screen.getByLabelText("Upper back");
       expect(checkedCheckbox).toBeChecked();
@@ -169,14 +168,14 @@ describe("SingleExercisePage", () => {
 
     await waitFor(() => {
       expect(screen.getByText("Edit exercise")).toBeInTheDocument();
-      expect(screen.getByDisplayValue("barbell rows")).toBeInTheDocument();
+      expect(screen.getByDisplayValue("Barbell rows")).toBeInTheDocument();
     });
 
-    fireEvent.change(screen.getByDisplayValue("barbell rows"), {
+    fireEvent.change(screen.getByDisplayValue("Barbell rows"), {
       target: { value: "" },
     });
 
-    fireEvent.click(screen.getByText("Update"));
+    fireEvent.click(screen.getByText("SAVE"));
     await waitFor(() => {
       expect(
         screen.getByText("Exercise name cannot be empty."),
@@ -194,15 +193,15 @@ describe("SingleExercisePage", () => {
     await waitFor(() => {
       expect(screen.getByText("Edit exercise")).toBeInTheDocument();
       expect(
-        screen.getByDisplayValue("dumbbell lateral raises"),
+        screen.getByDisplayValue("Dumbbell lateral raises"),
       ).toBeInTheDocument();
     });
 
-    fireEvent.change(screen.getByDisplayValue("dumbbell lateral raises"), {
-      target: { value: "bench press" },
+    fireEvent.change(screen.getByDisplayValue("Dumbbell lateral raises"), {
+      target: { value: "Bench press" },
     });
 
-    fireEvent.click(screen.getByText("Update"));
+    fireEvent.click(screen.getByText("SAVE"));
 
     await waitFor(() => {
       expect(
@@ -220,15 +219,15 @@ describe("SingleExercisePage", () => {
 
     await waitFor(() => {
       expect(screen.getByText("Edit exercise")).toBeInTheDocument();
-      expect(screen.getByDisplayValue("pull-downs")).toBeInTheDocument();
+      expect(screen.getByDisplayValue("Pull-downs")).toBeInTheDocument();
     });
 
-    fireEvent.change(screen.getByDisplayValue("pull-downs"), {
+    fireEvent.change(screen.getByDisplayValue("Pull-downs"), {
       target: { value: "edited exercise" },
     });
 
     await act(async () => {
-      fireEvent.click(screen.getByTestId("submit-button"));
+      fireEvent.click(screen.getByText("SAVE"));
     });
     await waitFor(() => {
       expect(screen.getByText("New exercise")).toBeInTheDocument();

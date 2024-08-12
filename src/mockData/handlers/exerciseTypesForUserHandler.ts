@@ -15,12 +15,12 @@ export const initialExerciseTypesForUser: Exercise[] = [
       {
         id: "100e8400-e29b-41d4-a716-446655440001",
         name: "Glutes",
-        muscleGroup: "Legs",
+        muscleGroup: "LEGS",
       },
       {
         id: "200e8400-c29b-41d4-a716-446655440003",
         name: "Quads",
-        muscleGroup: "Legs",
+        muscleGroup: "LEGS",
       },
     ],
   },
@@ -33,12 +33,12 @@ export const initialExerciseTypesForUser: Exercise[] = [
       {
         id: "100e8400-e29b-41d4-a716-446655440001",
         name: "Glutes",
-        muscleGroup: "Legs",
+        muscleGroup: "LEGS",
       },
       {
         id: "350e8400-c29b-41d4-a716-446655440006",
         name: "Lower back",
-        muscleGroup: "Back",
+        muscleGroup: "BACK",
       },
     ],
   },
@@ -51,7 +51,7 @@ export const initialExerciseTypesForUser: Exercise[] = [
       {
         id: "250e8400-c29b-41d4-a716-446655440004",
         name: "Calves",
-        muscleGroup: "Legs",
+        muscleGroup: "LEGS",
       },
     ],
   },
@@ -64,12 +64,12 @@ export const initialExerciseTypesForUser: Exercise[] = [
       {
         id: "300e8400-c29b-41d4-a716-446655440005",
         name: "Chest",
-        muscleGroup: "Chest",
+        muscleGroup: "CHEST",
       },
       {
         id: "450e8400-c29b-41d4-a716-446655440008",
         name: "Triceps",
-        muscleGroup: "Arms",
+        muscleGroup: "ARMS",
       },
     ],
   },
@@ -82,12 +82,12 @@ export const initialExerciseTypesForUser: Exercise[] = [
       {
         id: "300e8400-c29b-41d4-a716-446655440005",
         name: "Upper chest",
-        muscleGroup: "Chest",
+        muscleGroup: "CHEST",
       },
       {
         id: "450e8400-c29b-41d4-a716-446655440008",
         name: "Triceps",
-        muscleGroup: "Arms",
+        muscleGroup: "ARMS",
       },
     ],
   },
@@ -100,7 +100,7 @@ export const initialExerciseTypesForUser: Exercise[] = [
       {
         id: "400e8400-c29b-41d4-a716-446655440007",
         name: "Upper back",
-        muscleGroup: "Back",
+        muscleGroup: "BACK",
       },
     ],
   },
@@ -113,7 +113,7 @@ export const initialExerciseTypesForUser: Exercise[] = [
       {
         id: "400e8400-c29b-41d4-a716-446655440007",
         name: "Upper back",
-        muscleGroup: "Back",
+        muscleGroup: "BACK",
       },
     ],
   },
@@ -126,7 +126,7 @@ export const initialExerciseTypesForUser: Exercise[] = [
       {
         id: "600e8400-c29b-41d4-a716-446655440010",
         name: "Anterior delts",
-        muscleGroup: "Shoulders",
+        muscleGroup: "SHOULDERS",
       },
     ],
   },
@@ -139,7 +139,7 @@ export const initialExerciseTypesForUser: Exercise[] = [
       {
         id: "650e8400-c29b-41d4-a716-446655440010",
         name: "Middle delts",
-        muscleGroup: "Shoulders",
+        muscleGroup: "SHOULDERS",
       },
     ],
   },
@@ -152,12 +152,12 @@ export const initialExerciseTypesForUser: Exercise[] = [
       {
         id: "500e8400-c29b-41d4-a716-446655440009",
         name: "Biceps",
-        muscleGroup: "Arms",
+        muscleGroup: "ARMS",
       },
     ],
   },
   {
-    id: "a6647d9c-a926-499e-9a5f-e9f16690bfdl",
+    id: "a6647d9c-a926-499e-9a5f-e9f16690bfdll",
     name: "Sit-ups",
     equipment: "BODYWEIGHT",
     isDefault: false,
@@ -165,12 +165,12 @@ export const initialExerciseTypesForUser: Exercise[] = [
       {
         id: "500e8400-c29b-41d4-a716-446655440301",
         name: "Abs",
-        muscleGroup: "Core",
+        muscleGroup: "CORE",
       },
     ],
   },
   {
-    id: "a6647d9c-a926-499e-9a5f-e9f16690bfdl",
+    id: "a6647d9c-a926-499e-9a5f-e9f16690bfdlll",
     name: "Pull-ups",
     equipment: "BAR",
     isDefault: false,
@@ -178,12 +178,12 @@ export const initialExerciseTypesForUser: Exercise[] = [
       {
         id: "400e8400-c29b-41d4-a716-446655440007",
         name: "Upper back",
-        muscleGroup: "Back",
+        muscleGroup: "BACK",
       },
       {
         id: "450e8400-c29b-41d4-a716-446655440008",
         name: "Triceps",
-        muscleGroup: "Arms",
+        muscleGroup: "ARMS",
       },
     ],
   },
@@ -192,12 +192,12 @@ export const initialExerciseTypesForUser: Exercise[] = [
 export let exerciseTypesForUser = deepClone(initialExerciseTypesForUser);
 
 export const exerciseTypesForUserHandler = [
-  http.get(`${baseURL}user-exercise-types`, () => {
+  http.get("http://localhost:8080/api/user-exercise-types", () => {
     return HttpResponse.json(exerciseTypesForUser);
   }),
 
   http.put(
-    `${baseURL}exercise-types/a6647d9c-a926-499e-9a5f-e9f16690bfdk`,
+    "http://localhost:8080/api/exercise-types/a6647d9c-a926-499e-9a5f-e9f16690bfdk",
     async ({ request }) => {
       const updatedExercise = (await request.json()) as Exercise;
 
@@ -228,7 +228,7 @@ export const exerciseTypesForUserHandler = [
   ),
 
   http.put(
-    `${baseURL}exercise-types/a6647d9c-a926-499e-9a5f-e9f16690bfdi`,
+    "http://localhost:8080/api/exercise-types/a6647d9c-a926-499e-9a5f-e9f16690bfdi",
     async ({ request }) => {
       const updatedExercise = (await request.json()) as Exercise;
 
@@ -237,10 +237,10 @@ export const exerciseTypesForUserHandler = [
     },
   ),
 
-  http.post(`${baseURL}exercise-types`, async ({ request }) => {
+  http.post("http://localhost:8080/api/exercise-types", async ({ request }) => {
     const newExercise = (await request.json()) as Exercise;
 
-    const nameAlreadyTaken = "bench press";
+    const nameAlreadyTaken = "Bench press";
     if (newExercise.name === nameAlreadyTaken) {
       return new HttpResponse("Conflict", {
         status: 409,

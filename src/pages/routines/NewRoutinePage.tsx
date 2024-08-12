@@ -24,7 +24,7 @@ const NewRoutinePage = () => {
     (state: RootState) => state.authenticatedUser,
   );
   const { routineExercises: localRoutineExercises } = useSelector(
-    (state: RootState) => state.localRoutine,
+    (state: RootState) => state.localRoutine || [],
   );
 
   const routineFormRef = useRef<{ submit: () => void }>(null);

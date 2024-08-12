@@ -119,7 +119,7 @@ describe("RoutinesPage", () => {
     fireEvent.click(screen.getByText("New routine"));
 
     await waitFor(() => {
-      expect(screen.getByText("Add a new routine")).toBeInTheDocument();
+      expect(screen.getByText("New routine")).toBeInTheDocument();
     });
   });
 });

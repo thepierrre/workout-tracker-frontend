@@ -1,4 +1,5 @@
 import { setupServer } from "msw/node";
+
 import { categoriesHandler } from "./handlers/categoriesHandler.ts";
 import { exerciseTypesForUserHandler } from "./handlers/exerciseTypesForUserHandler.ts";
 import { routinesForUserHandler } from "./handlers/routinesForUserHandler.ts";
@@ -10,7 +11,8 @@ export const server = setupServer(
   ...exerciseTypesForUserHandler,
   ...routinesForUserHandler,
   ...userSettingsHandler,
-  ...workoutsForUserHandler
+  ...workoutsForUserHandler,
 );
 
-export const baseURL = "https://workout-tracker-service-2.onrender.com/api/";
+// export const baseURL = "https://workout-tracker-service-2.onrender.com/api/";
+export const baseURL = "http://localhost:8080/api/";

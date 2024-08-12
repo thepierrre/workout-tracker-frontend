@@ -131,9 +131,7 @@ describe("ExercisesPage", () => {
 
     await waitFor(() => {
       expect(screen.getByText("New exercise")).toBeInTheDocument();
-      expect(
-        screen.getByPlaceholderText("Search for exercises"),
-      ).toBeInTheDocument();
+      expect(screen.getByPlaceholderText("Search by name")).toBeInTheDocument();
     });
 
     expect(screen.getAllByTestId(/^exercise-name-/)).toHaveLength(
@@ -142,7 +140,7 @@ describe("ExercisesPage", () => {
 
     mutableExerciseTypesForUser.forEach((exercise: Exercise) => {
       const exerciseElement = screen.getByTestId(
-        `exercise-name-${exercise.id}`,
+        `exercise-name-${exercise.name}`,
       );
       expect(exerciseElement).toBeInTheDocument();
       expect(exerciseElement).toHaveTextContent(exercise.name);
@@ -170,12 +168,14 @@ describe("ExercisesPage", () => {
     fireEvent.click(screen.getByText("New exercise"));
 
     await waitFor(() => {
-      expect(screen.getByText("Add a new exercise")).toBeInTheDocument();
+      expect(screen.getByText("New exercise")).toBeInTheDocument();
       expect(screen.getByText("Exercise name")).toBeInTheDocument();
       expect(screen.getByPlaceholderText("Enter a name")).toBeInTheDocument();
-      expect(screen.getByText("Filter categories")).toBeInTheDocument();
-      expect(screen.getByText("Create")).toBeInTheDocument();
-      expect(screen.getByPlaceholderText("Search")).toBeInTheDocument();
+      expect(screen.getByText("CREATE")).toBeInTheDocument();
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("Selected muscles (0/5)")).toBeInTheDocument();
     });
 
     await waitFor(() => {
@@ -192,7 +192,7 @@ describe("ExercisesPage", () => {
       expect(screen.getByText("New exercise")).toBeInTheDocument();
     });
 
-    fireEvent.change(screen.getByPlaceholderText("Search for exercises"), {
+    fireEvent.change(screen.getByPlaceholderText("Search by name"), {
       target: { value: "Dumbbell" },
     });
 
@@ -201,16 +201,16 @@ describe("ExercisesPage", () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText("dumbbell pushes")).toBeInTheDocument();
-      expect(screen.getByText("dumbbell lateral raises")).toBeInTheDocument();
-      expect(screen.queryByText("squats")).toBeNull();
-      expect(screen.queryByText("deadlifts")).toBeNull();
-      expect(screen.queryByText("bench press")).toBeNull();
-      expect(screen.queryByText("incline bench press")).toBeNull();
-      expect(screen.queryByText("standing calf raises")).toBeNull();
-      expect(screen.queryByText("barbell rows")).toBeNull();
-      expect(screen.queryByText("pull-downs")).toBeNull();
-      expect(screen.queryByText("biceps barbell curls")).toBeNull();
+      expect(screen.getByText("Dumbbell pushes")).toBeInTheDocument();
+      expect(screen.getByText("Dumbbell lateral raises")).toBeInTheDocument();
+      expect(screen.queryByText("Squats")).toBeNull();
+      expect(screen.queryByText("Deadlifts")).toBeNull();
+      expect(screen.queryByText("Bench press")).toBeNull();
+      expect(screen.queryByText("Incline bench press")).toBeNull();
+      expect(screen.queryByText("Standing calf raises")).toBeNull();
+      expect(screen.queryByText("Barbell rows")).toBeNull();
+      expect(screen.queryByText("Pull-downs")).toBeNull();
+      expect(screen.queryByText("Biceps barbell curls")).toBeNull();
     });
   });
 });

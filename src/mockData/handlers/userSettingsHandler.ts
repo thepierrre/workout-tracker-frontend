@@ -10,7 +10,7 @@ export const userSettings = {
 };
 
 export const userSettingsHandler = [
-  http.get(`${baseURL}users/user-settings`, () => {
+  http.get("http://localhost:8080/api/users/user-settings", () => {
     return HttpResponse.json(userSettings);
   }),
 ];
