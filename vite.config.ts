@@ -20,7 +20,7 @@ export default defineConfig({
   plugins: [react()],
   test: {
     // 👋 add the line below to add jsdom to vite
-    include: ["**/*.test.tsx"],
+    include: ["**/*.test.tsx", "**/*.test.ts"],
     globals: true,
     environment: "jsdom",
     setupFiles: ["./setupTests.ts"],
