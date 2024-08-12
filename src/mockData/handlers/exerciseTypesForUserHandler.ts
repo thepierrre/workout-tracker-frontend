@@ -1,5 +1,6 @@
 import { Exercise } from "interfaces/exercise.interface";
-import { http, HttpResponse } from "msw";
+import { HttpResponse, http } from "msw";
+
 import { baseURL } from "../../mockData/node";
 
 const deepClone = (obj: any) => JSON.parse(JSON.stringify(obj));
@@ -7,117 +8,182 @@ const deepClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 export const initialExerciseTypesForUser: Exercise[] = [
   {
     id: "a6647d9c-a926-499e-9a5f-e9f16690bfda",
-    name: "squats",
+    name: "Squats",
+    equipment: "BARBELL",
+    isDefault: true,
     categories: [
       {
         id: "100e8400-e29b-41d4-a716-446655440001",
-        name: "glutes",
+        name: "Glutes",
+        muscleGroup: "Legs",
       },
       {
         id: "200e8400-c29b-41d4-a716-446655440003",
-        name: "quadriceps",
+        name: "Quads",
+        muscleGroup: "Legs",
       },
     ],
   },
   {
     id: "a6647d9c-a926-499e-9a5f-e9f16690bfdb",
-    name: "deadlifts",
+    name: "Deadlifts",
+    equipment: "BARBELL",
+    isDefault: true,
     categories: [
       {
         id: "100e8400-e29b-41d4-a716-446655440001",
-        name: "glutes",
+        name: "Glutes",
+        muscleGroup: "Legs",
       },
       {
         id: "350e8400-c29b-41d4-a716-446655440006",
-        name: "lower back",
+        name: "Lower back",
+        muscleGroup: "Back",
       },
     ],
   },
   {
     id: "a6647d9c-a926-499e-9a5f-e9f16690bfdc",
-    name: "standing calf raises",
+    name: "Standing calf raises",
+    equipment: "MACHINE",
+    isDefault: true,
     categories: [
       {
         id: "250e8400-c29b-41d4-a716-446655440004",
-        name: "calves",
+        name: "Calves",
+        muscleGroup: "Legs",
       },
     ],
   },
   {
     id: "a6647d9c-a926-499e-9a5f-e9f16690bfde",
-    name: "bench press",
+    name: "Bench press",
+    equipment: "BARBELL",
+    isDefault: true,
     categories: [
       {
         id: "300e8400-c29b-41d4-a716-446655440005",
-        name: "chest",
+        name: "Chest",
+        muscleGroup: "Chest",
       },
       {
         id: "450e8400-c29b-41d4-a716-446655440008",
-        name: "triceps",
+        name: "Triceps",
+        muscleGroup: "Arms",
       },
     ],
   },
   {
     id: "20047d9c-a926-499e-9a5f-e9f16690bfde",
-    name: "incline bench press",
+    name: "Incline bench press",
+    equipment: "BARBELL",
+    isDefault: true,
     categories: [
       {
         id: "300e8400-c29b-41d4-a716-446655440005",
-        name: "chest",
+        name: "Upper chest",
+        muscleGroup: "Chest",
       },
       {
         id: "450e8400-c29b-41d4-a716-446655440008",
-        name: "triceps",
+        name: "Triceps",
+        muscleGroup: "Arms",
       },
     ],
   },
   {
     id: "a6647d9c-a926-499e-9a5f-e9f16690bfdg",
-    name: "barbell rows",
+    name: "Barbell rows",
+    equipment: "BARBELL",
+    isDefault: true,
     categories: [
       {
         id: "400e8400-c29b-41d4-a716-446655440007",
-        name: "upper back",
+        name: "Upper back",
+        muscleGroup: "Back",
       },
     ],
   },
   {
     id: "a6647d9c-a926-499e-9a5f-e9f16690bfdi",
-    name: "pull-downs",
+    name: "Pull-downs",
+    equipment: "BAR",
+    isDefault: true,
     categories: [
       {
         id: "400e8400-c29b-41d4-a716-446655440007",
-        name: "upper back",
+        name: "Upper back",
+        muscleGroup: "Back",
       },
     ],
   },
   {
     id: "a6647d9c-a926-499e-9a5f-e9f16690bfdj",
-    name: "dumbbell pushes",
+    name: "Dumbbell pushes",
+    equipment: "DUMBBELLS",
+    isDefault: true,
     categories: [
       {
         id: "600e8400-c29b-41d4-a716-446655440010",
-        name: "front deltoids",
+        name: "Anterior delts",
+        muscleGroup: "Shoulders",
       },
     ],
   },
   {
     id: "a6647d9c-a926-499e-9a5f-e9f16690bfdk",
-    name: "dumbbell lateral raises",
+    name: "Dumbbell lateral raises",
+    equipment: "DUMBBELLS",
+    isDefault: true,
     categories: [
       {
         id: "650e8400-c29b-41d4-a716-446655440010",
-        name: "middle deltoids",
+        name: "Middle delts",
+        muscleGroup: "Shoulders",
       },
     ],
   },
   {
     id: "a6647d9c-a926-499e-9a5f-e9f16690bfdl",
-    name: "biceps barbell curls",
+    name: "Biceps barbell curls",
+    equipment: "BAR",
+    isDefault: true,
     categories: [
       {
         id: "500e8400-c29b-41d4-a716-446655440009",
-        name: "biceps",
+        name: "Biceps",
+        muscleGroup: "Arms",
+      },
+    ],
+  },
+  {
+    id: "a6647d9c-a926-499e-9a5f-e9f16690bfdl",
+    name: "Sit-ups",
+    equipment: "BODYWEIGHT",
+    isDefault: false,
+    categories: [
+      {
+        id: "500e8400-c29b-41d4-a716-446655440301",
+        name: "Abs",
+        muscleGroup: "Core",
+      },
+    ],
+  },
+  {
+    id: "a6647d9c-a926-499e-9a5f-e9f16690bfdl",
+    name: "Pull-ups",
+    equipment: "BAR",
+    isDefault: false,
+    categories: [
+      {
+        id: "400e8400-c29b-41d4-a716-446655440007",
+        name: "Upper back",
+        muscleGroup: "Back",
+      },
+      {
+        id: "450e8400-c29b-41d4-a716-446655440008",
+        name: "Triceps",
+        muscleGroup: "Arms",
       },
     ],
   },
@@ -136,12 +202,12 @@ export const exerciseTypesForUserHandler = [
       const updatedExercise = (await request.json()) as Exercise;
 
       const index = exerciseTypesForUser.findIndex(
-        (ex: Exercise) => ex.id === updatedExercise.id
+        (ex: Exercise) => ex.id === updatedExercise.id,
       );
 
       const nameAlreadyTaken = exerciseTypesForUser.some(
         (ex: Exercise) =>
-          ex.name === updatedExercise.name && ex.id !== updatedExercise.id
+          ex.name === updatedExercise.name && ex.id !== updatedExercise.id,
       );
 
       if (nameAlreadyTaken) {
@@ -158,7 +224,7 @@ export const exerciseTypesForUserHandler = [
         };
         return HttpResponse.json(updatedExercise);
       }
-    }
+    },
   ),
 
   http.put(
@@ -168,7 +234,7 @@ export const exerciseTypesForUserHandler = [
 
       exerciseTypesForUser = [...exerciseTypesForUser, updatedExercise];
       return HttpResponse.json(updatedExercise);
-    }
+    },
   ),
 
   http.post(`${baseURL}exercise-types`, async ({ request }) => {

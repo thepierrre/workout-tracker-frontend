@@ -5,6 +5,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 
+import { Exercise } from "../../../interfaces/exercise.interface";
 import { Routine } from "../../../interfaces/routine.interface";
 import { initializedUser } from "../../../mockData/authHandlers/userHandler";
 import { categories } from "../../../mockData/handlers/categoriesHandler";
@@ -98,9 +99,10 @@ describe("RoutinesPage", () => {
         const exercisesElement = screen.getByTestId(
           `routine-exercises-${routine.id}`,
         );
-        const expectedExercises = routine.exerciseTypes
-          .map((exercise) => exercise?.name.trim())
-          .join(" | ");
+        const expectedExercises =
+          routine.routineExercises
+            ?.map((exercise: Exercise) => exercise?.name.trim())
+            .join(" | ") || "";
         expect(exercisesElement).toBeInTheDocument();
         expect(exercisesElement).toHaveTextContent(expectedExercises);
       });

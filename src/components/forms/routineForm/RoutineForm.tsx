@@ -24,7 +24,7 @@ import {
   useForm,
 } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
 import { AppDispatch, RootState } from "../../../app/store";

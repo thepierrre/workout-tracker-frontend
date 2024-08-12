@@ -1,11 +1,10 @@
 import { Flex, FormControl, FormLabel, Text, Textarea } from "@chakra-ui/react";
 import debounce from "lodash.debounce";
 import { useCallback, useEffect, useState } from "react";
-import { Resolver, useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
+import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
 
-import { AppDispatch, RootState } from "../../app/store";
-import { ExerciseInstance } from "../../interfaces/exerciseInstance.interface";
+import { AppDispatch } from "../../app/store";
 import { updateNotesForExInstance } from "../../store/workout/workoutSessionsSlice";
 
 interface Props {

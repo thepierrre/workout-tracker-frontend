@@ -7,14 +7,12 @@ import axiosInstance from "../../util/axiosInstance.ts";
 
 export interface ExercisesState {
   exercises: Exercise[];
-  defaultExercises: Exercise[];
   loading: boolean;
   error: string | null;
 }
 
 const initialState: ExercisesState = {
   exercises: [],
-  defaultExercises: [],
   loading: false,
   error: null,
 };

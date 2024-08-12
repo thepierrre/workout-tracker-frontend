@@ -1,4 +1,5 @@
-import { http, HttpResponse } from "msw";
+import { HttpResponse, http } from "msw";
+
 import { baseURL } from "../../mockData/node";
 
 export const userSettings = {

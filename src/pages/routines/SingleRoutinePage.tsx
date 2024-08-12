@@ -1,4 +1,4 @@
-import { Text, useDisclosure } from "@chakra-ui/react";
+import { useDisclosure } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { UseFormSetError } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";

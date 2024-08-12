@@ -8,7 +8,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { User } from "interfaces/user.interface";
 import { useState } from "react";
 import { Resolver, SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
@@ -18,10 +17,7 @@ import { AppDispatch } from "../../app/store.ts";
 import Container from "../../components/UI/Container";
 import WideButton from "../../components/UI/buttons/WideButton.tsx";
 import Welcome from "../../components/profile/Welcome";
-import {
-  initializeUser,
-  setUser,
-} from "../../store/auth/authenticatedUserSlice";
+import { initializeUser } from "../../store/auth/authenticatedUserSlice";
 import axiosInstance from "../../util/axiosInstance.ts";
 
 type FormValues = {

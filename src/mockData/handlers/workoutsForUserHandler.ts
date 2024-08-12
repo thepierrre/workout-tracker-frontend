@@ -1,7 +1,8 @@
 import { format } from "date-fns";
-import { Workout } from "../../interfaces/workout.interface";
-import { http, HttpResponse } from "msw";
 import { ExerciseInstance } from "interfaces/exerciseInstance.interface";
+import { HttpResponse, http } from "msw";
+
+import { Workout } from "../../interfaces/workout.interface";
 import { baseURL } from "../../mockData/node";
 
 const deepClone = (obj: any) => JSON.parse(JSON.stringify(obj));
@@ -252,11 +253,11 @@ export const workoutsForUserHandler = [
       workoutsForUser = [
         ...workoutsForUser.filter(
           (workout: Workout) =>
-            workout.id !== "05fa8b17-08ee-41f1-b80e-5112c98c2c3e"
+            workout.id !== "05fa8b17-08ee-41f1-b80e-5112c98c2c3e",
         ),
       ];
 
       return new HttpResponse(null, { status: 204 });
-    }
+    },
   ),
 ];
