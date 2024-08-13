@@ -129,7 +129,7 @@ describe("NewExercisePage", () => {
     store = createStore(initialState);
   });
 
-  test("renders the heading, inputs and categories correctly", () => {
+  test("renders the heading, inputs, equipment options and categories correctly", () => {
     renderWithProviders(<NewExercisePage />, store);
 
     waitFor(() => {
@@ -138,6 +138,26 @@ describe("NewExercisePage", () => {
       expect(screen.getByPlaceholderText("Enter a name")).toBeInTheDocument();
       expect(screen.getByText("CREATE")).toBeInTheDocument();
       expect(screen.getByPlaceholderText("Search by name")).toBeInTheDocument();
+
+      expect(
+        screen.getByRole("option", { name: "Barbell" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("option", { name: "Bodyweight" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("option", { name: "Dumbbells" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("option", { name: "Weight plates" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("option", { name: "Kettlebells" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("option", { name: "Machine" }),
+      ).toBeInTheDocument();
+      expect(screen.getByRole("option", { name: "Bar" })).toBeInTheDocument();
     });
 
     waitFor(() => {

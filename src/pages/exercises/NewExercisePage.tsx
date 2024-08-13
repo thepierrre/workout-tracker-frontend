@@ -75,7 +75,7 @@ const NewExercisePage = () => {
       <SubmitOrCancelButton
         text="CANCEL"
         top="4.7rem"
-        left="2rem"
+        left={["2rem", "4rem", "8rem", "20rem", "30rem"]}
         link="/exercises"
       />
 
@@ -84,7 +84,7 @@ const NewExercisePage = () => {
       <SubmitOrCancelButton
         text="CREATE"
         top="4.7rem"
-        right="2rem"
+        right={["2rem", "4rem", "8rem", "20rem", "30rem"]}
         onClick={() => exerciseFormRef.current?.submit()}
       />
 

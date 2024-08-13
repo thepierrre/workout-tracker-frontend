@@ -146,7 +146,7 @@ const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
             isInvalid={!!errors.name}
             width={["95vw", "85vw", "70vw", "50vw", "40vw"]}
           >
-            <FormLabel fontSize="sm" htmlFor="exercise-name">
+            <FormLabel fontSize="sm" htmlFor="exercise-name" mr={0}>
               Exercise name
             </FormLabel>
             <Input
@@ -169,16 +169,29 @@ const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
             </FormErrorMessage>
           </FormControl>
           <FormControl>
-            <FormLabel fontSize="sm" mt={4} htmlFor="exercise-type">
-              Equipment
-            </FormLabel>
-            <Select id="exercise-type" {...register("equipment")} bg="#404040">
-              {equipmentOptions.map((option, index) => (
-                <option key={index} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </Select>
+            <Flex direction="column" align="center">
+              <FormLabel
+                fontSize="sm"
+                mr={0}
+                mt={4}
+                htmlFor="exercise-equipment"
+                w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+              >
+                Equipment
+              </FormLabel>
+              <Select
+                id="exercise-equipment"
+                {...register("equipment")}
+                bg="#404040"
+                w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+              >
+                {equipmentOptions.map((option, index) => (
+                  <option key={index} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </Select>
+            </Flex>
           </FormControl>
 
           <Flex direction="column" align="center" justify="center" w="100%">

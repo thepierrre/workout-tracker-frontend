@@ -79,7 +79,7 @@ const NewRoutinePage = () => {
       <SubmitOrCancelButton
         text="CANCEL"
         top="4.7rem"
-        left="2rem"
+        left={["2rem", "4rem", "8rem", "20rem", "30rem"]}
         link="/routines"
       />
 
@@ -88,7 +88,7 @@ const NewRoutinePage = () => {
       <SubmitOrCancelButton
         text="CREATE"
         top="4.7rem"
-        right="2rem"
+        right={["2rem", "4rem", "8rem", "20rem", "30rem"]}
         onClick={() => routineFormRef.current?.submit()}
       />
 

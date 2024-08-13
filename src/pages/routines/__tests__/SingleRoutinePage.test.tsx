@@ -135,7 +135,7 @@ describe("SingleRoutinePage", () => {
     store = createStore(initialState);
   });
 
-  test("renders the correct routine with the UI elements", async () => {
+  test("renders the correct routine", async () => {
     renderWithProviders(
       <SingleRoutinePage />,
       "916ee32a-728f-4eea-a3g6-d0e097b22b21",

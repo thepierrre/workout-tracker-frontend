@@ -4,6 +4,7 @@ import "@testing-library/jest-dom";
 import {
   act,
   fireEvent,
+  getAllByRole,
   render,
   screen,
   waitFor,
@@ -145,6 +146,26 @@ describe("SingleExercisePage", () => {
       expect(screen.getByPlaceholderText("Search by name")).toBeInTheDocument();
       expect(screen.getByText("SAVE")).toBeInTheDocument();
       expect(screen.getByText("DELETE")).toBeInTheDocument();
+
+      expect(
+        screen.getByRole("option", { name: "Barbell" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("option", { name: "Bodyweight" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("option", { name: "Dumbbells" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("option", { name: "Weight plates" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("option", { name: "Kettlebells" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("option", { name: "Machine" }),
+      ).toBeInTheDocument();
+      expect(screen.getByRole("option", { name: "Bar" })).toBeInTheDocument();
 
       const checkedCheckbox = screen.getByLabelText("Upper back");
       expect(checkedCheckbox).toBeChecked();

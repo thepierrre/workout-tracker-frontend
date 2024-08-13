@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 interface Props {
   text: "SAVE" | "CREATE" | "CANCEL";
   top: string;
-  right?: string;
-  left?: string;
+  right?: string[];
+  left?: string[];
   link?: string;
   onClick?: () => void;
 }
