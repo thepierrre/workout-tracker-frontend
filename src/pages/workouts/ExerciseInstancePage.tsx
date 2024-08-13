@@ -9,9 +9,9 @@ import { AppDispatch, RootState } from "../../app/store";
 import Container from "../../components/UI/Container";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
 import NotesForm from "../../components/forms/NotesForm";
-import ThresholdForm from "../../components/forms/ThresholdForm";
+import ThresholdForm from "../../components/forms/thresholdForm/ThresholdForm";
 import ExWorkingSet from "../../components/shared/ExWorkingSet";
-import ThresholdHandler from "../../components/workouts/ThresholdHandler";
+import ThresholdHandler from "../../components/workouts/thresholdHandler/ThresholdHandler";
 import { WorkingSet } from "../../interfaces/workingSet.interface";
 import PageNotFound from "../../pages/PageNotFound";
 import { fetchUserSettings } from "../../store/settings/userSettingsSlice";
@@ -100,6 +100,7 @@ const WorkoutExerciseInstancePage = () => {
 
           <Flex w="100%" direction="column" gap={5} mt={2}>
             <ThresholdHandler
+              setThreshold={setThreshold}
               threshold={threshold}
               userSettings={userSettings || defaultUserSettings}
             />

@@ -7,9 +7,9 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { AppDispatch, RootState } from "../../app/store";
 import Container from "../../components/UI/Container";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
-import ThresholdForm from "../../components/forms/ThresholdForm";
+import ThresholdForm from "../../components/forms/thresholdForm/ThresholdForm";
 import ExWorkingSet from "../../components/shared/ExWorkingSet";
-import ThresholdHandler from "../../components/workouts/ThresholdHandler";
+import ThresholdHandler from "../../components/workouts/thresholdHandler/ThresholdHandler";
 import { UserSettings } from "../../interfaces/userSettings.interface";
 import { WorkingSet } from "../../interfaces/workingSet.interface";
 import PageNotFound from "../../pages/PageNotFound";
@@ -100,6 +100,7 @@ const EditExerciseForRoutinePage = () => {
         </Heading>
         <Flex direction="column" gap={5}>
           <ThresholdHandler
+            setThreshold={setThreshold}
             threshold={threshold}
             userSettings={userSettings || defaultUserSettings}
           />

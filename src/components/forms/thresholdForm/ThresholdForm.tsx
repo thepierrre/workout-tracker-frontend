@@ -1,7 +1,6 @@
 import { CloseIcon } from "@chakra-ui/icons";
 import {
   Box,
-  Button,
   Flex,
   FormControl,
   IconButton,
@@ -13,26 +12,28 @@ import { useMemo, useState } from "react";
 import { Resolver, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 
-import { AppDispatch } from "../../app/store";
-import Stopwatch from "../../components/workouts/Stopwatch";
-import useCustomToast from "../../hooks/useCustomToast";
-import { ExerciseInstance } from "../../interfaces/exerciseInstance.interface";
-import { UserSettings } from "../../interfaces/userSettings.interface";
-import { WorkingSet } from "../../interfaces/workingSet.interface";
+import { AppDispatch } from "../../../app/store";
+import useCustomToast from "../../../hooks/useCustomToast";
+import { ExerciseInstance } from "../../../interfaces/exerciseInstance.interface";
+import { UserSettings } from "../../../interfaces/userSettings.interface";
+import { WorkingSet } from "../../../interfaces/workingSet.interface";
 import {
   addSetToExerciseLocally,
   removeSetFromExerciseLocally,
   updateSetInExerciseLocally,
-} from "../../store/routines/localRoutineSlice";
+} from "../../../store/routines/localRoutineSlice";
 import {
   addSet,
   deleteSet,
   updateSet,
-} from "../../store/workout/workoutSessionsSlice";
-import { convertLbsToKgs } from "../../util/weightUnitConverting";
-import NarrowButton from "../UI/buttons/NarrowButton";
+} from "../../../store/workout/workoutSessionsSlice";
+import { convertLbsToKgs } from "../../../util/weightUnitConverting";
+import NarrowButton from "../../UI/buttons/NarrowButton";
+import Stopwatch from "../../workouts/Stopwatch";
+import PlusMinusButton from "./PlusMinusButton";
+import ThresholdInput from "./ThresholdInput";
 
-interface FormValues {
+export interface FormValues {
   repsValue: string | null;
   weightValue: string | null;
 }
@@ -375,65 +376,34 @@ const ThresholdForm: React.FC<Props> = ({
           <Text textAlign="center" fontSize="sm">
             REPS
           </Text>
+
           <Flex justify="start" align="center" gap={2}>
-            <Button
-              fontSize="xl"
-              w={10}
-              bg="#404040"
-              color="white"
-              onClick={() =>
-                handleRepsAndWeight("reps", "decrease", getValues())
-              }
-              _focus={{ bg: "#404040" }}
-              isDisabled={
-                threshold !== undefined && parseInt(reps) - threshold < 0
-              }
-              css={{
-                ":active": {
-                  background: "lightblue",
-                  color: "#404040",
-                },
-              }}
-            >
-              –
-            </Button>
+            <PlusMinusButton
+              threshold={threshold || 1}
+              repsAndWeightValues={getValues()}
+              handleRepsAndWeight={handleRepsAndWeight}
+              reps={reps}
+              weight={weight}
+              increaseOrDecrease="decrease"
+              repsOrWeight="reps"
+            />
 
-            <FormControl isInvalid={!!errors.repsValue}>
-              <Input
-                {...register("repsValue")}
-                w={16}
-                p={1}
-                value={reps}
-                padding={0}
-                borderColor="#CBD5E0"
-                _focus={{
-                  boxShadow: "none",
-                  borderWidth: "2px",
-                  borderColor: errors.weightValue ? "#E53E3E" : "#3182CE",
-                }}
-                textAlign="center"
-                onChange={(event) => handleRepsInputChange(event)}
-              />
-            </FormControl>
+            <ThresholdInput
+              register={register("repsValue")}
+              reps={reps}
+              errors={errors}
+              handleRepsInputChange={handleRepsInputChange}
+            />
 
-            <Button
-              fontSize="xl"
-              w={10}
-              bg="#404040"
-              color="white"
-              onClick={() =>
-                handleRepsAndWeight("reps", "increase", getValues())
-              }
-              _focus={{ bg: "#404040" }}
-              css={{
-                ":active": {
-                  background: "lightblue",
-                  color: "#404040",
-                },
-              }}
-            >
-              +
-            </Button>
+            <PlusMinusButton
+              threshold={threshold || 1}
+              repsAndWeightValues={getValues()}
+              handleRepsAndWeight={handleRepsAndWeight}
+              reps={reps}
+              weight={weight}
+              increaseOrDecrease="increase"
+              repsOrWeight="reps"
+            />
           </Flex>
         </Flex>
 
@@ -442,60 +412,33 @@ const ThresholdForm: React.FC<Props> = ({
             {handleWeightUnitText()?.toUpperCase()}
           </Text>
           <Flex justify="center" gap={2} align="center">
-            <Button
-              fontSize="xl"
-              w={10}
-              bg="#404040"
-              color="white"
-              onClick={() => handleRepsAndWeight("weight", "decrease")}
-              _focus={{ bg: "#404040" }}
-              isDisabled={
-                threshold !== undefined && parseFloat(weight) - threshold < 0
-              }
-              css={{
-                ":active": {
-                  background: "lightblue",
-                  color: "#404040",
-                },
-              }}
-            >
-              –
-            </Button>
+            <PlusMinusButton
+              threshold={threshold || 1}
+              repsAndWeightValues={getValues()}
+              handleRepsAndWeight={handleRepsAndWeight}
+              reps={reps}
+              weight={weight}
+              increaseOrDecrease="decrease"
+              repsOrWeight="weight"
+            />
 
-            <FormControl isInvalid={!!errors.weightValue}>
-              <Input
-                {...register("weightValue")}
-                w={16}
-                p={1}
-                type="number"
-                value={weight}
-                textAlign="center"
-                borderColor="#CBD5E0"
-                _focus={{
-                  boxShadow: "none",
-                  borderWidth: "2px",
-                  borderColor: errors.weightValue ? "#E53E3E" : "#3182CE",
-                }}
-                onChange={(event) => handleWeightInputChange(event)}
-              />
-            </FormControl>
+            <ThresholdInput
+              register={register("weightValue")}
+              weight={weight}
+              errors={errors}
+              type="number"
+              handleRepsInputChange={handleWeightInputChange}
+            />
 
-            <Button
-              fontSize="xl"
-              w={10}
-              bg="#404040"
-              color="white"
-              onClick={() => handleRepsAndWeight("weight", "increase")}
-              _focus={{ bg: "#404040" }}
-              css={{
-                ":active": {
-                  background: "lightblue",
-                  color: "#404040",
-                },
-              }}
-            >
-              +
-            </Button>
+            <PlusMinusButton
+              threshold={threshold || 1}
+              repsAndWeightValues={getValues()}
+              handleRepsAndWeight={handleRepsAndWeight}
+              reps={reps}
+              weight={weight}
+              increaseOrDecrease="increase"
+              repsOrWeight="weight"
+            />
           </Flex>
         </Flex>
       </Flex>
