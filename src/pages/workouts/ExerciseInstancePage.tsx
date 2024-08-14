@@ -61,9 +61,11 @@ const WorkoutExerciseInstancePage = () => {
   }, [exerciseInstance]);
 
   const handleActiveWorkingSet = (workingSet: WorkingSet) => {
-    activeWorkingSet && activeWorkingSet.id === workingSet.id
-      ? setActiveWorkingSet(undefined)
-      : setActiveWorkingSet(workingSet);
+    if (activeWorkingSet?.id === workingSet.id) {
+      setActiveWorkingSet(undefined);
+    } else {
+      setActiveWorkingSet(workingSet);
+    }
   };
 
   const handleGoBack = () => {

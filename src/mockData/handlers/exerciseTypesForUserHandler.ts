@@ -1,8 +1,6 @@
 import { Exercise } from "interfaces/exercise.interface";
 import { HttpResponse, http } from "msw";
 
-import { baseURL } from "../../mockData/node";
-
 const deepClone = (obj: any) => JSON.parse(JSON.stringify(obj));
 
 export const initialExerciseTypesForUser: Exercise[] = [

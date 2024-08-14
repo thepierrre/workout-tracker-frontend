@@ -1,4 +1,4 @@
-import { Card, Flex, Text } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import React from "react";
 
 import { Workout } from "../../../interfaces/workout.interface";
@@ -13,7 +13,7 @@ interface Props {
 
 const Statistics: React.FC<Props> = ({ workouts, weightUnit }) => {
   const totalWeightRaised = (): number => {
-    let weightsFromAllSets: number[] = [];
+    const weightsFromAllSets: number[] = [];
     workouts.map((wrk) =>
       wrk.exerciseInstances.map((ex) =>
         ex.workingSets.map((wrkSet) => weightsFromAllSets.push(wrkSet.weight)),
@@ -40,7 +40,7 @@ const Statistics: React.FC<Props> = ({ workouts, weightUnit }) => {
   };
 
   const totalRepsDone = (): number => {
-    let repsFromAllSets: number[] = [];
+    const repsFromAllSets: number[] = [];
     workouts.map((wrk) =>
       wrk.exerciseInstances.map((ex) =>
         ex.workingSets.map((wrkSet) => repsFromAllSets.push(wrkSet.reps)),

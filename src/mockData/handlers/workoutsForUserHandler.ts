@@ -3,9 +3,8 @@ import { ExerciseInstance } from "interfaces/exerciseInstance.interface";
 import { HttpResponse, http } from "msw";
 
 import { Workout } from "../../interfaces/workout.interface";
-import { baseURL } from "../../mockData/node";
 
-const deepClone = (obj: any) => JSON.parse(JSON.stringify(obj));
+const deepClone = (obj: Workout[]) => JSON.parse(JSON.stringify(obj));
 
 // immutable, for each test to start
 const initialWorkoutsForUser = [

@@ -1,7 +1,6 @@
 import { HttpResponse, http } from "msw";
 
 import { Category } from "../../interfaces/category.interface";
-import { baseURL } from "../../mockData/node";
 
 export const categories: Category[] = [
   {

@@ -69,20 +69,19 @@ const SingleRoutinePage = () => {
   ) => {
     const currentIndex = routines.indexOf(currentRoutine);
 
-    const exercises: Exercise[] = localRoutineExercises.map((ex) => {
-      const { temporaryId, ...restEx } = ex;
-
-      return {
-        ...restEx,
-        workingSets: ex.workingSets?.map((set: WorkingSet) => {
-          const { id, creationTimedate, ...restSet } = set;
-
-          return {
-            ...restSet,
-          };
-        }),
-      };
-    });
+    const exercises: Omit<Exercise, "temporaryId">[] =
+      localRoutineExercises.map(
+        (ex) =>
+          ({
+            ...ex,
+            workingSets: ex.workingSets?.map(
+              (set) =>
+                ({
+                  ...set,
+                }) as Omit<WorkingSet, "id" | "creationTimedate">,
+            ),
+          }) as Omit<Exercise, "temporaryId">,
+      );
 
     const routineToUpdate = {
       id: currentRoutine.id,
@@ -90,8 +89,6 @@ const SingleRoutinePage = () => {
       routineExercises: exercises,
       userId: user.id,
     };
-
-    console.log(routineToUpdate);
 
     const compareOldAndNewRoutine = () => {
       return (
@@ -116,7 +113,7 @@ const SingleRoutinePage = () => {
       }
     } catch (error) {
       if (typeof error === "string") {
-        let errorMessage = error;
+        const errorMessage = error;
         setServerError(error);
         setError("name", { type: "server", message: errorMessage });
       }

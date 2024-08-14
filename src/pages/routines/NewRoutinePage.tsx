@@ -37,19 +37,20 @@ const NewRoutinePage = () => {
     data: FormValues,
     setError: UseFormSetError<FormValues>,
   ) => {
-    const exercises: Exercise[] = localRoutineExercises.map((ex) => {
-      const { temporaryId, ...rest } = ex; // Exclude temporary ID
+    const exercises: Omit<Exercise, "temporaryId">[] =
+      localRoutineExercises.map(
+        (ex) =>
+          ({
+            ...ex,
+            workingSets: ex.workingSets?.map(
+              (set) =>
+                ({
+                  ...set,
+                }) as Omit<WorkingSet, "id" | "creationTimedate">,
+            ),
+          }) as Omit<Exercise, "temporaryId">,
+      );
 
-      return {
-        ...rest,
-        workingSets: ex.workingSets?.map((set: WorkingSet) => {
-          const { id, ...restSet } = set;
-          return {
-            ...restSet,
-          };
-        }),
-      };
-    });
     const routineToAdd = {
       name: data.name,
       routineExercises: exercises,

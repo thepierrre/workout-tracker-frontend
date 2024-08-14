@@ -61,15 +61,16 @@ const EditExerciseForRoutinePage = () => {
   }, [userSettings]);
 
   const handleGoBack = () => {
-    location.state &&
-      location.state.newRoutine === true &&
+    if (location.state?.newRoutine === true) {
       navigate("/routines/new-routine", { state: { loadLocalRoutine: true } });
-    location.state &&
-      location.state.newRoutine === false &&
-      location.state.routineId &&
+    } else if (
+      location.state?.newRoutine === false &&
+      location.state.routineId
+    ) {
       navigate(`/routines/${location.state.routineId}`, {
         state: { loadLocalRoutine: true },
       });
+    }
   };
 
   if (!currentExercise) {

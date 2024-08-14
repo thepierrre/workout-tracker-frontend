@@ -6,12 +6,7 @@ import { RootState } from "app/store";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 
-import {
-  createInitialState,
-  createStore,
-  deepClone,
-  initialWorkoutsList,
-} from "../../../mockData/mockStore";
+import { createInitialState, createStore } from "../../../mockData/mockStore";
 import NewWorkout from "../NewWorkout";
 
 const renderWithProviders = (

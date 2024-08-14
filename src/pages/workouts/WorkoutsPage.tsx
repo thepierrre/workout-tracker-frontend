@@ -41,7 +41,7 @@ export const WorkoutsPage = () => {
       return false;
     }
 
-    let creationDate = parseISO(wrk.creationDate);
+    const creationDate = parseISO(wrk.creationDate);
 
     if (!isValid(creationDate)) {
       console.warn(`Invalid date: ${wrk.creationDate}`);
