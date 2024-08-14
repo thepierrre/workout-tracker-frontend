@@ -99,7 +99,7 @@ const SingleExercisePage = () => {
       }
     } catch (error) {
       if (typeof error === "string") {
-        let errorMessage = error;
+        const errorMessage = error;
         setServerError(error);
         setError("name", { type: "server", message: errorMessage });
       }

@@ -43,7 +43,7 @@ const RoutineExercisesList: React.FC<Props> = ({
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const moveArray = (arr: any[], fromIndex: number, toIndex: number) => {
+  const moveArray = (arr: Exercise[], fromIndex: number, toIndex: number) => {
     const newArr = [...arr];
     const element = newArr.splice(fromIndex, 1)[0];
     newArr.splice(toIndex, 0, element);

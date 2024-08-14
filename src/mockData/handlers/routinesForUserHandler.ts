@@ -1,7 +1,6 @@
 import { HttpResponse, http } from "msw";
 
 import { Routine } from "../../interfaces/routine.interface";
-import { baseURL } from "../../mockData/node";
 
 const deepClone = (obj: Routine[]) => JSON.parse(JSON.stringify(obj));
 

@@ -2,7 +2,7 @@ import { CloseIcon } from "@chakra-ui/icons";
 import { Box, Flex, IconButton, Text } from "@chakra-ui/react";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useMemo, useState } from "react";
-import { Resolver, useForm } from "react-hook-form";
+import { FieldError, Resolver, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 
 import { AppDispatch } from "../../../app/store";
@@ -32,7 +32,7 @@ export interface FormValues {
 }
 
 const resolver: Resolver<FormValues> = async (values) => {
-  const errors: Record<string, any> = {};
+  const errors: Record<string, FieldError> = {};
 
   if (!values.repsValue) {
     errors.repsValue = {
@@ -177,8 +177,8 @@ const ThresholdForm: React.FC<Props> = ({
   };
 
   const handleDeleteWorkingSet = async () => {
-    let exerciseInstanceId = exerciseInstance?.id;
-    let workingSetId = activeWorkingSet?.id;
+    const exerciseInstanceId = exerciseInstance?.id;
+    const workingSetId = activeWorkingSet?.id;
 
     if (exBlueprintOrInstance === "instance") {
       if (exerciseInstanceId && workingSetId) {
@@ -223,7 +223,7 @@ const ThresholdForm: React.FC<Props> = ({
       weight: parseWeightInCorrectUnit(weight),
     };
 
-    let exerciseInstanceId = exerciseInstance?.id;
+    const exerciseInstanceId = exerciseInstance?.id;
 
     if (exBlueprintOrInstance === "instance") {
       if (exerciseInstanceId) {
@@ -254,8 +254,8 @@ const ThresholdForm: React.FC<Props> = ({
   };
 
   const handleUpdateWorkingSet = async (reps: string, weight: string) => {
-    let exerciseInstanceId = exerciseInstance?.id;
-    let workingSetId = activeWorkingSet?.id;
+    const exerciseInstanceId = exerciseInstance?.id;
+    const workingSetId = activeWorkingSet?.id;
 
     const workingSetToUpdate: Omit<WorkingSet, "id"> = {
       reps: parseInt(reps),

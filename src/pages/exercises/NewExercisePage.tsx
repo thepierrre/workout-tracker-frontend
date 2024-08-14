@@ -57,7 +57,7 @@ const NewExercisePage = () => {
       navigate("/exercises", { state: { exercise: "created" } });
     } catch (error) {
       if (typeof error === "string") {
-        let errorMessage = error;
+        const errorMessage = error;
         setServerError(error);
         setError("name", { type: "server", message: errorMessage });
       }

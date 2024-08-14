@@ -1,7 +1,7 @@
 import { Exercise } from "interfaces/exercise.interface";
 import { HttpResponse, http } from "msw";
 
-const deepClone = (obj: any) => JSON.parse(JSON.stringify(obj));
+const deepClone = (obj: Exercise[]) => JSON.parse(JSON.stringify(obj));
 
 export const initialExerciseTypesForUser: Exercise[] = [
   {

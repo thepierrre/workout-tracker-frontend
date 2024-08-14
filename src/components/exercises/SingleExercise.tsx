@@ -75,7 +75,7 @@ const SingleExercise: React.FC<Props> = ({
       prevExercises.filter((name) => name !== exerciseName),
     );
     if (exerciseInstance && exerciseInstance.id) {
-      let exInstanceId = exerciseInstance.id;
+      const exInstanceId = exerciseInstance.id;
       dispatch(removeExInstance(exInstanceId));
     }
 

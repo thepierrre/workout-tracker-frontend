@@ -8,7 +8,6 @@ import {
   InputGroup,
   InputLeftElement,
 } from "@chakra-ui/react";
-import _ from "lodash";
 import {
   Fragment,
   forwardRef,
