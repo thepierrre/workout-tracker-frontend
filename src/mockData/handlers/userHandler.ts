@@ -2,7 +2,7 @@ import { format } from "date-fns";
 import { HttpResponse, http } from "msw";
 
 import { User } from "../../interfaces/user.interface";
-import { baseURL } from "../../mockData/node";
+import { baseURL } from "../node";
 
 export const initializedUser: User = {
   id: "12345",

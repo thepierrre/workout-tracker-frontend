@@ -1,8 +1,8 @@
 import { PayloadAction, createSlice, current } from "@reduxjs/toolkit";
+import { v4 as uuidv4 } from "uuid";
 
 import { Exercise } from "../../interfaces/exercise.interface";
 import { WorkingSet } from "../../interfaces/workingSet.interface";
-import { generateRandomString } from "../../util/randomValueGenerator";
 
 export interface LocalRoutineState {
   name: string;
@@ -68,7 +68,7 @@ export const localRoutineSlice = createSlice({
       if (exercise) {
         exercise.workingSets?.push({
           ...workingSet,
-          id: generateRandomString(),
+          temporaryId: uuidv4(),
         });
       }
     },

@@ -10,11 +10,10 @@
     "paths": {
       "test-utils": ["./utils/test-utils"]
     },
-    
-    
 
     /* Bundler mode */
     "moduleResolution": "bundler",
+    "noImplicitAny": true,
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,

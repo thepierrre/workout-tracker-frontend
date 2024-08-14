@@ -435,5 +435,4 @@ const workoutSessionsSlice = createSlice({
   },
 });
 
-export const {} = workoutSessionsSlice.actions;
 export default workoutSessionsSlice.reducer;

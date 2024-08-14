@@ -10,10 +10,10 @@ import {
 
 import App from "./app/App.tsx";
 import { store } from "./app/store.ts";
-import PageNotFound from "./pages/PageNotFound.tsx";
 import ExercisesPage from "./pages/exercises/ExercisesPage.tsx";
 import NewExercisePage from "./pages/exercises/NewExercisePage.tsx";
 import SingleExercisePage from "./pages/exercises/SingleExercisePage.tsx";
+import PageNotFound from "./pages/pageNotFound/PageNotFound.tsx";
 import LoginPage from "./pages/profile/LoginPage.tsx";
 import ProfilePage from "./pages/profile/ProfilePage.tsx";
 import RegisterPage from "./pages/profile/RegisterPage.tsx";

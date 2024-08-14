@@ -17,10 +17,10 @@ import ExerciseForm, {
 } from "../../components/forms/exerciseForm/ExerciseForm";
 import { Category } from "../../interfaces/category.interface";
 import { Exercise } from "../../interfaces/exercise.interface";
-import PageNotFound from "../../pages/PageNotFound";
 import { fetchCategories } from "../../store/exercises/categoriesSlice";
 import { removeExercise } from "../../store/exercises/exercisesSlice";
 import { updateExercise } from "../../store/exercises/exercisesSlice";
+import PageNotFound from "../pageNotFound/PageNotFound";
 
 const SingleExercisePage = () => {
   const navigate = useNavigate();

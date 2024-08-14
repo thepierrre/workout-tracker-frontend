@@ -1,12 +1,5 @@
 import { CloseIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Flex,
-  FormControl,
-  IconButton,
-  Input,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Flex, IconButton, Text } from "@chakra-ui/react";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useMemo, useState } from "react";
 import { Resolver, useForm } from "react-hook-form";
@@ -34,8 +27,8 @@ import PlusMinusButton from "./PlusMinusButton";
 import ThresholdInput from "./ThresholdInput";
 
 export interface FormValues {
-  repsValue: string | null;
-  weightValue: string | null;
+  repsValue: string;
+  weightValue: string;
 }
 
 const resolver: Resolver<FormValues> = async (values) => {
@@ -328,38 +321,6 @@ const ThresholdForm: React.FC<Props> = ({
     }
   };
 
-  const handleRepsInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const value = event.target.value;
-    if (value === "") {
-      setReps("");
-    } else {
-      const parsedValue = parseInt(value, 10);
-      if (!isNaN(parsedValue)) {
-        setReps(parsedValue.toString());
-      }
-    }
-  };
-
-  const handleWeightInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const value = event.target.value;
-
-    if (value === "") {
-      setWeight("");
-    } else {
-      const regex = /^\d*\.?\d{0,2}$/;
-      if (regex.test(value)) {
-        const parsedValue = parseFloat(value);
-        if (!isNaN(parsedValue)) {
-          setWeight(parsedValue.toString());
-        }
-      }
-    }
-  };
-
   const handleWeightUnitText = () => {
     if (userSettings?.weightUnit === "kgs") {
       return "kgs";
@@ -392,7 +353,8 @@ const ThresholdForm: React.FC<Props> = ({
               register={register("repsValue")}
               reps={reps}
               errors={errors}
-              handleRepsInputChange={handleRepsInputChange}
+              setWeight={setWeight}
+              setReps={setReps}
             />
 
             <PlusMinusButton
@@ -427,7 +389,8 @@ const ThresholdForm: React.FC<Props> = ({
               weight={weight}
               errors={errors}
               type="number"
-              handleRepsInputChange={handleWeightInputChange}
+              setWeight={setWeight}
+              setReps={setReps}
             />
 
             <PlusMinusButton

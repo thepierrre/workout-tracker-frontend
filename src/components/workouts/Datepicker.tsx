@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { RootState } from "../../app/store";
 import { setDay } from "../../store/workout/dayInCalendarSlice";
-import "./Calendar.css";
+import "./styles/Calendar.css";
 
 const today = new Date();
 

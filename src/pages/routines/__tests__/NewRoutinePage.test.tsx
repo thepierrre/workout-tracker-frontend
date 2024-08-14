@@ -1,13 +1,7 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { configureStore } from "@reduxjs/toolkit";
 import "@testing-library/jest-dom";
-import {
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-  waitForElementToBeRemoved,
-} from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 
@@ -15,10 +9,10 @@ import { Category } from "../../../interfaces/category.interface";
 import { Exercise } from "../../../interfaces/exercise.interface";
 import { User } from "../../../interfaces/user.interface";
 import { Workout } from "../../../interfaces/workout.interface";
-import { initializedUser } from "../../../mockData/authHandlers/userHandler";
 import { categories } from "../../../mockData/handlers/categoriesHandler";
 import { exerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
 import { routinesForUser as mutableRoutinesForUser } from "../../../mockData/handlers/routinesForUserHandler";
+import { initializedUser } from "../../../mockData/handlers/userHandler";
 import { workoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
 import authenticatedUserReducer from "../../../store/auth/authenticatedUserSlice";
 import categoriesReducer from "../../../store/exercises/categoriesSlice";
@@ -161,31 +155,31 @@ describe("NewRoutinePage", () => {
       target: { value: "brand-new routine" },
     });
 
-    // expect(screen.getByDisplayValue("brand-new routine")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("brand-new routine")).toBeInTheDocument();
 
-    // await waitFor(() => {
-    //   expect(screen.getByPlaceholderText("Search by name")).toBeInTheDocument();
-    // });
+    await waitFor(() => {
+      expect(screen.getByPlaceholderText("Search by name")).toBeInTheDocument();
+    });
 
-    // fireEvent.change(screen.getByPlaceholderText("Search by name"), {
-    //   target: { value: "Incline bench press" },
-    // });
+    fireEvent.change(screen.getByPlaceholderText("Search by name"), {
+      target: { value: "Incline bench press" },
+    });
 
-    // await waitFor(() => {
-    //   expect(
-    //     screen.getByDisplayValue("Incline bench press"),
-    //   ).toBeInTheDocument();
-    // });
+    await waitFor(() => {
+      expect(
+        screen.getByDisplayValue("Incline bench press"),
+      ).toBeInTheDocument();
+    });
 
-    // fireEvent.click(screen.getByTestId("not selected checkbox"));
+    fireEvent.click(screen.getByTestId("not selected checkbox"));
 
-    // fireEvent.click(screen.getByText("CREATE"));
-    // await waitFor(() =>
-    //   expect(screen.getByText("New routine")).toBeInTheDocument(),
-    // );
-    // await waitFor(() =>
-    //   expect(screen.getByText("brand-new routine")).toBeInTheDocument(),
-    // );
+    fireEvent.click(screen.getByText("CREATE"));
+    await waitFor(() =>
+      expect(screen.getByText("New routine")).toBeInTheDocument(),
+    );
+    await waitFor(() =>
+      expect(screen.getByText("brand-new routine")).toBeInTheDocument(),
+    );
   });
 
   test("attempt at adding a routine with no name renders an error", () => {

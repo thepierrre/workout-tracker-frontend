@@ -1,9 +1,9 @@
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
-import notfound from "../../public/notfound.png";
-import Container from "../components/UI/Container";
-import MainHeading from "../components/UI/text/MainHeading";
+import notfound from "../../../public/notfound.png";
+import Container from "../../components/UI/Container";
+import MainHeading from "../../components/UI/text/MainHeading";
 
 const PageNotFound = () => {
   return (

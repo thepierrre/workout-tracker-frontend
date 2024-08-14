@@ -8,8 +8,8 @@ import {
   roundKgs,
 } from "../../util/weightUnitConverting";
 
-// This exercise working set component can belong both to an exercise inside of a routine
-// or an exercise instance inside of a workout.
+// This exercise-working-set component can belong both to an exercise in a routine
+// or an exercise instance in a workout.
 
 interface ExWorkingSetProps {
   userSettings: UserSettings;

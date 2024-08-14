@@ -1,6 +1,6 @@
 import { UserSettings } from "interfaces/userSettings.interface";
 
-import SmallButton from "../../../components/UI/buttons/SmallButton";
+import SmallButton from "../../UI/buttons/SmallButton";
 
 interface Props {
   userSettings: UserSettings;

@@ -7,10 +7,10 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 
 import { Exercise } from "../../../interfaces/exercise.interface";
 import { Routine } from "../../../interfaces/routine.interface";
-import { initializedUser } from "../../../mockData/authHandlers/userHandler";
 import { categories } from "../../../mockData/handlers/categoriesHandler";
 import { exerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
 import { routinesForUser } from "../../../mockData/handlers/routinesForUserHandler";
+import { initializedUser } from "../../../mockData/handlers/userHandler";
 import { userSettings } from "../../../mockData/handlers/userSettingsHandler";
 import { workoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
 import authenticatedUserReducer from "../../../store/auth/authenticatedUserSlice";

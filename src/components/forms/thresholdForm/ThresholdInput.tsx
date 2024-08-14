@@ -10,10 +10,8 @@ interface Props {
     repsValue?: FieldError;
     weightValue?: FieldError;
   };
-  handleRepsInputChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleWeightInputChange?: (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => void;
+  setWeight: React.Dispatch<React.SetStateAction<string>>;
+  setReps: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const ThresholdInput: React.FC<Props> = ({
@@ -22,15 +20,47 @@ const ThresholdInput: React.FC<Props> = ({
   weight,
   errors,
   type,
-  handleRepsInputChange,
-  handleWeightInputChange,
+  setWeight,
+  setReps,
 }) => {
+  const handleWeightInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const value = event.target.value;
+
+    if (value === "") {
+      setWeight("");
+    } else {
+      const regex = /^\d*\.?\d{0,2}$/;
+      if (regex.test(value)) {
+        const parsedValue = parseFloat(value);
+        if (!isNaN(parsedValue)) {
+          setWeight(parsedValue.toString());
+        }
+      }
+    }
+  };
+
+  const handleRepsInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const value = event.target.value;
+    if (value === "") {
+      setReps("");
+    } else {
+      const parsedValue = parseInt(value, 10);
+      if (!isNaN(parsedValue)) {
+        setReps(parsedValue.toString());
+      }
+    }
+  };
+
   const handleRepsOrWeightInputChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    if (handleRepsInputChange && reps !== undefined) {
+    if (reps) {
       handleRepsInputChange(event);
-    } else if (handleWeightInputChange && weight !== undefined) {
+    } else if (weight) {
       handleWeightInputChange(event);
     }
   };

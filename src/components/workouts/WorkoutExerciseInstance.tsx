@@ -70,7 +70,7 @@ const WorkoutExerciseInstance: React.FC<Props> = ({
     <>
       <CustomCard>
         <CardBody>
-          <Text color="white" fontWeight="bold" mb={2}>
+          <Text color="white" fontWeight="bold" mb={4}>
             {exerciseInstance?.exerciseTypeName}
           </Text>
 
@@ -101,7 +101,9 @@ const WorkoutExerciseInstance: React.FC<Props> = ({
                 </Flex>
               ))
             ) : (
-              <Text textAlign="center">Add your first set!</Text>
+              <Text textAlign="center" mt={2}>
+                Add your first set!
+              </Text>
             )}
           </Flex>
           <Flex justify="end">

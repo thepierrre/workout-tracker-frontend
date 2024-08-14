@@ -8,8 +8,8 @@ import { AppDispatch, RootState } from "../../app/store";
 import Container from "../../components/UI/Container";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
 import MainHeading from "../../components/UI/text/MainHeading.tsx";
-import Statistics from "../../components/profile/Statistics";
 import Weight from "../../components/profile/Weight";
+import Statistics from "../../components/profile/statistics/Statistics.tsx";
 import { clearUser } from "../../store/auth/authenticatedUserSlice";
 import { fetchUserSettings } from "../../store/settings/userSettingsSlice";
 import { fetchWorkouts } from "../../store/workout/workoutSessionsSlice";
@@ -95,6 +95,7 @@ const ProfilePage = () => {
       <>
         <MainHeading
           text={`Hello${user?.username ? `, ${user.username}` : ""}`}
+          mb={0}
         />
 
         <Statistics

@@ -1,74 +1,23 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import { configureStore } from "@reduxjs/toolkit";
+import { EnhancedStore } from "@reduxjs/toolkit";
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen } from "@testing-library/react";
+import { RootState } from "app/store";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 
-import { initializedUser } from "../../../mockData/authHandlers/userHandler";
-import { exerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
-import { routinesForUser } from "../../../mockData/handlers/routinesForUserHandler";
-import { userSettings } from "../../../mockData/handlers/userSettingsHandler";
-import { workoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
-import authenticatedUserReducer from "../../../store/auth/authenticatedUserSlice";
-import categoriesReducer from "../../../store/exercises/categoriesSlice";
-import exercisesReducer from "../../../store/exercises/exercisesSlice";
-import localRoutineReducer from "../../../store/routines/localRoutineSlice";
-import routinesReducer from "../../../store/routines/routinesSlice";
-import userSettingsReducer from "../../../store/settings/userSettingsSlice";
-import activeExerciseInstanceReducer from "../../../store/workout/activeExerciseInstanceSlice";
-import chosenDayReducer from "../../../store/workout/dayInCalendarSlice";
-import workoutSessionsReducer from "../../../store/workout/workoutSessionsSlice";
+import {
+  createInitialState,
+  createStore,
+  deepClone,
+  initialWorkoutsList,
+} from "../../../mockData/mockStore";
 import NewWorkout from "../NewWorkout";
 
-const store = configureStore({
-  reducer: {
-    workoutSessions: workoutSessionsReducer,
-    chosenDay: chosenDayReducer,
-    activeExerciseInstance: activeExerciseInstanceReducer,
-    authenticatedUser: authenticatedUserReducer,
-    exercises: exercisesReducer,
-    routines: routinesReducer,
-    categories: categoriesReducer,
-    userSettings: userSettingsReducer,
-    localRoutine: localRoutineReducer,
-  },
-  preloadedState: {
-    authenticatedUser: {
-      user: initializedUser,
-      loading: false,
-      error: null,
-    },
-    workoutSessions: {
-      workouts: workoutsForUser,
-      loading: false,
-      error: null,
-    },
-    routines: {
-      routines: routinesForUser,
-      loading: false,
-      error: null,
-    },
-    exercises: {
-      exercises: exerciseTypesForUser,
-      loading: false,
-      error: null,
-    },
-    userSettings: {
-      userSettings: userSettings,
-      loading: false,
-      error: null,
-    },
-    localRoutine: {
-      name: "",
-      routineExercises: [],
-      loading: false,
-      error: null,
-    },
-  },
-});
-
-const renderWithProviders = (ui: React.ReactElement) => {
+const renderWithProviders = (
+  ui: React.ReactElement,
+  store: EnhancedStore<RootState>,
+) => {
   return render(
     <ChakraProvider>
       <Provider store={store}>
@@ -79,8 +28,15 @@ const renderWithProviders = (ui: React.ReactElement) => {
 };
 
 describe("SingleRoutine", () => {
+  let store: EnhancedStore<RootState>;
+
+  beforeEach(() => {
+    const initialState = createInitialState();
+    store = createStore(initialState);
+  });
+
   test("renders the drawer for choosing a new workout", async () => {
-    renderWithProviders(<NewWorkout />);
+    renderWithProviders(<NewWorkout />, store);
 
     fireEvent.click(screen.getByText("New workout"));
     expect(screen.getByText("Select a routine")).toBeInTheDocument();

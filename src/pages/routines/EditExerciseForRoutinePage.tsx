@@ -12,8 +12,8 @@ import ExWorkingSet from "../../components/shared/ExWorkingSet";
 import ThresholdHandler from "../../components/workouts/thresholdHandler/ThresholdHandler";
 import { UserSettings } from "../../interfaces/userSettings.interface";
 import { WorkingSet } from "../../interfaces/workingSet.interface";
-import PageNotFound from "../../pages/PageNotFound";
 import { fetchUserSettings } from "../../store/settings/userSettingsSlice";
+import PageNotFound from "../pageNotFound/PageNotFound";
 
 const defaultUserSettings: UserSettings = {
   changeThreshold: 1,
@@ -118,7 +118,7 @@ const EditExerciseForRoutinePage = () => {
                 <ExWorkingSet
                   workingSet={set}
                   index={index}
-                  key={index}
+                  key={set.id || set.temporaryId}
                   activeWorkingSet={activeWorkingSet}
                   handleActiveWorkingSet={handleActiveWorkingSet}
                   userSettings={userSettings || defaultUserSettings}

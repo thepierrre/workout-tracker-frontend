@@ -5,7 +5,7 @@ import { MemoryRouter } from "react-router-dom";
 import PageNotFound from "../PageNotFound";
 
 describe("WorkoutsPage", () => {
-  test("renders the not found page", () => {
+  test("renders the not-found page", () => {
     render(
       <MemoryRouter>
         <PageNotFound />

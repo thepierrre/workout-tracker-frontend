@@ -13,9 +13,9 @@ import ThresholdForm from "../../components/forms/thresholdForm/ThresholdForm";
 import ExWorkingSet from "../../components/shared/ExWorkingSet";
 import ThresholdHandler from "../../components/workouts/thresholdHandler/ThresholdHandler";
 import { WorkingSet } from "../../interfaces/workingSet.interface";
-import PageNotFound from "../../pages/PageNotFound";
 import { fetchUserSettings } from "../../store/settings/userSettingsSlice";
 import { fetchWorkouts } from "../../store/workout/workoutSessionsSlice";
+import PageNotFound from "../pageNotFound/PageNotFound";
 
 const defaultUserSettings: UserSettings = {
   changeThreshold: 1,

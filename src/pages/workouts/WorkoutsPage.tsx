@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { AppDispatch, RootState } from "../../app/store";
 import Container from "../../components/UI/Container";
+import SpinnerComponent from "../../components/UI/SpinnerComponent";
 import Datepicker from "../../components/workouts/Datepicker";
 import NewWorkout from "../../components/workouts/NewWorkout";
 import WorkoutSession from "../../components/workouts/WorkoutSession";
@@ -18,7 +19,9 @@ export const WorkoutsPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const toast = useToast();
   const toastIdRef = useRef<ToastId | undefined>(undefined);
-  const { workouts } = useSelector((state: RootState) => state.workoutSessions);
+  const { workouts, loading: loadingWorkouts } = useSelector(
+    (state: RootState) => state.workoutSessions,
+  );
   const [localWorkouts, setLocalWorkouts] = useState(workouts);
   const [workoutDeletionInProgressId, setWorkingDeletionInProgressId] =
     useState<string | null>(null);
@@ -84,6 +87,10 @@ export const WorkoutsPage = () => {
       setWorkingDeletionInProgressId(null);
     }
   };
+
+  if (loadingWorkouts) {
+    return <SpinnerComponent />;
+  }
 
   return (
     <Container>
