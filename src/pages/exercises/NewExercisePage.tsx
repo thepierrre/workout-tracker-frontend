@@ -49,8 +49,6 @@ const NewExercisePage = () => {
       userId: user.id,
     };
 
-    console.log(exerciseToAdd);
-
     try {
       setSubmittingInProgress(true);
       await dispatch(addExercise(exerciseToAdd)).unwrap();

@@ -40,7 +40,6 @@ export const addRoutine = createAsyncThunk<
   { rejectValue: string }
 >("routines/addRoutine", async (newRoutine, thunkAPI) => {
   try {
-    console.log(newRoutine);
     const response = await axiosInstance.post("routines", newRoutine);
     return response.data;
   } catch (error) {
@@ -72,7 +71,6 @@ export const updateRoutine = createAsyncThunk<
       `routines/${updatedRoutine.id}`,
       updatedRoutine,
     );
-    console.log(response.data);
     return response.data;
   } catch (error) {
     let errorMessage = "An unknown error occurred";

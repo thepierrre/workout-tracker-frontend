@@ -179,6 +179,7 @@ const ThresholdForm: React.FC<Props> = ({
   const handleDeleteWorkingSet = async () => {
     const exerciseInstanceId = exerciseInstance?.id;
     const workingSetId = activeWorkingSet?.id;
+    const workingSetTemporaryId = activeWorkingSet?.temporaryId;
 
     if (exBlueprintOrInstance === "instance") {
       if (exerciseInstanceId && workingSetId) {
@@ -193,9 +194,9 @@ const ThresholdForm: React.FC<Props> = ({
           console.error("Failed to delete set: ", error);
         }
       } else {
-        console.error("Exercise instance ID or set ID is missing");
+        console.error("Exercise instance ID or set ID is missing.");
       }
-    } else {
+    } else if (exBlueprintOrInstance === "blueprint") {
       if (exerciseName) {
         try {
           if (workingSetId) {
@@ -205,8 +206,15 @@ const ThresholdForm: React.FC<Props> = ({
                 exerciseName,
               }),
             );
+          } else if (workingSetTemporaryId) {
+            dispatch(
+              removeSetFromExerciseLocally({
+                temporaryId: workingSetTemporaryId,
+                exerciseName,
+              }),
+            );
           } else {
-            console.error("Working set ID missing.");
+            console.error("Working set ID is missing.");
           }
         } catch (error) {
           console.error("Failed to update set: ", error);
@@ -237,7 +245,7 @@ const ThresholdForm: React.FC<Props> = ({
       } else {
         console.error("Exercise instance ID is missing");
       }
-    } else {
+    } else if (exBlueprintOrInstance === "blueprint") {
       if (exerciseName) {
         try {
           dispatch(
@@ -256,6 +264,7 @@ const ThresholdForm: React.FC<Props> = ({
   const handleUpdateWorkingSet = async (reps: string, weight: string) => {
     const exerciseInstanceId = exerciseInstance?.id;
     const workingSetId = activeWorkingSet?.id;
+    const workingSetTemporaryId = activeWorkingSet?.temporaryId;
 
     const workingSetToUpdate: Omit<WorkingSet, "id"> = {
       reps: parseInt(reps),
@@ -278,7 +287,7 @@ const ThresholdForm: React.FC<Props> = ({
       } else {
         console.error("Exercise instance ID or set ID is missing");
       }
-    } else {
+    } else if (exBlueprintOrInstance === "blueprint") {
       if (exerciseName) {
         try {
           if (workingSetId) {
@@ -287,6 +296,16 @@ const ThresholdForm: React.FC<Props> = ({
                 workingSet: {
                   ...workingSetToUpdate,
                   id: workingSetId,
+                },
+                exerciseName,
+              }),
+            );
+          } else if (workingSetTemporaryId) {
+            dispatch(
+              updateSetInExerciseLocally({
+                workingSet: {
+                  ...workingSetToUpdate,
+                  temporaryId: workingSetTemporaryId,
                 },
                 exerciseName,
               }),

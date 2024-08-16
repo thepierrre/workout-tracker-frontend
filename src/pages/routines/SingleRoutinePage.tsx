@@ -70,18 +70,22 @@ const SingleRoutinePage = () => {
     const currentIndex = routines.indexOf(currentRoutine);
 
     const exercises: Omit<Exercise, "temporaryId">[] =
-      localRoutineExercises.map(
-        (ex) =>
-          ({
-            ...ex,
-            workingSets: ex.workingSets?.map(
-              (set) =>
-                ({
-                  ...set,
-                }) as Omit<WorkingSet, "id" | "creationTimedate">,
-            ),
-          }) as Omit<Exercise, "temporaryId">,
-      );
+      localRoutineExercises.map((ex) => {
+        const { temporaryId, ...restOfExercise } = ex;
+
+        const workingSets = ex.workingSets?.map((set) => {
+          const { temporaryId, ...restOfSet } = set;
+
+          return {
+            ...restOfSet,
+          } as Omit<WorkingSet, "temporaryId">;
+        });
+
+        return {
+          ...restOfExercise,
+          workingSets,
+        } as Omit<Exercise, "temporaryId">;
+      });
 
     const routineToUpdate = {
       id: currentRoutine.id,
