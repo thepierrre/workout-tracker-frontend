@@ -1,23 +1,24 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import WideButton from "../../components/UI/WideButton";
-import { User } from "interfaces/user.interface";
-import Container from "../../components/UI/Container";
 import {
-  Heading,
   Flex,
-  Text,
   FormControl,
-  Input,
   FormErrorMessage,
+  Heading,
+  Input,
   Spinner,
+  Text,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useForm, SubmitHandler, Resolver } from "react-hook-form";
-import { setUser } from "../../features/auth/authenticatedUserSlice";
-import axiosInstance from "../../util/axiosInstance.ts";
+import { useState } from "react";
+import { Resolver, SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+
+import { AppDispatch } from "../../app/store.ts";
+import Container from "../../components/UI/Container";
+import WideButton from "../../components/UI/buttons/WideButton.tsx";
 import Welcome from "../../components/profile/Welcome";
+import { initializeUser } from "../../store/auth/authenticatedUserSlice";
+import axiosInstance from "../../util/axiosInstance.ts";
 
 type FormValues = {
   username: string;
@@ -52,7 +53,7 @@ const resolver: Resolver<FormValues> = async (values) => {
 
 const RegisterPage = () => {
   const [loginInProgress, setLoginInProgress] = useState<boolean>(false);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const {
     register,
@@ -65,21 +66,7 @@ const RegisterPage = () => {
     try {
       setLoginInProgress(true);
       await axiosInstance.post("/auth/login", data);
-
-      const userResponse = await axiosInstance.get("users/me");
-
-      const authenticatedUser: User = {
-        id: userResponse.data.id,
-        username: userResponse.data.username,
-        password: "",
-        email: userResponse.data.email,
-        routines: userResponse.data.routines || [],
-        workoutSessions: userResponse.data.workoutSessions || [],
-        exercises: userResponse.data.exercises || [],
-      };
-
-      dispatch(setUser(authenticatedUser));
-      setLoginInProgress(false);
+      await dispatch(initializeUser());
     } catch (error) {
       setLoginInProgress(false);
       if (axios.isAxiosError(error)) {
@@ -95,6 +82,8 @@ const RegisterPage = () => {
           });
         }
       }
+    } finally {
+      setLoginInProgress(false);
     }
   };
 

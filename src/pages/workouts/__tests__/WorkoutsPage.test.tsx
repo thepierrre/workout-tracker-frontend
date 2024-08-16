@@ -1,108 +1,32 @@
-import { format } from "date-fns";
+import { ChakraProvider } from "@chakra-ui/react";
+import { EnhancedStore } from "@reduxjs/toolkit";
+import "@testing-library/jest-dom";
 import {
+  act,
+  fireEvent,
   render,
   screen,
   waitFor,
-  fireEvent,
-  act,
 } from "@testing-library/react";
+import { RootState } from "app/store";
+import { format } from "date-fns";
 import { Provider } from "react-redux";
-import { ChakraProvider } from "@chakra-ui/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import "@testing-library/jest-dom";
-import { configureStore } from "@reduxjs/toolkit";
-import workoutSessionsReducer from "../../../features/workout/workoutSessionsSlice";
-import chosenDayReducer from "../../../features/workout/dayInCalendarSlice";
-import activeExerciseInstanceReducer from "../../../features/workout/activeExerciseInstanceSlice";
-import authenticatedUserReducer from "../../../features/auth/authenticatedUserSlice";
-import exercisesReducer from "../../../features/exercises/exercisesSlice";
-import routinesReducer from "../../../features/routines/routinesSlice";
-import categoriesReducer from "../../../features/exercises/categoriesSlice";
+
 import { workoutsForUser as mutableWorkoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
-import { exerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
-import { categories } from "../../../mockData/handlers/categoriesHandler";
-import { initializedUser } from "../../../mockData/authHandlers/userHandler";
+import {
+  createInitialState,
+  createStore,
+  deepClone,
+  initialWorkoutsList,
+} from "../../../mockData/mockStore";
 import ExercisesPage from "../../exercises/ExercisesPage";
 import WorkoutsPage from "../WorkoutsPage";
-import { User } from "../../../interfaces/user.interface";
-import { Workout } from "../../../interfaces/workout.interface";
-import { Exercise } from "../../../interfaces/exercise.interface";
-import { Category } from "../../../interfaces/category.interface";
 
-const deepClone = (obj: any) => JSON.parse(JSON.stringify(obj));
-
-const initialWorkoutsList = deepClone(mutableWorkoutsForUser);
-
-interface AuthenticatedUserState {
-  user: User;
-  loading: boolean;
-  error: any;
-}
-
-interface WorkoutSessionsState {
-  workouts: Workout[];
-  loading: boolean;
-  error: any;
-}
-
-interface ExercisesState {
-  exercises: Exercise[];
-  loading: boolean;
-  error: any;
-}
-
-interface CategoriesState {
-  categories: Category[];
-  loading: boolean;
-  error: any;
-}
-
-interface InitialState {
-  authenticatedUser: AuthenticatedUserState;
-  workoutSessions: WorkoutSessionsState;
-  exercises: ExercisesState;
-  categories: CategoriesState;
-}
-
-const createInitialState = () => ({
-  authenticatedUser: {
-    user: initializedUser,
-    loading: false,
-    error: null,
-  },
-  workoutSessions: {
-    workouts: deepClone(initialWorkoutsList),
-    loading: false,
-    error: null,
-  },
-  exercises: {
-    exercises: exerciseTypesForUser,
-    loading: false,
-    error: null,
-  },
-  categories: {
-    categories: categories,
-    loading: false,
-    error: null,
-  },
-});
-
-const createStore = (initialState: InitialState) => {
-  return configureStore({
-    reducer: {
-      workoutSessions: workoutSessionsReducer,
-      chosenDay: chosenDayReducer,
-      activeExerciseInstance: activeExerciseInstanceReducer,
-      authenticatedUser: authenticatedUserReducer,
-      exercises: exercisesReducer,
-      routines: routinesReducer,
-      categories: categoriesReducer,
-    },
-    preloadedState: initialState,
-  });
-};
-
-const renderWithProviders = (ui: React.ReactElement, store: any) => {
+const renderWithProviders = (
+  ui: React.ReactElement,
+  store: EnhancedStore<RootState>,
+) => {
   return render(
     <ChakraProvider>
       <Provider store={store}>
@@ -113,12 +37,12 @@ const renderWithProviders = (ui: React.ReactElement, store: any) => {
           </Routes>
         </MemoryRouter>
       </Provider>
-    </ChakraProvider>
+    </ChakraProvider>,
   );
 };
 
 describe("WorkoutsPage", () => {
-  let store: any;
+  let store: EnhancedStore<RootState>;
 
   beforeEach(() => {
     mutableWorkoutsForUser.length = 0;
@@ -133,16 +57,16 @@ describe("WorkoutsPage", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText(format(new Date(), "EEE").toUpperCase())
+        screen.getByText(format(new Date(), "EEE").toUpperCase()),
       ).toBeInTheDocument();
     });
 
     expect(screen.getByText("New workout")).toBeInTheDocument();
     expect(screen.getByText("Full Body Workout A")).toBeInTheDocument();
-    expect(screen.getByText("bench press")).toBeInTheDocument();
-    expect(screen.getByText("barbell rows")).toBeInTheDocument();
-    expect(screen.getByText("squats")).toBeInTheDocument();
-    expect(screen.getByText("dumbbell pushes")).toBeInTheDocument();
+    expect(screen.getByText("Bench press")).toBeInTheDocument();
+    expect(screen.getByText("Barbell rows")).toBeInTheDocument();
+    expect(screen.getByText("Squats")).toBeInTheDocument();
+    expect(screen.getByText("Dumbbell pushes")).toBeInTheDocument();
     expect(screen.getAllByText("Delete workout")).toHaveLength(1);
   });
 
@@ -168,12 +92,16 @@ describe("WorkoutsPage", () => {
 
     fireEvent.click(screen.getByText("New workout"));
 
+    await waitFor(() => {
+      expect(screen.getByText("Full Body Workout B")).toBeInTheDocument();
+    });
+
     await act(async () => {
       fireEvent.click(screen.getByText("Full Body Workout B"));
     });
 
     await waitFor(() =>
-      expect(screen.queryAllByText("Select a routine")).toHaveLength(0)
+      expect(screen.queryAllByText("Select a routine")).toHaveLength(0),
     );
 
     await waitFor(() => {
@@ -193,7 +121,7 @@ describe("WorkoutsPage", () => {
     fireEvent.click(screen.getByText("Delete workout"));
     await waitFor(() => {
       expect(
-        screen.getByText("Do you really want to delete this workout?")
+        screen.getByText("Do you really want to delete this workout?"),
       ).toBeInTheDocument();
     });
     await act(async () => {

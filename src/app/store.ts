@@ -1,12 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
-import workoutSessionsReducer from "../features/workout/workoutSessionsSlice";
-import chosenDayReducer from "../features/workout/dayInCalendarSlice";
-import activeExerciseInstanceReducer from "../features/workout/activeExerciseInstanceSlice";
-import authenticatedUserReducer from "../features/auth/authenticatedUserSlice";
-import exercisesReducer from "../features/exercises/exercisesSlice";
-import routinesReducer from "../features/routines/routinesSlice";
-import categoriesReducer from "../features/exercises/categoriesSlice";
-import userSettingsReducer from "../features/settings/userSettingsSlice";
+
+import authenticatedUserReducer from "../store/auth/authenticatedUserSlice";
+import categoriesReducer from "../store/exercises/categoriesSlice";
+import exercisesReducer from "../store/exercises/exercisesSlice";
+import localRoutineReducer from "../store/routines/localRoutineSlice";
+import routinesReducer from "../store/routines/routinesSlice";
+import userSettingsReducer from "../store/settings/userSettingsSlice";
+import activeExerciseInstanceReducer from "../store/workout/activeExerciseInstanceSlice";
+import chosenDayReducer from "../store/workout/dayInCalendarSlice";
+import workoutSessionsReducer from "../store/workout/workoutSessionsSlice";
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +20,7 @@ export const store = configureStore({
     routines: routinesReducer,
     categories: categoriesReducer,
     userSettings: userSettingsReducer,
+    localRoutine: localRoutineReducer,
   },
 });
 

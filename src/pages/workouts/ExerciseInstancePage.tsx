@@ -1,18 +1,21 @@
+import { ChevronLeftIcon } from "@chakra-ui/icons";
+import { Box, Flex, Heading, IconButton, Text } from "@chakra-ui/react";
+import { UserSettings } from "interfaces/userSettings.interface";
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+
 import { AppDispatch, RootState } from "../../app/store";
 import Container from "../../components/UI/Container";
-import { Flex, Heading, Text, Box, IconButton } from "@chakra-ui/react";
-import { ChevronLeftIcon } from "@chakra-ui/icons";
-import { WorkingSet } from "../../interfaces/workingSet.interface";
-import { fetchWorkouts } from "../../features/workout/workoutSessionsSlice";
-import ExerciseWorkingSet from "../../components/workouts/ExerciseWorkingSet";
-import { UserSettings } from "interfaces/userSettings.interface";
-import { fetchUserSettings } from "../../features/settings/userSettingsSlice";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
-import ThresholdHandler from "../../components/workouts/ThresholdHandler";
-import ThresholdForm from "../../components/forms/ThresholdForm";
+import NotesForm from "../../components/forms/NotesForm";
+import ThresholdForm from "../../components/forms/thresholdForm/ThresholdForm";
+import ExWorkingSet from "../../components/shared/ExWorkingSet";
+import ThresholdHandler from "../../components/workouts/thresholdHandler/ThresholdHandler";
+import { WorkingSet } from "../../interfaces/workingSet.interface";
+import { fetchUserSettings } from "../../store/settings/userSettingsSlice";
+import { fetchWorkouts } from "../../store/workout/workoutSessionsSlice";
+import PageNotFound from "../pageNotFound/PageNotFound";
 
 const defaultUserSettings: UserSettings = {
   changeThreshold: 1,
@@ -29,50 +32,49 @@ const WorkoutExerciseInstancePage = () => {
 
   const { workoutId, exerciseInstanceId } = useParams();
 
-  const workoutSessions = useSelector(
-    (state: RootState) => state.workoutSessions
-  );
+  const { workouts } = useSelector((state: RootState) => state.workoutSessions);
   const { userSettings, loading: loadingUserSettings } = useSelector(
-    (state: RootState) => state.userSettings
+    (state: RootState) => state.userSettings,
   );
 
-  const wrk = workoutSessions.workouts.find((w) => w.id === workoutId);
-  const exerciseInstance = wrk?.exerciseInstances.find(
-    (e) => e.id === exerciseInstanceId
+  const workout = workouts.find((workout) => workout.id === workoutId);
+  const exerciseInstance = workout?.exerciseInstances.find(
+    (exercise) => exercise.id === exerciseInstanceId,
   );
 
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    dispatch(fetchWorkouts);
-  }, [wrk]);
-
-  useEffect(() => {
+    dispatch(fetchWorkouts());
     dispatch(fetchUserSettings());
   }, [dispatch]);
 
   useEffect(() => {
-    if (userSettings) {
-      const fetchedThreshold = userSettings.changeThreshold;
-      setThreshold(fetchedThreshold);
-    }
-  }, [userSettings]);
+    const fetchedThreshold = userSettings?.changeThreshold;
+    setThreshold(fetchedThreshold);
+  }, []);
 
   useEffect(() => {
-    if (exerciseInstance?.workingSets?.length === 0) {
+    if (!exerciseInstance?.workingSets?.length) {
       setActiveWorkingSet(undefined);
     }
   }, [exerciseInstance]);
 
-  const handleActiveExInstance = (workingSet: WorkingSet) => {
-    activeWorkingSet && activeWorkingSet.id === workingSet.id
-      ? setActiveWorkingSet(undefined)
-      : setActiveWorkingSet(workingSet);
+  const handleActiveWorkingSet = (workingSet: WorkingSet) => {
+    if (activeWorkingSet?.id === workingSet.id) {
+      setActiveWorkingSet(undefined);
+    } else {
+      setActiveWorkingSet(workingSet);
+    }
   };
 
   const handleGoBack = () => {
     navigate(-1);
   };
+
+  if (!exerciseInstance || !workout) {
+    return <PageNotFound />;
+  }
 
   if (loadingUserSettings) {
     return <SpinnerComponent />;
@@ -80,7 +82,7 @@ const WorkoutExerciseInstancePage = () => {
 
   return (
     <Container>
-      {exerciseInstance?.exerciseTypeName !== undefined && (
+      {exerciseInstance && exerciseInstanceId && (
         <Flex direction="column" gap={5}>
           <Flex align="center" w="100%">
             <IconButton
@@ -100,6 +102,7 @@ const WorkoutExerciseInstancePage = () => {
 
           <Flex w="100%" direction="column" gap={5} mt={2}>
             <ThresholdHandler
+              setThreshold={setThreshold}
               threshold={threshold}
               userSettings={userSettings || defaultUserSettings}
             />
@@ -110,17 +113,18 @@ const WorkoutExerciseInstancePage = () => {
               activeWorkingSet={activeWorkingSet || undefined}
               setActiveWorkingSet={setActiveWorkingSet}
               exerciseInstance={exerciseInstance}
+              exBlueprintOrInstance="instance"
             />
           </Flex>
-          <Flex direction="column" gap={2} mt={3} align="center">
+          <Flex direction="column" gap={2} mt={3} mb={3} align="center">
             {exerciseInstance?.workingSets?.length > 0 ? (
               exerciseInstance?.workingSets?.map((set, index) => (
-                <ExerciseWorkingSet
+                <ExWorkingSet
                   workingSet={set}
                   index={index}
                   key={set.id}
                   activeWorkingSet={activeWorkingSet}
-                  handleActiveExInstance={handleActiveExInstance}
+                  handleActiveWorkingSet={handleActiveWorkingSet}
                   userSettings={userSettings || defaultUserSettings}
                 />
               ))
@@ -128,6 +132,10 @@ const WorkoutExerciseInstancePage = () => {
               <Text>This exercise has no sets.</Text>
             )}
           </Flex>
+          <NotesForm
+            exInstanceId={exerciseInstanceId}
+            initialNotes={exerciseInstance.notes || ""}
+          />
         </Flex>
       )}
     </Container>

@@ -1,64 +1,77 @@
+import { HttpResponse, http } from "msw";
+
 import { Category } from "../../interfaces/category.interface";
-import { http, HttpResponse } from "msw";
-import { baseURL } from "../../mockData/node";
 
 export const categories: Category[] = [
   {
     id: "100e8400-e29b-41d4-a716-446655440001",
-    name: "glutes",
+    name: "Glutes",
+    muscleGroup: "LEGS",
   },
   {
     id: "150e8400-c29b-41d4-a716-446655440002",
-    name: "hamstrings",
+    name: "Hamstrings",
+    muscleGroup: "LEGS",
   },
   {
     id: "200e8400-c29b-41d4-a716-446655440003",
-    name: "quadriceps",
+    name: "Quads",
+    muscleGroup: "LEGS",
   },
   {
     id: "250e8400-c29b-41d4-a716-446655440004",
-    name: "calves",
+    name: "Calves",
+    muscleGroup: "LEGS",
   },
   {
     id: "300e8400-c29b-41d4-a716-446655440005",
-    name: "chest",
+    name: "Chest",
+    muscleGroup: "CHEST",
   },
   {
     id: "350e8400-c29b-41d4-a716-446655440006",
-    name: "lower back",
+    name: "Lower back",
+    muscleGroup: "BACK",
   },
   {
     id: "400e8400-c29b-41d4-a716-446655440007",
-    name: "upper back",
+    name: "Upper back",
+    muscleGroup: "BACK",
   },
   {
     id: "450e8400-c29b-41d4-a716-446655440008",
-    name: "triceps",
+    name: "Triceps",
+    muscleGroup: "ARMS",
   },
   {
     id: "500e8400-c29b-41d4-a716-446655440009",
-    name: "biceps",
+    name: "Biceps",
+    muscleGroup: "ARMS",
   },
   {
     id: "550e8400-c29b-41d4-a716-446655440010",
-    name: "abs",
+    name: "Abs",
+    muscleGroup: "CORE",
   },
   {
     id: "600e8400-c29b-41d4-a716-446655440010",
-    name: "front deltoids",
+    name: "Anterior delts",
+    muscleGroup: "SHOULDERS",
   },
   {
     id: "650e8400-c29b-41d4-a716-446655440010",
-    name: "middle deltoids",
+    name: "Middle delts",
+    muscleGroup: "SHOULDERS",
   },
   {
     id: "100e8400-c29c-41d4-a716-446655440010",
-    name: "test category",
+    name: "Test category",
+    muscleGroup: "BACK",
   },
 ];
 
 export const categoriesHandler = [
-  http.get(`${baseURL}categories`, () => {
+  http.get("http://localhost:8080/api/categories", () => {
     return HttpResponse.json(categories);
   }),
 ];

@@ -1,8 +1,11 @@
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../app/store";
-import { Button, Flex, Heading } from "@chakra-ui/react";
+import { Button, Flex } from "@chakra-ui/react";
 import { UserSettings } from "interfaces/userSettings.interface";
-import { updateUserSettings } from "../../features/settings/userSettingsSlice";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+
+import { AppDispatch } from "../../app/store";
+import SecondaryHeading from "../../components/UI/text/SecondaryHeading";
+import { updateUserSettings } from "../../store/settings/userSettingsSlice";
 
 interface Props {
   userSettings: UserSettings;
@@ -10,8 +13,14 @@ interface Props {
 
 const Weight: React.FC<Props> = ({ userSettings }) => {
   const dispatch = useDispatch<AppDispatch>();
+  // Local state to render the changed button for the new weight unit faster in slow networks.
+  const [localWeightUnit, setLocalWeightUnit] = useState(
+    userSettings.weightUnit,
+  );
 
   const handleWeightUnit = async (unit: string) => {
+    setLocalWeightUnit(unit);
+
     const userSettingsToUpdate: Omit<UserSettings, "id" | "user"> = {
       weightUnit: unit,
     };
@@ -24,13 +33,11 @@ const Weight: React.FC<Props> = ({ userSettings }) => {
 
   return (
     <Flex direction="column" gap={2} align="center" mb={3}>
-      <Heading fontSize="lg" mb={1}>
-        Weight units
-      </Heading>
+      <SecondaryHeading text="Weight units" />
       <Flex gap={3}>
         <Button
-          bg={userSettings.weightUnit === "kgs" ? "lightblue" : "#404040"}
-          textColor={userSettings.weightUnit === "kgs" ? "#404040" : "white"}
+          bg={localWeightUnit === "kgs" ? "lightblue" : "#404040"}
+          textColor={localWeightUnit === "kgs" ? "#404040" : "white"}
           fontSize="lg"
           _focus={{ bg: "lightblue" }}
           onClick={() => handleWeightUnit("kgs")}
@@ -38,8 +45,8 @@ const Weight: React.FC<Props> = ({ userSettings }) => {
           KGS
         </Button>
         <Button
-          bg={userSettings.weightUnit === "lbs" ? "lightblue" : "#404040"}
-          textColor={userSettings.weightUnit === "lbs" ? "#404040" : "white"}
+          bg={localWeightUnit === "lbs" ? "lightblue" : "#404040"}
+          textColor={localWeightUnit === "lbs" ? "#404040" : "white"}
           fontSize="lg"
           _focus={{ bg: "lightblue" }}
           onClick={() => handleWeightUnit("lbs")}

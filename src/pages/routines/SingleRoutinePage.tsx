@@ -1,31 +1,28 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import _ from "underscore";
-import { fetchRoutines } from "../../features/routines/routinesSlice";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState, AppDispatch } from "../../app/store";
-import {
-  updateRoutine,
-  removeRoutine,
-} from "../../features/routines/routinesSlice";
-import RoutineForm from "../../components/forms/RoutineForm";
-import DeletionModal from "../../components/UI/DeletionModal";
-import { Exercise } from "../../interfaces/exercise.interface";
-import Container from "../../components/UI/Container";
-import {
-  Flex,
-  Heading,
-  IconButton,
-  Box,
-  Text,
-  useDisclosure,
-} from "@chakra-ui/react";
-import { ChevronLeftIcon } from "@chakra-ui/icons";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import { useDisclosure } from "@chakra-ui/react";
+import { useEffect, useRef, useState } from "react";
 import { UseFormSetError } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import _ from "underscore";
 
-import { Routine } from "../../interfaces/routine.interface";
+import { AppDispatch, RootState } from "../../app/store";
+import Container from "../../components/UI/Container";
+import DeletionModal from "../../components/UI/DeletionModal";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
+import DeleteButton from "../../components/UI/buttons/DeleteButton";
+import SubmitOrCancelButton from "../../components/UI/buttons/SubmitOrCancelButton";
+import MainHeading from "../../components/UI/text/MainHeading";
+import { FormValues } from "../../components/forms/routineForm/RoutineForm";
+import RoutineForm from "../../components/forms/routineForm/RoutineForm";
+import { Exercise } from "../../interfaces/exercise.interface";
+import { Routine } from "../../interfaces/routine.interface";
+import { WorkingSet } from "../../interfaces/workingSet.interface";
+import { fetchRoutines } from "../../store/routines/routinesSlice";
+import {
+  removeRoutine,
+  updateRoutine,
+} from "../../store/routines/routinesSlice";
+import PageNotFound from "../pageNotFound/PageNotFound";
 
 const SingleRoutinePage = () => {
   const { routineId } = useParams();
@@ -33,24 +30,33 @@ const SingleRoutinePage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [serverError, setServerError] = useState<string | null>(null);
   const [routineToDelete, setRoutineToDelete] = useState<Routine | null>(null);
+  const [submittingInProgress, setSubmittingInProgress] =
+    useState<boolean>(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { routines, loading: loadingRoutines } = useSelector(
-    (state: RootState) => state.routines
+    (state: RootState) => state.routines,
   );
-  const currentRoutine: Routine | undefined = routines.find(
-    (routine) => routine.id === routineId
+
+  const { routineExercises: localRoutineExercises } = useSelector(
+    (state: RootState) => state.localRoutine || [],
   );
 
   const { user, loading: loadingUser } = useSelector(
-    (state: RootState) => state.authenticatedUser
+    (state: RootState) => state.authenticatedUser,
   );
+
+  const routineFormRef = useRef<{ submit: () => void }>(null);
 
   useEffect(() => {
     dispatch(fetchRoutines());
   }, [dispatch]);
 
+  const currentRoutine: Routine | undefined = routines.find(
+    (routine) => routine.id === routineId,
+  );
+
   if (!currentRoutine) {
-    return <Text>Routine not found.</Text>;
+    return <PageNotFound />;
   }
 
   if (!user) {
@@ -59,15 +65,32 @@ const SingleRoutinePage = () => {
 
   const onSubmit = async (
     data: { name: string },
-    selectedExercises: Exercise[],
-    setError: UseFormSetError<{ name: string }>
+    setError: UseFormSetError<FormValues>,
   ) => {
     const currentIndex = routines.indexOf(currentRoutine);
+
+    const exercises: Omit<Exercise, "temporaryId">[] =
+      localRoutineExercises.map((ex) => {
+        const { temporaryId, ...restOfExercise } = ex;
+
+        const workingSets = ex.workingSets?.map((set) => {
+          const { temporaryId, ...restOfSet } = set;
+
+          return {
+            ...restOfSet,
+          } as Omit<WorkingSet, "temporaryId">;
+        });
+
+        return {
+          ...restOfExercise,
+          workingSets,
+        } as Omit<Exercise, "temporaryId">;
+      });
 
     const routineToUpdate = {
       id: currentRoutine.id,
       name: data.name,
-      exerciseTypes: selectedExercises,
+      routineExercises: exercises,
       userId: user.id,
     };
 
@@ -75,11 +98,15 @@ const SingleRoutinePage = () => {
       return (
         routineToUpdate.id === currentRoutine.id &&
         routineToUpdate.name === currentRoutine.name &&
-        _.isEqual(routineToUpdate.exerciseTypes, currentRoutine.exerciseTypes)
+        _.isEqual(
+          routineToUpdate.routineExercises,
+          currentRoutine.routineExercises,
+        )
       );
     };
 
     try {
+      setSubmittingInProgress(true);
       if (currentIndex !== -1) {
         await dispatch(updateRoutine(routineToUpdate)).unwrap();
       }
@@ -90,16 +117,13 @@ const SingleRoutinePage = () => {
       }
     } catch (error) {
       if (typeof error === "string") {
-        let errorMessage = error;
+        const errorMessage = error;
         setServerError(error);
         setError("name", { type: "server", message: errorMessage });
       }
+    } finally {
+      setSubmittingInProgress(false);
     }
-  };
-
-  const handleOpenModal = (routine: Routine) => {
-    setRoutineToDelete(routine);
-    onOpen();
   };
 
   const handleRemoveRoutine = async () => {
@@ -111,55 +135,53 @@ const SingleRoutinePage = () => {
     }
   };
 
-  const handleGoBack = () => {
-    navigate(-1);
-  };
-
   if (loadingRoutines || loadingUser) {
     return <SpinnerComponent />;
   }
 
   return (
-    <Container>
-      <Flex align="center" w="100%" mb={3}>
-        <IconButton
-          aria-label="Go back"
-          variant="link"
-          color="white"
-          w="15%"
-          icon={<ChevronLeftIcon boxSize={8} />}
-          onClick={() => handleGoBack()}
+    <>
+      <Container>
+        <SubmitOrCancelButton
+          text="CANCEL"
+          top="4.7rem"
+          left={["2rem", "4rem", "8rem", "20rem", "30rem"]}
+          link="/routines"
         />
 
-        <Heading w="70%" fontSize="lg" textAlign="center">
-          Edit routine
-        </Heading>
-        <Box w="16%" />
-      </Flex>
-      <RoutineForm
-        initialName={currentRoutine.name}
-        initialSelectedExercises={currentRoutine.exerciseTypes}
-        onSubmit={onSubmit}
-        buttonText="Update"
-        serverError={serverError}
-      ></RoutineForm>
-      <Flex
-        gap={1}
-        justify="center"
-        color="lightblue"
-        onClick={() => handleOpenModal(currentRoutine)}
-        mt={3}
-      >
-        <RemoveCircleOutlineIcon />
-        <Text fontWeight="bold">Delete routine</Text>
-        <DeletionModal
-          isOpen={isOpen}
-          onClose={onClose}
-          onDelete={handleRemoveRoutine}
-          elementType="routine"
+        <MainHeading text="Edit routine" />
+        {submittingInProgress && <SpinnerComponent mt={0} mb={4} />}
+        <SubmitOrCancelButton
+          text="SAVE"
+          top="4.7rem"
+          right={["2rem", "4rem", "8rem", "20rem", "30rem"]}
+          onClick={() => routineFormRef.current?.submit()}
         />
-      </Flex>
-    </Container>
+
+        <DeleteButton
+          onOpen={onOpen}
+          currentRoutine={currentRoutine}
+          setRoutineToDelete={setRoutineToDelete}
+        />
+
+        <RoutineForm
+          newRoutine={false}
+          routineId={currentRoutine.id}
+          ref={routineFormRef}
+          initialName={currentRoutine.name}
+          initialSelectedExercises={currentRoutine.routineExercises}
+          onSubmit={onSubmit}
+          buttonText="Update"
+          serverError={serverError}
+        ></RoutineForm>
+      </Container>
+      <DeletionModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onDelete={handleRemoveRoutine}
+        elementType="routine"
+      />
+    </>
   );
 };
 

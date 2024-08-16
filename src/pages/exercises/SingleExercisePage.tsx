@@ -1,72 +1,81 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useDisclosure } from "@chakra-ui/react";
+import { useEffect, useRef, useState } from "react";
+import { UseFormSetError } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import _ from "underscore";
-import { Category } from "../../interfaces/category.interface";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState, AppDispatch } from "../../app/store";
-import { removeExercise } from "../../features/exercises/exercisesSlice";
-import {
-  Text,
-  Flex,
-  Heading,
-  IconButton,
-  Box,
-  useDisclosure,
-} from "@chakra-ui/react";
-import { ChevronLeftIcon } from "@chakra-ui/icons";
-import { updateExercise } from "../../features/exercises/exercisesSlice";
-import ExerciseForm from "../../components/forms/ExerciseForm";
+
+import { AppDispatch, RootState } from "../../app/store";
 import Container from "../../components/UI/Container";
 import DeletionModal from "../../components/UI/DeletionModal";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import { Exercise } from "../../interfaces/exercise.interface";
-import { fetchCategories } from "../../features/exercises/categoriesSlice";
-import { UseFormSetError } from "react-hook-form";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
+import DeleteButton from "../../components/UI/buttons/DeleteButton";
+import SubmitOrCancelButton from "../../components/UI/buttons/SubmitOrCancelButton";
+import MainHeading from "../../components/UI/text/MainHeading";
+import ExerciseForm, {
+  FormValues,
+} from "../../components/forms/exerciseForm/ExerciseForm";
+import { Category } from "../../interfaces/category.interface";
+import { Exercise } from "../../interfaces/exercise.interface";
+import { fetchCategories } from "../../store/exercises/categoriesSlice";
+import { removeExercise } from "../../store/exercises/exercisesSlice";
+import { updateExercise } from "../../store/exercises/exercisesSlice";
+import PageNotFound from "../pageNotFound/PageNotFound";
 
 const SingleExercisePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const [serverError, setServerError] = useState<string | null>(null);
-  const [exerciseToDelete, setExerciseToDelete] = useState<Exercise | null>(
-    null
-  );
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { exerciseId } = useParams();
+  const [serverError, setServerError] = useState<string | null>(null);
+  const [submittingInProgress, setSubmittingInProgress] =
+    useState<boolean>(false);
+  const [exerciseToDelete, setExerciseToDelete] = useState<Exercise | null>(
+    null,
+  );
+
   const { user, loading: loadingUser } = useSelector(
-    (state: RootState) => state.authenticatedUser
+    (state: RootState) => state.authenticatedUser,
   );
   const { exercises, loading: loadingExercises } = useSelector(
-    (state: RootState) => state.exercises
+    (state: RootState) => state.exercises,
   );
-  const { exerciseId } = useParams();
 
-  const currentExercise = exercises.find(
-    (exercise) => exercise.id === exerciseId
-  );
+  const exerciseFormRef = useRef<{ submit: () => void }>(null);
 
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
+  const currentExercise = exercises.find(
+    (exercise) => exercise.id === exerciseId,
+  );
+
+  if (loadingUser || loadingExercises) {
+    return <SpinnerComponent />;
+  }
+
   if (!user) {
-    return;
+    return null;
   }
 
   if (!currentExercise) {
-    return <Text>Exercise not found.</Text>;
+    return <PageNotFound />;
   }
 
   const onSubmit = async (
-    data: { name: string },
+    data: FormValues,
     selectedCategories: Category[],
-    setError: UseFormSetError<{ name: string }>
+    setError: UseFormSetError<FormValues>,
   ) => {
     const currentIndex = exercises.indexOf(currentExercise);
 
     const exerciseToUpdate = {
       id: currentExercise.id,
       name: data.name,
+      equipment: data.equipment,
       categories: selectedCategories,
+      isDefault: false,
       userId: user.id,
     };
 
@@ -79,6 +88,7 @@ const SingleExercisePage = () => {
     };
 
     try {
+      setSubmittingInProgress(true);
       if (currentIndex !== -1) {
         await dispatch(updateExercise(exerciseToUpdate)).unwrap();
       }
@@ -89,20 +99,17 @@ const SingleExercisePage = () => {
       }
     } catch (error) {
       if (typeof error === "string") {
-        let errorMessage = error;
+        const errorMessage = error;
         setServerError(error);
         setError("name", { type: "server", message: errorMessage });
       }
+    } finally {
+      setSubmittingInProgress(false);
     }
   };
 
-  const handleOpenModal = (exercise: Exercise) => {
-    setExerciseToDelete(exercise);
-    onOpen();
-  };
-
   const handleRemoveExercise = async () => {
-    if (exerciseToDelete) {
+    if (exerciseToDelete && exerciseToDelete.id) {
       await dispatch(removeExercise(exerciseToDelete.id));
       setExerciseToDelete(null);
       onClose();
@@ -110,55 +117,52 @@ const SingleExercisePage = () => {
     }
   };
 
-  const handleGoBack = () => {
-    navigate(-1);
-  };
-
   if (loadingUser || loadingExercises) {
     return <SpinnerComponent />;
   }
 
   return (
-    <Container>
-      <Flex align="center" w="100%" mb={3}>
-        <IconButton
-          aria-label="Go back"
-          variant="link"
-          color="white"
-          w="15%"
-          icon={<ChevronLeftIcon boxSize={8} />}
-          onClick={() => handleGoBack()}
+    <>
+      <Container>
+        <SubmitOrCancelButton
+          text="CANCEL"
+          top="4.7rem"
+          left={["2rem", "4rem", "8rem", "20rem", "30rem"]}
+          link="/exercises"
         />
 
-        <Heading w="70%" fontSize="lg" textAlign="center">
-          Edit exercise
-        </Heading>
-        <Box w="16%" />
-      </Flex>
-      <ExerciseForm
-        initialName={currentExercise.name}
-        initialSelectedCategories={currentExercise.categories}
-        buttonText="Update"
-        onSubmit={onSubmit}
-        serverError={serverError}
-      ></ExerciseForm>
-      <Flex
-        gap={1}
-        justify="center"
-        color="lightblue"
-        onClick={() => handleOpenModal(currentExercise)}
-        mt={3}
-      >
-        <RemoveCircleOutlineIcon />
-        <Text fontWeight="bold">Delete exercise</Text>
-        <DeletionModal
-          isOpen={isOpen}
-          onClose={onClose}
-          onDelete={handleRemoveExercise}
-          elementType="exercise"
+        <MainHeading text="Edit exercise" />
+        {submittingInProgress && <SpinnerComponent mt={0} mb={4} />}
+        <SubmitOrCancelButton
+          text="SAVE"
+          top="4.7rem"
+          right={["2rem", "4rem", "8rem", "20rem", "30rem"]}
+          onClick={() => exerciseFormRef.current?.submit()}
         />
-      </Flex>
-    </Container>
+
+        <DeleteButton
+          onOpen={onOpen}
+          currentExercise={currentExercise}
+          setExerciseToDelete={setExerciseToDelete}
+        />
+
+        <ExerciseForm
+          ref={exerciseFormRef}
+          initialName={currentExercise.name}
+          initialEquipment={currentExercise.equipment}
+          initialSelectedCategories={currentExercise.categories}
+          buttonText="Update"
+          onSubmit={onSubmit}
+          serverError={serverError}
+        ></ExerciseForm>
+      </Container>
+      <DeletionModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onDelete={handleRemoveExercise}
+        elementType="exercise"
+      />
+    </>
   );
 };
 

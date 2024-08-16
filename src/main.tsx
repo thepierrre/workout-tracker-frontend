@@ -1,67 +1,68 @@
-import ReactDOM from "react-dom/client";
-import App from "./app/App.tsx";
 import { ChakraProvider } from "@chakra-ui/react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import WorkoutsPage from "./pages/workouts/WorkoutsPage.tsx";
-import RoutinesPage from "./pages/routines/RoutinesPage.tsx";
-import ExercisesPage from "./pages/exercises/ExercisesPage.tsx";
-import ProfilePage from "./pages/profile/ProfilePage.tsx";
-import LoginPage from "./pages/profile/LoginPage.tsx";
-import SingleExercisePage from "./pages/exercises/SingleExercisePage.tsx";
-import ExerciseInstancePage from "./pages/workouts/ExerciseInstancePage.tsx";
-import SingleRoutinePage from "./pages/routines/SingleRoutinePage.tsx";
-import NewExercise from "./pages/exercises/NewExercisePage.tsx";
-import NewRoutine from "./pages/routines/NewRoutinePage.tsx";
-import RegisterPage from "./pages/profile/RegisterPage.tsx";
-import { store } from "./app/store.ts";
+import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
+import {
+  Route,
+  RouterProvider,
+  createBrowserRouter,
+  createRoutesFromElements,
+} from "react-router-dom";
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,
-    children: [
-      {
-        path: "",
-        element: <LoginPage />,
-      },
-      { path: "sign-up", element: <RegisterPage /> },
-      {
-        path: "workouts/*",
-        children: [
-          {
-            path: ":workoutId/exercise-instances/:exerciseInstanceId",
-            element: <ExerciseInstancePage />,
-          },
-          { path: "*", element: <WorkoutsPage /> },
-        ],
-      },
-      {
-        path: "routines/*",
-        children: [
-          { path: ":routineId", element: <SingleRoutinePage /> },
-          { path: "new-routine", element: <NewRoutine /> },
-          { path: "*", element: <RoutinesPage /> },
-        ],
-      },
-      {
-        path: "exercises/*",
-        children: [
-          {
-            path: ":exerciseId",
-            element: <SingleExercisePage />,
-          },
-          { path: "new-exercise", element: <NewExercise /> },
-          { path: "*", element: <ExercisesPage /> },
-        ],
-      },
-      {
-        path: "profile/*",
-        children: [{ path: "*", element: <ProfilePage /> }],
-      },
-    ],
-  },
-]);
+import App from "./app/App.tsx";
+import { store } from "./app/store.ts";
+import ExercisesPage from "./pages/exercises/ExercisesPage.tsx";
+import NewExercisePage from "./pages/exercises/NewExercisePage.tsx";
+import SingleExercisePage from "./pages/exercises/SingleExercisePage.tsx";
+import PageNotFound from "./pages/pageNotFound/PageNotFound.tsx";
+import LoginPage from "./pages/profile/LoginPage.tsx";
+import ProfilePage from "./pages/profile/ProfilePage.tsx";
+import RegisterPage from "./pages/profile/RegisterPage.tsx";
+import EditExerciseForRoutinePage from "./pages/routines/EditExerciseForRoutinePage.tsx";
+import NewRoutinePage from "./pages/routines/NewRoutinePage.tsx";
+import RoutinesPage from "./pages/routines/RoutinesPage.tsx";
+import SingleRoutinePage from "./pages/routines/SingleRoutinePage.tsx";
+import ExerciseInstancePage from "./pages/workouts/ExerciseInstancePage.tsx";
+import WorkoutsPage from "./pages/workouts/WorkoutsPage.tsx";
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/" element={<App />}>
+      <Route index element={<LoginPage />} />
+      <Route path="sign-up" element={<RegisterPage />} />
+
+      <Route path="workouts/*">
+        <Route
+          path=":workoutId/exercise-instances/:exerciseInstanceId"
+          element={<ExerciseInstancePage />}
+        />
+        <Route path="*" element={<WorkoutsPage />} />
+      </Route>
+
+      <Route path="routines/*">
+        <Route path=":routineId" element={<SingleRoutinePage />} />
+        <Route path="new-routine/*">
+          <Route
+            path="edit-exercise/:exerciseName"
+            element={<EditExerciseForRoutinePage />}
+          />
+          <Route path="*" element={<NewRoutinePage />} />
+        </Route>
+        <Route path="*" element={<RoutinesPage />} />
+      </Route>
+
+      <Route path="exercises/*">
+        <Route path=":exerciseId" element={<SingleExercisePage />} />
+        <Route path="new-exercise" element={<NewExercisePage />} />
+        <Route path="*" element={<ExercisesPage />} />
+      </Route>
+
+      <Route path="profile/*">
+        <Route path="*" element={<ProfilePage />} />
+      </Route>
+      <Route path="*" element={<PageNotFound />} />
+    </Route>,
+  ),
+);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
@@ -70,5 +71,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <RouterProvider router={router} />
       {/* </React.StrictMode> */}
     </ChakraProvider>
-  </Provider>
+  </Provider>,
 );

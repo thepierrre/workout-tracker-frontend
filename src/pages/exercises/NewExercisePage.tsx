@@ -1,23 +1,27 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { fetchCategories } from "../../features/exercises/categoriesSlice";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState, AppDispatch } from "../../app/store";
-import { Category } from "../../interfaces/category.interface";
-import { addExercise } from "../../features/exercises/exercisesSlice";
-import { ChevronLeftIcon } from "@chakra-ui/icons";
-import ExerciseForm from "../../components/forms/ExerciseForm";
-import Container from "../../components/UI/Container";
+import { useEffect, useRef, useState } from "react";
 import { UseFormSetError } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-import { Flex, Heading, IconButton, Box } from "@chakra-ui/react";
+import { AppDispatch, RootState } from "../../app/store";
+import Container from "../../components/UI/Container";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
+import SubmitOrCancelButton from "../../components/UI/buttons/SubmitOrCancelButton";
+import MainHeading from "../../components/UI/text/MainHeading";
+import ExerciseForm, {
+  FormValues,
+} from "../../components/forms/exerciseForm/ExerciseForm";
+import { Category } from "../../interfaces/category.interface";
+import { fetchCategories } from "../../store/exercises/categoriesSlice";
+import { addExercise } from "../../store/exercises/exercisesSlice";
 
 const NewExercisePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const [serverError, setServerError] = useState<string | null>(null);
   const user = useSelector((state: RootState) => state.authenticatedUser.user);
+  const [submittingInProgress, setSubmittingInProgress] =
+    useState<boolean>(false);
   const categoriesState = useSelector((state: RootState) => state.categories);
 
   useEffect(() => {
@@ -26,35 +30,38 @@ const NewExercisePage = () => {
     }
   }, [dispatch, categoriesState.categories.length]);
 
+  const exerciseFormRef = useRef<{ submit: () => void }>(null);
+
   if (!user) {
     return;
   }
 
   const onSubmit = async (
-    data: { name: string },
+    data: FormValues,
     selectedCategories: Category[],
-    setError: UseFormSetError<{ name: string }>
+    setError: UseFormSetError<FormValues>,
   ) => {
     const exerciseToAdd = {
       name: data.name,
+      equipment: data.equipment,
       categories: selectedCategories,
+      isDefault: false,
       userId: user.id,
     };
 
     try {
+      setSubmittingInProgress(true);
       await dispatch(addExercise(exerciseToAdd)).unwrap();
       navigate("/exercises", { state: { exercise: "created" } });
     } catch (error) {
       if (typeof error === "string") {
-        let errorMessage = error;
+        const errorMessage = error;
         setServerError(error);
         setError("name", { type: "server", message: errorMessage });
       }
+    } finally {
+      setSubmittingInProgress(false);
     }
-  };
-
-  const handleGoBack = () => {
-    navigate(-1);
   };
 
   if (categoriesState.loading) {
@@ -63,22 +70,26 @@ const NewExercisePage = () => {
 
   return (
     <Container>
-      <Flex align="center" w={["95vw", "85vw", "70vw", "50vw", "40vw"]} mb={3}>
-        <IconButton
-          aria-label="Go back"
-          variant="link"
-          color="white"
-          w="15%"
-          icon={<ChevronLeftIcon boxSize={8} />}
-          onClick={() => handleGoBack()}
-        />
+      <SubmitOrCancelButton
+        text="CANCEL"
+        top="4.7rem"
+        left={["2rem", "4rem", "8rem", "20rem", "30rem"]}
+        link="/exercises"
+      />
 
-        <Heading w="70%" fontSize="lg" textAlign="center">
-          Add a new exercise
-        </Heading>
-        <Box w="16%" />
-      </Flex>
+      <MainHeading text="New exercise" />
+      {submittingInProgress && <SpinnerComponent mt={0} mb={4} />}
+      <SubmitOrCancelButton
+        text="CREATE"
+        top="4.7rem"
+        right={["2rem", "4rem", "8rem", "20rem", "30rem"]}
+        onClick={() => exerciseFormRef.current?.submit()}
+      />
+
       <ExerciseForm
+        ref={exerciseFormRef}
+        initialName=""
+        initialEquipment="BODYWEIGHT"
         initialSelectedCategories={[]}
         onSubmit={onSubmit}
         buttonText="Create"

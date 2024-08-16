@@ -1,10 +1,10 @@
 import { format } from "date-fns";
-import { Workout } from "../../interfaces/workout.interface";
-import { http, HttpResponse } from "msw";
 import { ExerciseInstance } from "interfaces/exerciseInstance.interface";
-import { baseURL } from "../../mockData/node";
+import { HttpResponse, http } from "msw";
 
-const deepClone = (obj: any) => JSON.parse(JSON.stringify(obj));
+import { Workout } from "../../interfaces/workout.interface";
+
+const deepClone = (obj: Workout[]) => JSON.parse(JSON.stringify(obj));
 
 // immutable, for each test to start
 const initialWorkoutsForUser = [
@@ -14,7 +14,7 @@ const initialWorkoutsForUser = [
     exerciseInstances: [
       {
         id: "3521346b-168d-4d05-8294-8db264bf54cc",
-        exerciseTypeName: "bench press",
+        exerciseTypeName: "Bench press",
         workingSets: [
           {
             id: "0c518544-89a2-4155-8968-1c78ec48bb2e",
@@ -44,7 +44,7 @@ const initialWorkoutsForUser = [
       },
       {
         id: "5fe33ee8-fcf2-49b5-b247-ff4a7aeda4b5b",
-        exerciseTypeName: "barbell rows",
+        exerciseTypeName: "Barbell rows",
         workingSets: [
           {
             id: "e0ab7b4f-3eef-4ecb-ac84-6b7a871f693d",
@@ -68,7 +68,7 @@ const initialWorkoutsForUser = [
       },
       {
         id: "5fe33ee8-fcf2-49b5-b247-b4fdfdD7aeda4b5b",
-        exerciseTypeName: "squats",
+        exerciseTypeName: "Squats",
         workingSets: [
           {
             id: "e0ab7b4f-3eef-4ecb-ac84-6b7a871f693d",
@@ -92,7 +92,7 @@ const initialWorkoutsForUser = [
       },
       {
         id: "5fe33aaae8-fcf2-49b5-b247-b4a7aeda4b5b",
-        exerciseTypeName: "dumbbell pushes",
+        exerciseTypeName: "Dumbbell pushes",
         workingSets: [
           {
             id: "e0ab7b4f-3eef-4ecb-ac84-6b7a871f693d",
@@ -125,7 +125,7 @@ export let workoutsForUser = deepClone(initialWorkoutsForUser);
 const newWorkoutExercises: ExerciseInstance[] = [
   {
     id: "3521346b-168d-4d05-8294-8db264bf54cc",
-    exerciseTypeName: "incline bench press",
+    exerciseTypeName: "Incline bench press",
     workingSets: [
       {
         id: "0c518544-89a2-4155-8968-1c78ecdfae4ff",
@@ -149,7 +149,7 @@ const newWorkoutExercises: ExerciseInstance[] = [
   },
   {
     id: "3521346b-168d-4d05-4-8db264bf54cc",
-    exerciseTypeName: "pull-downs",
+    exerciseTypeName: "Pull-downs",
     workingSets: [
       {
         id: "0c518544-89a2-4155-8968-1c78ecdfae4ff",
@@ -173,7 +173,7 @@ const newWorkoutExercises: ExerciseInstance[] = [
   },
   {
     id: "3521346b-168d-4d05-4-8db26d4bf54cc",
-    exerciseTypeName: "deadlifts",
+    exerciseTypeName: "Deadlifts",
     workingSets: [
       {
         id: "0c518544-89a2-4155-8968-1c78ecdfae4ff",
@@ -197,7 +197,7 @@ const newWorkoutExercises: ExerciseInstance[] = [
   },
   {
     id: "3521346b-168d-4d05-4-8db26fff4bf54cc",
-    exerciseTypeName: "dumbbell lateral raises",
+    exerciseTypeName: "Dumbbell lateral raises",
     workingSets: [
       {
         id: "0c518544-89a2-4155-8968-1c78ecdfae4ff",
@@ -222,11 +222,11 @@ const newWorkoutExercises: ExerciseInstance[] = [
 ];
 
 export const workoutsForUserHandler = [
-  http.get(`${baseURL}user-workouts`, () => {
+  http.get("http://localhost:8080/api/user-workouts", () => {
     return HttpResponse.json([...workoutsForUser]);
   }),
 
-  http.post(`${baseURL}workouts`, async ({ request }) => {
+  http.post("http://localhost:8080/api/workouts", async ({ request }) => {
     const newWorkout = (await request.json()) as Workout;
     newWorkout.exerciseInstances = newWorkoutExercises.map((exercise) => ({
       ...exercise,
@@ -236,7 +236,7 @@ export const workoutsForUserHandler = [
     return HttpResponse.json(newWorkout);
   }),
 
-  http.post(`${baseURL}workouts`, async ({ request }) => {
+  http.post("http://localhost:8080/api/workouts", async ({ request }) => {
     const newWorkout = (await request.json()) as Workout;
     newWorkout.exerciseInstances = newWorkoutExercises.map((exercise) => ({
       ...exercise,
@@ -247,16 +247,16 @@ export const workoutsForUserHandler = [
   }),
 
   http.delete(
-    `${baseURL}workouts/05fa8b17-08ee-41f1-b80e-5112c98c2c3e`,
+    "http://localhost:8080/api/workouts/05fa8b17-08ee-41f1-b80e-5112c98c2c3e",
     async () => {
       workoutsForUser = [
         ...workoutsForUser.filter(
           (workout: Workout) =>
-            workout.id !== "05fa8b17-08ee-41f1-b80e-5112c98c2c3e"
+            workout.id !== "05fa8b17-08ee-41f1-b80e-5112c98c2c3e",
         ),
       ];
 
       return new HttpResponse(null, { status: 204 });
-    }
+    },
   ),
 ];

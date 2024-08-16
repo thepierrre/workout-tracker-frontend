@@ -1,28 +1,31 @@
-import { useEffect } from "react";
-import { useRef, Fragment } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { Routine } from "../../interfaces/routine.interface";
-import { Link } from "react-router-dom";
-import WideButton from "../UI/WideButton";
-import { Workout } from "../../interfaces/workout.interface";
-import { addWorkout } from "../../features/workout/workoutSessionsSlice";
-import { fetchRoutines } from "../../features/routines/routinesSlice";
-import { RootState, AppDispatch } from "../../app/store";
-import { format } from "date-fns";
-
 import {
-  Flex,
-  useDisclosure,
+  Box,
   Drawer,
-  DrawerOverlay,
+  DrawerBody,
   DrawerContent,
   DrawerHeader,
-  DrawerBody,
+  DrawerOverlay,
+  Flex,
   Text,
-  Box,
+  useDisclosure,
 } from "@chakra-ui/react";
+import { format } from "date-fns";
+import { useEffect, useState } from "react";
+import { Fragment, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+
+import { AppDispatch, RootState } from "../../app/store";
+import SpinnerComponent from "../../components/UI/SpinnerComponent";
+import { Routine } from "../../interfaces/routine.interface";
+import { Workout } from "../../interfaces/workout.interface";
+import { fetchRoutines } from "../../store/routines/routinesSlice";
+import { addWorkout } from "../../store/workout/workoutSessionsSlice";
+import WideButton from "../UI/buttons/WideButton";
 
 const NewWorkout = () => {
+  const [workoutAddingInProgress, setWorkoutAddingInProgress] =
+    useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef<HTMLButtonElement>(null);
@@ -36,14 +39,20 @@ const NewWorkout = () => {
     dispatch(fetchRoutines());
   }, [dispatch]);
 
-  const handleAddWorkout = (routine: Routine) => {
-    const workoutToAdd: Omit<Workout, "id" | "exerciseInstances"> = {
-      routineName: routine.name,
-      creationDate: format(chosenDayAsDate, "yyyy-MM-dd"),
-    };
-
-    dispatch(addWorkout(workoutToAdd));
-    onClose();
+  const handleAddWorkout = async (routine: Routine) => {
+    try {
+      setWorkoutAddingInProgress(true);
+      const workoutToAdd: Omit<Workout, "id" | "exerciseInstances"> = {
+        routineName: routine.name,
+        creationDate: format(chosenDayAsDate, "yyyy-MM-dd"),
+      };
+      onClose();
+      await dispatch(addWorkout(workoutToAdd));
+      setWorkoutAddingInProgress(false);
+    } catch (error) {
+      setWorkoutAddingInProgress(false);
+      console.log(error);
+    }
   };
 
   return (
@@ -55,6 +64,11 @@ const NewWorkout = () => {
       >
         New workout
       </WideButton>
+      {workoutAddingInProgress && (
+        <Flex justify="center">
+          <SpinnerComponent mt={0} mb={0} />
+        </Flex>
+      )}
       <Drawer
         isOpen={isOpen}
         placement="bottom"
@@ -63,6 +77,7 @@ const NewWorkout = () => {
       >
         <DrawerOverlay />
         <DrawerContent
+          borderTopRadius={10}
           height="50vh"
           bg="#404040"
           w={["100vw", "100vw", "70vw", "65vw", "65vw"]}
@@ -96,11 +111,11 @@ const NewWorkout = () => {
                       <Flex direction="column" gap={2}>
                         <Text fontWeight="bold">{routine?.name}</Text>
                         <Text fontWeight="bold" fontSize="xs" color="#E0E0E0">
-                          {routine?.exerciseTypes?.length} EXERCISES
+                          {routine?.routineExercises?.length} EXERCISES
                         </Text>
                       </Flex>
                       <Text fontSize="sm" color="#E0E0E0">
-                        {routine?.exerciseTypes?.map((exercise, index) => (
+                        {routine?.routineExercises?.map((exercise, index) => (
                           <Fragment key={index}>
                             {index > 0 && " | "} {exercise?.name}
                           </Fragment>

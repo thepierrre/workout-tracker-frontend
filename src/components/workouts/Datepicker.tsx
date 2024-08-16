@@ -1,11 +1,12 @@
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../app/store";
-import { Flex, Text, Box, IconButton } from "@chakra-ui/react";
-import { setDay } from "../../features/workout/dayInCalendarSlice";
-import { format } from "date-fns";
-
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import { Box, Flex, Heading, IconButton, Text } from "@chakra-ui/react";
+import { format } from "date-fns";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import { RootState } from "../../app/store";
+import { setDay } from "../../store/workout/dayInCalendarSlice";
+import "./styles/Calendar.css";
 
 const today = new Date();
 
@@ -33,9 +34,18 @@ const daysOfNextWeek = Array.from({ length: 7 }, (_, index) => {
 });
 
 const Datepicker = () => {
+  // const { isOpen, onOpen, onClose } = useDisclosure();
   const [displayedWeek, setDisplayedWeek] = useState<Date[]>(daysOfThisWeek);
+  const [weekHeading, setWeekHeading] = useState<
+    "THIS WEEK" | "LAST WEEK" | "NEXT WEEK"
+  >("THIS WEEK");
   const chosenDay = useSelector((state: RootState) => state.chosenDay.day);
+  const { workouts } = useSelector((state: RootState) => state.workoutSessions);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    updateWeekHeading();
+  }, [displayedWeek]);
 
   const handleActiveDay = (index: number) => {
     const selectedDate = displayedWeek[index];
@@ -59,58 +69,112 @@ const Datepicker = () => {
     }
   };
 
+  const doesDayHaveWorkouts = (day: Date): boolean => {
+    const formattedDay = format(day, "yyyy-MM-dd");
+    const workoutsForDay = workouts.some(
+      (wrk) => wrk.creationDate === formattedDay,
+    );
+    return workoutsForDay ? true : false;
+  };
+
+  const updateWeekHeading = () => {
+    if (displayedWeek === daysOfThisWeek) {
+      setWeekHeading("THIS WEEK");
+    } else if (displayedWeek === daysOfLastWeek) {
+      setWeekHeading("LAST WEEK");
+    } else if (displayedWeek === daysOfNextWeek) {
+      setWeekHeading("NEXT WEEK");
+    }
+  };
+
   return (
-    <Flex align="center" m={2}>
-      <IconButton
-        color="white"
-        icon={<ChevronLeftIcon boxSize={8} />}
-        isDisabled={displayedWeek === daysOfLastWeek ? true : false}
-        aria-label="Go to previous week"
-        variant="link"
-        onClick={() => handleDisplayedWeek("previous")}
-      />
-      <Flex gap={4}>
-        {displayedWeek.map((day, index) => (
-          <Flex
-            key={index}
-            direction="column"
-            align="center"
-            gap={1}
-            onClick={() => handleActiveDay(index)}
-            w={7}
-          >
-            <Text
-              fontSize="xs"
-              fontWeight={chosenDay === format(day, "dd/MM/yyyy") ? "bold" : ""}
-            >
-              {format(new Date(day), "EEE").toUpperCase()}
-            </Text>
-            <Box
-              paddingInline={1}
-              borderRadius={7}
-              w={8}
-              bg={chosenDay === format(day, "dd/MM/yyyy") ? "lightblue" : ""}
-            >
-              <Text
-                fontSize="xl"
-                color={chosenDay === format(day, "dd/MM/yyyy") ? "#353935" : ""}
-                textAlign="center"
+    <>
+      <Flex direction="column" align="center" m={2} gap={5}>
+        <Heading fontSize="xl">{weekHeading}</Heading>
+        <Flex>
+          <IconButton
+            color="white"
+            icon={<ChevronLeftIcon boxSize={8} />}
+            isDisabled={displayedWeek === daysOfLastWeek ? true : false}
+            aria-label="Go to previous week"
+            variant="link"
+            onClick={() => handleDisplayedWeek("previous")}
+          />
+          <Flex gap={4}>
+            {displayedWeek.map((day, index) => (
+              <Flex
+                key={index}
+                direction="column"
+                align="center"
+                gap={1}
+                onClick={() => handleActiveDay(index)}
+                w={7}
               >
-                {day.getDate()}
-              </Text>
-            </Box>
+                <Text
+                  fontSize="xs"
+                  fontWeight={
+                    chosenDay === format(day, "dd/MM/yyyy") ? "bold" : ""
+                  }
+                >
+                  {format(new Date(day), "EEE").toUpperCase()}
+                </Text>
+                <Flex direction="column" w={8} h={12} align="center" gap={1}>
+                  <Box
+                    w="100%"
+                    borderRadius={7}
+                    bg={
+                      chosenDay === format(day, "dd/MM/yyyy") ? "lightblue" : ""
+                    }
+                  >
+                    <Text
+                      fontSize="xl"
+                      color={
+                        chosenDay === format(day, "dd/MM/yyyy") ? "#353935" : ""
+                      }
+                      textAlign="center"
+                    >
+                      {day.getDate()}
+                    </Text>
+                  </Box>
+
+                  {doesDayHaveWorkouts(day) && (
+                    <Box bg="lightblue" w={2} h={2} borderRadius={4}></Box>
+                  )}
+                </Flex>
+              </Flex>
+            ))}
           </Flex>
-        ))}
+          <IconButton
+            color="white"
+            icon={<ChevronRightIcon boxSize={8} />}
+            isDisabled={displayedWeek === daysOfNextWeek ? true : false}
+            aria-label="Go to previous week"
+            variant="link"
+            onClick={() => handleDisplayedWeek("following")}
+          />
+        </Flex>
+
+        {/* <IconButton
+          aria-label="Calendar"
+          variant="link"
+          color="white"
+          icon={<CalendarMonthIcon />}
+          onClick={onOpen}
+        /> */}
       </Flex>
-      <IconButton
-        color="white"
-        icon={<ChevronRightIcon boxSize={8} />}
-        isDisabled={displayedWeek === daysOfNextWeek ? true : false}
-        aria-label="Go to previous week"
-        variant="link"
-        onClick={() => handleDisplayedWeek("following")}
-      />
-    </Flex>
+      {/* <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent top={24}>
+          <ModalBody>
+            <Calendar
+              onClickDay={(value) => console.log(value)}
+              minDetail="year"
+            />
+          </ModalBody>
+          <ModalCloseButton />
+        </ModalContent>
+      </Modal> */}
+    </>
   );
 };
 

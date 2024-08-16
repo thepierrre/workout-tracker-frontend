@@ -1,6 +1,5 @@
 // import { defineConfig } from "vite";
 // import react from "@vitejs/plugin-react";
-
 // // https://vitejs.dev/config/
 // export default defineConfig({
 //   plugins: [react()],
@@ -13,16 +12,15 @@
 //     exclude: ["js-big-decimal"],
 //   },
 // });
-
-import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
+import { defineConfig } from "vitest/config";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   test: {
     // 👋 add the line below to add jsdom to vite
-    include: ["**/*.test.tsx"],
+    include: ["**/*.test.tsx", "**/*.test.ts"],
     globals: true,
     environment: "jsdom",
     setupFiles: ["./setupTests.ts"],

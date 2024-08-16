@@ -1,5 +1,5 @@
 export const handleWeightUnitText = (
-  weightUnit: string | undefined
+  weightUnit: string | undefined,
 ): string => {
   return weightUnit === "kgs" ? "kgs" : weightUnit === "lbs" ? "lbs" : "";
 };
@@ -12,8 +12,8 @@ export const convertKgsToLbs = (kgs: number): number => {
   return decimalPart < 0.5
     ? integerPart
     : decimalPart === 0.5
-    ? integerPart + 0.5
-    : integerPart + 1;
+      ? integerPart + 0.5
+      : integerPart + 1;
 };
 
 export const convertLbsToKgs = (lbs: number): number => {

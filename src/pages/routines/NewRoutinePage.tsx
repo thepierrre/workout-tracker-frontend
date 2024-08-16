@@ -1,54 +1,74 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Exercise } from "../../interfaces/exercise.interface";
-import { RootState, AppDispatch } from "../../app/store";
-import { Routine } from "../../interfaces/routine.interface";
-import { addRoutine } from "../../features/routines/routinesSlice";
-import { useSelector, useDispatch } from "react-redux";
-import { Flex, IconButton, Heading, Box } from "@chakra-ui/react";
-import RoutineForm from "../../components/forms/RoutineForm";
-import Container from "../../components/UI/Container";
-import { ChevronLeftIcon } from "@chakra-ui/icons";
+import { useRef, useState } from "react";
 import { UseFormSetError } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
+import { AppDispatch, RootState } from "../../app/store";
+import Container from "../../components/UI/Container";
 import SpinnerComponent from "../../components/UI/SpinnerComponent";
+import SubmitOrCancelButton from "../../components/UI/buttons/SubmitOrCancelButton";
+import MainHeading from "../../components/UI/text/MainHeading";
+import RoutineForm from "../../components/forms/routineForm/RoutineForm";
+import { FormValues } from "../../components/forms/routineForm/RoutineForm";
+import { Exercise } from "../../interfaces/exercise.interface";
+import { WorkingSet } from "../../interfaces/workingSet.interface";
+import { addRoutine } from "../../store/routines/routinesSlice";
 
 const NewRoutinePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const [serverError, setServerError] = useState<string | null>(null);
+  const [submittingInProgress, setSubmittingInProgress] =
+    useState<boolean>(false);
   const { user, loading: loadingUser } = useSelector(
-    (state: RootState) => state.authenticatedUser
+    (state: RootState) => state.authenticatedUser,
   );
+  const { routineExercises: localRoutineExercises } = useSelector(
+    (state: RootState) => state.localRoutine || [],
+  );
+
+  const routineFormRef = useRef<{ submit: () => void }>(null);
 
   if (!user) {
     return;
   }
 
   const onSubmit = async (
-    data: { name: string },
-    selectedExercises: Exercise[],
-    setError: UseFormSetError<{ name: string }>
+    data: FormValues,
+    setError: UseFormSetError<FormValues>,
   ) => {
-    const routineToAdd: Omit<Routine, "id"> = {
+    const exercises: Omit<Exercise, "temporaryId">[] =
+      localRoutineExercises.map((ex) => {
+        const workingSets = ex.workingSets?.map((set) => {
+          return {
+            ...set,
+          } as Omit<WorkingSet, "id" | "creationTimedate">;
+        });
+
+        return {
+          ...ex,
+          workingSets,
+        } as Omit<Exercise, "temporaryId">;
+      });
+
+    const routineToAdd = {
       name: data.name,
-      exerciseTypes: selectedExercises,
+      routineExercises: exercises,
       userId: user.id,
     };
 
     try {
+      setSubmittingInProgress(true);
       await dispatch(addRoutine(routineToAdd)).unwrap();
       navigate("/routines", { state: { routine: "created" } });
     } catch (error) {
       if (typeof error === "string") {
-        let errorMessage = error;
         setServerError(error);
-        setError("name", { type: "server", message: errorMessage });
+        setError("name", { type: "server", message: error });
       }
+    } finally {
+      setSubmittingInProgress(false);
     }
-  };
-
-  const handleGoBack = () => {
-    navigate(-1);
   };
 
   if (loadingUser) {
@@ -57,25 +77,29 @@ const NewRoutinePage = () => {
 
   return (
     <Container>
-      <Flex align="center" w={["95vw", "85vw", "70vw", "50vw", "40vw"]} mb={3}>
-        <IconButton
-          aria-label="Go back"
-          variant="link"
-          color="white"
-          w="15%"
-          icon={<ChevronLeftIcon boxSize={8} />}
-          onClick={() => handleGoBack()}
-        />
+      <SubmitOrCancelButton
+        text="CANCEL"
+        top="4.7rem"
+        left={["2rem", "4rem", "8rem", "20rem", "30rem"]}
+        link="/routines"
+      />
 
-        <Heading w="70%" fontSize="lg" textAlign="center" color="white">
-          Add a new routine
-        </Heading>
-        <Box w="16%" />
-      </Flex>
+      <MainHeading text="New routine" />
+      {submittingInProgress && <SpinnerComponent mt={0} mb={4} />}
+      <SubmitOrCancelButton
+        text="CREATE"
+        top="4.7rem"
+        right={["2rem", "4rem", "8rem", "20rem", "30rem"]}
+        onClick={() => routineFormRef.current?.submit()}
+      />
+
       <RoutineForm
+        initialName=""
+        newRoutine={true}
+        ref={routineFormRef}
         initialSelectedExercises={[]}
         onSubmit={onSubmit}
-        buttonText="Create"
+        buttonText="Save"
         serverError={serverError}
       />
     </Container>

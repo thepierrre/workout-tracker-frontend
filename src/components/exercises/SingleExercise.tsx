@@ -1,14 +1,15 @@
-import { useLocation } from "react-router-dom";
-import CustomCard from "../UI/CustomCard";
+import { Badge, CardBody, Flex, Text, useDisclosure } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+
 import { AppDispatch, RootState } from "../../app/store";
-import { CardBody, Text, Flex, useDisclosure } from "@chakra-ui/react";
+import DeletionModal from "../../components/UI/DeletionModal";
 import { Exercise } from "../../interfaces/exercise.interface";
 import {
   addExInstance,
   removeExInstance,
-} from "../../features/workout/workoutSessionsSlice";
-import DeletionModal from "../../components/UI/DeletionModal";
+} from "../../store/workout/workoutSessionsSlice";
+import CustomCard from "../UI/CustomCard";
 
 interface Props {
   workoutId: string | null;
@@ -37,21 +38,12 @@ const SingleExercise: React.FC<Props> = ({
 
   const handleAddOrDeleteExerciseInstance = (
     e: React.MouseEvent,
-    exerciseName: string
+    exerciseName: string,
   ) => {
     e.stopPropagation();
     e.preventDefault();
 
     if (workoutId !== null) {
-      // const currentWorkout = workouts.find((wrk) => wrk.id === workoutId);
-
-      // if (currentWorkout) {
-
-      //   letexerciseInstance = currentWorkout.exerciseInstances.find(
-      //     (ex) => ex.exerciseTypeName === exerciseName
-      //   );
-      // }
-
       if (!currentWorkoutExercisesNames.includes(exerciseName)) {
         setCurrentWorkoutExercisesNames((prevExercises) => [
           ...prevExercises,
@@ -75,20 +67,22 @@ const SingleExercise: React.FC<Props> = ({
 
     if (currentWorkout) {
       exerciseInstance = currentWorkout.exerciseInstances.find(
-        (ex) => ex.exerciseTypeName === exerciseName
+        (ex) => ex.exerciseTypeName === exerciseName,
       );
     }
 
     setCurrentWorkoutExercisesNames((prevExercises) =>
-      prevExercises.filter((name) => name !== exerciseName)
+      prevExercises.filter((name) => name !== exerciseName),
     );
     if (exerciseInstance && exerciseInstance.id) {
-      let exInstanceId = exerciseInstance.id;
+      const exInstanceId = exerciseInstance.id;
       dispatch(removeExInstance(exInstanceId));
     }
 
     onClose();
   };
+
+  const isExerciseDefault = exercise.isDefault === true;
 
   return (
     <>
@@ -96,17 +90,27 @@ const SingleExercise: React.FC<Props> = ({
         <CardBody
           borderRadius={5}
           bg={
+            location.state &&
+            location.state.addExercises === "true" &&
             currentWorkoutExercisesNames?.includes(exercise.name)
               ? "lightblue"
               : "#414141"
           }
         >
+          {!isExerciseDefault && (
+            <Badge position="absolute" top={4} right={4} bg="#E9D8FD">
+              Custom
+            </Badge>
+          )}
           <Flex>
-            <Flex direction="column" gap={1} textColor="white">
+            <Flex direction="column" gap={1} textColor="white" w="80%">
               <Text
                 fontWeight="bold"
-                data-testid={`exercise-name-${exercise.id}`}
+                fontSize="lg"
+                data-testid={`exercise-name-${exercise.name}`}
                 color={
+                  location.state &&
+                  location.state.addExercises === "true" &&
                   currentWorkoutExercisesNames?.includes(exercise.name)
                     ? "#414141"
                     : "white"
@@ -115,9 +119,10 @@ const SingleExercise: React.FC<Props> = ({
                 {exercise.name}
               </Text>
               <Text
-                fontWeight="bold"
-                fontSize="xs"
+                fontSize="sm"
                 color={
+                  location.state &&
+                  location.state.addExercises === "true" &&
                   currentWorkoutExercisesNames?.includes(exercise.name)
                     ? "#414141"
                     : "white"
@@ -131,10 +136,23 @@ const SingleExercise: React.FC<Props> = ({
                       .toUpperCase()
                   : `0 categories`.toUpperCase()}
               </Text>
+              <Text
+                fontSize="sm"
+                fontWeight="bold"
+                color={
+                  location.state &&
+                  location.state.addExercises === "true" &&
+                  currentWorkoutExercisesNames?.includes(exercise.name)
+                    ? "#414141"
+                    : "lightblue"
+                }
+              >
+                {exercise.equipment}
+              </Text>
             </Flex>
-            {location.state && location.state.addExercises == "true" && (
+            {location.state && location.state.addExercises === "true" && (
               <Flex
-                w="100%"
+                w="20%"
                 align="center"
                 justify="end"
                 mr={2}

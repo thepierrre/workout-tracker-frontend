@@ -1,25 +1,25 @@
-import { useState } from "react";
-import { ExerciseInstance } from "../../interfaces/exerciseInstance.interface";
-import { removeExInstance } from "../../features/workout/workoutSessionsSlice";
-import { useDispatch } from "react-redux";
-
-import CustomCard from "../UI/CustomCard";
-import DeletionModal from "../../components/UI/DeletionModal";
 import {
   CardBody,
-  Text,
   Flex,
-  useDisclosure,
   IconButton,
+  Text,
+  useDisclosure,
 } from "@chakra-ui/react";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+
+import { AppDispatch } from "../../app/store";
+import DeletionModal from "../../components/UI/DeletionModal";
+import { ExerciseInstance } from "../../interfaces/exerciseInstance.interface";
+import { UserSettings } from "../../interfaces/userSettings.interface";
+import { removeExInstance } from "../../store/workout/workoutSessionsSlice";
 import {
   convertKgsToLbs,
   handleWeightUnitText,
   roundKgs,
 } from "../../util/weightUnitConverting";
-import { AppDispatch } from "../../app/store";
-import { UserSettings } from "../../interfaces/userSettings.interface";
+import CustomCard from "../UI/CustomCard";
 
 const defaultUserSettings: UserSettings = {
   changeThreshold: 1,
@@ -45,7 +45,7 @@ const WorkoutExerciseInstance: React.FC<Props> = ({
 
   const handleOpenModal = (
     e: React.MouseEvent,
-    exInstance: ExerciseInstance
+    exInstance: ExerciseInstance,
   ) => {
     e.preventDefault();
     e.stopPropagation();
@@ -70,7 +70,7 @@ const WorkoutExerciseInstance: React.FC<Props> = ({
     <>
       <CustomCard>
         <CardBody>
-          <Text color="white" fontWeight="bold" mb={2}>
+          <Text color="white" fontWeight="bold" mb={4}>
             {exerciseInstance?.exerciseTypeName}
           </Text>
 
@@ -78,13 +78,15 @@ const WorkoutExerciseInstance: React.FC<Props> = ({
             {exerciseInstance?.workingSets?.length > 0 ? (
               exerciseInstance.workingSets.map((workingSet, index) => (
                 <Flex key={index} gap={10}>
-                  <Text flex={0.1}>{index + 1}</Text>
-                  <Flex gap={3} flex={0.2}>
-                    <Text fontWeight="bold">{workingSet.reps}</Text>
+                  <Text w={8}>{index + 1}</Text>
+                  <Flex gap={2} w={20}>
+                    <Text fontWeight="bold" w={8}>
+                      {workingSet.reps}
+                    </Text>
                     <Text>reps</Text>
                   </Flex>
-                  <Flex gap={3} flex={0.2}>
-                    <Text fontWeight="bold">
+                  <Flex gap={3} w={20}>
+                    <Text fontWeight="bold" w={8}>
                       {userSettings?.weightUnit === "kgs"
                         ? roundKgs(workingSet.weight)
                         : convertKgsToLbs(workingSet.weight)}
@@ -92,14 +94,16 @@ const WorkoutExerciseInstance: React.FC<Props> = ({
                     <Text>
                       {handleWeightUnitText(
                         userSettings?.weightUnit ||
-                          defaultUserSettings.weightUnit
+                          defaultUserSettings.weightUnit,
                       )}
                     </Text>
                   </Flex>
                 </Flex>
               ))
             ) : (
-              <Text textAlign="center">No sets.</Text>
+              <Text textAlign="center" mt={2}>
+                Add your first set!
+              </Text>
             )}
           </Flex>
           <Flex justify="end">

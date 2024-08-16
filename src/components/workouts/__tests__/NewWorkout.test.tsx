@@ -1,77 +1,37 @@
-import { render, screen, fireEvent } from "@testing-library/react";
 import { ChakraProvider } from "@chakra-ui/react";
-import { BrowserRouter } from "react-router-dom";
-import NewWorkout from "../NewWorkout";
+import { EnhancedStore } from "@reduxjs/toolkit";
 import "@testing-library/jest-dom";
-import { configureStore } from "@reduxjs/toolkit";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { RootState } from "app/store";
 import { Provider } from "react-redux";
-import workoutSessionsReducer from "../../../features/workout/workoutSessionsSlice";
-import chosenDayReducer from "../../../features/workout/dayInCalendarSlice";
-import activeExerciseInstanceReducer from "../../../features/workout/activeExerciseInstanceSlice";
-import authenticatedUserReducer from "../../../features/auth/authenticatedUserSlice";
-import exercisesReducer from "../../../features/exercises/exercisesSlice";
-import routinesReducer from "../../../features/routines/routinesSlice";
-import categoriesReducer from "../../../features/exercises/categoriesSlice";
-import userSettingsReducer from "../../../features/settings/userSettingsSlice";
-import { initializedUser } from "../../../mockData/authHandlers/userHandler";
-import { workoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
-import { routinesForUser } from "../../../mockData/handlers/routinesForUserHandler";
-import { exerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
-import { userSettings } from "../../../mockData/handlers/userSettingsHandler";
+import { BrowserRouter } from "react-router-dom";
 
-const store = configureStore({
-  reducer: {
-    workoutSessions: workoutSessionsReducer,
-    chosenDay: chosenDayReducer,
-    activeExerciseInstance: activeExerciseInstanceReducer,
-    authenticatedUser: authenticatedUserReducer,
-    exercises: exercisesReducer,
-    routines: routinesReducer,
-    categories: categoriesReducer,
-    userSettings: userSettingsReducer,
-  },
-  preloadedState: {
-    authenticatedUser: {
-      user: initializedUser,
-      loading: false,
-      error: null,
-    },
-    workoutSessions: {
-      workouts: workoutsForUser,
-      loading: false,
-      error: null,
-    },
-    routines: {
-      routines: routinesForUser,
-      loading: false,
-      error: null,
-    },
-    exercises: {
-      exercises: exerciseTypesForUser,
-      loading: false,
-      error: null,
-    },
-    userSettings: {
-      userSettings: userSettings,
-      loading: false,
-      error: null,
-    },
-  },
-});
+import { createInitialState, createStore } from "../../../mockData/mockStore";
+import NewWorkout from "../NewWorkout";
 
-const renderWithProviders = (ui: React.ReactElement) => {
+const renderWithProviders = (
+  ui: React.ReactElement,
+  store: EnhancedStore<RootState>,
+) => {
   return render(
     <ChakraProvider>
       <Provider store={store}>
         <BrowserRouter>{ui}</BrowserRouter>
       </Provider>
-    </ChakraProvider>
+    </ChakraProvider>,
   );
 };
 
 describe("SingleRoutine", () => {
+  let store: EnhancedStore<RootState>;
+
+  beforeEach(() => {
+    const initialState = createInitialState();
+    store = createStore(initialState);
+  });
+
   test("renders the drawer for choosing a new workout", async () => {
-    renderWithProviders(<NewWorkout />);
+    renderWithProviders(<NewWorkout />, store);
 
     fireEvent.click(screen.getByText("New workout"));
     expect(screen.getByText("Select a routine")).toBeInTheDocument();
@@ -79,12 +39,12 @@ describe("SingleRoutine", () => {
     expect(screen.getByText("Full Body Workout B")).toBeInTheDocument();
     expect(screen.getAllByText("4 EXERCISES")).toHaveLength(2);
     expect(
-      screen.getByText("bench press | barbell rows | squats | dumbbell pushes")
+      screen.getByText("Bench press | Barbell rows | Squats | Dumbbell pushes"),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        "incline bench press | pull-downs | deadlifts | dumbbell lateral raises"
-      )
+        "Incline bench press | Pull-downs | Deadlifts | Dumbbell lateral raises",
+      ),
     ).toBeInTheDocument();
   });
 });

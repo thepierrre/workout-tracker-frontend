@@ -1,15 +1,16 @@
-import { render, screen } from "@testing-library/react";
 import { ChakraProvider } from "@chakra-ui/react";
-import { BrowserRouter } from "react-router-dom";
-import SingleRoutine from "../SingleRoutine";
 import "@testing-library/jest-dom";
+import { render, screen } from "@testing-library/react";
+import { BrowserRouter } from "react-router-dom";
+
 import { routinesForUser } from "../../../mockData/handlers/routinesForUserHandler";
+import SingleRoutine from "../SingleRoutine";
 
 const renderWithProviders = (ui: React.ReactElement) => {
   return render(
     <ChakraProvider>
       <BrowserRouter>{ui}</BrowserRouter>
-    </ChakraProvider>
+    </ChakraProvider>,
   );
 };
 
@@ -20,7 +21,7 @@ describe("SingleRoutine", () => {
     expect(screen.getByText("Full Body Workout A")).toBeInTheDocument();
     expect(screen.getByText("4 EXERCISES")).toBeInTheDocument();
     expect(
-      screen.getByText("bench press | barbell rows | squats | dumbbell pushes")
+      screen.getByText("Bench press | Barbell rows | Squats | Dumbbell pushes"),
     ).toBeInTheDocument();
   });
 });
