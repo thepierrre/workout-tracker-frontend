@@ -162,7 +162,7 @@ const ThresholdForm: React.FC<Props> = ({
   };
 
   const buttonText = useMemo(() => {
-    return activeWorkingSet ? "UPDATE" : "ADD NEW";
+    return activeWorkingSet ? "CHANGE" : "ADD NEW";
   }, [activeWorkingSet]);
 
   const parseWeightInCorrectUnit = (w: string | number) => {

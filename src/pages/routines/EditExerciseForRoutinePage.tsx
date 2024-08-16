@@ -95,7 +95,7 @@ const EditExerciseForRoutinePage = () => {
         onClick={() => handleGoBack()}
       />
       <Flex direction="column" align="center" gap={3}>
-        <Text size="md">Customize exercise</Text>
+        <Text size="md">Editing exercise</Text>
         <Heading size="md" mb={5} w="80%" textAlign="center">
           {exerciseName?.toUpperCase()}
         </Heading>
