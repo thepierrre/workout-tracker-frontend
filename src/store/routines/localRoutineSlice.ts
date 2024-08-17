@@ -44,12 +44,17 @@ export const localRoutineSlice = createSlice({
     handleRoutineName: (state, action: PayloadAction<string>) => {
       state.name = action.payload;
     },
-    updateExercisesInRoutine: (state, action: PayloadAction<Exercise[]>) => {
+    updateExercisesInRoutine: (
+      state,
+      action: PayloadAction<Omit<Exercise[], "exerciseOrder">>,
+    ) => {
       state.routineExercises = action.payload;
     },
     addExerciseLocally: (
       state,
-      action: PayloadAction<Omit<Exercise, "id">>,
+      action: PayloadAction<
+        Omit<Exercise, "id" | "isDefault" | "exerciseOrder">
+      >,
     ) => {
       state.routineExercises.push(action.payload);
     },

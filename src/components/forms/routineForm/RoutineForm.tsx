@@ -179,11 +179,18 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
           if (selectedExercises.length >= 15) {
             return prevSelectedExercises;
           }
-          exercise = { ...exercise, workingSets: [] };
-          addExerciseToRoutineLocally(exercise);
-          return [...prevSelectedExercises, exercise];
+          const { id, isDefault, ...restExercise } = exercise;
+          const exerciseToAdd = {
+            ...restExercise,
+            temporaryId: uuidv4(),
+            workingSets: [],
+          };
+          console.log("adding exercise: ", exerciseToAdd);
+          addExerciseToRoutineLocally(exerciseToAdd);
+          return [...prevSelectedExercises, exerciseToAdd];
         }
       });
+      console.log("selected exercises: ", selectedExercises);
     };
 
     const doesSequenceExistInExerciseName = (
@@ -300,14 +307,15 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
       !isExerciseSelected(exercise) && selectedExercises.length >= 15;
 
     const addExerciseToRoutineLocally = (exercise: Exercise) => {
-      const routineExerciseToAdd: Omit<Exercise, "id"> = {
+      const routineExerciseToAdd: Omit<Exercise, "id" | "isDefault"> = {
         name: exercise.name,
         temporaryId: uuidv4(),
         categories: [],
-        equipment: "BODYWEIGHT",
-        isDefault: false,
+        equipment: exercise.equipment,
         workingSets: [],
       };
+      console.log("routine exercise: ", routineExerciseToAdd);
+      console.log("exercises: ", localRoutineExercises);
       dispatch(addExerciseLocally(routineExerciseToAdd));
     };
 

@@ -47,6 +47,7 @@ const RoutineExercisesList: React.FC<Props> = ({
     const newArr = [...arr];
     const element = newArr.splice(fromIndex, 1)[0];
     newArr.splice(toIndex, 0, element);
+    console.log("new array: ", newArr);
     return newArr;
   };
 

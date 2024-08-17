@@ -7,7 +7,8 @@ export interface Exercise {
   name: string;
   categories: Category[];
   equipment: string;
-  isDefault: boolean;
+  isDefault?: boolean;
   userId?: string;
+  exerciseOrder?: number;
   workingSets?: WorkingSet[];
 }
