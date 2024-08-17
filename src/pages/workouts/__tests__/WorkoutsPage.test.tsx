@@ -8,16 +8,16 @@ import {
   screen,
   waitFor,
 } from "@testing-library/react";
-import { RootState } from "app/store";
 import { format } from "date-fns";
 import { Provider } from "react-redux";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 
+import { RootState } from "../../../app/store";
 import { workoutsForUser as mutableWorkoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
 import {
   createInitialState,
   createStore,
-  deepClone,
+  deepCloneWorkouts,
   initialWorkoutsList,
 } from "../../../mockData/mockStore";
 import ExercisesPage from "../../exercises/ExercisesPage";
@@ -46,7 +46,7 @@ describe("WorkoutsPage", () => {
 
   beforeEach(() => {
     mutableWorkoutsForUser.length = 0;
-    mutableWorkoutsForUser.push(...deepClone(initialWorkoutsList));
+    mutableWorkoutsForUser.push(...deepCloneWorkouts(initialWorkoutsList));
 
     const initialState = createInitialState();
     store = createStore(initialState);

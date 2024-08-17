@@ -1,111 +1,25 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import { configureStore } from "@reduxjs/toolkit";
+import { EnhancedStore } from "@reduxjs/toolkit";
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 
-import { Category } from "../../../interfaces/category.interface";
-import { Exercise } from "../../../interfaces/exercise.interface";
-import { User } from "../../../interfaces/user.interface";
-import { Workout } from "../../../interfaces/workout.interface";
-import { categories } from "../../../mockData/handlers/categoriesHandler";
-import { exerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
+import { RootState } from "../../../app/store";
 import { routinesForUser as mutableRoutinesForUser } from "../../../mockData/handlers/routinesForUserHandler";
-import { initializedUser } from "../../../mockData/handlers/userHandler";
-import { workoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
-import authenticatedUserReducer from "../../../store/auth/authenticatedUserSlice";
-import categoriesReducer from "../../../store/exercises/categoriesSlice";
-import exercisesReducer from "../../../store/exercises/exercisesSlice";
-import localRoutineReducer from "../../../store/routines/localRoutineSlice";
-import routinesReducer from "../../../store/routines/routinesSlice";
-import activeExerciseInstanceReducer from "../../../store/workout/activeExerciseInstanceSlice";
-import chosenDayReducer from "../../../store/workout/dayInCalendarSlice";
-import workoutSessionsReducer from "../../../store/workout/workoutSessionsSlice";
+import {
+  createInitialState,
+  createStore,
+  deepCloneRoutines,
+  initialRoutinesList,
+} from "../../../mockData/mockStore";
 import NewRoutinePage from "../NewRoutinePage";
 import RoutinesPage from "../RoutinesPage";
 
-const deepClone = (obj: any) => JSON.parse(JSON.stringify(obj));
-
-const initialRoutinesList = deepClone(mutableRoutinesForUser);
-
-interface AuthenticatedUserState {
-  user: User;
-  loading: boolean;
-  error: any;
-}
-
-interface WorkoutSessionsState {
-  workouts: Workout[];
-  loading: boolean;
-  error: any;
-}
-
-interface ExercisesState {
-  exercises: Exercise[];
-  loading: boolean;
-  error: any;
-}
-
-interface CategoriesState {
-  categories: Category[];
-  loading: boolean;
-  error: any;
-}
-
-interface InitialState {
-  authenticatedUser: AuthenticatedUserState;
-  workoutSessions: WorkoutSessionsState;
-  exercises: ExercisesState;
-  categories: CategoriesState;
-}
-
-const createInitialState = () => ({
-  authenticatedUser: {
-    user: initializedUser,
-    loading: false,
-    error: null,
-  },
-  workoutSessions: {
-    workouts: workoutsForUser,
-    loading: false,
-    error: null,
-  },
-  exercises: {
-    exercises: exerciseTypesForUser,
-    loading: false,
-    error: null,
-  },
-  categories: {
-    categories: categories,
-    loading: false,
-    error: null,
-  },
-  localRoutine: {
-    name: "",
-    routineExercises: [],
-    loading: false,
-    error: null,
-  },
-});
-
-const createStore = (initialState: InitialState) => {
-  return configureStore({
-    reducer: {
-      workoutSessions: workoutSessionsReducer,
-      chosenDay: chosenDayReducer,
-      activeExerciseInstance: activeExerciseInstanceReducer,
-      authenticatedUser: authenticatedUserReducer,
-      exercises: exercisesReducer,
-      routines: routinesReducer,
-      categories: categoriesReducer,
-      localRoutine: localRoutineReducer,
-    },
-    preloadedState: initialState,
-  });
-};
-
-const renderWithProviders = (ui: React.ReactElement, store: any) => {
+const renderWithProviders = (
+  ui: React.ReactElement,
+  store: EnhancedStore<RootState>,
+) => {
   return render(
     <ChakraProvider>
       <Provider store={store}>
@@ -121,11 +35,11 @@ const renderWithProviders = (ui: React.ReactElement, store: any) => {
 };
 
 describe("NewRoutinePage", () => {
-  let store: any;
+  let store: EnhancedStore<RootState>;
 
   beforeEach(() => {
     mutableRoutinesForUser.length = 0;
-    mutableRoutinesForUser.push(...deepClone(initialRoutinesList));
+    mutableRoutinesForUser.push(...deepCloneRoutines(initialRoutinesList));
 
     const initialState = createInitialState();
     store = createStore(initialState);

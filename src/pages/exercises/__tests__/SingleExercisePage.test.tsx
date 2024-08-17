@@ -1,5 +1,5 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import { configureStore } from "@reduxjs/toolkit";
+import { EnhancedStore } from "@reduxjs/toolkit";
 import "@testing-library/jest-dom";
 import {
   act,
@@ -11,101 +11,21 @@ import {
 import { Provider } from "react-redux";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 
-import { Category } from "../../../interfaces/category.interface";
-import { Exercise } from "../../../interfaces/exercise.interface";
-import { User } from "../../../interfaces/user.interface";
-import { Workout } from "../../../interfaces/workout.interface";
-import { categories as initialCategories } from "../../../mockData/handlers/categoriesHandler";
+import { RootState } from "../../../app/store";
 import { exerciseTypesForUser as mutableExerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
-import { initializedUser } from "../../../mockData/handlers/userHandler";
-import { workoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
-import authenticatedUserReducer from "../../../store/auth/authenticatedUserSlice";
-import categoriesReducer from "../../../store/exercises/categoriesSlice";
-import exercisesReducer from "../../../store/exercises/exercisesSlice";
-import routinesReducer from "../../../store/routines/routinesSlice";
-import activeExerciseInstanceReducer from "../../../store/workout/activeExerciseInstanceSlice";
-import chosenDayReducer from "../../../store/workout/dayInCalendarSlice";
-import workoutSessionsReducer from "../../../store/workout/workoutSessionsSlice";
+import {
+  createInitialState,
+  createStore,
+  deepCloneExercises,
+  initialExercisesList,
+} from "../../../mockData/mockStore";
 import ExercisesPage from "../ExercisesPage";
 import SingleExercisePage from "../SingleExercisePage";
-
-const deepClone = (obj: any) => JSON.parse(JSON.stringify(obj));
-
-const initialExerciseTypesList = deepClone(mutableExerciseTypesForUser);
-
-interface AuthenticatedUserState {
-  user: User;
-  loading: boolean;
-  error: any;
-}
-
-interface WorkoutSessionsState {
-  workouts: Workout[];
-  loading: boolean;
-  error: any;
-}
-
-interface ExercisesState {
-  exercises: Exercise[];
-  loading: boolean;
-  error: any;
-}
-
-interface CategoriesState {
-  categories: Category[];
-  loading: boolean;
-  error: any;
-}
-
-interface InitialState {
-  authenticatedUser: AuthenticatedUserState;
-  workoutSessions: WorkoutSessionsState;
-  exercises: ExercisesState;
-  categories: CategoriesState;
-}
-
-const createInitialState = () => ({
-  authenticatedUser: {
-    user: initializedUser,
-    loading: false,
-    error: null,
-  },
-  workoutSessions: {
-    workouts: workoutsForUser,
-    loading: false,
-    error: null,
-  },
-  exercises: {
-    exercises: deepClone(initialExerciseTypesList),
-    loading: false,
-    error: null,
-  },
-  categories: {
-    categories: deepClone(initialCategories),
-    loading: false,
-    error: null,
-  },
-});
-
-const createStore = (initialState: InitialState) => {
-  return configureStore({
-    reducer: {
-      workoutSessions: workoutSessionsReducer,
-      chosenDay: chosenDayReducer,
-      activeExerciseInstance: activeExerciseInstanceReducer,
-      authenticatedUser: authenticatedUserReducer,
-      exercises: exercisesReducer,
-      routines: routinesReducer,
-      categories: categoriesReducer,
-    },
-    preloadedState: initialState,
-  });
-};
 
 const renderWithProviders = (
   ui: React.ReactElement,
   id: string,
-  store: any,
+  store: EnhancedStore<RootState>,
 ) => {
   return render(
     <ChakraProvider>
@@ -122,11 +42,13 @@ const renderWithProviders = (
 };
 
 describe("SingleExercisePage", () => {
-  let store: any;
+  let store: EnhancedStore<RootState>;
 
   beforeEach(() => {
     mutableExerciseTypesForUser.length = 0;
-    mutableExerciseTypesForUser.push(...deepClone(initialExerciseTypesList));
+    mutableExerciseTypesForUser.push(
+      ...deepCloneExercises(initialExercisesList),
+    );
 
     const initialState = createInitialState();
     store = createStore(initialState);

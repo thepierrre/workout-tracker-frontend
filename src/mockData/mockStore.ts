@@ -1,9 +1,10 @@
 import { EnhancedStore, configureStore } from "@reduxjs/toolkit";
 import { RootState } from "app/store";
 import { format } from "date-fns";
+import { Exercise } from "interfaces/exercise.interface";
 
+import { Routine } from "../interfaces/routine.interface";
 import { Workout } from "../interfaces/workout.interface";
-import { workoutsForUser as mutableWorkoutsForUser } from "../mockData/handlers/workoutsForUserHandler";
 import { authenticatedUserState } from "../store/auth/authenticatedUserSlice";
 import authenticatedUserReducer from "../store/auth/authenticatedUserSlice";
 import categoriesReducer, {
@@ -31,14 +32,25 @@ import workoutSessionsReducer, {
   WorkoutSessionsState,
 } from "../store/workout/workoutSessionsSlice";
 import { categories } from "./handlers/categoriesHandler";
-import { exerciseTypesForUser } from "./handlers/exerciseTypesForUserHandler";
+import { exerciseTypesForUser as mutableExerciseTypesForUser } from "./handlers/exerciseTypesForUserHandler";
+import { routinesForUser as mutableRoutinesForUser } from "./handlers/routinesForUserHandler";
 import { routinesForUser } from "./handlers/routinesForUserHandler";
 import { initializedUser } from "./handlers/userHandler";
 import { userSettings } from "./handlers/userSettingsHandler";
+import { workoutsForUser as mutableWorkoutsForUser } from "./handlers/workoutsForUserHandler";
 
-export const deepClone = (obj: Workout[]) => JSON.parse(JSON.stringify(obj));
+export const deepCloneWorkouts = (obj: Workout[]) =>
+  JSON.parse(JSON.stringify(obj));
+export const deepCloneRoutines = (obj: Routine[]) =>
+  JSON.parse(JSON.stringify(obj));
+export const deepCloneExercises = (obj: Exercise[]) =>
+  JSON.parse(JSON.stringify(obj));
 
-export const initialWorkoutsList = deepClone(mutableWorkoutsForUser);
+export const initialWorkoutsList = deepCloneWorkouts(mutableWorkoutsForUser);
+export const initialRoutinesList = deepCloneRoutines(mutableRoutinesForUser);
+export const initialExercisesList = deepCloneExercises(
+  mutableExerciseTypesForUser,
+);
 
 // Define InitialState interface based on RootState
 export interface InitialState {
@@ -61,7 +73,7 @@ export const createInitialState = (): RootState => ({
   },
   chosenDay: { day: format(new Date(), "dd/MM/yyyy") },
   workoutSessions: {
-    workouts: deepClone(initialWorkoutsList),
+    workouts: deepCloneWorkouts(initialWorkoutsList),
     loading: false,
     error: null,
   },
@@ -69,7 +81,7 @@ export const createInitialState = (): RootState => ({
     activeExerciseInstance: undefined,
   },
   exercises: {
-    exercises: exerciseTypesForUser,
+    exercises: deepCloneExercises(initialExercisesList),
     loading: false,
     error: null,
   },
@@ -79,7 +91,7 @@ export const createInitialState = (): RootState => ({
     error: null,
   },
   routines: {
-    routines: routinesForUser,
+    routines: deepCloneRoutines(initialRoutinesList),
     loading: false,
     error: null,
   },
