@@ -114,8 +114,18 @@ const Datepicker = () => {
 
   return (
     <>
-      <Flex direction="column" align="center" m={2} gap={4}>
-        <Heading fontSize="xl">{weekHeading}</Heading>
+      <Flex direction="column" align="center">
+        <Flex direction="column" align="center" mb={2}>
+          <Text fontWeight="bold" fontSize="2xl">
+            Your workouts
+          </Text>
+          <Text fontSize="xl" color="lightblue" fontWeight="bold" mb={4}>
+            {handleDisplayedDayFormat().toLocaleUpperCase()}
+          </Text>
+        </Flex>
+        <Heading fontSize="md" mb={2}>
+          {weekHeading}
+        </Heading>
         <Flex>
           <IconButton
             color="white"
@@ -184,13 +194,6 @@ const Datepicker = () => {
             icon={<CalendarMonthIcon />}
             onClick={onOpen}
           />
-        </Flex>
-
-        <Flex gap={1} direction="column" align="center" mb={2}>
-          <Text fontWeight="bold" fontSize="xl">
-            WORKOUTS FOR
-          </Text>
-          <Text>{handleDisplayedDayFormat()}</Text>
         </Flex>
       </Flex>
       <Modal isOpen={isOpen} onClose={onClose}>

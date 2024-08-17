@@ -105,7 +105,7 @@ const ExercisesPage = () => {
     <Container>
       <Link to="/exercises/new-exercise">
         <WideButton w={["95vw", "85vw", "70vw", "50vw", "40vw"]} type="submit">
-          New exercise
+          Add exercise
         </WideButton>
       </Link>
 

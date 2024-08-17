@@ -108,7 +108,7 @@ const RoutinesPage = () => {
     <Container>
       <Link to="/routines/new-routine">
         <WideButton w={["95vw", "85vw", "70vw", "50vw", "40vw"]} type="submit">
-          New routine
+          Add routine
         </WideButton>
       </Link>
 

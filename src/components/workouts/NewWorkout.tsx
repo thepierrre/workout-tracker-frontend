@@ -62,7 +62,7 @@ const NewWorkout = () => {
         ref={btnRef}
         onClick={onOpen}
       >
-        New workout
+        Add workout
       </WideButton>
       {workoutAddingInProgress && (
         <Flex justify="center">
