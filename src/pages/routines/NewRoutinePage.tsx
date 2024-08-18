@@ -58,6 +58,7 @@ const NewRoutinePage = () => {
     };
 
     try {
+      console.log(routineToAdd);
       setSubmittingInProgress(true);
       await dispatch(addRoutine(routineToAdd)).unwrap();
       navigate("/routines", { state: { routine: "created" } });
