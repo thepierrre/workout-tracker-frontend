@@ -61,7 +61,7 @@ describe("WorkoutsPage", () => {
       ).toBeInTheDocument();
     });
 
-    expect(screen.getByText("New workout")).toBeInTheDocument();
+    expect(screen.getByText("Add workout")).toBeInTheDocument();
     expect(screen.getByText("Full Body Workout A")).toBeInTheDocument();
     expect(screen.getByText("Bench press")).toBeInTheDocument();
     expect(screen.getByText("Barbell rows")).toBeInTheDocument();
@@ -70,14 +70,14 @@ describe("WorkoutsPage", () => {
     expect(screen.getAllByText("Delete workout")).toHaveLength(1);
   });
 
-  test("opens the sliding element with all routines when 'New workout' is clicked", async () => {
+  test("opens the sliding element with all routines when 'Add workout' is clicked", async () => {
     renderWithProviders(<WorkoutsPage />, store);
 
     await waitFor(() => {
-      expect(screen.getByText("New workout")).toBeInTheDocument();
+      expect(screen.getByText("Add workout")).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getByText("New workout"));
+    fireEvent.click(screen.getByText("Add workout"));
     expect(screen.getByText("Select a routine")).toBeInTheDocument();
     expect(screen.queryAllByText("Full Body Workout A")).toHaveLength(2);
     expect(screen.getByText("Full Body Workout B")).toBeInTheDocument();
@@ -87,10 +87,10 @@ describe("WorkoutsPage", () => {
     renderWithProviders(<WorkoutsPage />, store);
 
     await waitFor(() => {
-      expect(screen.getByText("New workout")).toBeInTheDocument();
+      expect(screen.getByText("Add workout")).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getByText("New workout"));
+    fireEvent.click(screen.getByText("Add workout"));
 
     await waitFor(() => {
       expect(screen.getByText("Full Body Workout B")).toBeInTheDocument();

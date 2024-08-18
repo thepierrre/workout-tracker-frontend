@@ -57,7 +57,7 @@ describe("ExercisesPage", () => {
     renderWithProviders(<ExercisesPage />, store);
 
     await waitFor(() => {
-      expect(screen.getByText("New exercise")).toBeInTheDocument();
+      expect(screen.getByText("Add exercise")).toBeInTheDocument();
       expect(screen.getByPlaceholderText("Search by name")).toBeInTheDocument();
     });
 
@@ -85,14 +85,14 @@ describe("ExercisesPage", () => {
     });
   });
 
-  test("renders the 'New exercise' page when the 'New exercise' button is clicked", async () => {
+  test("renders the 'New exercise' page when the 'Add exercise' button is clicked", async () => {
     renderWithProviders(<ExercisesPage />, store);
 
     await waitFor(() => {
-      expect(screen.getByText("New exercise")).toBeInTheDocument();
+      expect(screen.getByText("Add exercise")).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getByText("New exercise"));
+    fireEvent.click(screen.getByText("Add exercise"));
 
     await waitFor(() => {
       expect(screen.getByText("New exercise")).toBeInTheDocument();
@@ -116,7 +116,7 @@ describe("ExercisesPage", () => {
     renderWithProviders(<ExercisesPage />, store);
 
     await waitFor(() => {
-      expect(screen.getByText("New exercise")).toBeInTheDocument();
+      expect(screen.getByText("Add exercise")).toBeInTheDocument();
     });
 
     fireEvent.change(screen.getByPlaceholderText("Search by name"), {

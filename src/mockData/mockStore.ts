@@ -34,7 +34,6 @@ import workoutSessionsReducer, {
 import { categories } from "./handlers/categoriesHandler";
 import { exerciseTypesForUser as mutableExerciseTypesForUser } from "./handlers/exerciseTypesForUserHandler";
 import { routinesForUser as mutableRoutinesForUser } from "./handlers/routinesForUserHandler";
-import { routinesForUser } from "./handlers/routinesForUserHandler";
 import { initializedUser } from "./handlers/userHandler";
 import { userSettings } from "./handlers/userSettingsHandler";
 import { workoutsForUser as mutableWorkoutsForUser } from "./handlers/workoutsForUserHandler";

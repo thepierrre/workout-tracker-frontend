@@ -172,7 +172,7 @@ describe("SingleExercisePage", () => {
       fireEvent.click(screen.getByText("SAVE"));
     });
     await waitFor(() => {
-      expect(screen.getByText("New exercise")).toBeInTheDocument();
+      expect(screen.getByText("Add exercise")).toBeInTheDocument();
       expect(screen.getByText("edited exercise")).toBeInTheDocument();
     });
   });

@@ -186,7 +186,7 @@ describe("NewExercisePage", () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText("New exercise")).toBeInTheDocument();
+      expect(screen.getByText("Add exercise")).toBeInTheDocument();
       expect(screen.getByText("brand-new exercise")).toBeInTheDocument();
       expect(screen.getByText("TEST CATEGORY")).toBeInTheDocument();
     });

@@ -72,14 +72,14 @@ describe("RoutinesPage", () => {
     });
   });
 
-  test("renders the 'New routine' page when the 'New routine' button is clicked", async () => {
+  test("renders the 'New routine' page when the 'Add routine' button is clicked", async () => {
     renderWithProviders(<RoutinesPage />, store);
 
     await waitFor(() => {
-      expect(screen.getByText("New routine")).toBeInTheDocument();
+      expect(screen.getByText("Add routine")).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getByText("New routine"));
+    fireEvent.click(screen.getByText("Add routine"));
 
     await waitFor(() => {
       expect(screen.getByText("New routine")).toBeInTheDocument();
