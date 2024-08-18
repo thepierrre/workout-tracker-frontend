@@ -351,10 +351,18 @@ const workoutSessionsSlice = createSlice({
           );
 
           if (workout) {
-            workout.exerciseInstances.filter(
+            workout.exerciseInstances = workout.exerciseInstances.filter(
               (exInstance) => exInstance.id !== deletedExInstanceId,
             );
           }
+        },
+      )
+      .addCase(
+        removeExInstance.rejected,
+        (state, action: PayloadAction<string | undefined>) => {
+          state.error =
+            action.payload ||
+            "Failed to delete the exercise instance from the workout.";
         },
       )
       .addCase(

@@ -109,7 +109,7 @@ export const WorkoutsPage = () => {
         ))
       ) : (
         <Text textColor="white" mt={5}>
-          You don't have any workouts for this day.
+          No workouts for this day.
         </Text>
       )}
     </Container>

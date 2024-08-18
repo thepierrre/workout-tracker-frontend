@@ -1,75 +1,28 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import { configureStore } from "@reduxjs/toolkit";
+import { EnhancedStore } from "@reduxjs/toolkit";
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 
+import { RootState } from "../../../app/store";
 import { Exercise } from "../../../interfaces/exercise.interface";
 import { Routine } from "../../../interfaces/routine.interface";
-import { categories } from "../../../mockData/handlers/categoriesHandler";
-import { exerciseTypesForUser } from "../../../mockData/handlers/exerciseTypesForUserHandler";
+import { routinesForUser as mutableRoutinesForUser } from "../../../mockData/handlers/routinesForUserHandler";
 import { routinesForUser } from "../../../mockData/handlers/routinesForUserHandler";
-import { initializedUser } from "../../../mockData/handlers/userHandler";
-import { userSettings } from "../../../mockData/handlers/userSettingsHandler";
-import { workoutsForUser } from "../../../mockData/handlers/workoutsForUserHandler";
-import authenticatedUserReducer from "../../../store/auth/authenticatedUserSlice";
-import categoriesReducer from "../../../store/exercises/categoriesSlice";
-import exercisesReducer from "../../../store/exercises/exercisesSlice";
-import routinesReducer from "../../../store/routines/routinesSlice";
-import userSettingsReducer from "../../../store/settings/userSettingsSlice";
-import activeExerciseInstanceReducer from "../../../store/workout/activeExerciseInstanceSlice";
-import chosenDayReducer from "../../../store/workout/dayInCalendarSlice";
-import workoutSessionsReducer from "../../../store/workout/workoutSessionsSlice";
+import {
+  createInitialState,
+  createStore,
+  deepCloneRoutines,
+  initialRoutinesList,
+} from "../../../mockData/mockStore";
 import NewRoutinePage from "../NewRoutinePage";
 import RoutinesPage from "../RoutinesPage";
 
-const store = configureStore({
-  reducer: {
-    workoutSessions: workoutSessionsReducer,
-    chosenDay: chosenDayReducer,
-    activeExerciseInstance: activeExerciseInstanceReducer,
-    authenticatedUser: authenticatedUserReducer,
-    exercises: exercisesReducer,
-    routines: routinesReducer,
-    categories: categoriesReducer,
-    userSettings: userSettingsReducer,
-  },
-  preloadedState: {
-    authenticatedUser: {
-      user: initializedUser,
-      loading: false,
-      error: null,
-    },
-    workoutSessions: {
-      workouts: workoutsForUser,
-      loading: false,
-      error: null,
-    },
-    routines: {
-      routines: routinesForUser,
-      loading: false,
-      error: null,
-    },
-    exercises: {
-      exercises: exerciseTypesForUser,
-      loading: false,
-      error: null,
-    },
-    categories: {
-      categories: categories,
-      loading: false,
-      error: null,
-    },
-    userSettings: {
-      userSettings: userSettings,
-      loading: false,
-      error: null,
-    },
-  },
-});
-
-const renderWithProviders = (ui: React.ReactElement) => {
+const renderWithProviders = (
+  ui: React.ReactElement,
+  store: EnhancedStore<RootState>,
+) => {
   return render(
     <ChakraProvider>
       <Provider store={store}>
@@ -85,8 +38,18 @@ const renderWithProviders = (ui: React.ReactElement) => {
 };
 
 describe("RoutinesPage", () => {
+  let store: EnhancedStore<RootState>;
+
+  beforeEach(() => {
+    mutableRoutinesForUser.length = 0;
+    mutableRoutinesForUser.push(...deepCloneRoutines(initialRoutinesList));
+
+    const initialState = createInitialState();
+    store = createStore(initialState);
+  });
+
   test("renders the correct number of routines and their exercises", async () => {
-    renderWithProviders(<RoutinesPage />);
+    renderWithProviders(<RoutinesPage />, store);
     await waitFor(() => {
       const routineElements = screen.getAllByTestId(/^routine-name-/);
       expect(routineElements).toHaveLength(routinesForUser.length);
@@ -109,14 +72,14 @@ describe("RoutinesPage", () => {
     });
   });
 
-  test("renders the 'New routine' page when the 'New routine' button is clicked", async () => {
-    renderWithProviders(<RoutinesPage />);
+  test("renders the 'New routine' page when the 'Add routine' button is clicked", async () => {
+    renderWithProviders(<RoutinesPage />, store);
 
     await waitFor(() => {
-      expect(screen.getByText("New routine")).toBeInTheDocument();
+      expect(screen.getByText("Add routine")).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getByText("New routine"));
+    fireEvent.click(screen.getByText("Add routine"));
 
     await waitFor(() => {
       expect(screen.getByText("New routine")).toBeInTheDocument();

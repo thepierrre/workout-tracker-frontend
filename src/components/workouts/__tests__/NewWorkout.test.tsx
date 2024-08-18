@@ -33,7 +33,7 @@ describe("SingleRoutine", () => {
   test("renders the drawer for choosing a new workout", async () => {
     renderWithProviders(<NewWorkout />, store);
 
-    fireEvent.click(screen.getByText("New workout"));
+    fireEvent.click(screen.getByText("Add workout"));
     expect(screen.getByText("Select a routine")).toBeInTheDocument();
     expect(screen.getByText("Full Body Workout A")).toBeInTheDocument();
     expect(screen.getByText("Full Body Workout B")).toBeInTheDocument();

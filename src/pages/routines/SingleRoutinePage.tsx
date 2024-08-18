@@ -71,7 +71,7 @@ const SingleRoutinePage = () => {
 
     const exercises: Omit<Exercise, "temporaryId">[] =
       localRoutineExercises.map((ex) => {
-        const { temporaryId, ...restOfExercise } = ex;
+        const { temporaryId, exerciseOrder, ...restOfExercise } = ex;
 
         const workingSets = ex.workingSets?.map((set) => {
           const { temporaryId, ...restOfSet } = set;
@@ -106,6 +106,7 @@ const SingleRoutinePage = () => {
     };
 
     try {
+      console.log("updating routine: ", routineToUpdate);
       setSubmittingInProgress(true);
       if (currentIndex !== -1) {
         await dispatch(updateRoutine(routineToUpdate)).unwrap();

@@ -1,7 +1,21 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import { Box, Flex, Heading, IconButton, Text } from "@chakra-ui/react";
-import { format } from "date-fns";
+import {
+  Box,
+  Flex,
+  Heading,
+  IconButton,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalOverlay,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import { format, parse } from "date-fns";
 import { useEffect, useState } from "react";
+import Calendar from "react-calendar";
 import { useDispatch, useSelector } from "react-redux";
 
 import { RootState } from "../../app/store";
@@ -34,7 +48,7 @@ const daysOfNextWeek = Array.from({ length: 7 }, (_, index) => {
 });
 
 const Datepicker = () => {
-  // const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [displayedWeek, setDisplayedWeek] = useState<Date[]>(daysOfThisWeek);
   const [weekHeading, setWeekHeading] = useState<
     "THIS WEEK" | "LAST WEEK" | "NEXT WEEK"
@@ -47,10 +61,16 @@ const Datepicker = () => {
     updateWeekHeading();
   }, [displayedWeek]);
 
-  const handleActiveDay = (index: number) => {
-    const selectedDate = displayedWeek[index];
-    const formattedDate = format(selectedDate, "dd/MM/yyyy");
-    dispatch(setDay(formattedDate));
+  const handleActiveDay = (index?: number, date?: Date) => {
+    if (index) {
+      const selectedDate = displayedWeek[index];
+      const formattedDate = format(selectedDate, "dd/MM/yyyy");
+      dispatch(setDay(formattedDate));
+    } else if (date) {
+      const formattedDate = format(date, "dd/MM/yyyy");
+      dispatch(setDay(formattedDate));
+      onClose();
+    }
   };
 
   const handleDisplayedWeek = (week: string) => {
@@ -87,10 +107,25 @@ const Datepicker = () => {
     }
   };
 
+  const handleDisplayedDayFormat = () => {
+    const parsedDate = parse(chosenDay, "dd/MM/yyyy", new Date());
+    return format(parsedDate, "dd MMM, yyyy");
+  };
+
   return (
     <>
-      <Flex direction="column" align="center" m={2} gap={5}>
-        <Heading fontSize="xl">{weekHeading}</Heading>
+      <Flex direction="column" align="center">
+        <Flex direction="column" align="center" mb={2}>
+          <Text fontWeight="bold" fontSize="2xl">
+            Your workouts
+          </Text>
+          <Text fontSize="xl" color="lightblue" fontWeight="bold" mb={4}>
+            {handleDisplayedDayFormat().toLocaleUpperCase()}
+          </Text>
+        </Flex>
+        <Heading fontSize="md" mb={2}>
+          {weekHeading}
+        </Heading>
         <Flex>
           <IconButton
             color="white"
@@ -152,28 +187,27 @@ const Datepicker = () => {
             variant="link"
             onClick={() => handleDisplayedWeek("following")}
           />
+          <IconButton
+            aria-label="Calendar"
+            variant="link"
+            color="white"
+            icon={<CalendarMonthIcon />}
+            onClick={onOpen}
+          />
         </Flex>
-
-        {/* <IconButton
-          aria-label="Calendar"
-          variant="link"
-          color="white"
-          icon={<CalendarMonthIcon />}
-          onClick={onOpen}
-        /> */}
       </Flex>
-      {/* <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent top={24}>
           <ModalBody>
             <Calendar
-              onClickDay={(value) => console.log(value)}
+              onClickDay={(value: Date) => handleActiveDay(undefined, value)}
               minDetail="year"
             />
           </ModalBody>
           <ModalCloseButton />
         </ModalContent>
-      </Modal> */}
+      </Modal>
     </>
   );
 };

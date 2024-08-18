@@ -35,6 +35,7 @@ const router = createBrowserRouter(
           path=":workoutId/exercise-instances/:exerciseInstanceId"
           element={<ExerciseInstancePage />}
         />
+        {/* <Route path="date/:workoutDate" element={<WorkoutsPage />} /> */}
         <Route path="*" element={<WorkoutsPage />} />
       </Route>
 

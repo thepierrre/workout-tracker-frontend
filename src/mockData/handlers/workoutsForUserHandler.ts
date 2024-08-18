@@ -7,7 +7,7 @@ import { Workout } from "../../interfaces/workout.interface";
 const deepClone = (obj: Workout[]) => JSON.parse(JSON.stringify(obj));
 
 // immutable, for each test to start
-const initialWorkoutsForUser = [
+const initialWorkoutsForUser: Workout[] = [
   {
     id: "05fa8b17-08ee-41f1-b80e-5112c98c2c3e",
     creationDate: format(new Date(), "yyyy-MM-dd"),
