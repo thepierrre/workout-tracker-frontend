@@ -1,4 +1,5 @@
 import { Badge, CardBody, Flex, Text, useDisclosure } from "@chakra-ui/react";
+import { unwrapResult } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 
@@ -36,7 +37,7 @@ const SingleExercise: React.FC<Props> = ({
     onOpen();
   };
 
-  const handleAddOrDeleteExerciseInstance = (
+  const handleAddOrDeleteExerciseInstance = async (
     e: React.MouseEvent,
     exerciseName: string,
   ) => {
@@ -44,6 +45,7 @@ const SingleExercise: React.FC<Props> = ({
     e.preventDefault();
 
     if (workoutId !== null) {
+      // Add the exercise to the workout.
       if (!currentWorkoutExercisesNames.includes(exerciseName)) {
         setCurrentWorkoutExercisesNames((prevExercises) => [
           ...prevExercises,
@@ -53,33 +55,41 @@ const SingleExercise: React.FC<Props> = ({
         const exerciseType = exercises.find((ex) => ex.name === exerciseName);
 
         if (exerciseType) {
-          dispatch(addExInstance({ exerciseType, workoutId }));
+          await dispatch(addExInstance({ exerciseType, workoutId }));
+          const currentWorkout = workouts.find((wrk) => wrk.id === workoutId);
+          console.log(currentWorkout);
         }
       } else {
+        // Open the modal to confirm the deletion of the exercise.
         handleOpenModal();
       }
     }
   };
 
-  const handleRemoveExInstance = (exerciseName: string) => {
-    const currentWorkout = workouts.find((wrk) => wrk.id === workoutId);
-    let exerciseInstance;
+  const handleRemoveExInstance = async (exerciseName: string) => {
+    try {
+      const currentWorkout = workouts.find((wrk) => wrk.id === workoutId);
+      let exerciseInstance;
 
-    if (currentWorkout) {
-      exerciseInstance = currentWorkout.exerciseInstances.find(
-        (ex) => ex.exerciseTypeName === exerciseName,
+      if (currentWorkout) {
+        exerciseInstance = currentWorkout.exerciseInstances.find(
+          (ex) => ex.exerciseTypeName === exerciseName,
+        );
+      }
+
+      setCurrentWorkoutExercisesNames((prevExercises) =>
+        prevExercises.filter((name) => name !== exerciseName),
       );
+      if (exerciseInstance && exerciseInstance.id) {
+        const exInstanceId = exerciseInstance.id;
+        const result = await dispatch(removeExInstance(exInstanceId));
+        unwrapResult(result);
+        console.log(currentWorkout);
+      }
+      onClose();
+    } catch (error) {
+      console.error("Failed to remove the exercise from workout:", error);
     }
-
-    setCurrentWorkoutExercisesNames((prevExercises) =>
-      prevExercises.filter((name) => name !== exerciseName),
-    );
-    if (exerciseInstance && exerciseInstance.id) {
-      const exInstanceId = exerciseInstance.id;
-      dispatch(removeExInstance(exInstanceId));
-    }
-
-    onClose();
   };
 
   const isExerciseDefault = exercise.isDefault === true;
