@@ -65,7 +65,7 @@ const NewWorkout = () => {
         Add workout
       </WideButton>
       {workoutAddingInProgress && (
-        <Flex justify="center">
+        <Flex justify="center" w={["95vw", "85vw", "70vw", "50vw", "40vw"]}>
           <SpinnerComponent mt={0} mb={0} />
         </Flex>
       )}
