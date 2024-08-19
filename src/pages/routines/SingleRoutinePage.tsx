@@ -33,6 +33,8 @@ const SingleRoutinePage = () => {
   const [submittingInProgress, setSubmittingInProgress] =
     useState<boolean>(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [deletingRoutineInProgress, setDeletingRoutineInProgress] =
+    useState<boolean>(false);
   const { routines, loading: loadingRoutines } = useSelector(
     (state: RootState) => state.routines,
   );
@@ -59,9 +61,9 @@ const SingleRoutinePage = () => {
     return <PageNotFound />;
   }
 
-  if (!user) {
-    return;
-  }
+  // if (!user) {
+  //   return;
+  // }
 
   const onSubmit = async (
     data: { name: string },
@@ -91,7 +93,7 @@ const SingleRoutinePage = () => {
       id: currentRoutine.id,
       name: data.name,
       routineExercises: exercises,
-      userId: user.id,
+      userId: user?.id,
     };
 
     const compareOldAndNewRoutine = () => {
@@ -106,7 +108,6 @@ const SingleRoutinePage = () => {
     };
 
     try {
-      console.log("updating routine: ", routineToUpdate);
       setSubmittingInProgress(true);
       if (currentIndex !== -1) {
         await dispatch(updateRoutine(routineToUpdate)).unwrap();
@@ -128,17 +129,25 @@ const SingleRoutinePage = () => {
   };
 
   const handleRemoveRoutine = async () => {
-    if (routineToDelete) {
-      await dispatch(removeRoutine(routineToDelete.id));
-      setRoutineToDelete(null);
-      onClose();
-      navigate("/routines", { state: { routine: "removed" } });
+    if (routineToDelete?.id) {
+      try {
+        setDeletingRoutineInProgress(true);
+        await dispatch(removeRoutine(routineToDelete.id));
+        setRoutineToDelete(null);
+        onClose();
+
+        navigate("/routines", { state: { routine: "removed" } });
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setDeletingRoutineInProgress(false);
+      }
     }
   };
 
-  if (loadingRoutines || loadingUser) {
-    return <SpinnerComponent />;
-  }
+  // if (loadingRoutines || loadingUser) {
+  //   return <SpinnerComponent />;
+  // }
 
   return (
     <>
@@ -151,7 +160,9 @@ const SingleRoutinePage = () => {
         />
 
         <MainHeading text="Edit routine" />
-        {submittingInProgress && <SpinnerComponent mt={0} mb={4} />}
+        {submittingInProgress && (
+          <SpinnerComponent mt={0} mb={4} text="Saving routine..." />
+        )}
         <SubmitOrCancelButton
           text="SAVE"
           top="4.7rem"
@@ -177,6 +188,7 @@ const SingleRoutinePage = () => {
         ></RoutineForm>
       </Container>
       <DeletionModal
+        deletionInProgress={deletingRoutineInProgress}
         isOpen={isOpen}
         onClose={onClose}
         onDelete={handleRemoveRoutine}

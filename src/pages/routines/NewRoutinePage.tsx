@@ -20,18 +20,17 @@ const NewRoutinePage = () => {
   const [serverError, setServerError] = useState<string | null>(null);
   const [submittingInProgress, setSubmittingInProgress] =
     useState<boolean>(false);
-  const { user, loading: loadingUser } = useSelector(
-    (state: RootState) => state.authenticatedUser,
-  );
+  // const { user, loading: loadingUser } = useSelector(
+  //   (state: RootState) => state.authenticatedUser,
+  // );
   const { routineExercises: localRoutineExercises } = useSelector(
     (state: RootState) => state.localRoutine || [],
   );
+  // const { exercises, loading: loadingExercises } = useSelector(
+  //   (state: RootState) => state.exercises,
+  // );
 
   const routineFormRef = useRef<{ submit: () => void }>(null);
-
-  if (!user) {
-    return;
-  }
 
   const onSubmit = async (
     data: FormValues,
@@ -54,7 +53,6 @@ const NewRoutinePage = () => {
     const routineToAdd = {
       name: data.name,
       routineExercises: exercises,
-      userId: user.id,
     };
 
     try {
@@ -72,9 +70,9 @@ const NewRoutinePage = () => {
     }
   };
 
-  if (loadingUser) {
-    return <SpinnerComponent />;
-  }
+  // if (loadingUser) {
+  //   return <SpinnerComponent />;
+  // }
 
   return (
     <Container>
@@ -86,7 +84,9 @@ const NewRoutinePage = () => {
       />
 
       <MainHeading text="New routine" />
-      {submittingInProgress && <SpinnerComponent mt={0} mb={4} />}
+      {submittingInProgress && (
+        <SpinnerComponent mt={0} mb={4} text="Adding routine..." />
+      )}
       <SubmitOrCancelButton
         text="CREATE"
         top="4.7rem"

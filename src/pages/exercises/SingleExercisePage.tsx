@@ -20,7 +20,6 @@ import { Exercise } from "../../interfaces/exercise.interface";
 import { fetchCategories } from "../../store/exercises/categoriesSlice";
 import { removeExercise } from "../../store/exercises/exercisesSlice";
 import { updateExercise } from "../../store/exercises/exercisesSlice";
-import { fetchLocalCategories } from "../../store/exercises/localCategoriesSlice";
 import PageNotFound from "../pageNotFound/PageNotFound";
 
 const SingleExercisePage = () => {
@@ -28,11 +27,17 @@ const SingleExercisePage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { exerciseId } = useParams();
+  const [deletingExerciseInProgress, setDeletingExerciseInProgress] =
+    useState<boolean>(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [submittingInProgress, setSubmittingInProgress] =
     useState<boolean>(false);
   const [exerciseToDelete, setExerciseToDelete] = useState<Exercise | null>(
     null,
+  );
+
+  const { categories, loading: loadingCategories } = useSelector(
+    (state: RootState) => state.categories,
   );
 
   const { user, loading: loadingUser } = useSelector(
@@ -45,21 +50,12 @@ const SingleExercisePage = () => {
   const exerciseFormRef = useRef<{ submit: () => void }>(null);
 
   useEffect(() => {
-    //dispatch(fetchCategories());
-    dispatch(fetchLocalCategories());
+    dispatch(fetchCategories());
   }, [dispatch]);
 
   const currentExercise = exercises.find(
     (exercise) => exercise.id === exerciseId,
   );
-
-  if (loadingUser || loadingExercises) {
-    return <SpinnerComponent />;
-  }
-
-  if (!user) {
-    return null;
-  }
 
   if (!currentExercise) {
     return <PageNotFound />;
@@ -78,7 +74,7 @@ const SingleExercisePage = () => {
       equipment: data.equipment,
       categories: selectedCategories,
       isDefault: false,
-      userId: user.id,
+      userId: user?.id,
     };
 
     const compareOldAndNewEx = () => {
@@ -112,16 +108,18 @@ const SingleExercisePage = () => {
 
   const handleRemoveExercise = async () => {
     if (exerciseToDelete && exerciseToDelete.id) {
+      setDeletingExerciseInProgress(true);
       await dispatch(removeExercise(exerciseToDelete.id));
       setExerciseToDelete(null);
       onClose();
+      setDeletingExerciseInProgress(false);
       navigate("/exercises", { state: { exercise: "removed" } });
     }
   };
 
-  if (loadingUser || loadingExercises) {
-    return <SpinnerComponent />;
-  }
+  // if (loadingUser || loadingExercises) {
+  //   return <SpinnerComponent />;
+  // }
 
   return (
     <>
@@ -134,7 +132,9 @@ const SingleExercisePage = () => {
         />
 
         <MainHeading text="Edit exercise" />
-        {submittingInProgress && <SpinnerComponent mt={0} mb={4} />}
+        {submittingInProgress && (
+          <SpinnerComponent mt={0} mb={4} text="Saving exercise..." />
+        )}
         <SubmitOrCancelButton
           text="SAVE"
           top="4.7rem"
@@ -149,6 +149,8 @@ const SingleExercisePage = () => {
         />
 
         <ExerciseForm
+          categories={categories}
+          loadingCategories={loadingCategories}
           ref={exerciseFormRef}
           initialName={currentExercise.name}
           initialEquipment={currentExercise.equipment}
@@ -159,6 +161,7 @@ const SingleExercisePage = () => {
         ></ExerciseForm>
       </Container>
       <DeletionModal
+        deletionInProgress={deletingExerciseInProgress}
         isOpen={isOpen}
         onClose={onClose}
         onDelete={handleRemoveExercise}

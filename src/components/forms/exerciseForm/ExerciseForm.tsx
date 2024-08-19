@@ -8,6 +8,7 @@ import {
   InputGroup,
   InputLeftElement,
   Select,
+  Text,
 } from "@chakra-ui/react";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { FormProvider, Resolver, useForm } from "react-hook-form";
@@ -43,6 +44,8 @@ const resolver: Resolver<FormValues> = async (values) => {
 };
 
 interface ExerciseFormProps {
+  categories: Category[];
+  loadingCategories: boolean;
   initialName: string;
   initialEquipment: string;
   initialSelectedCategories: Category[];
@@ -68,6 +71,8 @@ const equipmentOptions = [
 const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
   (
     {
+      categories,
+      loadingCategories,
       initialName,
       initialEquipment,
       initialSelectedCategories,
@@ -93,9 +98,9 @@ const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
     const [selectedCategories, setSelectedCategories] = useState<Category[]>(
       initialSelectedCategories,
     );
-    const { categories, loading: loadingCategories } = useSelector(
-      (state: RootState) => state.categories,
-    );
+    // const { categories, loading: loadingCategories } = useSelector(
+    //   (state: RootState) => state.categories,
+    // );
 
     useImperativeHandle(ref, () => ({
       submit: () =>
@@ -106,7 +111,8 @@ const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
 
     useEffect(() => {
       setSelectedCategories(initialSelectedCategories);
-    }, [initialSelectedCategories]);
+      console.log("selected", selectedCategories);
+    }, []);
 
     useEffect(() => {
       if (serverError) {
@@ -125,9 +131,9 @@ const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
       category.name.toLowerCase().startsWith(searchedCategories.toLowerCase()),
     );
 
-    if (loadingCategories) {
-      return <SpinnerComponent />;
-    }
+    // if (loadingCategories) {
+    //   return <SpinnerComponent />;
+    // }
 
     return (
       <FormProvider {...methods}>
@@ -194,47 +200,58 @@ const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
             </Flex>
           </FormControl>
 
-          <Flex direction="column" align="center" justify="center" w="100%">
-            <Flex
-              direction="column"
-              w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
-            >
-              <SecondaryHeading
-                text={`Selected muscles (${selectedCategories.length}/5)`}
-              />
-
-              <InputGroup
-                flexDirection="column"
-                alignItems="flex-start"
-                width={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+          {loadingCategories && categories.length === 0 ? (
+            <SpinnerComponent text="Loading categories..." mt={4} />
+          ) : (
+            <Flex direction="column" align="center" justify="center" w="100%">
+              <Flex
+                direction="column"
+                w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
               >
-                <Input
-                  id="search-muscle-groups"
-                  w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
-                  bg="#404040"
-                  borderWidth="1px"
-                  borderColor="#CBD5E0"
-                  _focus={{
-                    boxShadow: "none",
-                    borderWidth: "2px",
-                    borderColor: "#3182CE",
-                  }}
-                  _placeholder={{ color: "#B3B3B3" }}
-                  placeholder="Search by name"
-                  onChange={(event) => handleCategoryFiltering(event)}
+                <SecondaryHeading
+                  text={`Selected muscles (${selectedCategories.length}/5)`}
                 />
-                <InputLeftElement>
-                  <SearchIcon />
-                </InputLeftElement>
-              </InputGroup>
-            </Flex>
 
-            <Categories
-              filteredCategories={filteredCategories}
-              selectedCategories={selectedCategories}
-              setSelectedCategories={setSelectedCategories}
-            />
-          </Flex>
+                <InputGroup
+                  flexDirection="column"
+                  alignItems="flex-start"
+                  width={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+                >
+                  <Input
+                    id="search-muscle-groups"
+                    w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+                    bg="#404040"
+                    borderWidth="1px"
+                    borderColor="#CBD5E0"
+                    _focus={{
+                      boxShadow: "none",
+                      borderWidth: "2px",
+                      borderColor: "#3182CE",
+                    }}
+                    _placeholder={{ color: "#B3B3B3" }}
+                    placeholder="Search by name"
+                    onChange={(event) => handleCategoryFiltering(event)}
+                  />
+                  <InputLeftElement>
+                    <SearchIcon />
+                  </InputLeftElement>
+                </InputGroup>
+              </Flex>
+              {!loadingCategories && categories.length === 0 ? (
+                <SpinnerComponent text="Loading categories..." mt={4} />
+              ) : categories.length === 0 ? (
+                <Text textAlign="center" mt={4} mb={4}>
+                  No categories found.
+                </Text>
+              ) : (
+                <Categories
+                  filteredCategories={filteredCategories}
+                  selectedCategories={selectedCategories}
+                  setSelectedCategories={setSelectedCategories}
+                />
+              )}
+            </Flex>
+          )}
         </form>
       </FormProvider>
     );

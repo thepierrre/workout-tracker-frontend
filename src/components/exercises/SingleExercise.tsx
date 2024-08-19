@@ -215,6 +215,7 @@ const SingleExercise: React.FC<Props> = ({
         </CardBody>
       </CustomCard>
       <DeletionModal
+        deletionInProgress={deletingExerciseInProgress}
         isOpen={isOpen}
         onClose={onClose}
         onDelete={() => handleRemoveExInstance(exercise.name)}

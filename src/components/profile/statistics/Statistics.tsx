@@ -1,5 +1,5 @@
 import { Flex } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { Workout } from "../../../interfaces/workout.interface";
 import { convertKgsToLbs, roundKgs } from "../../../util/weightUnitConverting";
@@ -12,7 +12,27 @@ interface Props {
 }
 
 const Statistics: React.FC<Props> = ({ workouts, weightUnit }) => {
-  const totalWeightRaised = (): number => {
+  const [totalWeightRaised, setTotalWeightRaised] = useState<
+    number | undefined
+  >(undefined);
+  const [maxSingleWeightRaised, setMaxSingleWeightRaised] = useState<
+    number | undefined
+  >(undefined);
+  const [totalRepsDone, setTotalRepsDone] = useState<number | undefined>(
+    undefined,
+  );
+  const [maxRepsInSingleSet, setMaxRepsInSingleSet] = useState<
+    number | undefined
+  >(undefined);
+
+  useEffect(() => {
+    calculateTotalWeightRaised();
+    calculateMaxSingleWeightRaised();
+    calculateTotalRepsDone();
+    calculateMaxRepsInSingleSet();
+  }, [workouts]);
+
+  const calculateTotalWeightRaised = () => {
     const weightsFromAllSets: number[] = [];
     workouts.map((wrk) =>
       wrk.exerciseInstances.map((ex) =>
@@ -20,10 +40,10 @@ const Statistics: React.FC<Props> = ({ workouts, weightUnit }) => {
       ),
     );
     const sum = weightsFromAllSets.reduce((partialSum, a) => partialSum + a, 0);
-    return sum;
+    setTotalWeightRaised(sum);
   };
 
-  const maxSingleWeightRaised = (): number => {
+  const calculateMaxSingleWeightRaised = () => {
     let maxValue = 0;
 
     workouts.map((wrk) =>
@@ -36,10 +56,10 @@ const Statistics: React.FC<Props> = ({ workouts, weightUnit }) => {
       ),
     );
 
-    return maxValue;
+    setMaxSingleWeightRaised(maxValue);
   };
 
-  const totalRepsDone = (): number => {
+  const calculateTotalRepsDone = () => {
     const repsFromAllSets: number[] = [];
     workouts.map((wrk) =>
       wrk.exerciseInstances.map((ex) =>
@@ -47,10 +67,10 @@ const Statistics: React.FC<Props> = ({ workouts, weightUnit }) => {
       ),
     );
     const sum = repsFromAllSets.reduce((partialSum, a) => partialSum + a, 0);
-    return sum;
+    setTotalRepsDone(sum);
   };
 
-  const maxRepsInSingleSet = (): number => {
+  const calculateMaxRepsInSingleSet = () => {
     let maxValue = 0;
 
     workouts.map((wrk) =>
@@ -63,23 +83,25 @@ const Statistics: React.FC<Props> = ({ workouts, weightUnit }) => {
       ),
     );
 
-    return maxValue;
+    setMaxRepsInSingleSet(maxValue);
   };
 
-  const totalWeight =
-    weightUnit === "kgs"
-      ? `${roundKgs(totalWeightRaised())} kgs`
-      : `${convertKgsToLbs(totalWeightRaised())} lbs`;
+  const totalWeight = totalWeightRaised
+    ? weightUnit === "kgs"
+      ? `${roundKgs(totalWeightRaised)} kgs`
+      : `${convertKgsToLbs(totalWeightRaised)} lbs`
+    : undefined;
 
-  const highestSingleWeight =
-    weightUnit === "kgs"
-      ? `${roundKgs(maxSingleWeightRaised())} kgs`
-      : `${convertKgsToLbs(maxSingleWeightRaised())} lbs`;
+  const highestSingleWeight = maxSingleWeightRaised
+    ? weightUnit === "kgs"
+      ? `${roundKgs(maxSingleWeightRaised)} kgs`
+      : `${convertKgsToLbs(maxSingleWeightRaised)} lbs`
+    : undefined;
 
   const statisticsContent = [
     { text: "Total workouts:", value: workouts.length },
-    { text: "Total reps:", value: totalRepsDone() },
-    { text: "Maximum reps in a set:", value: maxRepsInSingleSet() },
+    { text: "Total reps:", value: totalRepsDone },
+    { text: "Maximum reps in a set:", value: maxRepsInSingleSet },
     {
       text: " Total weight:",
       value: totalWeight,

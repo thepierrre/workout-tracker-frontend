@@ -73,75 +73,67 @@ const Categories = ({
 
   return (
     <>
-      {filteredCategories.length > 0 ? (
-        muscleGroups.map((muscleGrp, index) => (
-          <Box key={index}>
-            {hasCategoriesForMuscleGroups(filteredCategories, muscleGrp) && (
-              <>
-                <Heading
-                  fontSize="lg"
-                  mt={8}
-                  ml={2}
-                  color="lightblue"
-                  textAlign="center"
-                >
-                  {muscleGrp}
-                </Heading>
-                <Wrap
-                  mt={5}
-                  w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
-                  spacing={2}
-                  justify="left"
-                >
-                  {filteredCategories
-                    .filter((category) => category.muscleGroup === muscleGrp)
-                    .map((category, _, arr) => {
-                      const width = arr.length === 1 ? "100%" : "49%";
-                      return (
-                        <Card
-                          direction="column"
-                          p={[2, 1, 2, 1]}
-                          bg={
-                            isCategorySelected(category)
-                              ? "lightblue"
-                              : "#414141"
-                          }
-                          w={width}
-                          textColor={
-                            isCategorySelected(category) ? "#404040" : "white"
-                          }
-                          data-testid={`category-name-${category.name}`}
-                          key={category.name}
-                          onClick={() =>
-                            handleToast(isCategorySelected(category))
+      {muscleGroups.map((muscleGrp, index) => (
+        <Box key={index}>
+          {hasCategoriesForMuscleGroups(filteredCategories, muscleGrp) && (
+            <>
+              <Heading
+                fontSize="lg"
+                mt={8}
+                ml={2}
+                color="lightblue"
+                textAlign="center"
+              >
+                {muscleGrp}
+              </Heading>
+              <Wrap
+                mt={5}
+                w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+                spacing={2}
+                justify="left"
+              >
+                {filteredCategories
+                  .filter((category) => category.muscleGroup === muscleGrp)
+                  .map((category, _, arr) => {
+                    const width = arr.length === 1 ? "100%" : "49%";
+                    return (
+                      <Card
+                        direction="column"
+                        p={[2, 1, 2, 1]}
+                        bg={
+                          isCategorySelected(category) ? "lightblue" : "#414141"
+                        }
+                        w={width}
+                        textColor={
+                          isCategorySelected(category) ? "#404040" : "white"
+                        }
+                        data-testid={`category-name-${category.name}`}
+                        key={category.name}
+                        onClick={() =>
+                          handleToast(isCategorySelected(category))
+                        }
+                      >
+                        <Checkbox
+                          isChecked={isCategorySelected(category)}
+                          isDisabled={isCheckboxDisabled(category)}
+                          onChange={() => handleCheck(category)}
+                          colorScheme="green"
+                          data-testid={`checkbox-category-name-${category.name}`}
+                          fontWeight={
+                            isCategorySelected(category) ? "bold" : ""
                           }
                         >
-                          <Checkbox
-                            isChecked={isCategorySelected(category)}
-                            isDisabled={isCheckboxDisabled(category)}
-                            onChange={() => handleCheck(category)}
-                            colorScheme="green"
-                            data-testid={`checkbox-category-name-${category.name}`}
-                            fontWeight={
-                              isCategorySelected(category) ? "bold" : ""
-                            }
-                          >
-                            {category.name.charAt(0).toLocaleUpperCase() +
-                              category.name.slice(1)}
-                          </Checkbox>
-                        </Card>
-                      );
-                    })}
-                </Wrap>
-              </>
-            )}
-          </Box>
-        ))
-      ) : (
-        <Text textAlign="center" mt={4} mb={4}>
-          No categories found.
-        </Text>
-      )}
+                          {category.name.charAt(0).toLocaleUpperCase() +
+                            category.name.slice(1)}
+                        </Checkbox>
+                      </Card>
+                    );
+                  })}
+              </Wrap>
+            </>
+          )}
+        </Box>
+      ))}
     </>
   );
 };

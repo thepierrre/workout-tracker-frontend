@@ -1,8 +1,8 @@
-import { Card, Flex, Text } from "@chakra-ui/react";
+import { Card, Flex, Spinner, Text } from "@chakra-ui/react";
 
 interface Props {
   text: string;
-  value: string | number;
+  value: string | number | undefined;
 }
 
 const StatisticsUnit: React.FC<Props> = ({ text, value }) => {
@@ -18,7 +18,15 @@ const StatisticsUnit: React.FC<Props> = ({ text, value }) => {
         <Text fontWeight="bold" w="60%" color="lightblue">
           {text}
         </Text>
-        <Text fontWeight="bold">{value}</Text>
+        {value ? (
+          <Text fontWeight="bold" w="40%">
+            {value}
+          </Text>
+        ) : (
+          <Flex w="40%">
+            <Spinner size="xs" color="lightblue" />
+          </Flex>
+        )}
       </Flex>
     </Card>
   );

@@ -40,6 +40,9 @@ const WorkoutExerciseInstance: React.FC<Props> = ({
   const dispatch = useDispatch<AppDispatch>();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [deletingExerciseInProgress, setDeletingExerciseInProgress] =
+    useState<boolean>(false);
+
   const [exInstanceToDelete, setExInstanceToDelete] =
     useState<ExerciseInstance | null>(null);
 
@@ -56,12 +59,15 @@ const WorkoutExerciseInstance: React.FC<Props> = ({
   const handleRemoveExInstance = async () => {
     if (exInstanceToDelete) {
       try {
+        setDeletingExerciseInProgress(true);
         await dispatch(removeExInstance(exInstanceToDelete.id)).unwrap();
         onExInstanceDeleted(exInstanceToDelete.id);
         setExInstanceToDelete(null);
         onClose();
       } catch (error) {
         console.error("Failed to delete exercise instance:", error);
+      } finally {
+        setDeletingExerciseInProgress(false);
       }
     }
   };
@@ -119,6 +125,7 @@ const WorkoutExerciseInstance: React.FC<Props> = ({
         </CardBody>
       </CustomCard>
       <DeletionModal
+        deletionInProgress={deletingExerciseInProgress}
         isOpen={isOpen}
         onClose={onClose}
         onDelete={handleRemoveExInstance}

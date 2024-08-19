@@ -103,9 +103,9 @@ const ExercisesPage = () => {
     setSearchedExercises(value);
   };
 
-  if (loadingExercises || loadingWorkouts) {
-    return <SpinnerComponent />;
-  }
+  // if (loadingExercises || loadingWorkouts) {
+  //   return <SpinnerComponent />;
+  // }
 
   return (
     <Container>
@@ -137,11 +137,25 @@ const ExercisesPage = () => {
         </InputGroup>
       </Flex>
 
-      <Flex direction="column" gap={2} align="center" mt={2}>
-        {filteredExercises && filteredExercises.length > 0 ? (
-          filteredExercises.map((exercise) =>
-            exercise.isDefault === false ? (
-              <Link key={exercise.name} to={`/exercises/${exercise.id}`}>
+      {loadingExercises && exercises.length === 0 ? (
+        <SpinnerComponent text="Loading exercises..." mt={4} />
+      ) : (
+        <Flex direction="column" gap={2} align="center" mt={2}>
+          {filteredExercises && filteredExercises.length > 0 ? (
+            filteredExercises.map((exercise) =>
+              exercise.isDefault === false ? (
+                <Link key={exercise.name} to={`/exercises/${exercise.id}`}>
+                  <SingleExercise
+                    key={exercise.id}
+                    exercise={exercise}
+                    setCurrentWorkoutExercisesNames={
+                      setCurrentWorkoutExercisesNames
+                    }
+                    workoutId={workoutId}
+                    currentWorkoutExercisesNames={currentWorkoutExercisesNames}
+                  />
+                </Link>
+              ) : (
                 <SingleExercise
                   key={exercise.id}
                   exercise={exercise}
@@ -151,25 +165,15 @@ const ExercisesPage = () => {
                   workoutId={workoutId}
                   currentWorkoutExercisesNames={currentWorkoutExercisesNames}
                 />
-              </Link>
-            ) : (
-              <SingleExercise
-                key={exercise.id}
-                exercise={exercise}
-                setCurrentWorkoutExercisesNames={
-                  setCurrentWorkoutExercisesNames
-                }
-                workoutId={workoutId}
-                currentWorkoutExercisesNames={currentWorkoutExercisesNames}
-              />
-            ),
-          )
-        ) : (
-          <Text textAlign="center" mt={5}>
-            No exercises.
-          </Text>
-        )}
-      </Flex>
+              ),
+            )
+          ) : (
+            <Text textAlign="center" mt={5}>
+              No exercises.
+            </Text>
+          )}
+        </Flex>
+      )}
     </Container>
   );
 };

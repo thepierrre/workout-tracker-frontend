@@ -86,9 +86,9 @@ const ProfilePage = () => {
     }
   };
 
-  if (loadingWorkouts || loadingUserSettings) {
-    return <SpinnerComponent />;
-  }
+  //   if (loadingWorkouts || loadingUserSettings) {
+  //     return <SpinnerComponent />;
+  //   }
 
   return (
     <Container>
@@ -98,11 +98,18 @@ const ProfilePage = () => {
           mb={0}
         />
 
-        <Statistics
-          workouts={workouts}
-          weightUnit={userSettings?.weightUnit || "kgs"}
-        />
-        {userSettings && <Weight userSettings={userSettings} />}
+        {loadingWorkouts && loadingUserSettings && workouts.length === 0 ? (
+          <SpinnerComponent mt={2} text="Loading statistics..." />
+        ) : (
+          <>
+            <Statistics
+              workouts={workouts}
+              weightUnit={userSettings?.weightUnit || "kgs"}
+            />
+            {userSettings && <Weight userSettings={userSettings} />}
+          </>
+        )}
+
         <Button
           w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
           bg="lightblue"
