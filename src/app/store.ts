@@ -32,8 +32,9 @@ export const store = configureStore({
 
 axiosInstance.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
     if (error.response && error.response.status === 401) {
+      await axiosInstance.post("/auth/logout");
       store.dispatch(clearUser());
       store.dispatch(displayAlert("Unauthorized access. Please log in."));
     }
