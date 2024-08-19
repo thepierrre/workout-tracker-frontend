@@ -108,7 +108,7 @@ const WorkoutExerciseInstance: React.FC<Props> = ({
               ))
             ) : (
               <Text textAlign="center" mt={2}>
-                Add your first set!
+                No sets.
               </Text>
             )}
           </Flex>

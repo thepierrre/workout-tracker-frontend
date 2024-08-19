@@ -95,7 +95,7 @@ const Categories = ({
                 {filteredCategories
                   .filter((category) => category.muscleGroup === muscleGrp)
                   .map((category, _, arr) => {
-                    const width = arr.length === 1 ? "100%" : "49%";
+                    const width = arr.length === 1 ? "100%" : "48%";
                     return (
                       <Card
                         direction="column"

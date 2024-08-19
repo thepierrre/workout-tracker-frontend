@@ -109,7 +109,6 @@ const ExerciseForm = forwardRef<{ submit: () => void }, ExerciseFormProps>(
 
     useEffect(() => {
       setSelectedCategories(initialSelectedCategories);
-      console.log("selected", selectedCategories);
     }, []);
 
     useEffect(() => {
