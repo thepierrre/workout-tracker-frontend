@@ -1,4 +1,13 @@
-import { Flex, Spinner, Tab, TabList, Tabs, Text } from "@chakra-ui/react";
+import {
+  Alert,
+  AlertIcon,
+  Flex,
+  Spinner,
+  Tab,
+  TabList,
+  Tabs,
+  Text,
+} from "@chakra-ui/react";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
@@ -7,7 +16,9 @@ import { initializeUser } from "../store/auth/authenticatedUserSlice";
 import { AppDispatch, RootState } from "./store";
 
 const App = () => {
+  const alertState = useSelector((state: RootState) => state.alert);
   const dispatch = useDispatch<AppDispatch>();
+  const [showAlert, setShowAlert] = useState<boolean>(false);
   const location = useLocation();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("");
@@ -25,17 +36,31 @@ const App = () => {
 
   useEffect(() => {
     if (initialized) {
-      if (user === null) {
-        if (location.pathname !== "/" && location.pathname !== "/sign-up") {
+      if (user === null && alertState.visible) {
+        if (
+          location.pathname !== "/" &&
+          location.pathname !== "/sign-up" &&
+          !location.state
+        ) {
           navigate("/");
+          setShowAlert(true);
         }
       } else {
+        setShowAlert(false);
         if (location.pathname === "/" || location.pathname === "/sign-up") {
           navigate("/workouts");
         }
       }
     }
-  }, [initialized, user, navigate, location.pathname]);
+  }, [initialized, user, navigate, dispatch, location.pathname]);
+
+  useEffect(() => {
+    if (alertState.visible) {
+      if (location.pathname !== "/" && location.pathname !== "/sign-up") {
+        setShowAlert(true);
+      }
+    }
+  }, [alertState, dispatch]);
 
   useEffect(() => {
     setActiveTab(location.pathname);
@@ -82,32 +107,44 @@ const App = () => {
   }
 
   return (
-    <Flex bg="#1a1a1a" minH="100vh" paddingTop={3}>
-      <Tabs variant="soft-rounded" index={activeIndex}>
-        {user && (
-          <TabList width="100%">
-            <Flex justify="center" width="100%" gap={0.5}>
-              {tabs.map((tab) => (
-                <Tab
-                  sx={{
-                    color: "white",
-                    WebkitTapHighlightColor: "transparent",
-                  }}
-                  w="23vw"
-                  fontSize="md"
-                  as={Link}
-                  to={tab.url}
-                  key={tab.title}
-                >
-                  {tab.title}
-                </Tab>
-              ))}
-            </Flex>
-          </TabList>
-        )}
-        <Outlet />
-      </Tabs>
-    </Flex>
+    <>
+      {showAlert && (
+        <Alert status="error" variant="top-accent" gap={8} pt={4}>
+          <AlertIcon boxSize="30px" position="absolute" />
+          <Flex direction="column" align="center" w="100%">
+            <Text>You didn't log in</Text>
+            <Text mb={4}>or your session expired.</Text>
+            <Text fontWeight="bold">Please authenticate to get access.</Text>
+          </Flex>
+        </Alert>
+      )}
+      <Flex bg="#1a1a1a" minH="100vh" paddingTop={3}>
+        <Tabs variant="soft-rounded" index={activeIndex}>
+          {user && (
+            <TabList width="100%">
+              <Flex justify="center" width="100%" gap={0.5}>
+                {tabs.map((tab) => (
+                  <Tab
+                    sx={{
+                      color: "white",
+                      WebkitTapHighlightColor: "transparent",
+                    }}
+                    w="23vw"
+                    fontSize="md"
+                    as={Link}
+                    to={tab.url}
+                    key={tab.title}
+                  >
+                    {tab.title}
+                  </Tab>
+                ))}
+              </Flex>
+            </TabList>
+          )}
+          <Outlet />
+        </Tabs>
+      </Flex>
+    </>
   );
 };
 

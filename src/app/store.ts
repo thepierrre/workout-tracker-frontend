@@ -1,6 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import authenticatedUserReducer from "../store/auth/authenticatedUserSlice";
+import alertReducer, { displayAlert } from "../store/alerts/alertSlice";
+import authenticatedUserReducer, {
+  clearUser,
+} from "../store/auth/authenticatedUserSlice";
+import authenticatedUserSlice from "../store/auth/authenticatedUserSlice";
 import categoriesReducer from "../store/exercises/categoriesSlice";
 import exercisesReducer from "../store/exercises/exercisesSlice";
 import localRoutineReducer from "../store/routines/localRoutineSlice";
@@ -9,9 +13,11 @@ import userSettingsReducer from "../store/settings/userSettingsSlice";
 import activeExerciseInstanceReducer from "../store/workout/activeExerciseInstanceSlice";
 import chosenDayReducer from "../store/workout/dayInCalendarSlice";
 import workoutSessionsReducer from "../store/workout/workoutSessionsSlice";
+import axiosInstance from "../util/axiosInstance";
 
 export const store = configureStore({
   reducer: {
+    alert: alertReducer,
     workoutSessions: workoutSessionsReducer,
     chosenDay: chosenDayReducer,
     activeExerciseInstance: activeExerciseInstanceReducer,
@@ -23,6 +29,17 @@ export const store = configureStore({
     localRoutine: localRoutineReducer,
   },
 });
+
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      store.dispatch(clearUser());
+      store.dispatch(displayAlert("Unauthorized access. Please log in."));
+    }
+    return Promise.reject(error);
+  },
+);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

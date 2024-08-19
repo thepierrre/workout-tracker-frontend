@@ -80,7 +80,7 @@ const ProfilePage = () => {
 
       dispatch(clearUser());
 
-      navigate("/");
+      navigate("/", { state: { logout: true } });
     } catch (error) {
       console.error("Error logging out:", error);
     }

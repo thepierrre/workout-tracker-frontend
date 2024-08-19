@@ -27,9 +27,18 @@ export const fetchRoutines = createAsyncThunk<
     return response.data;
   } catch (error) {
     let errorMessage = "An unknown error occurred";
-    if (error instanceof Error) {
+
+    if (axios.isAxiosError(error) && error.response) {
+      if (error.response.status === 401) {
+        errorMessage = "Unauthorized access - 401";
+        console.error(errorMessage);
+      } else {
+        errorMessage = error.response.data.message || errorMessage;
+      }
+    } else if (error instanceof Error) {
       errorMessage = error.message;
     }
+
     return thunkAPI.rejectWithValue(errorMessage);
   }
 });
