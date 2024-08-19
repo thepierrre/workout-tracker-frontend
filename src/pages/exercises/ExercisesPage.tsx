@@ -53,7 +53,13 @@ const ExercisesPage = () => {
 
   useEffect(() => {
     dispatch(fetchExercises());
-    dispatch(fetchWorkouts());
+    //dispatch(fetchWorkouts());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (location.state && location.state.workoutId) {
+      dispatch(fetchWorkouts());
+    }
   }, [dispatch]);
 
   useEffect(() => {

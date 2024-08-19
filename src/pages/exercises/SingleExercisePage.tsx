@@ -20,6 +20,7 @@ import { Exercise } from "../../interfaces/exercise.interface";
 import { fetchCategories } from "../../store/exercises/categoriesSlice";
 import { removeExercise } from "../../store/exercises/exercisesSlice";
 import { updateExercise } from "../../store/exercises/exercisesSlice";
+import { fetchLocalCategories } from "../../store/exercises/localCategoriesSlice";
 import PageNotFound from "../pageNotFound/PageNotFound";
 
 const SingleExercisePage = () => {
@@ -44,7 +45,8 @@ const SingleExercisePage = () => {
   const exerciseFormRef = useRef<{ submit: () => void }>(null);
 
   useEffect(() => {
-    dispatch(fetchCategories());
+    //dispatch(fetchCategories());
+    dispatch(fetchLocalCategories());
   }, [dispatch]);
 
   const currentExercise = exercises.find(

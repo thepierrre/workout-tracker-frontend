@@ -3,6 +3,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import authenticatedUserReducer from "../store/auth/authenticatedUserSlice";
 import categoriesReducer from "../store/exercises/categoriesSlice";
 import exercisesReducer from "../store/exercises/exercisesSlice";
+import localCategoriesReducer from "../store/exercises/localCategoriesSlice";
 import localRoutineReducer from "../store/routines/localRoutineSlice";
 import routinesReducer from "../store/routines/routinesSlice";
 import userSettingsReducer from "../store/settings/userSettingsSlice";
@@ -21,6 +22,7 @@ export const store = configureStore({
     categories: categoriesReducer,
     userSettings: userSettingsReducer,
     localRoutine: localRoutineReducer,
+    localCategories: localCategoriesReducer,
   },
 });
 

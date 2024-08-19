@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import { initializeUser } from "../store/auth/authenticatedUserSlice";
+import { fetchCategories } from "../store/exercises/categoriesSlice";
+import { updateLocalCategories } from "../store/exercises/localCategoriesSlice";
 import { AppDispatch, RootState } from "./store";
 
 const App = () => {
@@ -32,6 +34,18 @@ const App = () => {
       } else {
         if (location.pathname === "/" || location.pathname === "/sign-up") {
           navigate("/workouts");
+
+          // Fetch categories and save them in the app memory to save loading time in the future.
+          const fetchCategoriesData = async () => {
+            try {
+              const fetchedCategories =
+                await dispatch(fetchCategories()).unwrap();
+              dispatch(updateLocalCategories(fetchedCategories));
+            } catch (error) {
+              console.error("Failed to fetch categories:", error);
+            }
+          };
+          fetchCategoriesData();
         }
       }
     }

@@ -14,6 +14,7 @@ import ExerciseForm, {
 import { Category } from "../../interfaces/category.interface";
 import { fetchCategories } from "../../store/exercises/categoriesSlice";
 import { addExercise } from "../../store/exercises/exercisesSlice";
+import { fetchLocalCategories } from "../../store/exercises/localCategoriesSlice";
 
 const NewExercisePage = () => {
   const navigate = useNavigate();
@@ -22,13 +23,14 @@ const NewExercisePage = () => {
   const user = useSelector((state: RootState) => state.authenticatedUser.user);
   const [submittingInProgress, setSubmittingInProgress] =
     useState<boolean>(false);
-  const categoriesState = useSelector((state: RootState) => state.categories);
+  const categoriesState = useSelector(
+    (state: RootState) => state.localCategories,
+  );
 
   useEffect(() => {
-    if (categoriesState.categories.length === 0) {
-      dispatch(fetchCategories());
-    }
-  }, [dispatch, categoriesState.categories.length]);
+    //dispatch(fetchCategories());
+    dispatch(fetchLocalCategories());
+  }, [dispatch]);
 
   const exerciseFormRef = useRef<{ submit: () => void }>(null);
 
