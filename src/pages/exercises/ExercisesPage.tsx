@@ -30,9 +30,7 @@ const ExercisesPage = () => {
   const { exercises, loading: loadingExercises } = useSelector(
     (state: RootState) => state.exercises,
   );
-  const { workouts, loading: loadingWorkouts } = useSelector(
-    (state: RootState) => state.workoutSessions,
-  );
+  const { workouts } = useSelector((state: RootState) => state.workoutSessions);
 
   const workoutId = location.state?.workoutId || null;
 

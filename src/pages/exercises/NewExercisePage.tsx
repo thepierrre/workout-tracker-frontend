@@ -14,7 +14,6 @@ import ExerciseForm, {
 import { Category } from "../../interfaces/category.interface";
 import { fetchCategories } from "../../store/exercises/categoriesSlice";
 import { addExercise } from "../../store/exercises/exercisesSlice";
-import { fetchLocalCategories } from "../../store/exercises/localCategoriesSlice";
 
 const NewExercisePage = () => {
   const navigate = useNavigate();

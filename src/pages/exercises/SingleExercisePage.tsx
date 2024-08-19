@@ -40,12 +40,8 @@ const SingleExercisePage = () => {
     (state: RootState) => state.categories,
   );
 
-  const { user, loading: loadingUser } = useSelector(
-    (state: RootState) => state.authenticatedUser,
-  );
-  const { exercises, loading: loadingExercises } = useSelector(
-    (state: RootState) => state.exercises,
-  );
+  const { user } = useSelector((state: RootState) => state.authenticatedUser);
+  const { exercises } = useSelector((state: RootState) => state.exercises);
 
   const exerciseFormRef = useRef<{ submit: () => void }>(null);
 

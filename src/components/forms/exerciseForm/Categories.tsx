@@ -1,4 +1,4 @@
-import { Box, Card, Checkbox, Heading, Text, Wrap } from "@chakra-ui/react";
+import { Box, Card, Checkbox, Heading, Wrap } from "@chakra-ui/react";
 import { useEffect } from "react";
 
 import useCustomToast from "../../../hooks/useCustomToast";

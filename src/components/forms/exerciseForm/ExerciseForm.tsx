@@ -13,9 +13,7 @@ import {
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { FormProvider, Resolver, useForm } from "react-hook-form";
 import { UseFormSetError } from "react-hook-form";
-import { useSelector } from "react-redux";
 
-import { RootState } from "../../../app/store";
 import SecondaryHeading from "../../../components/UI/text/SecondaryHeading";
 import { Category } from "../../../interfaces/category.interface";
 import SpinnerComponent from "../../UI/SpinnerComponent";

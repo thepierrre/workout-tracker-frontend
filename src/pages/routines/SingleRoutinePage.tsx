@@ -35,17 +35,13 @@ const SingleRoutinePage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [deletingRoutineInProgress, setDeletingRoutineInProgress] =
     useState<boolean>(false);
-  const { routines, loading: loadingRoutines } = useSelector(
-    (state: RootState) => state.routines,
-  );
+  const { routines } = useSelector((state: RootState) => state.routines);
 
   const { routineExercises: localRoutineExercises } = useSelector(
     (state: RootState) => state.localRoutine || [],
   );
 
-  const { user, loading: loadingUser } = useSelector(
-    (state: RootState) => state.authenticatedUser,
-  );
+  const { user } = useSelector((state: RootState) => state.authenticatedUser);
 
   const routineFormRef = useRef<{ submit: () => void }>(null);
 
