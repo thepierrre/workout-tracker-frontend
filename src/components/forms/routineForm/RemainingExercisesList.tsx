@@ -71,7 +71,7 @@ const RemainingExercisesList: React.FC<Props> = ({
     </Flex>
   ) : (
     <Flex direction="column">
-      <Text textAlign="center" mt={0} mb={2}>
+      <Text textAlign="center" mt={2} mb={2}>
         No exercises.
       </Text>
     </Flex>
