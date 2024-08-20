@@ -30,7 +30,6 @@ export const fetchRoutines = createAsyncThunk<
 
     if (axios.isAxiosError(error) && error.response) {
       if (error.response.status === 401) {
-        errorMessage = "Unauthorized access - 401";
         console.error(errorMessage);
       } else {
         errorMessage = error.response.data.message || errorMessage;
