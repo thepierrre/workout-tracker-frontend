@@ -10,7 +10,10 @@ import SpinnerComponent from "../../components/UI/SpinnerComponent";
 import MainHeading from "../../components/UI/text/MainHeading.tsx";
 import Weight from "../../components/profile/Weight";
 import Statistics from "../../components/profile/statistics/Statistics.tsx";
-import { clearUser } from "../../store/auth/authenticatedUserSlice";
+import {
+  clearUser,
+  setLoggedOut,
+} from "../../store/auth/authenticatedUserSlice";
 import { fetchUserSettings } from "../../store/settings/userSettingsSlice";
 import { fetchWorkouts } from "../../store/workout/workoutSessionsSlice";
 import axiosInstance from "../../util/axiosInstance.ts";
@@ -81,6 +84,8 @@ const ProfilePage = () => {
       dispatch(clearUser());
 
       navigate("/", { state: { logout: true } });
+
+      dispatch(setLoggedOut(true));
     } catch (error) {
       console.error("Error logging out:", error);
     }

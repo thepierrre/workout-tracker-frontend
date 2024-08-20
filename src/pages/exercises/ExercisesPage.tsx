@@ -101,10 +101,6 @@ const ExercisesPage = () => {
     setSearchedExercises(value);
   };
 
-  // if (loadingExercises || loadingWorkouts) {
-  //   return <SpinnerComponent />;
-  // }
-
   return (
     <Container>
       <Link to="/exercises/new-exercise">

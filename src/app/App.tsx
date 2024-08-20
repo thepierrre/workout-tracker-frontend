@@ -14,7 +14,7 @@ const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("");
-  const { user, loading } = useSelector(
+  const { user, loading, loggedOut } = useSelector(
     (state: RootState) => state.authenticatedUser,
   );
 
@@ -29,13 +29,11 @@ const App = () => {
   useEffect(() => {
     if (initialized) {
       if (user === null && alertState.visible) {
-        if (
-          location.pathname !== "/" &&
-          location.pathname !== "/sign-up" &&
-          !location.state
-        ) {
+        if (location.pathname !== "/" && location.pathname !== "/sign-up") {
           navigate("/");
-          setShowAlert(true);
+          if (!loggedOut) {
+            setShowAlert(true);
+          }
         }
       } else {
         setShowAlert(false);

@@ -9,12 +9,14 @@ export interface authenticatedUserState {
   user: User | null;
   loading: boolean;
   error: string | null;
+  loggedOut: boolean;
 }
 
 const initialState: authenticatedUserState = {
   user: null,
   loading: false,
   error: null,
+  loggedOut: false,
 };
 
 export const initializeUser = createAsyncThunk<
@@ -46,6 +48,9 @@ const authenticatedUserSlice = createSlice({
     clearUser(state) {
       state.user = null;
     },
+    setLoggedOut: (state, action) => {
+      state.loggedOut = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -70,5 +75,6 @@ const authenticatedUserSlice = createSlice({
   },
 });
 
-export const { setUser, clearUser } = authenticatedUserSlice.actions;
+export const { setUser, clearUser, setLoggedOut } =
+  authenticatedUserSlice.actions;
 export default authenticatedUserSlice.reducer;
