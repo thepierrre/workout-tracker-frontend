@@ -86,10 +86,6 @@ const ProfilePage = () => {
     }
   };
 
-  //   if (loadingWorkouts || loadingUserSettings) {
-  //     return <SpinnerComponent />;
-  //   }
-
   return (
     <Container>
       <>

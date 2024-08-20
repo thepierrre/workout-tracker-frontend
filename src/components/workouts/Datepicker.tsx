@@ -62,18 +62,11 @@ const Datepicker = () => {
   }, [displayedWeek]);
 
   const handleActiveDay = (index?: number, date?: Date) => {
-    console.log("date", date);
-    console.log("index", index);
     if (index !== undefined && index !== -1) {
       const selectedDate = displayedWeek[index];
       const formattedDate = format(selectedDate, "dd/MM/yyyy");
-      console.log(formattedDate);
       dispatch(setDay(formattedDate));
     } else if (index === undefined && date) {
-      // let date;
-      // if (date === undefined) {
-      //   date = new Date();
-      // }
       const formattedDate = format(date, "dd/MM/yyyy");
       dispatch(setDay(formattedDate));
       onClose();
