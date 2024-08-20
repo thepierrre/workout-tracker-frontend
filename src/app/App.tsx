@@ -1,17 +1,9 @@
-import {
-  Alert,
-  AlertIcon,
-  Flex,
-  Spinner,
-  Tab,
-  TabList,
-  Tabs,
-  Text,
-} from "@chakra-ui/react";
+import { Flex, Spinner, Tab, TabList, Tabs, Text } from "@chakra-ui/react";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 
+import CustomAlert from "../components/UI/CustomAlert";
 import { initializeUser } from "../store/auth/authenticatedUserSlice";
 import { AppDispatch, RootState } from "./store";
 
@@ -110,36 +102,6 @@ const App = () => {
       </Flex>
     );
   }
-
-  interface Props {
-    message1: string;
-    message2: string;
-    message3: string;
-  }
-
-  const CustomAlert: React.FC<Props> = ({ message1, message2, message3 }) => {
-    return (
-      <Alert status="error" variant="top-accent" gap={8} pt={4}>
-        <AlertIcon boxSize="30px" position="absolute" />
-        <Flex direction="column" align="center" w="100%">
-          <Text mb={4} textAlign="center">
-            {message1}
-            <br />
-            {message2}
-          </Text>
-          <Text fontWeight="bold">{message3}</Text>
-        </Flex>
-      </Alert>
-    );
-  };
-  // <Alert status="error" variant="top-accent" gap={8} pt={4}>
-  //       <AlertIcon boxSize="30px" position="absolute" />
-  //       <Flex direction="column" align="center" w="100%">
-  //         <Text>You didn't log in</Text>
-  //         <Text mb={4}>or your session expired.</Text>
-  //         <Text fontWeight="bold">Please authenticate to get access.</Text>
-  //       </Flex>
-  //     </Alert>
 
   return (
     <>
