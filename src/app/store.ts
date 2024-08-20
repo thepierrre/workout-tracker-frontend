@@ -4,7 +4,6 @@ import alertReducer, { displayAlert } from "../store/alerts/alertSlice";
 import authenticatedUserReducer, {
   clearUser,
 } from "../store/auth/authenticatedUserSlice";
-import authenticatedUserSlice from "../store/auth/authenticatedUserSlice";
 import categoriesReducer from "../store/exercises/categoriesSlice";
 import exercisesReducer from "../store/exercises/exercisesSlice";
 import localRoutineReducer from "../store/routines/localRoutineSlice";
@@ -33,10 +32,14 @@ export const store = configureStore({
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response && error.response.status === 401) {
-      await axiosInstance.post("/auth/logout");
+    if (error.response) {
+      if (error.response.status === 401) {
+        store.dispatch(clearUser());
+        store.dispatch(displayAlert("Unauthorized access"));
+      }
+    } else if (error.code === "ERR_NETWORK") {
       store.dispatch(clearUser());
-      store.dispatch(displayAlert("Unauthorized access. Please log in."));
+      store.dispatch(displayAlert("Server not available"));
     }
     return Promise.reject(error);
   },

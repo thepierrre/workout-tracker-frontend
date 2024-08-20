@@ -55,10 +55,15 @@ const App = () => {
   }, [initialized, user, navigate, dispatch, location.pathname]);
 
   useEffect(() => {
-    if (alertState.visible) {
+    if (alertState.visible && alertState.message === "Unauthorized access") {
       if (location.pathname !== "/" && location.pathname !== "/sign-up") {
         setShowAlert(true);
       }
+    } else if (
+      alertState.visible &&
+      alertState.message === "Server not available"
+    ) {
+      setShowAlert(true);
     }
   }, [alertState, dispatch]);
 
@@ -106,17 +111,51 @@ const App = () => {
     );
   }
 
+  interface Props {
+    message1: string;
+    message2: string;
+    message3: string;
+  }
+
+  const CustomAlert: React.FC<Props> = ({ message1, message2, message3 }) => {
+    return (
+      <Alert status="error" variant="top-accent" gap={8} pt={4}>
+        <AlertIcon boxSize="30px" position="absolute" />
+        <Flex direction="column" align="center" w="100%">
+          <Text mb={4} textAlign="center">
+            {message1}
+            <br />
+            {message2}
+          </Text>
+          <Text fontWeight="bold">{message3}</Text>
+        </Flex>
+      </Alert>
+    );
+  };
+  // <Alert status="error" variant="top-accent" gap={8} pt={4}>
+  //       <AlertIcon boxSize="30px" position="absolute" />
+  //       <Flex direction="column" align="center" w="100%">
+  //         <Text>You didn't log in</Text>
+  //         <Text mb={4}>or your session expired.</Text>
+  //         <Text fontWeight="bold">Please authenticate to get access.</Text>
+  //       </Flex>
+  //     </Alert>
+
   return (
     <>
-      {showAlert && (
-        <Alert status="error" variant="top-accent" gap={8} pt={4}>
-          <AlertIcon boxSize="30px" position="absolute" />
-          <Flex direction="column" align="center" w="100%">
-            <Text>You didn't log in</Text>
-            <Text mb={4}>or your session expired.</Text>
-            <Text fontWeight="bold">Please authenticate to get access.</Text>
-          </Flex>
-        </Alert>
+      {showAlert && alertState.message === "Unauthorized access" && (
+        <CustomAlert
+          message1="You didn't log in"
+          message2="or your session expired."
+          message3="Please authenticate to get access."
+        />
+      )}
+      {showAlert && alertState.message === "Server not available" && (
+        <CustomAlert
+          message1="Oops!"
+          message2="Service is not available."
+          message3="Please try again later!"
+        />
       )}
       <Flex bg="#1a1a1a" minH="100vh" paddingTop={3}>
         <Tabs variant="soft-rounded" index={activeIndex}>
