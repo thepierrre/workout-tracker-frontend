@@ -68,6 +68,7 @@ export interface InitialState {
 export const createInitialState = (): RootState => ({
   authenticatedUser: {
     user: initializedUser,
+    loggedOut: false,
     loading: false,
     error: null,
   },
