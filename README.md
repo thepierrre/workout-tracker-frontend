@@ -9,3 +9,5 @@ Visit https://my-gym-tracker.work/ <br />
 Dummy user:
 Username: CardioManiac <br />
 Password: str0ngp@ssword1
+
+For the most recent changes, see the develop branch.
