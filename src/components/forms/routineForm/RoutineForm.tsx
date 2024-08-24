@@ -190,7 +190,6 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
           return [...prevSelectedExercises, exerciseToAdd];
         }
       });
-      console.log("selected exercises: ", selectedExercises);
     };
 
     const doesSequenceExistInExerciseName = (

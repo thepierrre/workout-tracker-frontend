@@ -104,11 +104,11 @@ const Statistics: React.FC<Props> = ({ workouts, weightUnit }) => {
     { text: "Maximum reps in a set:", value: maxRepsInSingleSet },
     {
       text: " Total weight:",
-      value: totalWeight,
+      value: totalWeight || 0,
     },
     {
       text: " Highest single weight:",
-      value: highestSingleWeight,
+      value: highestSingleWeight || 0,
     },
   ];
 

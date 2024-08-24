@@ -1,4 +1,5 @@
 import { Card, Flex, Spinner, Text } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
 
 interface Props {
   text: string;
@@ -6,6 +7,20 @@ interface Props {
 }
 
 const StatisticsUnit: React.FC<Props> = ({ text, value }) => {
+  const [currentValue, setCurrentValue] = useState<string | number | undefined>(
+    value,
+  );
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (value === undefined) {
+      setIsLoading(true);
+    } else {
+      setCurrentValue(value);
+      setIsLoading(false);
+    }
+  }, [value]);
+
   return (
     <Card
       bg="#404040"
@@ -18,14 +33,14 @@ const StatisticsUnit: React.FC<Props> = ({ text, value }) => {
         <Text fontWeight="bold" w="60%" color="lightblue">
           {text}
         </Text>
-        {value ? (
-          <Text fontWeight="bold" w="40%">
-            {value}
-          </Text>
-        ) : (
+        {isLoading ? (
           <Flex w="40%">
             <Spinner size="xs" color="lightblue" />
           </Flex>
+        ) : (
+          <Text fontWeight="bold" w="40%">
+            {currentValue}
+          </Text>
         )}
       </Flex>
     </Card>
