@@ -6,7 +6,7 @@ backend repository: https://github.com/thepierrre/workout-tracker-backend
 
 Visit https://my-gym-tracker.work/ <br />
 
-Dummy user:
+Dummy user: <br />
 Username: CardioManiac <br />
 Password: str0ngp@ssword1
 
