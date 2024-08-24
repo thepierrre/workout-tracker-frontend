@@ -35,6 +35,7 @@ const store = configureStore({
     authenticatedUser: {
       user: initializedUser,
       loading: false,
+      loggedOut: false,
       error: null,
     },
     workoutSessions: {
