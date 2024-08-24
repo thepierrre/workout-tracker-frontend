@@ -32,7 +32,6 @@ export const fetchExercises = createAsyncThunk<
     const userExercises = userExercisesResponse.data;
     const defaultExercises = defaultExercisesResponse.data;
     const allExercises = userExercises.concat(defaultExercises);
-    //console.log(allExercises);
     return allExercises;
   } catch (error) {
     let errorMessage = "An unknown error occurred";
@@ -144,7 +143,7 @@ const exercisesSlice = createSlice({
       .addCase(
         addExercise.fulfilled,
         (state, action: PayloadAction<Exercise>) => {
-          state.exercises.push(action.payload);
+          state.exercises.unshift(action.payload);
         },
       )
       .addCase(

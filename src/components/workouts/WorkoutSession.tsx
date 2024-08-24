@@ -178,6 +178,7 @@ const WorkoutSession: React.FC<WorkoutProps> = ({
         />
       </Flex>
       <DeletionModal
+        deletionInProgress={workoutDeletionInProgress}
         isOpen={isOpen}
         onClose={onClose}
         onDelete={handleRemoveWorkout}

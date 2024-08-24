@@ -6,7 +6,6 @@ const deepClone = (obj: Routine[]) => JSON.parse(JSON.stringify(obj));
 
 const initialRoutinesForUser: Routine[] = [
   {
-    userId: "12345",
     id: "916ee32a-728f-4eea-a3g6-d0e097b22b21",
     name: "Full Body Workout A",
     routineExercises: [
@@ -75,7 +74,6 @@ const initialRoutinesForUser: Routine[] = [
     ],
   },
   {
-    userId: "12345",
     id: "916ee32a-728f-4ood-a3g6-d0e097b22c54",
     name: "Full Body Workout B",
     routineExercises: [

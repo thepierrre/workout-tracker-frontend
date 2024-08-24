@@ -88,15 +88,17 @@ export const WorkoutsPage = () => {
     }
   };
 
-  if (loadingWorkouts) {
-    return <SpinnerComponent />;
-  }
+  // if (loadingWorkouts) {
+  //   return <SpinnerComponent />;
+  // }
 
   return (
     <Container>
       <Datepicker />
       <NewWorkout />
-      {filteredWorkouts?.length > 0 ? (
+      {loadingWorkouts && filteredWorkouts.length === 0 ? (
+        <SpinnerComponent mt={4} text="Loading workouts for the day..." />
+      ) : filteredWorkouts?.length > 0 ? (
         filteredWorkouts.map((workout) => (
           <WorkoutSession
             key={workout.id}

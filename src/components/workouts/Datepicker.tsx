@@ -62,11 +62,11 @@ const Datepicker = () => {
   }, [displayedWeek]);
 
   const handleActiveDay = (index?: number, date?: Date) => {
-    if (index) {
+    if (index !== undefined && index !== -1) {
       const selectedDate = displayedWeek[index];
       const formattedDate = format(selectedDate, "dd/MM/yyyy");
       dispatch(setDay(formattedDate));
-    } else if (date) {
+    } else if (index === undefined && date) {
       const formattedDate = format(date, "dd/MM/yyyy");
       dispatch(setDay(formattedDate));
       onClose();
@@ -135,7 +135,7 @@ const Datepicker = () => {
             variant="link"
             onClick={() => handleDisplayedWeek("previous")}
           />
-          <Flex gap={4}>
+          <Flex gap={2}>
             {displayedWeek.map((day, index) => (
               <Flex
                 key={index}

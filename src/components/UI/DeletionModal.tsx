@@ -1,17 +1,19 @@
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  Text,
-  ModalFooter,
   Button,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Spinner,
+  Text,
 } from "@chakra-ui/react";
 import React from "react";
 
 interface DeletionModalProps {
+  deletionInProgress: boolean;
   isOpen: boolean;
   onClose: () => void;
   onDelete: () => void;
@@ -20,6 +22,7 @@ interface DeletionModalProps {
 }
 
 const DeletionModal: React.FC<DeletionModalProps> = ({
+  deletionInProgress,
   isOpen,
   onClose,
   onDelete,
@@ -39,10 +42,16 @@ const DeletionModal: React.FC<DeletionModalProps> = ({
         </ModalBody>
 
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={onDelete}>
-            Delete
+          <Button
+            colorScheme="blue"
+            mr={3}
+            onClick={onDelete}
+            w={20}
+            isDisabled={deletionInProgress}
+          >
+            {deletionInProgress ? <Spinner size="xs" /> : "Delete"}
           </Button>
-          <Button variant="ghost" onClick={onClose}>
+          <Button variant="ghost" onClick={onClose} w={20}>
             Cancel
           </Button>
         </ModalFooter>

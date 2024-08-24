@@ -323,20 +323,26 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
       dispatch(removeExerciseLocally(exercise.name));
     };
 
-    if (loadingExercises) {
-      return <SpinnerComponent />;
-    }
+    // if (loadingExercises) {
+    //   return <SpinnerComponent />;
+    // }
 
     return (
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit((data) => onSubmit(data, setError))}
+          style={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
         >
           <FormControl
             isInvalid={!!errors.name}
             width={["95vw", "85vw", "70vw", "50vw", "40vw"]}
           >
-            <FormLabel htmlFor="routine-name" fontSize="sm">
+            <FormLabel htmlFor="routine-name" fontSize="sm" mr={0}>
               Routine name
             </FormLabel>
             <Input
@@ -361,60 +367,69 @@ const RoutineForm = forwardRef<{ submit: () => void }, RoutineFormProps>(
             </FormErrorMessage>
           </FormControl>
 
-          <Flex direction="column" w="100%">
-            <SecondaryHeading
-              text={`Selected exercises (${selectedExercises.length}/15)`}
-            />
-            <RoutineExercisesList
-              selectedExercises={selectedExercises}
-              localRoutineExercises={localRoutineExercises}
-              routineName={getValues("name")}
-              newRoutine={newRoutine}
-              routineId={routineId}
-              handleCheck={handleCheck}
-              setSelectedExercises={setSelectedExercises}
-              isExerciseSelected={isExerciseSelected}
-              isCheckboxDisabled={isCheckboxDisabled}
-            />
+          {loadingExercises && exercises.length === 0 ? (
+            <SpinnerComponent text="Loading exercises..." mt={4} w="100%" />
+          ) : (
+            <Flex
+              direction="column"
+              align="center"
+              justify="center"
+              w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+            >
+              <SecondaryHeading
+                text={`Selected exercises (${selectedExercises.length}/15)`}
+              />
+              <RoutineExercisesList
+                selectedExercises={selectedExercises}
+                localRoutineExercises={localRoutineExercises}
+                routineName={getValues("name")}
+                newRoutine={newRoutine}
+                routineId={routineId}
+                handleCheck={handleCheck}
+                setSelectedExercises={setSelectedExercises}
+                isExerciseSelected={isExerciseSelected}
+                isCheckboxDisabled={isCheckboxDisabled}
+              />
 
-            <Flex direction="column" w="100%">
-              <SecondaryHeading text="Add exercises" />
-              <InputGroup
-                flexDirection="column"
-                alignItems="flex-start"
-                width={["95vw", "85vw", "70vw", "50vw", "40vw"]}
-              >
-                <Input
-                  id="search-exercises"
-                  w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
-                  bg="#404040"
-                  color="white"
-                  borderWidth="1px"
-                  borderColor="#CBD5E0"
-                  _focus={{
-                    boxShadow: "none",
-                    borderWidth: "2px",
-                    borderColor: "#3182CE",
-                  }}
-                  _placeholder={{ color: "#B3B3B3" }}
-                  placeholder="Search by name"
-                  onChange={handleExerciseFiltering}
-                />
-                <InputLeftElement>
-                  <SearchIcon />
-                </InputLeftElement>
-              </InputGroup>
+              <Flex direction="column" w="100%">
+                <SecondaryHeading text="Add exercises" />
+                <InputGroup
+                  flexDirection="column"
+                  alignItems="flex-start"
+                  width={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+                >
+                  <Input
+                    id="search-exercises"
+                    w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
+                    bg="#404040"
+                    color="white"
+                    borderWidth="1px"
+                    borderColor="#CBD5E0"
+                    _focus={{
+                      boxShadow: "none",
+                      borderWidth: "2px",
+                      borderColor: "#3182CE",
+                    }}
+                    _placeholder={{ color: "#B3B3B3" }}
+                    placeholder="Search by name"
+                    onChange={handleExerciseFiltering}
+                  />
+                  <InputLeftElement>
+                    <SearchIcon />
+                  </InputLeftElement>
+                </InputGroup>
+              </Flex>
+
+              <RemainingExercisesList
+                selectedExercises={selectedExercises}
+                remainingExercises={remainingExercises}
+                handleCheck={handleCheck}
+                isExerciseSelected={isExerciseSelected}
+                isCheckboxDisabled={isCheckboxDisabled}
+                highlightMatchedText={highlightMatchedText}
+              />
             </Flex>
-
-            <RemainingExercisesList
-              selectedExercises={selectedExercises}
-              remainingExercises={remainingExercises}
-              handleCheck={handleCheck}
-              isExerciseSelected={isExerciseSelected}
-              isCheckboxDisabled={isCheckboxDisabled}
-              highlightMatchedText={highlightMatchedText}
-            />
-          </Flex>
+          )}
         </form>
       </FormProvider>
     );

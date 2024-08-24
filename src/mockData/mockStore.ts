@@ -5,6 +5,7 @@ import { Exercise } from "interfaces/exercise.interface";
 
 import { Routine } from "../interfaces/routine.interface";
 import { Workout } from "../interfaces/workout.interface";
+import alertReducer from "../store/alerts/alertSlice";
 import { authenticatedUserState } from "../store/auth/authenticatedUserSlice";
 import authenticatedUserReducer from "../store/auth/authenticatedUserSlice";
 import categoriesReducer, {
@@ -67,6 +68,7 @@ export interface InitialState {
 export const createInitialState = (): RootState => ({
   authenticatedUser: {
     user: initializedUser,
+    loggedOut: false,
     loading: false,
     error: null,
   },
@@ -105,6 +107,10 @@ export const createInitialState = (): RootState => ({
     loading: false,
     error: null,
   },
+  alert: {
+    message: "",
+    visible: false,
+  },
 });
 
 export const createStore = (
@@ -112,6 +118,7 @@ export const createStore = (
 ): EnhancedStore<RootState> => {
   return configureStore({
     reducer: {
+      alert: alertReducer,
       workoutSessions: workoutSessionsReducer,
       chosenDay: chosenDayReducer,
       activeExerciseInstance: activeExerciseInstanceReducer,

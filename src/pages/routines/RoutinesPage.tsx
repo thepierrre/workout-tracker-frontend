@@ -30,6 +30,10 @@ const RoutinesPage = () => {
     (state: RootState) => state.routines,
   );
 
+  // useEffect(() => {
+  //   dispatch(fetchRoutines());
+  // }, [dispatch]);
+
   useEffect(() => {
     dispatch(fetchRoutines());
   }, [dispatch]);
@@ -100,9 +104,9 @@ const RoutinesPage = () => {
     setSearchedRoutines(value);
   };
 
-  if (loadingRoutines) {
-    return <SpinnerComponent />;
-  }
+  // if (loadingRoutines) {
+  //   return <SpinnerComponent />;
+  // }
 
   return (
     <Container>
@@ -136,7 +140,23 @@ const RoutinesPage = () => {
         </InputGroup>
       </Flex>
 
-      <Flex direction="column" gap={2} w="95vw" align="center" mt={2}>
+      {loadingRoutines && routines.length === 0 ? (
+        <SpinnerComponent text="Loading routines..." mt={4} />
+      ) : (
+        <Flex direction="column" gap={2} w="95vw" align="center" mt={2}>
+          {filteredRoutines.length > 0 ? (
+            filteredRoutines?.map((routine) => (
+              <Link to={`/routines/${routine.id}`} key={routine.id}>
+                <SingleRoutine key={routine.id} routine={routine} />
+              </Link>
+            ))
+          ) : (
+            <Text mt={5}>You have no routines yet.</Text>
+          )}
+        </Flex>
+      )}
+
+      {/* <Flex direction="column" gap={2} w="95vw" align="center" mt={2}>
         {filteredRoutines.length > 0 ? (
           filteredRoutines?.map((routine) => (
             <Link to={`/routines/${routine.id}`} key={routine.id}>
@@ -146,7 +166,7 @@ const RoutinesPage = () => {
         ) : (
           <Text mt={5}>You have no routines yet.</Text>
         )}
-      </Flex>
+      </Flex> */}
     </Container>
   );
 };

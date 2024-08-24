@@ -267,7 +267,7 @@ const workoutSessionsSlice = createSlice({
       .addCase(
         addWorkout.fulfilled,
         (state, action: PayloadAction<Workout>) => {
-          state.workouts.push(action.payload);
+          state.workouts.unshift(action.payload);
         },
       )
       .addCase(

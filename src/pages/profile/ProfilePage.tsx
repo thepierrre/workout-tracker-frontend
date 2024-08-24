@@ -10,7 +10,10 @@ import SpinnerComponent from "../../components/UI/SpinnerComponent";
 import MainHeading from "../../components/UI/text/MainHeading.tsx";
 import Weight from "../../components/profile/Weight";
 import Statistics from "../../components/profile/statistics/Statistics.tsx";
-import { clearUser } from "../../store/auth/authenticatedUserSlice";
+import {
+  clearUser,
+  setLoggedOut,
+} from "../../store/auth/authenticatedUserSlice";
 import { fetchUserSettings } from "../../store/settings/userSettingsSlice";
 import { fetchWorkouts } from "../../store/workout/workoutSessionsSlice";
 import axiosInstance from "../../util/axiosInstance.ts";
@@ -80,15 +83,13 @@ const ProfilePage = () => {
 
       dispatch(clearUser());
 
-      navigate("/");
+      navigate("/", { state: { logout: true } });
+
+      dispatch(setLoggedOut(true));
     } catch (error) {
       console.error("Error logging out:", error);
     }
   };
-
-  if (loadingWorkouts || loadingUserSettings) {
-    return <SpinnerComponent />;
-  }
 
   return (
     <Container>
@@ -98,11 +99,18 @@ const ProfilePage = () => {
           mb={0}
         />
 
-        <Statistics
-          workouts={workouts}
-          weightUnit={userSettings?.weightUnit || "kgs"}
-        />
-        {userSettings && <Weight userSettings={userSettings} />}
+        {loadingWorkouts && loadingUserSettings && workouts.length === 0 ? (
+          <SpinnerComponent mt={2} text="Loading statistics..." />
+        ) : (
+          <>
+            <Statistics
+              workouts={workouts}
+              weightUnit={userSettings?.weightUnit || "kgs"}
+            />
+            {userSettings && <Weight userSettings={userSettings} />}
+          </>
+        )}
+
         <Button
           w={["95vw", "85vw", "70vw", "50vw", "40vw"]}
           bg="lightblue"

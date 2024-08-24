@@ -22,19 +22,16 @@ const NewExercisePage = () => {
   const user = useSelector((state: RootState) => state.authenticatedUser.user);
   const [submittingInProgress, setSubmittingInProgress] =
     useState<boolean>(false);
-  const categoriesState = useSelector((state: RootState) => state.categories);
+  const { categories, loading: loadingCategories } = useSelector(
+    (state: RootState) => state.categories,
+  );
 
   useEffect(() => {
-    if (categoriesState.categories.length === 0) {
-      dispatch(fetchCategories());
-    }
-  }, [dispatch, categoriesState.categories.length]);
+    dispatch(fetchCategories());
+    //dispatch(fetchLocalCategories());
+  }, [dispatch]);
 
   const exerciseFormRef = useRef<{ submit: () => void }>(null);
-
-  if (!user) {
-    return;
-  }
 
   const onSubmit = async (
     data: FormValues,
@@ -46,7 +43,7 @@ const NewExercisePage = () => {
       equipment: data.equipment,
       categories: selectedCategories,
       isDefault: false,
-      userId: user.id,
+      userId: user?.id,
     };
 
     try {
@@ -64,9 +61,9 @@ const NewExercisePage = () => {
     }
   };
 
-  if (categoriesState.loading) {
-    return <SpinnerComponent />;
-  }
+  // if (categoriesState.loading) {
+  //   return <SpinnerComponent />;
+  // }
 
   return (
     <Container>
@@ -78,7 +75,9 @@ const NewExercisePage = () => {
       />
 
       <MainHeading text="New exercise" />
-      {submittingInProgress && <SpinnerComponent mt={0} mb={4} />}
+      {submittingInProgress && (
+        <SpinnerComponent mt={0} mb={4} text="Adding exercise..." />
+      )}
       <SubmitOrCancelButton
         text="CREATE"
         top="4.7rem"
@@ -87,6 +86,8 @@ const NewExercisePage = () => {
       />
 
       <ExerciseForm
+        categories={categories}
+        loadingCategories={loadingCategories}
         ref={exerciseFormRef}
         initialName=""
         initialEquipment="BODYWEIGHT"

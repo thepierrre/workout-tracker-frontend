@@ -27,6 +27,8 @@ const SingleExercisePage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { exerciseId } = useParams();
+  const [deletingExerciseInProgress, setDeletingExerciseInProgress] =
+    useState<boolean>(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [submittingInProgress, setSubmittingInProgress] =
     useState<boolean>(false);
@@ -34,12 +36,12 @@ const SingleExercisePage = () => {
     null,
   );
 
-  const { user, loading: loadingUser } = useSelector(
-    (state: RootState) => state.authenticatedUser,
+  const { categories, loading: loadingCategories } = useSelector(
+    (state: RootState) => state.categories,
   );
-  const { exercises, loading: loadingExercises } = useSelector(
-    (state: RootState) => state.exercises,
-  );
+
+  const { user } = useSelector((state: RootState) => state.authenticatedUser);
+  const { exercises } = useSelector((state: RootState) => state.exercises);
 
   const exerciseFormRef = useRef<{ submit: () => void }>(null);
 
@@ -50,14 +52,6 @@ const SingleExercisePage = () => {
   const currentExercise = exercises.find(
     (exercise) => exercise.id === exerciseId,
   );
-
-  if (loadingUser || loadingExercises) {
-    return <SpinnerComponent />;
-  }
-
-  if (!user) {
-    return null;
-  }
 
   if (!currentExercise) {
     return <PageNotFound />;
@@ -76,7 +70,7 @@ const SingleExercisePage = () => {
       equipment: data.equipment,
       categories: selectedCategories,
       isDefault: false,
-      userId: user.id,
+      userId: user?.id,
     };
 
     const compareOldAndNewEx = () => {
@@ -110,16 +104,18 @@ const SingleExercisePage = () => {
 
   const handleRemoveExercise = async () => {
     if (exerciseToDelete && exerciseToDelete.id) {
+      setDeletingExerciseInProgress(true);
       await dispatch(removeExercise(exerciseToDelete.id));
       setExerciseToDelete(null);
       onClose();
+      setDeletingExerciseInProgress(false);
       navigate("/exercises", { state: { exercise: "removed" } });
     }
   };
 
-  if (loadingUser || loadingExercises) {
-    return <SpinnerComponent />;
-  }
+  // if (loadingUser || loadingExercises) {
+  //   return <SpinnerComponent />;
+  // }
 
   return (
     <>
@@ -132,7 +128,9 @@ const SingleExercisePage = () => {
         />
 
         <MainHeading text="Edit exercise" />
-        {submittingInProgress && <SpinnerComponent mt={0} mb={4} />}
+        {submittingInProgress && (
+          <SpinnerComponent mt={0} mb={4} text="Saving exercise..." />
+        )}
         <SubmitOrCancelButton
           text="SAVE"
           top="4.7rem"
@@ -147,6 +145,8 @@ const SingleExercisePage = () => {
         />
 
         <ExerciseForm
+          categories={categories}
+          loadingCategories={loadingCategories}
           ref={exerciseFormRef}
           initialName={currentExercise.name}
           initialEquipment={currentExercise.equipment}
@@ -157,6 +157,7 @@ const SingleExercisePage = () => {
         ></ExerciseForm>
       </Container>
       <DeletionModal
+        deletionInProgress={deletingExerciseInProgress}
         isOpen={isOpen}
         onClose={onClose}
         onDelete={handleRemoveExercise}
