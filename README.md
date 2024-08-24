@@ -8,6 +8,4 @@ Visit https://my-gym-tracker.work/ <br />
 
 Dummy user:
 Username: CardioManiac <br />
-Password: testp@ss124
-
-(The application may be initially sleeping to save the dynos on Heroku, <br /> a few seconds of patience please :))
+Password: str0ngp@ssword1
